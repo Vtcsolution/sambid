@@ -1,4 +1,4 @@
-// server.js - Remove the userRoutes import
+// backend/server.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -8,7 +8,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import opportunityRoutes from "./routes/opportunityRoutes.js";
 import savedRoutes from './routes/savedRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';  // ← Make sure this exists
 import aiRoutes from './routes/aiRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import adminPlanRoutes from './routes/adminPlanRoutes.js';
@@ -32,11 +32,11 @@ app.use(express.json());
 // Routes
 app.get("/", (req, res) => res.json({ success: true, message: "Sambid API is running..." }));
 
-// API Routes - NOTE: NO userRoutes here
+// API Routes - NOTE: Order matters
 app.use("/api/auth", authRoutes);
 app.use("/api/opportunities", opportunityRoutes);
 app.use('/api/saved', savedRoutes);
-app.use('/api/payment', paymentRoutes);
+app.use('/api/payment', paymentRoutes);  // ← This should be BEFORE admin routes
 app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/plans', adminPlanRoutes);
@@ -44,7 +44,8 @@ app.use('/api/alerts', alertRoutes);
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
+  console.log(`404 - Route not found: ${req.method} ${req.url}`);
+  res.status(404).json({ success: false, message: `Route not found: ${req.url}` });
 });
 
 // Global error handler
