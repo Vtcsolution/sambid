@@ -7,13 +7,18 @@ export default function StripePayment({ amount, planName, billingCycle, onSucces
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSimulatedPayment = async () => {
+  console.log('StripePayment received:', { amount, planName, billingCycle });
+
+  const handlePayment = async () => {
+    if (!planName) {
+      setError('Invalid plan selection. Please try again.');
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     
     try {
-      console.log('Stripe payment with:', { planName, billingCycle });
-      
       const response = await paymentAPI.createStripePayment({
         planName: planName,
         billingCycle: billingCycle
@@ -68,7 +73,7 @@ export default function StripePayment({ amount, planName, billingCycle, onSucces
       </div>
       
       <button
-        onClick={handleSimulatedPayment}
+        onClick={handlePayment}
         disabled={loading}
         className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2"
       >
@@ -80,7 +85,7 @@ export default function StripePayment({ amount, planName, billingCycle, onSucces
         ) : (
           <>
             <CreditCard className="w-4 h-4" />
-            Simulate Payment (${amount})
+            Pay ${amount}
           </>
         )}
       </button>
