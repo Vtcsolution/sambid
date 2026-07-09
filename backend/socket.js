@@ -11,6 +11,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://localhost:4173',
   process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL?.replace('://', '://www.'),
 ].filter(Boolean);
 
 export const initSocket = (httpServer) => {

@@ -76,13 +76,14 @@ app.use(helmet({
   contentSecurityPolicy: false,        // CSP handled by nginx; API returns JSON only
 }));
 
-// CORS — allow localhost + configured frontend URL
+// CORS — allow localhost + configured frontend URL (with and without www)
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
   'http://localhost:4173',
   process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL?.replace('://', '://www.'),
 ].filter(Boolean);
 
 app.use(cors({
