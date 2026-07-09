@@ -459,6 +459,7 @@ export const getUserPredictions = async (user, forceRefresh = false) => {
     const masterQuery = {
       dueDate: { $gt: new Date() },
       ...(user.naicsCodes?.length ? { naicsCode: { $in: user.naicsCodes } } : {}),
+      description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
     };
     opportunities = await Opportunity.find(masterQuery)
       .sort({ dueDate: 1 })

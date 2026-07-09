@@ -244,6 +244,11 @@ const distributeToUser = async (user) => {
   // Only active solicitations: due date must exist AND be strictly in the future
   const activeFilter = { dueDate: { $gt: now } };
 
+  // Only fully-resolved records: never distribute an opportunity whose description
+  // is still a raw SAM.gov URL — it stays in the master store until the nightly
+  // completion pass (or an on-demand fetch) fills in the real text.
+  const completeFilter = { description: { $not: /^https?:\/\/.*api\.sam\.gov/ } };
+
   // Expand NAICS codes to 4-digit family so sibling codes (e.g. 541512/541513/541519 for user with 541511) are included.
   // Also include opportunities tagged via keyword search (suggestedNaics) for wrong-NAICS catches.
   const naicsFamilyPrefixes = [...new Set((user.naicsCodes || []).map(c => c.slice(0, 4)))];
@@ -263,7 +268,8 @@ const distributeToUser = async (user) => {
     postedDate: { $gte: windowStart },
     _id: { $nin: existingIds },
     source: { $ne: 'usaspending' },
-    ...activeFilter
+    ...activeFilter,
+    ...completeFilter
   })
     .sort({ postedDate: -1 })
     .limit(remaining * 5)
@@ -275,7 +281,8 @@ const distributeToUser = async (user) => {
       ...naicsFamilyFilter,
       _id: { $nin: existingIds },
       source: { $ne: 'usaspending' },
-      ...activeFilter
+      ...activeFilter,
+      ...completeFilter
     })
       .sort({ postedDate: -1 })
       .limit(remaining * 5)

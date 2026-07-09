@@ -298,8 +298,9 @@ const fetchPageWithRetry = async (apiKey, postedFrom, postedTo, limit, offset, m
 
 // ─── Upsert a single document ─────────────────────────────────────────────────
 const upsertOpp = async (doc) => {
-  const { sourceId, description, ...rest } = doc;
+  const { sourceId, description, resourceLinks, ...rest } = doc;
   const isUrlDesc = description && description.startsWith('http') && description.includes('api.sam.gov');
+  const hasLinks  = Array.isArray(resourceLinks) && resourceLinks.length > 0;
 
   await Opportunity.findOneAndUpdate(
     { sourceId },
@@ -307,10 +308,17 @@ const upsertOpp = async (doc) => {
       // Never overwrite a saved text description with a raw URL from SAM.gov.
       // If description is real text → always save it.
       // If description is a URL → only write it on brand-new inserts.
-      $set: isUrlDesc ? rest : { ...rest, description },
+      // Same for resourceLinks: an empty array from the search API must never
+      // wipe PDF links already resolved by the completion pass.
+      $set: {
+        ...rest,
+        ...(isUrlDesc ? {} : { description }),
+        ...(hasLinks ? { resourceLinks } : {}),
+      },
       $setOnInsert: {
         fetchSource: 'bulk',
         ...(isUrlDesc ? { description } : {}),
+        ...(hasLinks ? {} : { resourceLinks: [] }),
       },
     },
     { upsert: true }
@@ -324,19 +332,24 @@ export const runNightlyBulkDownload = async () => {
     return { fetched: 0, saved: 0, skipped: 0, pages: 0 };
   }
 
-  const from180 = new Date();
-  from180.setDate(from180.getDate() - 180);
-  from180.setHours(0, 0, 0, 0);
+  // Fetch window: only recent postings (last 2 days, with 1-day overlap for safety).
+  // Kept small ON PURPOSE — the goal is that every record fetched tonight gets its
+  // description + PDFs resolved the SAME night, so the store only ever holds
+  // complete records. The library builds up day by day from launch.
+  const FETCH_WINDOW_DAYS = 2;
+  const fromDate = new Date();
+  fromDate.setDate(fromDate.getDate() - FETCH_WINDOW_DAYS);
+  fromDate.setHours(0, 0, 0, 0);
 
   const today      = new Date();
-  const postedFrom = fmtDate(from180);
+  const postedFrom = fmtDate(fromDate);
   const postedTo   = fmtDate(today);
   const rdlFrom    = fmtDate(today); // only active contracts (deadline >= today)
   const pageSize   = 1000;
 
   console.log('\n' + '═'.repeat(70));
   console.log('🌙 BULK DOWNLOAD  (SAM.gov → Global Opportunity Store)');
-  console.log(`   Range  : ${postedFrom} → ${postedTo}  (posted in last 180 days)`);
+  console.log(`   Range  : ${postedFrom} → ${postedTo}  (posted in last ${FETCH_WINDOW_DAYS} days)`);
   console.log(`   Filter : active only (deadline >= ${rdlFrom})`);
   console.log(`   Page   : ${pageSize} records/request (SAM.gov max)`);
   console.log('═'.repeat(70));
@@ -496,6 +509,69 @@ export const resolveAllPendingResourceLinks = async (maxCalls = 200) => {
   return withFiles;
 };
 
+// ─── Complete records one-by-one: description + PDFs together ────────────────
+// Guarantees every processed record is FULLY complete (real description text +
+// resource links checked) before moving to the next one. If quota runs out
+// mid-run, the store holds N fully-complete records instead of thousands of
+// half-complete ones. Priority: user-feed records first, then newest posted.
+export const completeAllPendingRecords = async () => {
+  const URL_DESC = /^https?:\/\/.*api\.sam\.gov/;
+  const baseFilter = {
+    source: 'sam',
+    $and: [
+      { $or: [{ dueDate: { $gt: new Date() } }, { dueDate: null }] },
+      { $or: [
+        { description: { $regex: URL_DESC } },
+        { resourceLinks: { $size: 0 }, noticeId: { $exists: true, $ne: '' } },
+      ]},
+    ],
+  };
+
+  const userFeedIds = await UserOpportunity.distinct('opportunity');
+  const fields = '_id sourceId noticeId description resourceLinks';
+  const [priority, rest] = await Promise.all([
+    Opportunity.find({ _id: { $in: userFeedIds }, ...baseFilter })
+      .sort({ postedDate: -1 }).select(fields).lean(),
+    Opportunity.find({ _id: { $nin: userFeedIds }, ...baseFilter })
+      .sort({ postedDate: -1 }).select(fields).lean(),
+  ]);
+  const pending = [...priority, ...rest];
+  console.log(`\n🧩 Completing records (description + PDFs per record): ${pending.length} pending (${priority.length} in user feeds)`);
+  if (!pending.length) return 0;
+
+  let completed = 0;
+  for (const rec of pending) {
+    try {
+      const update = {};
+      if (URL_DESC.test(rec.description || '')) {
+        const text = await resolveDescription(null, rec.description);
+        if (text && !text.startsWith('http')) update.description = text;
+        await new Promise(r => setTimeout(r, 250));
+      }
+      if ((!rec.resourceLinks || rec.resourceLinks.length === 0) && rec.noticeId) {
+        update.resourceLinks = await fetchSAMResourceLinks(null, rec.noticeId);
+      }
+      if (Object.keys(update).length) {
+        await Opportunity.updateOne({ _id: rec._id }, { $set: update });
+      }
+      completed++;
+    } catch (err) {
+      if (err.response?.status === 429) {
+        console.error(`  💤 All API keys quota exhausted — ${completed}/${pending.length} records fully completed. Rest continue next night + on-demand.`);
+        break;
+      }
+      console.warn(`  ⚠️  Completion failed (${rec.sourceId}): ${err.message}`);
+    }
+    await new Promise(r => setTimeout(r, 250));
+    if (completed > 0 && completed % 100 === 0) {
+      console.log(`  🧩 Progress: ${completed}/${pending.length} records fully completed`);
+    }
+  }
+
+  console.log(`   ✅ Fully-complete records: ${completed}/${pending.length}`);
+  return completed;
+};
+
 // ─── Test bulk: exactly 10 records at a given offset — 1 API call per click ──
 export const runBulkTest = async (offset = 0) => {
   const apiKey = process.env.SAM_API_KEY;
@@ -534,18 +610,14 @@ export const bulkStats = {
   isRunning:    false,
 };
 
-// Full nightly pipeline — three steps in sequence:
-//   1. Bulk fetch    : download ALL active SAM.gov records, save every field
-//   2. Descriptions  : resolve URL → real text for EVERY active record (no cap)
-//   3. Resource links: fetch PDFs/attachments for EVERY active record with none yet (no cap)
+// Full nightly pipeline — two steps in sequence:
+//   1. Bulk fetch : download ALL active SAM.gov records, save every field (cheap)
+//   2. Complete   : per record, fetch description text + PDF links together so
+//                   each processed record is 100% complete. Quota exhaustion
+//                   leaves complete records, never half-filled ones.
 //
-// Quota budget per nightly run:
-//   keys × 1000/day = total daily quota
-//   We spend ~half on the nightly batch (descriptions + resource links) and
-//   reserve the other half for on-demand resolution when users open records.
-//   If you have 4 keys (4,000/day) you can raise the caps — e.g. 2000 + 400.
-const NIGHTLY_DESC_CAP  = 9999; // use all available quota — resolves as many as possible each night
-const NIGHTLY_LINKS_CAP = 9999; // use all available quota for resource links too
+// Quota: each key = 1,000 requests/day; a record costs up to 2 calls to complete.
+// 4 keys ≈ 4,000/day ≈ ~1,900 records fully completed per night.
 
 export const triggerBulkDownload = async () => {
   if (bulkStats.isRunning) {
@@ -555,21 +627,17 @@ export const triggerBulkDownload = async () => {
 
   bulkStats.isRunning = true;
   try {
-    // Step 1: resolve existing pending descriptions FIRST — they get priority over new fetches
-    // This ensures quota is used on descriptions before the bulk fetch consumes any calls
-    await resolveAllPendingDescriptions(NIGHTLY_DESC_CAP);
-
-    // Step 2: download all active records from SAM.gov (uses ~12-50 calls, well within remaining quota)
+    // Step 1: download all active records from SAM.gov (cheap — ~12-50 calls at 1000/page)
     const result = await runNightlyBulkDownload();
     bulkStats.lastRunAt    = new Date();
     bulkStats.lastRunCount = result.saved;
     bulkStats.lastRunPages = result.pages;
 
-    // Step 3: resolve descriptions for any newly fetched records (uses leftover quota)
-    await resolveAllPendingDescriptions(300);
-
-    // Step 4: fetch PDFs/attachments
-    await resolveAllPendingResourceLinks(NIGHTLY_LINKS_CAP);
+    // Step 2: complete every record FULLY (description + PDFs together, newest first,
+    // user feeds first) with all remaining quota. Records completed here are 100%
+    // ready for the user feed; incomplete ones are held back by the distribution
+    // filter until they finish on a following night or on-demand.
+    await completeAllPendingRecords();
 
     return result;
   } finally {

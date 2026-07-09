@@ -242,7 +242,7 @@ export default function Signup({ setIsAuthenticated, setUser }) {
       // Surface "already exists" errors directly on the email field so user sees it immediately
       if (msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already in use')) {
         setErrors({ email: msg, general: '' });
-        setStep(1); // jump back to step 1 where the email field is visible
+        setSignupStep(1); // jump back to step 1 where the email field is visible
       } else {
         setErrors({ general: msg });
       }

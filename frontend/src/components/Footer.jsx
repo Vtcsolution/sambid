@@ -163,11 +163,14 @@ export default function Footer() {
           <p className="text-center sm:text-left">
             © {new Date().getFullYear()} Sambid. All rights reserved. Data sourced from SAM.gov (official US federal database).
           </p>
-          <div className="flex gap-4 sm:gap-6">
-            <Link to="/privacy" className="hover:text-indigo-300 transition-colors">Privacy Policy</Link>
-            <Link to="/terms"   className="hover:text-indigo-300 transition-colors">Terms of Service</Link>
-            <Link to="/faq"     className="hover:text-indigo-300 transition-colors">FAQ</Link>
-            <Link to="/contact" className="hover:text-indigo-300 transition-colors">Support</Link>
+          <div className="flex flex-wrap gap-4 sm:gap-6 justify-center sm:justify-end">
+            <Link to="/privacy"  className="hover:text-indigo-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms"    className="hover:text-indigo-300 transition-colors">Terms of Service</Link>
+            <Link to="/dpa"      className="hover:text-indigo-300 transition-colors">DPA</Link>
+            <Link to="/security" className="hover:text-indigo-300 transition-colors">Security</Link>
+            <Link to="/nda"      className="hover:text-indigo-300 transition-colors">NDA</Link>
+            <Link to="/faq"      className="hover:text-indigo-300 transition-colors">FAQ</Link>
+            <Link to="/contact"  className="hover:text-indigo-300 transition-colors">Support</Link>
           </div>
         </div>
 

@@ -48,6 +48,9 @@ const ReferralPage       = lazy(() => import('./pages/Referral'));
 const VerifyEmail        = lazy(() => import('./pages/VerifyEmail'));
 const TermsOfService     = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy      = lazy(() => import('./pages/PrivacyPolicy'));
+const DPA                = lazy(() => import('./pages/DPA'));
+const SecurityPolicy     = lazy(() => import('./pages/SecurityPolicy'));
+const NDA                = lazy(() => import('./pages/NDA'));
 const Billing            = lazy(() => import('./pages/Billing'));
 const ProposalBuilder    = lazy(() => import('./pages/ProposalBuilder'));
 const PayoneerReturn     = lazy(() => import('./pages/PayoneerReturn'));
@@ -125,6 +128,7 @@ function App() {
   const location = useLocation();
   const isProtectedRoute = !['/', '/pricing', '/about', '/how-it-works', '/contact',
     '/signup', '/login', '/forgot-password', '/reset-password', '/terms', '/privacy',
+    '/dpa', '/security', '/nda',
     '/annual-plan-request', '/features', '/faq'].some(p => location.pathname === p
       || location.pathname.startsWith('/features/')
       || location.pathname.startsWith('/verify-email')
@@ -322,6 +326,9 @@ function App() {
             <Route path="/proposal-builder"     element={<WorkspaceRoute><ProposalBuilder /></WorkspaceRoute>} />
             <Route path="/terms"                element={<TermsOfService />} />
             <Route path="/privacy"              element={<PrivacyPolicy />} />
+            <Route path="/dpa"                  element={<DPA />} />
+            <Route path="/security"             element={<SecurityPolicy />} />
+            <Route path="/nda"                  element={<NDA />} />
             <Route path="/payment/payoneer/return" element={<PayoneerReturn />} />
             <Route path="/suggestions"          element={<Suggestions />} />
             <Route path="/past-performance"     element={<WorkspaceRoute><PastPerformance /></WorkspaceRoute>} />

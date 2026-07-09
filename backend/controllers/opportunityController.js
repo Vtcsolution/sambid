@@ -331,7 +331,10 @@ export const getOpportunities = async (req, res) => {
     // contract awards (usaspending records where performance period is still open).
     if (req.user.plan === 'enterprise') {
       const masterQuery = {
-        dueDate: { $gt: now }  // strictly future — only requirement for enterprise
+        dueDate: { $gt: now },  // strictly future — only requirement for enterprise
+        // Hide records whose description is still an unresolved SAM.gov URL —
+        // they appear automatically once the nightly completion pass fills them in.
+        description: { $not: /^https?:\/\/.*api\.sam\.gov/ },
       };
       if (req.user.naicsCodes?.length) {
         const entPrefixes = [...new Set(req.user.naicsCodes.map(c => c.slice(0, 4)))];
@@ -555,6 +558,7 @@ export const getOpportunities = async (req, res) => {
           dueDate: { $gt: now },
           source: { $ne: 'usaspending' },
           _id: { $nin: existingOppIds },
+          description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
         }).sort({ postedDate: -1 }).limit(15).lean();
 
         potentialMatches = sectorOpps.map(opp => {

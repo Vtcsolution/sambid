@@ -121,6 +121,7 @@ export const getDashboardStats = async (req, res) => {
       const enterpriseBase = {
         dueDate: { $gt: now },  // enterprise sees all sources — sam + usaspending
         ...(naics.length ? { naicsCode: { $in: naics } } : {}),
+        description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
       };
 
       [totalFeedCount, todayFeedCount, highMatchCount] = await Promise.all([
@@ -272,6 +273,7 @@ export const getCalendarEvents = async (req, res) => {
       const masterQuery = {
         dueDate: { $gte: windowStart, $lte: windowEnd },
         ...(naics.length ? { naicsCode: { $in: naics } } : {}),
+        description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
       };
       const masterOpps = await Opportunity.find(masterQuery, 'title agency dueDate postedDate estimatedValue naicsCode setAside noticeType').lean();
       feedOpps = masterOpps.map(opp => ({ opportunity: opp, matchScore: 75 }));
