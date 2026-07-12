@@ -55,9 +55,20 @@ dotenv.config();
 connectDB().then(async () => {
   await ensureInvoiceIndexes(); // self-heal the paypalOrderId index (fixes E11000 on null)
   await loadSettingsFromDB();
-  startScheduler();
-  startProjectScheduler();
-  startEmailScheduler();
+
+  // Schedulers run in production only. A local dev server shares the same
+  // database AND the same SAM.gov API keys — if its crons fire too, they burn
+  // the production quota and race the VPS (this starved description fetching
+  // for days). Set ENABLE_SCHEDULERS=true locally only when deliberately
+  // testing scheduler behavior.
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_SCHEDULERS === 'true') {
+    startScheduler();
+    startProjectScheduler();
+    startEmailScheduler();
+  } else {
+    console.log('⏸️  Schedulers DISABLED (development) — production VPS owns the SAM.gov quota.');
+    console.log('    Set ENABLE_SCHEDULERS=true in .env to enable locally.');
+  }
 }).catch(err => {
   console.error('❌ Startup aborted — DB connection failed:', err.message);
   process.exit(1);

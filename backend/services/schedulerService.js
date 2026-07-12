@@ -444,7 +444,7 @@ export const runUserDistribution = async () => {
 export const startScheduler = () => {
   console.log('\n🚀 Starting Hybrid Opportunity Scheduler');
   console.log('   Phase 1a — API Fetch (per NAICS)        : MANUAL only (Admin panel button)');
-  console.log('   Phase 1b — Bulk Nightly Download (all)   : 04:00 UTC (09:00 AM Pakistan)');
+  console.log('   Phase 1b — Bulk Nightly Download (all)   : 00:10 UTC (05:10 AM Pakistan) — first claim on fresh quota');
   console.log('   Phase 2  — User Distribution             : every 10 min');
 
   // Phase 1a: Automatic API fetch is DISABLED — use Admin panel buttons to fetch manually.
@@ -460,37 +460,29 @@ export const startScheduler = () => {
     await runUserDistribution();
   });
 
-  // Phase 1b: Nightly bulk download at 04:00 UTC = 09:00 AM Pakistan (PST UTC+5).
-  // Why 4 AM UTC:
-  //   • US Eastern midnight (00:00 ET = 04:00-05:00 UTC) means the entire
-  //     US government business day is over and all SAM.gov postings for that
-  //     day are finalised and available via the API.
-  //   • Pakistan users wake up to fully refreshed data by 9 AM their time.
+  // Phase 1b: Nightly bulk download at 00:10 UTC = 05:10 AM Pakistan.
+  // Why 00:10 UTC:
+  //   • SAM.gov's own 429 responses state quota resets at 00:00:00 UTC — running
+  //     10 minutes later gives the opportunity pipeline FIRST CLAIM on the fresh
+  //     daily quota, before entity sync or any daytime usage can consume it.
+  //   • Descriptions + PDFs are fetched per record inside this job, so every
+  //     record it processes is 100% complete for users the same night.
   //   • No NAICS filter — every category is downloaded so no opportunity is missed.
   //   • Deduplication via sourceId upsert; API-fetched records are never duplicated.
-  //   • The master fetch cron (0 * * * *) also fires at 04:00 UTC — the 55-min guard
-  //     on runMasterFetch will skip it so bulk gets the full quota to itself.
-  cron.schedule('0 4 * * *', async () => {
-    // Wait 5 min for SAM.gov quota reset to fully propagate before making any calls.
-    // Quota resets at midnight US Eastern (04:00 UTC summer / 05:00 UTC winter).
-    // Without this wait the first requests can still see yesterday's exhausted quota.
-    console.log('\n⏳ 04:00 UTC — waiting 5 min for SAM.gov quota reset to propagate...');
-    await new Promise(r => setTimeout(r, 5 * 60 * 1000));
-    console.log('\n🌙 BULK DOWNLOAD (04:05 UTC = 09:05 AM Pakistan) starting...');
+  cron.schedule('10 0 * * *', async () => {
+    console.log('\n🌙 BULK DOWNLOAD (00:10 UTC = 05:10 AM Pakistan) starting on fresh quota...');
     await triggerBulkDownload();
     // Wait 2 min then distribute so users see fresh data on login
     await new Promise(r => setTimeout(r, 120_000));
     await runUserDistribution();
   });
 
-  // SAM Entity sync — 02:00 UTC daily.
-  // Uses dynamic quota: consumes all remaining daily SAM.gov requests minus 200
-  // reserved for the day's opportunity-fetching crons (hourly master + nightly bulk).
-  // At 02:00 UTC only ~2 hourly master-fetch crons have fired, so the full ~750-800
-  // pages (~75-80k companies) are typically available — covering the full ~140k SAM
-  // entity list within 2 nightly runs.
-  cron.schedule('0 2 * * *', async () => {
-    console.log('\n🏢 02:00 UTC SAM ENTITY SYNC starting (dynamic quota)…');
+  // SAM Entity sync — 09:00 UTC daily (AFTER the opportunity pipeline).
+  // Uses dynamic quota: consumes remaining daily SAM.gov requests minus a reserve.
+  // Deliberately scheduled after the 00:10 bulk job so company data never starves
+  // opportunity descriptions/PDFs of quota (it previously ran at 02:00 and did).
+  cron.schedule('0 9 * * *', async () => {
+    console.log('\n🏢 09:00 UTC SAM ENTITY SYNC starting (leftover quota only)…');
     await syncSamEntitiesDynamic(200);
   });
 
