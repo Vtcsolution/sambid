@@ -91,7 +91,8 @@ export const getDashboardStats = async (req, res) => {
           await fetchSAMOpportunities(code, 50);
         }
         const afterFetch = await Opportunity.countDocuments({ naicsCode: { $in: req.user.naicsCodes } });
-        if (afterFetch === 0) {
+        if (afterFetch === 0 && process.env.NODE_ENV !== 'production') {
+          // Dev-only fallback — production must never show fake sample data
           await seedSampleForUser(req.user.naicsCodes.slice(0, 2));
         }
       }

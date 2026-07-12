@@ -467,8 +467,11 @@ export const getOpportunities = async (req, res) => {
           ...fillFamilyFilter,
           dueDate: { $gt: now },
         });
-        if (afterFetch === 0) {
-          console.log('🧪 SAM.gov returned nothing — seeding sample opportunities');
+        if (afterFetch === 0 && process.env.NODE_ENV !== 'production') {
+          // Dev-only: sample records so the UI isn't empty while testing.
+          // In production the feed stays empty until the nightly SAM.gov
+          // fetch delivers real, complete records — never show fake data.
+          console.log('🧪 SAM.gov returned nothing — seeding sample opportunities (dev only)');
           await seedSampleForUser(req.user.naicsCodes.slice(0, 2));
         }
       }
