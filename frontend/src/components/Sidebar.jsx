@@ -5,7 +5,7 @@ import {
   LayoutDashboard, FileText, Bell, Settings, LogOut, CreditCard,
   Bookmark, TrendingUp, User, HelpCircle, Shield, Kanban,
   CalendarDays, Sparkles, ScanSearch, ThumbsUp, Truck, Users, BarChart3, Gift, Receipt, FileEdit, Lightbulb, Award, Search, Brain,
-  X, ChevronRight, Zap, Building2, FolderOpen, Trophy
+  X, ChevronRight, Zap, Building2, FolderOpen, Trophy, ExternalLink
 } from 'lucide-react';
 import { opportunityAPI } from '../services/api';
 import SambidLogo from './SambidLogo';
@@ -270,6 +270,15 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
               <SambidLogo size={28} />
               <span className="text-xl font-bold text-white">Sambid</span>
             </Link>
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-1.5 text-xs text-indigo-100 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 py-1.5 rounded-lg transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Visit Website
+            </a>
             <button onClick={onClose} className="md:hidden text-white hover:text-gray-200">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

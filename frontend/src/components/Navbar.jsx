@@ -37,6 +37,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
     '/go-no-go', '/teaming-finder', '/contract-vehicles', '/market-research',
     '/referral', '/billing', '/proposal-builder', '/past-performance',
     '/sources-sought', '/ai-predictions', '/suggestions',
+    '/company', '/onboarding',
   ];
 
   const isDashboardRoute = dashboardRoutes.some(r => location.pathname.startsWith(r));
