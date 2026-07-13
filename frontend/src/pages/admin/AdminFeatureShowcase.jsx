@@ -38,7 +38,9 @@ function UploadBtn({ label, accept, onUploaded }) {
         setUploading(true);
         try {
           const res = await uploadFile(file);
-          if (res.success) onUploaded(`${BASE}${res.data.url}`);
+          // Save the RELATIVE url (/uploads/...) — an absolute BASE prefix bakes the
+          // upload-time host into the DB (e.g. http://localhost:8000) and breaks prod.
+          if (res.success) onUploaded(res.data.url);
           else alert(res.message || 'Upload failed');
         } catch { alert('Upload error'); }
         setUploading(false);
