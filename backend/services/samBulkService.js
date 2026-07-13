@@ -627,16 +627,26 @@ export const triggerBulkDownload = async () => {
 
   bulkStats.isRunning = true;
   try {
-    // Step 1: download all active records from SAM.gov (cheap — ~12-50 calls at 1000/page)
+    // Step 1: download all active records from SAM.gov (a few API calls at 1000/page)
     const result = await runNightlyBulkDownload();
     bulkStats.lastRunAt    = new Date();
     bulkStats.lastRunCount = result.saved;
     bulkStats.lastRunPages = result.pages;
 
-    // Step 2: complete every record FULLY (description + PDFs together, newest first,
-    // user feeds first) with all remaining quota. Records completed here are 100%
-    // ready for the user feed; incomplete ones are held back by the distribution
-    // filter until they finish on a following night or on-demand.
+    // Step 2: fill descriptions from SAM.gov's PUBLIC daily CSV extract.
+    // Free and unlimited — no API key, no quota. This is the primary description
+    // source; the per-record API resolution below only mops up records the CSV
+    // missed. (Personal SAM.gov keys have a tiny daily quota, so per-record
+    // resolution alone can never keep up.)
+    try {
+      const { backfillDescriptionsFromCsv } = await import('./samCsvService.js');
+      await backfillDescriptionsFromCsv();
+    } catch (e) {
+      console.error('  ⚠️ CSV backfill failed (will rely on API resolution):', e.message);
+    }
+
+    // Step 3: complete remaining records via API (leftover descriptions + PDF
+    // links) with whatever key quota exists. Stops gracefully on 429.
     await completeAllPendingRecords();
 
     return result;
