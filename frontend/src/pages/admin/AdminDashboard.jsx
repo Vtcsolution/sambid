@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import adminAxios, { adminPanelAPI as adminAPI, supportAPI } from '../../services/adminApi';
 import { exportSamBidReport } from '../../utils/exportUtils';
+import AdminHowItWorks from '../../components/AdminHowItWorks';
 
 // ── SVG Mini Chart Components ────────────────────────────────────────────────
 function BarChart({ data, dataKey, color = '#4f46e5', height = 180 }) {
