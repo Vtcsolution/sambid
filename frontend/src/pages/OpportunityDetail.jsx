@@ -757,16 +757,6 @@ export default function OpportunityDetail() {
                 </a>
               )}
 
-              {/* Search by solicitation number */}
-              {solicitationNumber && (
-                <button
-                  onClick={handleSamSearch}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 hover:border-indigo-400 text-gray-700 rounded-xl text-sm font-semibold transition-colors"
-                >
-                  <Search className="w-4 h-4 text-indigo-500" />
-                  Search by Solicitation #
-                </button>
-              )}
             </div>
 
             {/* Document guide banner - only for real records */}
@@ -828,26 +818,6 @@ export default function OpportunityDetail() {
               </div>
             )}
 
-            {userPlan !== 'free' && userPlan !== 'starter' ? (
-              <>
-                <Button variant="outline" onClick={handleGenerateProposal} disabled={generatingProposal}>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {generatingProposal ? 'Generating...' : 'Generate Proposal Outline (AI)'}
-                </Button>
-                <button
-                  onClick={() => navigate(`/proposal-builder?opportunityId=${opportunity._id}&title=${encodeURIComponent(opportunity.title || '')}`)}
-                  className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                >
-                  <FileEdit className="w-4 h-4" />
-                  Write Full Proposal (AI)
-                </button>
-              </>
-            ) : (
-              <Button variant="outline" onClick={() => navigate('/pricing')}>
-                Upgrade to Pro for AI Proposals
-              </Button>
-            )}
-
           </div>
 
           {/* ── Attachments / Documents ──────────────────────────────────────── */}
@@ -858,30 +828,6 @@ export default function OpportunityDetail() {
                   <Paperclip className="w-4 h-4 text-gray-400" />
                   Solicitation Documents ({opportunity.resourceLinks.length})
                 </h3>
-                {(userPlan === 'pro' || userPlan === 'enterprise') && (
-                  <button
-                    disabled={deepLoading}
-                    onClick={async () => {
-                      setDeepLoading(true);
-                      setDeepResult(null);
-                      setDeepDocMeta(null);
-                      try {
-                        const res = await aiAPI.deepSummarize(id);
-                        setDeepResult(res.data.data.analysis);
-                        setDeepDocMeta(res.data.data);
-                      } catch (err) {
-                        setDeepResult(`Error: ${err.response?.data?.message || err.message}`);
-                      } finally {
-                        setDeepLoading(false);
-                      }
-                    }}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all disabled:opacity-50 font-medium shadow-sm"
-                  >
-                    {deepLoading
-                      ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Reading {opportunity.resourceLinks.length} docs…</>
-                      : <><Sparkles className="w-3.5 h-3.5" /> Analyze All {opportunity.resourceLinks.length} Docs with AI</>}
-                  </button>
-                )}
               </div>
 
               {/* Deep analysis result panel */}
@@ -943,25 +889,6 @@ export default function OpportunityDetail() {
                         className="flex items-center gap-1 text-xs px-2.5 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:border-blue-300 hover:text-blue-600 transition-colors">
                         <ExternalLink className="w-3.5 h-3.5" /> Open
                       </a>
-                      {(userPlan === 'pro' || userPlan === 'enterprise') && (
-                        <button
-                          disabled={analyzingUrl === link.url}
-                          onClick={async () => {
-                            setAnalyzingUrl(link.url);
-                            try {
-                              const res = await aiAPI.analyzeAttachment(link.url);
-                              setAttachAnalysis(prev => ({ ...prev, [link.url]: res.data.data.analysis }));
-                            } catch (err) {
-                              setAttachAnalysis(prev => ({ ...prev, [link.url]: `Error: ${err.response?.data?.message || err.message}` }));
-                            } finally {
-                              setAnalyzingUrl(null);
-                            }
-                          }}
-                          className="flex items-center gap-1 text-xs px-2.5 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors disabled:opacity-50">
-                          {analyzingUrl === link.url ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ScanSearch className="w-3.5 h-3.5" />}
-                          {analyzingUrl === link.url ? 'Analyzing…' : 'Analyze with AI'}
-                        </button>
-                      )}
                     </div>
                   </div>
                   );
