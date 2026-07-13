@@ -15,7 +15,7 @@ export default function WorkspaceLogin() {
   const [error,    setError]    = useState('');
 
   useEffect(() => {
-    if (!companyId) setError('Invalid workspace link — no company ID found.');
+    if (!companyId) setError('Invalid workspace link - no company ID found.');
   }, [companyId]);
 
   const handleLogin = async (e) => {
@@ -80,7 +80,7 @@ export default function WorkspaceLogin() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-4">
-          This is a company workspace — contact your company owner for access.
+          This is a company workspace - contact your company owner for access.
         </p>
       </div>
     </div>

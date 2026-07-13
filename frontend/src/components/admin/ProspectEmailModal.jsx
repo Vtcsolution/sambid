@@ -135,7 +135,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
               <p className="text-indigo-200 text-xs mt-0.5">
                 {selectedProspects.length} selected · {emailCount} with email
                 {emailCount < selectedProspects.length && (
-                  <span className="ml-1 opacity-80">({selectedProspects.length - emailCount} skipped — no email)</span>
+                  <span className="ml-1 opacity-80">({selectedProspects.length - emailCount} skipped - no email)</span>
                 )}
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
         {view === 'history' && (
           <div className="flex-1 overflow-y-auto p-6">
             <h3 className="font-semibold text-gray-800 mb-1">
-              Email History — {selectedProspects[0]?.companyName}
+              Email History - {selectedProspects[0]?.companyName}
             </h3>
             <p className="text-xs text-gray-500 mb-4">{selectedProspects[0]?.primaryEmail}</p>
             {historyLoading ? (
@@ -227,7 +227,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
               {/* Type toggles */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  1. Select Email Type — AI will generate it automatically
+                  1. Select Email Type - AI will generate it automatically
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {EMAIL_TYPES.map(type => (
@@ -303,7 +303,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">
                       Body
-                      <span className="ml-1 text-gray-400 font-normal">(editable — {emailCount > 1 ? '{{companyName}} personalises per recipient' : 'plain text'})</span>
+                      <span className="ml-1 text-gray-400 font-normal">(editable - {emailCount > 1 ? '{{companyName}} personalises per recipient' : 'plain text'})</span>
                     </label>
                     <textarea
                       value={bodyText}
@@ -319,7 +319,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
                 </div>
               )}
 
-              {/* Empty state — no type selected */}
+              {/* Empty state - no type selected */}
               {!generating && !subject && !bodyText && !genError && (
                 <div className="text-center py-10 text-gray-400">
                   <Sparkles className="w-10 h-10 mx-auto mb-2 opacity-30" />

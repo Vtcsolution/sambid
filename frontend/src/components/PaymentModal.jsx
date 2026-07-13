@@ -14,7 +14,7 @@ const PLAN_COLORS = {
   enterprise: 'from-amber-500 to-orange-600',
 };
 
-// Plans whose yearly billing goes through the annual request form — NOT PayPal
+// Plans whose yearly billing goes through the annual request form - NOT PayPal
 const MONTHLY_ONLY_PLANS = ['starter', 'pro'];
 
 export default function PaymentModal({ isOpen, onClose, plan, billingCycle: billingCycleProp = 'monthly', couponCode = '', couponDiscount = 0 }) {
@@ -76,7 +76,7 @@ export default function PaymentModal({ isOpen, onClose, plan, billingCycle: bill
 
   const planId          = plan.name;
   const planDisplayName = plan.displayName || plan.name;
-  // Starter and Pro have yearly plans via the request form — lock them to monthly in this modal
+  // Starter and Pro have yearly plans via the request form - lock them to monthly in this modal
   const isMonthlyOnly   = MONTHLY_ONLY_PLANS.includes(planId);
   const effectiveCycle  = isMonthlyOnly ? 'monthly' : cycle;
   const rawAmount       = effectiveCycle === 'monthly' ? plan.priceMonthly : plan.priceYearly;
@@ -86,7 +86,7 @@ export default function PaymentModal({ isOpen, onClose, plan, billingCycle: bill
   const maxApply        = Math.min(referralBalance, baseAmount);
   const effectiveAmount = useBalance ? Math.max(0, baseAmount - balanceToApply) : baseAmount;
   const gradient        = PLAN_COLORS[planId] || PLAN_COLORS.pro;
-  // Use features from the plan object (fetched from DB) — fall back to empty array
+  // Use features from the plan object (fetched from DB) - fall back to empty array
   const features        = (plan.features || []).filter(f => f.included).map(f => f.name);
   const yearlySavingsPct = plan.priceMonthly > 0 && plan.priceYearly > 0
     ? Math.round(((plan.priceMonthly * 12 - plan.priceYearly) / (plan.priceMonthly * 12)) * 100)
@@ -124,7 +124,7 @@ export default function PaymentModal({ isOpen, onClose, plan, billingCycle: bill
           </div>
           <h2 className="text-2xl font-bold text-white">{planDisplayName} Plan</h2>
 
-          {/* Billing cycle toggle — only shown for Enterprise (starter/pro yearly → request form) */}
+          {/* Billing cycle toggle - only shown for Enterprise (starter/pro yearly → request form) */}
           {plan.priceMonthly > 0 && !isMonthlyOnly && (
             <div className="inline-flex mt-3 bg-white/20 rounded-full p-0.5">
               <button
@@ -157,7 +157,7 @@ export default function PaymentModal({ isOpen, onClose, plan, billingCycle: bill
             <span className="text-white/70 text-sm">/{effectiveCycle === 'yearly' ? 'year' : 'month'}</span>
           </div>
           {couponSaving > 0 && (
-            <p className="text-white/80 text-xs mt-1">{couponDiscount}% coupon applied — saving ${couponSaving.toFixed(2)}</p>
+            <p className="text-white/80 text-xs mt-1">{couponDiscount}% coupon applied - saving ${couponSaving.toFixed(2)}</p>
           )}
         </div>
 
@@ -226,7 +226,7 @@ export default function PaymentModal({ isOpen, onClose, plan, billingCycle: bill
                       </div>
                       {effectiveAmount === 0 ? (
                         <p className="text-xs text-green-700 font-semibold">
-                          Your balance fully covers this plan — no payment needed!
+                          Your balance fully covers this plan - no payment needed!
                         </p>
                       ) : (
                         <p className="text-xs text-green-700">

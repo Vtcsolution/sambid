@@ -40,7 +40,7 @@ export default function CompanyJoin() {
     const userToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     setIsLoggedIn(!!userToken);
 
-    // Load preview — public endpoint, no auth required
+    // Load preview - public endpoint, no auth required
     companyAPI.previewInvite(token)
       .then(res => {
         if (res.data.success) { setInvite(res.data.data); setStatus('preview'); }

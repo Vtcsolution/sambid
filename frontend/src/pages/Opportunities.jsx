@@ -138,7 +138,7 @@ export default function Opportunities() {
     fetchOpportunities();
   }, [pagination.page, pageSize, searchTerm, keywordMode, statusFilter, minValue, maxValue, setAsideFilter, sortBy, dueDateFrom, dueDateTo, postedFrom, postedTo, naicsFilter, noticeTypeFilter, agencyFilter, pscFilter, popFilter, daysLeftFilter]);
 
-  // NAICS autocomplete — search predefined list + support any 6-digit code
+  // NAICS autocomplete - search predefined list + support any 6-digit code
   useEffect(() => {
     if (!naicsQuery.trim()) { setNaicsDropdown([]); return; }
     const q = naicsQuery.trim();
@@ -149,7 +149,7 @@ export default function Opportunities() {
       .filter(c => !results.find(r => r.code === c))
       .map(c => {
         const entry = NAICS_CODES.find(n => n.code === c);
-        return { code: c, label: entry?.label || `${c} — Your Code`, isUserCode: true };
+        return { code: c, label: entry?.label || `${c} - Your Code`, isUserCode: true };
       });
     setNaicsDropdown([...userMatches, ...results].slice(0, 12));
   }, [naicsQuery, userProfile]);
@@ -552,7 +552,7 @@ export default function Opportunities() {
               {/* ══ NICHE + CITY smart row ══════════════════════════════════════ */}
               <div className="p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl">
                 <p className="text-xs font-bold text-indigo-700 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5" /> Smart Search — Niche + Location
+                  <Zap className="w-3.5 h-3.5" /> Smart Search - Niche + Location
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
@@ -565,7 +565,7 @@ export default function Opportunities() {
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
                       <input
                         type="text"
-                        placeholder="Type industry or code — e.g. 'IT services', '541511'…"
+                        placeholder="Type industry or code - e.g. 'IT services', '541511'…"
                         value={naicsQuery}
                         onChange={e => { setNaicsQuery(e.target.value); setShowNaicsDropdown(true); if (!e.target.value.trim()) clearNaicsFilter(); }}
                         onFocus={() => setShowNaicsDropdown(true)}
@@ -587,7 +587,7 @@ export default function Opportunities() {
                             <span className={`font-mono font-bold text-xs w-14 flex-shrink-0 ${n.isUserCode ? 'text-indigo-700' : 'text-purple-600'}`}>
                               {n.code}
                             </span>
-                            <span className="text-gray-700 flex-1 truncate text-xs">{n.label.split(' — ')[1]}</span>
+                            <span className="text-gray-700 flex-1 truncate text-xs">{n.label.split(' - ')[1]}</span>
                             {n.isUserCode && <span className="text-xs text-indigo-400 flex-shrink-0">My code</span>}
                           </button>
                         ))}
@@ -596,7 +596,7 @@ export default function Opportunities() {
                     {naicsFilter && (
                       <p className="mt-1 text-xs text-indigo-600">
                         Filtering: <span className="font-mono font-semibold">{naicsFilter}</span>
-                        {(() => { const e = NAICS_CODES.find(n => n.code === naicsFilter); return e ? ` — ${e.label.split(' — ')[1]}` : ''; })()}
+                        {(() => { const e = NAICS_CODES.find(n => n.code === naicsFilter); return e ? ` - ${e.label.split(' - ')[1]}` : ''; })()}
                       </p>
                     )}
                   </div>
@@ -609,7 +609,7 @@ export default function Opportunities() {
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="Type city or state — e.g. 'Virginia', 'Austin TX'…"
+                        placeholder="Type city or state - e.g. 'Virginia', 'Austin TX'…"
                         value={popFilter}
                         onChange={e => { setPopFilter(e.target.value); setPagination(p => ({...p, page:1})); }}
                         className={`w-full pr-8 py-2.5 px-3 text-sm border rounded-lg focus:ring-2 focus:ring-indigo-500 ${popFilter ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-white'}`}
@@ -877,7 +877,7 @@ export default function Opportunities() {
           )}
         </div>
 
-        {/* Active filter chips — always visible when any filter is on */}
+        {/* Active filter chips - always visible when any filter is on */}
         {hasActiveFilters && (
           <div className="mb-4 flex flex-wrap items-center gap-1.5">
             <span className="text-xs text-gray-400 mr-0.5">Filtering by:</span>
@@ -1012,7 +1012,7 @@ export default function Opportunities() {
                       {opp.deadlineStatus === 'closing_soon' && (
                         <div className="mb-2 flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
                           <AlertOctagon className="w-4 h-4 shrink-0" />
-                          <span><strong>Less than 24 hours left.</strong> Deadline is {opp.hoursUntilDue ? `in ~${Math.round(opp.hoursUntilDue)}h` : 'very soon'} — act immediately.</span>
+                          <span><strong>Less than 24 hours left.</strong> Deadline is {opp.hoursUntilDue ? `in ~${Math.round(opp.hoursUntilDue)}h` : 'very soon'} - act immediately.</span>
                         </div>
                       )}
 
@@ -1159,10 +1159,10 @@ export default function Opportunities() {
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-600" />
                 <span className="font-semibold text-amber-800 text-sm">
-                  Potential Matches — {potentialMatches.length} opportunities in your industry sector
+                  Potential Matches - {potentialMatches.length} opportunities in your industry sector
                 </span>
                 <span className="text-xs text-amber-600 hidden sm:inline">
-                  (Contracting officers sometimes enter incorrect NAICS codes — these are in your same sector)
+                  (Contracting officers sometimes enter incorrect NAICS codes - these are in your same sector)
                 </span>
               </div>
               <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${showPotential ? 'rotate-180' : ''}`} />
@@ -1171,7 +1171,7 @@ export default function Opportunities() {
             {showPotential && (
               <div className="mt-3 space-y-3">
                 <p className="text-xs text-gray-500 px-1">
-                  ⚠️ These opportunities have different NAICS codes but are in the same industry sector as your registered codes. They may be worth reviewing — a CO may have entered the wrong code.
+                  ⚠️ These opportunities have different NAICS codes but are in the same industry sector as your registered codes. They may be worth reviewing - a CO may have entered the wrong code.
                 </p>
                 {potentialMatches.map((opp, i) => (
                   <div key={opp._id || i} className="bg-white rounded-xl border border-amber-200 border-l-4 border-l-amber-400 shadow-sm p-5 hover:shadow-md transition-all">

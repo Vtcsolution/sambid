@@ -183,7 +183,7 @@ function UploadModal({ onClose, onSuccess, showToast }) {
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">Document Name</label>
           <input value={name} onChange={e => setName(e.target.value)}
-            placeholder="e.g. Q3 Proposal Draft — DoD SBIR"
+            placeholder="e.g. Q3 Proposal Draft - DoD SBIR"
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
         </div>
 

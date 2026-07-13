@@ -109,7 +109,7 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4">
       <SEOHead
-        title="Forgot Password — Reset Your Sambid Account"
+        title="Forgot Password - Reset Your Sambid Account"
         description="Reset your Sambid password to regain access to your federal contract opportunity dashboard and SAM.gov alerts."
         canonical="https://sambid.co/forgot-password"
         noindex={true}

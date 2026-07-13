@@ -37,10 +37,10 @@ const SOURCE_CFG = {
   sam:         { label: 'SAM.gov',     color: 'bg-blue-100 text-blue-700' },
 };
 const PHASE_LABELS = {
-  phase1_usa:  'Phase 1 — USASpending.gov',
-  phase1_fpds: 'Phase 1 — FPDS.gov',
-  phase1_sam:  'Phase 1 — SAM.gov',
-  phase2:      'Phase 2 — Enriching contacts',
+  phase1_usa:  'Phase 1 - USASpending.gov',
+  phase1_fpds: 'Phase 1 - FPDS.gov',
+  phase1_sam:  'Phase 1 - SAM.gov',
+  phase2:      'Phase 2 - Enriching contacts',
   done:        'Sync complete',
 };
 const PHASE_COLORS = {
@@ -192,9 +192,9 @@ const PAGE_SIZE_OPTIONS = [20, 50, 100, 500, 1000];
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function AdminProspects() {
   const { can, isAdmin } = useAdminPermission();
-  // View the prospects list — support users with content permission can see data
+  // View the prospects list - support users with content permission can see data
   const canContent   = can('content');
-  // Destructive / heavy operations (sync, enrich, clear, export) — admin/super_admin only
+  // Destructive / heavy operations (sync, enrich, clear, export) - admin/super_admin only
   const canManage    = isAdmin;
   const canAITools   = isAdmin && can('aiTools');  // AI Website Finder
   const canCampaigns = can('campaigns');            // Email Outreach
@@ -225,7 +225,7 @@ export default function AdminProspects() {
         setStats(data.data);
         setSyncState(data.data.syncState || null);
       }
-    } catch { /* network error — ignore */ }
+    } catch { /* network error - ignore */ }
     finally { setStatsLoading(false); }
   }, []);
 
@@ -366,7 +366,7 @@ export default function AdminProspects() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Federal Prospects<AdminHowItWorks page="prospects" /></h1>
-          <p className="text-sm text-gray-500 mt-0.5">All federal awardees — small, medium &amp; large — from USASpending &amp; SAM.gov</p>
+          <p className="text-sm text-gray-500 mt-0.5">All federal awardees - small, medium &amp; large - from USASpending &amp; SAM.gov</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {canManage && (
@@ -400,7 +400,7 @@ export default function AdminProspects() {
             )
           )}
 
-          {/* Export — admin/super_admin only */}
+          {/* Export - admin/super_admin only */}
           {canManage && (
             <div className="relative group">
               <button className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium">
@@ -415,7 +415,7 @@ export default function AdminProspects() {
             </div>
           )}
 
-          {/* Data is protected — no bulk delete */}
+          {/* Data is protected - no bulk delete */}
           {canCampaigns && (
             <button onClick={() => navigate('/admin/prospect-outreach')}
               className="flex items-center gap-1.5 px-3 py-2 bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">
@@ -432,7 +432,7 @@ export default function AdminProspects() {
       {/* ── Sync progress ── */}
       <SyncProgress state={syncState} />
 
-      {/* ── AI finder — only shown when aiTools permission is granted ── */}
+      {/* ── AI finder - only shown when aiTools permission is granted ── */}
       {canAITools && <AIFinderCard state={aiState} onStart={handleStartAI} onStop={handleStopAI} />}
 
       {/* ── Stats ── */}
@@ -630,7 +630,7 @@ export default function AdminProspects() {
                     {/* Company */}
                     <td className="px-4 py-3">
                       <div className="max-w-52">
-                        <p className="font-medium text-gray-900 truncate">{p.companyName || '—'}</p>
+                        <p className="font-medium text-gray-900 truncate">{p.companyName || '-'}</p>
                         <div className="flex flex-wrap gap-1 mt-0.5">
                           {p.uei   && <span className="text-xs text-gray-400">UEI: {p.uei.slice(0,8)}…</span>}
                           {p.state && <span className="flex items-center gap-0.5 text-xs text-gray-400"><MapPin className="w-2.5 h-2.5"/>{p.state}{p.city ? `, ${p.city}` : ''}</span>}
@@ -660,7 +660,7 @@ export default function AdminProspects() {
                           </a>
                           <span className={`text-xs px-1.5 py-0.5 rounded-full mt-0.5 inline-block ${webCfg.color}`}>{webCfg.label}</span>
                         </div>
-                      ) : <span className="text-gray-300 text-xs">—</span>}
+                      ) : <span className="text-gray-300 text-xs">-</span>}
                     </td>
                     {/* Email */}
                     <td className="px-4 py-3">
@@ -670,13 +670,13 @@ export default function AdminProspects() {
                           {p.contactPersonName && <p className="text-xs text-gray-400 truncate">{p.contactPersonName}</p>}
                           {p.isGovEmail && <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">Gov</span>}
                         </div>
-                      ) : <span className="text-gray-300 text-xs">—</span>}
+                      ) : <span className="text-gray-300 text-xs">-</span>}
                     </td>
                     {/* Phone */}
                     <td className="px-4 py-3">
                       {p.primaryPhone
                         ? <span className="text-xs text-gray-700">{p.primaryPhone}</span>
-                        : <span className="text-gray-300 text-xs">—</span>}
+                        : <span className="text-gray-300 text-xs">-</span>}
                     </td>
                     {/* Award */}
                     <td className="px-4 py-3">
@@ -732,7 +732,7 @@ export default function AdminProspects() {
                             </a>
                           </>
                         )}
-                        {/* Delete disabled — prospect data is protected */}
+                        {/* Delete disabled - prospect data is protected */}
                       </div>
                     </td>
                   </tr>

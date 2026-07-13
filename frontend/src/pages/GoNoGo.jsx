@@ -117,7 +117,7 @@ export default function GoNoGo() {
               <HowItWorks
                 title="Go/No-Go Decision"
                 steps={[
-                  { title: 'Select an opportunity', description: 'Choose from your saved opportunities or feed — all contract data is loaded automatically' },
+                  { title: 'Select an opportunity', description: 'Choose from your saved opportunities or feed - all contract data is loaded automatically' },
                   { title: 'AI fetches real data', description: 'Pulls competitors from USASpending, your company profile (UEI, certs, past wins), and full SOW text' },
                   { title: '10-factor scoring matrix', description: 'Each factor scored 1-10 with evidence: NAICS match, set-aside, past performance, competition, pricing, timeline, capacity, agency relationship' },
                   { title: 'GO / NO-GO / CONDITIONAL', description: 'Clear recommendation with win probability, pricing intelligence, action plan with deadlines, and alternatives if NO-GO' },
@@ -136,7 +136,7 @@ export default function GoNoGo() {
                 </ul>
               </HowItWorks>
             </div>
-            <p className="text-gray-500 text-sm">Select an opportunity — AI analyzes with real competitor data, pricing history, and your company profile.</p>
+            <p className="text-gray-500 text-sm">Select an opportunity - AI analyzes with real competitor data, pricing history, and your company profile.</p>
           </div>
         </div>
 
@@ -176,7 +176,7 @@ export default function GoNoGo() {
                     <button onClick={() => { setSelectedOpp(null); setResult(''); }} className="text-xs text-red-500 hover:underline shrink-0 ml-2">Change</button>
                   </div>
                   <div className="mt-2 flex items-center gap-1.5 text-xs text-green-700">
-                    <CheckCircle className="w-3.5 h-3.5" /> Full opportunity data will be sent to AI — description, contacts, dates, attachments
+                    <CheckCircle className="w-3.5 h-3.5" /> Full opportunity data will be sent to AI - description, contacts, dates, attachments
                   </div>
                 </div>
               ) : (

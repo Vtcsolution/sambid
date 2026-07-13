@@ -203,15 +203,15 @@ export default function AdminHybridFetch() {
 
           <div className="grid grid-cols-3 gap-3 mb-4 text-center">
             <div className="bg-blue-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-blue-700">{(bd?.fromApi ?? '—').toLocaleString()}</p>
+              <p className="text-lg font-bold text-blue-700">{(bd?.fromApi ?? '-').toLocaleString()}</p>
               <p className="text-xs text-gray-500">Total records</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-blue-700">{bd?.todayApi ?? '—'}</p>
+              <p className="text-lg font-bold text-blue-700">{bd?.todayApi ?? '-'}</p>
               <p className="text-xs text-gray-500">Today</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-blue-700">{bd?.apiFetch?.totalRuns ?? '—'}</p>
+              <p className="text-lg font-bold text-blue-700">{bd?.apiFetch?.totalRuns ?? '-'}</p>
               <p className="text-xs text-gray-500">Total runs</p>
             </div>
           </div>
@@ -234,7 +234,7 @@ export default function AdminHybridFetch() {
             onClick={handleApiTest}
             disabled={apiFetching || apiTesting || bd?.apiFetch?.isFetching}
             className="w-full flex items-center justify-center gap-2 py-1.5 mt-2 bg-amber-50 border border-amber-300 text-amber-700 text-xs font-semibold rounded-lg hover:bg-amber-100 disabled:opacity-60 transition"
-            title="Each click fetches the next 10 records — costs 1 API call per click"
+            title="Each click fetches the next 10 records - costs 1 API call per click"
           >
             {apiTesting
               ? <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Fetching...</>
@@ -259,15 +259,15 @@ export default function AdminHybridFetch() {
 
           <div className="grid grid-cols-3 gap-3 mb-4 text-center">
             <div className="bg-purple-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-purple-700">{(bd?.fromBulk ?? '—').toLocaleString()}</p>
+              <p className="text-lg font-bold text-purple-700">{(bd?.fromBulk ?? '-').toLocaleString()}</p>
               <p className="text-xs text-gray-500">Total records</p>
             </div>
             <div className="bg-purple-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-purple-700">{bd?.todayBulk ?? '—'}</p>
+              <p className="text-lg font-bold text-purple-700">{bd?.todayBulk ?? '-'}</p>
               <p className="text-xs text-gray-500">Today</p>
             </div>
             <div className="bg-purple-50 rounded-lg p-2">
-              <p className="text-lg font-bold text-purple-700">{bd?.bulkFetch?.lastRunPages ?? '—'}</p>
+              <p className="text-lg font-bold text-purple-700">{bd?.bulkFetch?.lastRunPages ?? '-'}</p>
               <p className="text-xs text-gray-500">Last pages</p>
             </div>
           </div>
@@ -290,7 +290,7 @@ export default function AdminHybridFetch() {
             onClick={handleBulkTest}
             disabled={bulkRunning || bulkTesting || bd?.bulkFetch?.isRunning}
             className="w-full flex items-center justify-center gap-2 py-1.5 mt-2 bg-amber-50 border border-amber-300 text-amber-700 text-xs font-semibold rounded-lg hover:bg-amber-100 disabled:opacity-60 transition"
-            title="Each click fetches the next 10 records from bulk range — costs 1 API call per click"
+            title="Each click fetches the next 10 records from bulk range - costs 1 API call per click"
           >
             {bulkTesting
               ? <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Fetching...</>
@@ -307,7 +307,7 @@ export default function AdminHybridFetch() {
           <p className="text-xs text-gray-600 mt-0.5">
             Both pipelines write to the same MongoDB collection using <code className="bg-green-100 px-1 rounded">sourceId</code> (SAM.gov's
             unique <em>noticeId / solicitationNumber</em>) as the upsert key with a unique index.
-            If the API and bulk both see the same opportunity, MongoDB merges them into one record — the
+            If the API and bulk both see the same opportunity, MongoDB merges them into one record - the
             first pipeline to fetch it sets <code className="bg-green-100 px-1 rounded">fetchSource</code>,
             the second just updates the fields. Total unique records:{' '}
             <strong>{(bd?.totalUnique ?? 0).toLocaleString()}</strong>.
@@ -421,10 +421,10 @@ export default function AdminHybridFetch() {
                         <span className="text-xs font-mono bg-gray-100 px-2 py-0.5 rounded">{opp.naicsCode}</span>
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-500">
-                        {opp.dueDate ? new Date(opp.dueDate).toLocaleDateString() : '—'}
+                        {opp.dueDate ? new Date(opp.dueDate).toLocaleDateString() : '-'}
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-400">
-                        {opp.lastFetched ? new Date(opp.lastFetched).toLocaleString() : '—'}
+                        {opp.lastFetched ? new Date(opp.lastFetched).toLocaleString() : '-'}
                       </td>
                       <td className="px-4 py-3">
                         {(opp.url && opp.url !== '#') || opp.sourceId ? (

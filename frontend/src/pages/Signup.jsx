@@ -275,7 +275,7 @@ export default function Signup({ setIsAuthenticated, setUser }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 py-10 sm:py-12 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Sign Up Free — Start Your Federal Contract Trial"
+        title="Sign Up Free - Start Your Federal Contract Trial"
         description="Create your free Sambid account and start receiving AI-matched federal contract opportunities from SAM.gov in minutes. 7-day free trial, no credit card required."
         keywords="sign up federal contracting tool, create account SAM.gov alerts, free federal contract notifications, register Sambid"
         canonical="https://sambid.co/signup"
@@ -287,11 +287,11 @@ export default function Signup({ setIsAuthenticated, setUser }) {
               <span className="text-white font-bold text-base">S</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-              Sambid Notify
+              Sambid
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Create your account</h1>
-          <p className="text-sm sm:text-base text-gray-500">Free trial — no credit card required</p>
+          <p className="text-sm sm:text-base text-gray-500">Free trial - no credit card required</p>
         </div>
 
         <Card className="shadow-xl">
@@ -416,7 +416,7 @@ export default function Signup({ setIsAuthenticated, setUser }) {
                   </div>
                 </div>
 
-                {/* Support referral banner — shown when URL has ?supportRef= */}
+                {/* Support referral banner - shown when URL has ?supportRef= */}
                 {formData.supportRef && (
                   <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3">
                     <span className="text-lg">🎉</span>
@@ -429,7 +429,7 @@ export default function Signup({ setIsAuthenticated, setUser }) {
                   </div>
                 )}
 
-                {/* Referral Code — only shown when NOT a support referral */}
+                {/* Referral Code - only shown when NOT a support referral */}
                 {!formData.supportRef && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">

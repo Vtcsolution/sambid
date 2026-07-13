@@ -14,14 +14,14 @@ import SambidLogo from './SambidLogo';
 const WHATS_NEW = {
   '/ai-predictions': [
     { id: 'pred-1', date: 'Jun 2025', title: 'Win Probability Scoring', desc: 'AI scores each contract 0–100% based on your NAICS codes, past performance history, and competition density.' },
-    { id: 'pred-2', date: 'Jun 2025', title: 'Personalized Bid Strategy', desc: 'Get a custom 5-step action plan for each contract — written specifically for your company profile.' },
+    { id: 'pred-2', date: 'Jun 2025', title: 'Personalized Bid Strategy', desc: 'Get a custom 5-step action plan for each contract - written specifically for your company profile.' },
   ],
   '/proposal-builder': [
     { id: 'prop-1', date: 'Jun 2025', title: 'Full 7-Section Proposals', desc: 'AI now writes complete, submission-ready proposals: Executive Summary, Technical Approach, Management Plan, Past Performance, Price Strategy, and more.' },
     { id: 'prop-2', date: 'Jun 2025', title: 'Agency-Specific Language', desc: 'Proposals auto-include agency evaluation criteria and compliance language for the specific solicitation.' },
   ],
   '/sources-sought': [
-    { id: 'ss-1', date: 'Jun 2025', title: 'Pre-RFP Capability Responses', desc: 'Generate compliant responses to Sources Sought / RFIs before the RFP drops — get on the agency\'s radar early.' },
+    { id: 'ss-1', date: 'Jun 2025', title: 'Pre-RFP Capability Responses', desc: 'Generate compliant responses to Sources Sought / RFIs before the RFP drops - get on the agency\'s radar early.' },
     { id: 'ss-2', date: 'Jun 2025', title: 'Automatic Compliance Check', desc: 'AI flags missing required elements and suggests improvements before you submit.' },
   ],
   '/capability-statement': [
@@ -30,16 +30,16 @@ const WHATS_NEW = {
   ],
   '/rfp-analyzer': [
     { id: 'rfp-1', date: 'Jun 2025', title: 'Deep RFP Breakdown', desc: 'Paste any solicitation and get instant analysis: key requirements, evaluation factors, hidden risks, and a bid recommendation.' },
-    { id: 'rfp-2', date: 'Jun 2025', title: 'Auto Compliance Checklist', desc: 'Generates a checklist of every requirement you must address — never miss a mandatory section.' },
+    { id: 'rfp-2', date: 'Jun 2025', title: 'Auto Compliance Checklist', desc: 'Generates a checklist of every requirement you must address - never miss a mandatory section.' },
   ],
   '/go-no-go': [
-    { id: 'gng-1', date: 'Jun 2025', title: 'Go/No-Go Decision Matrix', desc: 'AI evaluates 12 factors — set-aside fit, incumbent presence, agency familiarity — and gives you a clear Bid / Don\'t Bid recommendation.' },
+    { id: 'gng-1', date: 'Jun 2025', title: 'Go/No-Go Decision Matrix', desc: 'AI evaluates 12 factors - set-aside fit, incumbent presence, agency familiarity - and gives you a clear Bid / Don\'t Bid recommendation.' },
   ],
   '/past-performance': [
     { id: 'pp-1', date: 'Jun 2025', title: 'SF-330 Citation Builder', desc: 'Store past contracts and auto-format them into SF-330 compliant citations ready to paste into any federal proposal.' },
   ],
   '/market-research': [
-    { id: 'mr-1', date: 'Jun 2025', title: 'Market Intelligence Dashboard', desc: 'See award trends, top agencies in your NAICS, typical award sizes, and competition density — all in one view.' },
+    { id: 'mr-1', date: 'Jun 2025', title: 'Market Intelligence Dashboard', desc: 'See award trends, top agencies in your NAICS, typical award sizes, and competition density - all in one view.' },
   ],
   '/teaming-finder': [
     { id: 'tf-1', date: 'Jun 2025', title: 'Smart Partner Matching', desc: 'Find companies with complementary capabilities, small business certifications, and proven agency relationships for teaming.' },
@@ -189,7 +189,7 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
   const plan = userProfile?.plan || localStorage.getItem('userPlan') || 'free';
   const isPro = ['pro', 'enterprise'].includes(plan);
 
-  // Workspace mode — filter sidebar to only allowed pages
+  // Workspace mode - filter sidebar to only allowed pages
   const workspaceSession = getWorkspaceSession();
   const filterWorkspace = (items) => {
     if (!workspaceSession) return items;
@@ -268,7 +268,7 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
           <div className="flex items-center justify-between">
             <Link to="/dashboard" onClick={onClose} className="flex items-center space-x-2">
               <SambidLogo size={28} />
-              <span className="text-xl font-bold text-white">Sambid Notify</span>
+              <span className="text-xl font-bold text-white">Sambid</span>
             </Link>
             <button onClick={onClose} className="md:hidden text-white hover:text-gray-200">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -431,7 +431,7 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
             </div>
           )}
 
-          {/* My Account — hidden in workspace mode */}
+          {/* My Account - hidden in workspace mode */}
           {!workspaceSession && (
             <div className="px-3 pt-3">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">My Account</p>
@@ -472,7 +472,7 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
             <span className="font-medium text-sm">Logout</span>
           </button>
           )}
-          <p className="text-center text-xs text-gray-400 mt-3">© 2024 Sambid Notify. All rights reserved.</p>
+          <p className="text-center text-xs text-gray-400 mt-3">© 2024 Sambid. All rights reserved.</p>
         </div>
       </aside>
     </>

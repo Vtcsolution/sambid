@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2, Bot, User, MinusCircle } from 'lucide-
 import { contactAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
 
-const WELCOME = "Hi! I'm Sambid Notify's AI support assistant 👋\n\nI can help you with:\n• Plan features & pricing\n• How contract matching works\n• Account & billing questions\n• Federal contracting basics\n\nWhat can I help you with today?";
+const WELCOME = "Hi! I'm Sambid's AI support assistant 👋\n\nI can help you with:\n• Plan features & pricing\n• How contract matching works\n• Account & billing questions\n• Federal contracting basics\n\nWhat can I help you with today?";
 
 function Message({ msg }) {
   const isBot = msg.role === 'assistant';
@@ -88,7 +88,7 @@ export default function SupportChatbot() {
     const userMsg = { role: 'user', content: text };
     const next = [...messages, userMsg];
     setMessages(next);        // update UI with user message
-    dispatchChat(next, text); // fire API call — outside the updater, fires exactly once
+    dispatchChat(next, text); // fire API call - outside the updater, fires exactly once
   };
 
   const dispatchChat = async (currentMessages, text) => {
@@ -139,7 +139,7 @@ export default function SupportChatbot() {
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-white text-sm">Sambid Notify Support</p>
+              <p className="font-semibold text-white text-sm">Sambid Support</p>
               <p className="text-indigo-200 text-xs">AI assistant · Usually instant</p>
             </div>
             <button onClick={() => setMinimized(v => !v)} className="text-indigo-200 hover:text-white transition">
@@ -171,7 +171,7 @@ export default function SupportChatbot() {
                 <div ref={bottomRef} />
               </div>
 
-              {/* Quick replies — only show at start */}
+              {/* Quick replies - only show at start */}
               {messages.length <= 1 && (
                 <div className="px-4 pb-2 flex flex-wrap gap-1.5">
                   {QUICK.map(q => (

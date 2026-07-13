@@ -14,7 +14,7 @@ export default function AdminLayout() {
     const token = localStorage.getItem('adminToken');
     if (!token) { navigate('/admin/login'); return; }
 
-    // Verify token is still valid and refresh permissions — 401 is handled by the adminApi interceptor
+    // Verify token is still valid and refresh permissions - 401 is handled by the adminApi interceptor
     adminAuthAPI.profile()
       .then(res => {
         const a = res.data.admin;

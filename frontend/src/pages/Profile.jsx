@@ -1,5 +1,5 @@
 // frontend/src/pages/Profile.jsx
-// Read-only profile overview — edits go through /settings
+// Read-only profile overview - edits go through /settings
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -101,11 +101,11 @@ export default function Profile() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-500">Company</span>
-                <span className="font-medium text-gray-900">{user.businessName || '—'}</span>
+                <span className="font-medium text-gray-900">{user.businessName || '-'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Business type</span>
-                <span className="font-medium text-gray-900 capitalize">{user.businessType?.replace('_', ' ') || '—'}</span>
+                <span className="font-medium text-gray-900 capitalize">{user.businessType?.replace('_', ' ') || '-'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Member since</span>
@@ -172,7 +172,7 @@ export default function Profile() {
                   return (
                     <div key={code} className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
                       <span className="font-mono font-bold text-indigo-700 text-sm">{code}</span>
-                      {entry && <span className="text-xs text-gray-500">{entry.label.split(' — ')[1]?.substring(0, 35)}</span>}
+                      {entry && <span className="text-xs text-gray-500">{entry.label.split(' - ')[1]?.substring(0, 35)}</span>}
                     </div>
                   );
                 })}

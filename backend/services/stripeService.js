@@ -131,7 +131,7 @@ export const createCheckoutSessionForInquiry = async ({ inquiryId, email, planNa
           currency: 'usd',
           unit_amount: Math.round(amount * 100),
           product_data: {
-            name: `Sambid Notify — ${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan`,
+            name: `Sambid — ${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan`,
             description: `${billingCycle === 'yearly' ? 'Annual' : 'Monthly'} subscription`,
           },
         },
@@ -178,7 +178,7 @@ export const createCheckoutSessionForCommissionInvoice = async ({ invoiceId, ema
           currency: 'usd',
           unit_amount: Math.round(amount * 100),
           product_data: {
-            name: 'Sambid Notify — Managed Service Invoice',
+            name: 'Sambid — Managed Service Invoice',
             description,
           },
         },

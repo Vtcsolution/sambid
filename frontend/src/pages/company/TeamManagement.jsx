@@ -273,10 +273,10 @@ export default function TeamManagement() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">Team Members
                 <HowItWorks title="Team Management" steps={[
-                  { title: 'Invite team members', description: 'Add people by email — they get an invite to join your company workspace' },
-                  { title: 'Assign roles', description: 'Owner, Admin, Capture Manager, Proposal Writer, Reviewer, or Member — each role has different page access' },
+                  { title: 'Invite team members', description: 'Add people by email - they get an invite to join your company workspace' },
+                  { title: 'Assign roles', description: 'Owner, Admin, Capture Manager, Proposal Writer, Reviewer, or Member - each role has different page access' },
                   { title: 'Page-level access control', description: 'Control which pages each member can see (opportunities, proposals, pipeline, etc.)' },
-                  { title: 'Workspace users', description: 'Create workspace logins with restricted access — separate from main SamBid accounts' },
+                  { title: 'Workspace users', description: 'Create workspace logins with restricted access - separate from main SamBid accounts' },
                 ]} dataUsed={['Your Company Workspace', 'Member Invites']} >
                   <p className="text-sm font-semibold text-gray-700 mt-2">Connected to:</p>
                   <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
@@ -357,11 +357,11 @@ export default function TeamManagement() {
             <div className="bg-gray-50 rounded-xl p-3 text-xs text-gray-500">
               <p className="font-semibold mb-1">Role Descriptions:</p>
               <ul className="space-y-0.5">
-                <li><strong>Admin</strong> — Full access: invite/remove members, edit company</li>
-                <li><strong>Capture Manager</strong> — Manage bid pipeline, assign opportunities</li>
-                <li><strong>Proposal Writer</strong> — Write and edit proposals</li>
-                <li><strong>Reviewer</strong> — View and comment on proposals and documents</li>
-                <li><strong>Member</strong> — View shared content only</li>
+                <li><strong>Admin</strong> - Full access: invite/remove members, edit company</li>
+                <li><strong>Capture Manager</strong> - Manage bid pipeline, assign opportunities</li>
+                <li><strong>Proposal Writer</strong> - Write and edit proposals</li>
+                <li><strong>Reviewer</strong> - View and comment on proposals and documents</li>
+                <li><strong>Member</strong> - View shared content only</li>
               </ul>
             </div>
           </div>
@@ -507,7 +507,7 @@ export default function TeamManagement() {
 
               {/* Page permissions */}
               <div>
-                <p className="text-xs font-semibold text-gray-700 mb-2">Allowed Pages <span className="text-gray-400 font-normal">— only checked pages will be visible</span></p>
+                <p className="text-xs font-semibold text-gray-700 mb-2">Allowed Pages <span className="text-gray-400 font-normal">- only checked pages will be visible</span></p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                   {ALL_PAGES.map(p => (
                     <label key={p.key} className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border cursor-pointer text-xs transition ${wsForm.allowedPages.includes(p.key) ? 'bg-indigo-50 border-indigo-300 text-indigo-700 font-medium' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>

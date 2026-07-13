@@ -217,7 +217,7 @@ function EditModal({ plan, onClose, onSaved }) {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  {form.dailyLimit > 0 ? `${form.dailyLimit} matches/day — only applies to the "free" plan (covers Trial + Free)` : 'Not applicable'}
+                  {form.dailyLimit > 0 ? `${form.dailyLimit} matches/day - only applies to the "free" plan (covers Trial + Free)` : 'Not applicable'}
                 </p>
               </div>
             </div>
@@ -268,7 +268,7 @@ function EditModal({ plan, onClose, onSaved }) {
                   <button
                     type="button"
                     onClick={() => toggleFeature(i)}
-                    title={feature.included ? 'Included — click to exclude' : 'Excluded — click to include'}
+                    title={feature.included ? 'Included - click to exclude' : 'Excluded - click to include'}
                     className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-colors ${
                       feature.included
                         ? 'bg-green-500 border-green-500 text-white'
@@ -293,7 +293,7 @@ function EditModal({ plan, onClose, onSaved }) {
                 </div>
               ))}
               {form.features.length === 0 && (
-                <p className="text-xs text-gray-400 text-center py-3">No features yet — click "Add Feature" to add one.</p>
+                <p className="text-xs text-gray-400 text-center py-3">No features yet - click "Add Feature" to add one.</p>
               )}
             </div>
           </div>
@@ -685,7 +685,7 @@ export default function AdminPlans() {
                   {pct !== null && (
                     <div className="bg-green-50 border border-green-100 rounded-lg px-3 py-1.5 text-center">
                       <p className="text-xs text-green-700 font-semibold">
-                        Save {pct}% yearly — customer saves ${annualIfMonthly - plan.priceYearly}/yr
+                        Save {pct}% yearly - customer saves ${annualIfMonthly - plan.priceYearly}/yr
                       </p>
                     </div>
                   )}
@@ -792,21 +792,21 @@ export default function AdminPlans() {
                         </div>
                       </td>
                       <td className="px-6 py-3 text-right font-medium text-gray-800">
-                        {plan.priceMonthly === 0 ? '—' : `$${plan.priceMonthly}/mo`}
+                        {plan.priceMonthly === 0 ? '-' : `$${plan.priceMonthly}/mo`}
                       </td>
                       <td className="px-6 py-3 text-right font-bold text-indigo-700">
-                        {plan.priceYearly === 0 ? '—' : `$${plan.priceYearly}/yr`}
+                        {plan.priceYearly === 0 ? '-' : `$${plan.priceYearly}/yr`}
                       </td>
                       <td className="px-6 py-3 text-right text-gray-500">
-                        {plan.priceYearly > 0 ? `~$${Math.round(plan.priceYearly / 12)}/mo` : '—'}
+                        {plan.priceYearly > 0 ? `~$${Math.round(plan.priceYearly / 12)}/mo` : '-'}
                       </td>
                       <td className="px-6 py-3 text-right">
                         {pct ? (
                           <span className="text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">{pct}% off</span>
-                        ) : '—'}
+                        ) : '-'}
                       </td>
                       <td className="px-6 py-3 text-right">
-                        {saves > 0 ? <span className="text-green-700 font-medium">${saves}/yr</span> : '—'}
+                        {saves > 0 ? <span className="text-green-700 font-medium">${saves}/yr</span> : '-'}
                       </td>
                       <td className="px-6 py-3 text-center">
                         {plan.isActive

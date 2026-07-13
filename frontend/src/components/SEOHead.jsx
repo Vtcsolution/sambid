@@ -5,17 +5,17 @@ const SITE_URL  = 'https://sambid.co';
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 
 /**
- * SEOHead — drop this into any page to set title, meta, OG, Twitter, canonical.
+ * SEOHead - drop this into any page to set title, meta, OG, Twitter, canonical.
  *
  * Props:
- *   title        — page title (shown in tab + Google result)
- *   description  — 150-160 chars, shown in Google snippet
- *   keywords     — comma-separated keyword string
- *   canonical    — full URL for this page (defaults to SITE_URL)
- *   image        — OG image URL (defaults to /og-image.png)
- *   noindex      — true → tells Google not to index (use on dashboard/admin)
- *   type         — OG type: 'website' (default) | 'article'
- *   jsonLd       — optional JSON-LD object (pass already-built schema)
+ *   title        - page title (shown in tab + Google result)
+ *   description  - 150-160 chars, shown in Google snippet
+ *   keywords     - comma-separated keyword string
+ *   canonical    - full URL for this page (defaults to SITE_URL)
+ *   image        - OG image URL (defaults to /og-image.png)
+ *   noindex      - true → tells Google not to index (use on dashboard/admin)
+ *   type         - OG type: 'website' (default) | 'article'
+ *   jsonLd       - optional JSON-LD object (pass already-built schema)
  */
 export default function SEOHead({
   title,
@@ -27,7 +27,7 @@ export default function SEOHead({
   type = 'website',
   jsonLd,
 }) {
-  const fullTitle    = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Federal Contract Opportunity Alerts`;
+  const fullTitle    = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} - Federal Contract Opportunity Alerts`;
   const canonicalUrl = canonical || SITE_URL;
 
   return (

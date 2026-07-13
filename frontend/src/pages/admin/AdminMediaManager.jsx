@@ -7,28 +7,28 @@ const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
 const HOME_SLOTS = [
   { key: 'hero',     label: 'Hero Screenshot',  types: ['image'] },
-  { key: 'phase_01', label: 'Phase 01 — Find Every Opportunity',    types: ['video','image'] },
-  { key: 'phase_02', label: 'Phase 02 — Search & Discover',         types: ['video','image'] },
-  { key: 'phase_03', label: 'Phase 03 — Deadline Calendar',         types: ['video','image'] },
-  { key: 'phase_04', label: 'Phase 04 — AI Predictions',            types: ['video','image'] },
-  { key: 'phase_05', label: 'Phase 05 — Teaming Finder',            types: ['video','image'] },
-  { key: 'phase_06', label: 'Phase 06 — Past Performance',          types: ['video','image'] },
-  { key: 'phase_07', label: 'Phase 07 — AI Proposal Writing',       types: ['video','image'] },
+  { key: 'phase_01', label: 'Phase 01 - Find Every Opportunity',    types: ['video','image'] },
+  { key: 'phase_02', label: 'Phase 02 - Search & Discover',         types: ['video','image'] },
+  { key: 'phase_03', label: 'Phase 03 - Deadline Calendar',         types: ['video','image'] },
+  { key: 'phase_04', label: 'Phase 04 - AI Predictions',            types: ['video','image'] },
+  { key: 'phase_05', label: 'Phase 05 - Teaming Finder',            types: ['video','image'] },
+  { key: 'phase_06', label: 'Phase 06 - Past Performance',          types: ['video','image'] },
+  { key: 'phase_07', label: 'Phase 07 - AI Proposal Writing',       types: ['video','image'] },
 ];
 
 const FEATURE_SLOTS = [
-  { key: 'feature_01', label: 'Feature 01 — Opportunity Discovery' },
-  { key: 'feature_02', label: 'Feature 02 — Smart Alerts' },
-  { key: 'feature_03', label: 'Feature 03 — Deadline Calendar' },
-  { key: 'feature_04', label: 'Feature 04 — AI Win Predictions' },
-  { key: 'feature_05', label: 'Feature 05 — AI Proposal Writer' },
-  { key: 'feature_06', label: 'Feature 06 — RFP Analyzer' },
-  { key: 'feature_07', label: 'Feature 07 — Past Performance Intel' },
-  { key: 'feature_08', label: 'Feature 08 — Teaming Finder' },
-  { key: 'feature_09', label: 'Feature 09 — Market Research' },
-  { key: 'feature_10', label: 'Feature 10 — Capability Statement' },
-  { key: 'feature_11', label: 'Feature 11 — Bid Pipeline' },
-  { key: 'feature_12', label: 'Feature 12 — Contract Vehicles' },
+  { key: 'feature_01', label: 'Feature 01 - Opportunity Discovery' },
+  { key: 'feature_02', label: 'Feature 02 - Smart Alerts' },
+  { key: 'feature_03', label: 'Feature 03 - Deadline Calendar' },
+  { key: 'feature_04', label: 'Feature 04 - AI Win Predictions' },
+  { key: 'feature_05', label: 'Feature 05 - AI Proposal Writer' },
+  { key: 'feature_06', label: 'Feature 06 - RFP Analyzer' },
+  { key: 'feature_07', label: 'Feature 07 - Past Performance Intel' },
+  { key: 'feature_08', label: 'Feature 08 - Teaming Finder' },
+  { key: 'feature_09', label: 'Feature 09 - Market Research' },
+  { key: 'feature_10', label: 'Feature 10 - Capability Statement' },
+  { key: 'feature_11', label: 'Feature 11 - Bid Pipeline' },
+  { key: 'feature_12', label: 'Feature 12 - Contract Vehicles' },
 ].map(s => ({ ...s, types: ['image'] }));
 
 function formatSize(bytes) {
@@ -174,7 +174,7 @@ function SlotCard({ slot, page, media, onRefresh }) {
         >
           <div className="max-w-3xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-              <p className="font-semibold text-gray-900 text-sm">{slot.label} — {preview.type}</p>
+              <p className="font-semibold text-gray-900 text-sm">{slot.label} - {preview.type}</p>
               <button onClick={() => setPreview(null)} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
             </div>
             <div className="p-4">
@@ -292,8 +292,8 @@ export default function AdminMediaManager() {
         <div className="text-sm text-blue-700">
           <p className="font-semibold mb-0.5">Storage notes</p>
           <ul className="space-y-0.5 text-blue-600">
-            <li>• Videos stored in <code className="bg-blue-100 px-1 rounded">uploads/videos/</code> — max 300 MB per file</li>
-            <li>• Images stored in <code className="bg-blue-100 px-1 rounded">uploads/images/</code> — max 300 MB per file</li>
+            <li>• Videos stored in <code className="bg-blue-100 px-1 rounded">uploads/videos/</code> - max 300 MB per file</li>
+            <li>• Images stored in <code className="bg-blue-100 px-1 rounded">uploads/images/</code> - max 300 MB per file</li>
             <li>• Uploading a new file for a slot automatically replaces the previous one</li>
             <li>• Changes appear on the public site immediately after upload</li>
           </ul>

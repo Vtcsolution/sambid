@@ -96,7 +96,7 @@ export default function WinningBidsAnalysis({ naicsCode, autoFetch = true }) {
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-emerald-600" />
-            Past Award Analysis — NAICS {naicsCode}
+            Past Award Analysis - NAICS {naicsCode}
           </h3>
           <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
             <CheckCircle className="w-3 h-3 text-gray-400" />

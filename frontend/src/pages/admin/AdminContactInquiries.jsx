@@ -202,7 +202,7 @@ function InquiryRow({ inquiry: initialInquiry, onUpdate }) {
               />
             </div>
           </div>
-          {/* ── Payment & Activation — gated flow ───────────────────────── */}
+          {/* ── Payment & Activation - gated flow ───────────────────────── */}
           {ACTIVATABLE_PLANS.includes(inquiry.planInterest) && !activated && status !== 'resolved' && (
             <div className="space-y-3">
 
@@ -237,7 +237,7 @@ function InquiryRow({ inquiry: initialInquiry, onUpdate }) {
                       ))}
                     </div>
 
-                    {/* Manual payment confirmation — admin/super_admin only */}
+                    {/* Manual payment confirmation - admin/super_admin only */}
                     {isAdmin && (
                       <div className="p-3 bg-white rounded-lg border border-amber-200">
                         <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1"><ShieldAlert className="w-3.5 h-3.5" /> Confirm Payment Received</p>
@@ -267,7 +267,7 @@ function InquiryRow({ inquiry: initialInquiry, onUpdate }) {
                 )}
               </div>
 
-              {/* Step 2: Activate Plan — admin/super_admin only */}
+              {/* Step 2: Activate Plan - admin/super_admin only */}
               {isAdmin && (
                 <div className={`rounded-xl border p-4 ${payConfirmed ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 opacity-60'}`}>
                   <p className="text-sm font-semibold text-gray-800 mb-1 flex items-center gap-1.5">
@@ -311,7 +311,7 @@ function InquiryRow({ inquiry: initialInquiry, onUpdate }) {
             </button>
             {saved && <span className="text-sm text-green-600 font-medium">Saved!</span>}
             <a
-              href={`mailto:${inquiry.email}?subject=Your Sambid Notify ${inquiry.planInterest} Inquiry`}
+              href={`mailto:${inquiry.email}?subject=Your Sambid ${inquiry.planInterest} Inquiry`}
               className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
             >
               Reply via Email

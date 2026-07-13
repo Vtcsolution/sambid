@@ -153,7 +153,7 @@ export const registerUser = async (req, res) => {
     createUserNotification(
       user._id,
       'account_created',
-      'Welcome to Sambid Notify! 🎉',
+      'Welcome to Sambid! 🎉',
       `Hi ${user.name || 'there'}, your account is ready. Start by setting up your contract alerts.`,
       '/dashboard'
     );

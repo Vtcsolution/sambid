@@ -99,8 +99,8 @@ export default function AdminPlatformHealth() {
                     <p className="text-sm font-medium text-gray-800">{api.name}</p>
                     <p className="text-xs text-gray-400">
                       HTTP {api.code}
-                      {api.code === 429 && ' — Rate limited (API is up, quota resets hourly)'}
-                      {api.code === 404 && ' — Endpoint not found'}
+                      {api.code === 429 && ' - Rate limited (API is up, quota resets hourly)'}
+                      {api.code === 404 && ' - Endpoint not found'}
                     </p>
                   </div>
                   <StatusBadge status={api.status} />

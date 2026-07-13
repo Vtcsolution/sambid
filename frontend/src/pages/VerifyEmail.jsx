@@ -30,7 +30,7 @@ export default function VerifyEmail() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <SEOHead title="Verify Email — Sambid" noindex={true} />
+      <SEOHead title="Verify Email - Sambid" noindex={true} />
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-10 text-center">
         {status === 'loading' && (
           <>

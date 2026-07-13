@@ -122,7 +122,7 @@ export function AICreditsBar({ feature, onCreditsLoaded }) {
         )}
         {!empty && low && (
           <p className="text-xs text-amber-600 mt-2">
-            Running low — resets {resetLabel}.{' '}
+            Running low - resets {resetLabel}.{' '}
             <button onClick={() => setShowTopup(true)} className="underline font-medium">Buy more credits</button>.
           </p>
         )}

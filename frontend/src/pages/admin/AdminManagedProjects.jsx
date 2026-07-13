@@ -22,7 +22,7 @@ async function api(path, method = 'GET', body) {
 }
 
 function fmt(n) { return n ? `$${Number(n).toLocaleString()}` : '$0'; }
-function fmtD(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'; }
+function fmtD(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'; }
 
 const STATUS_COLORS = {
   draft:           'bg-gray-100 text-gray-600',
@@ -102,7 +102,7 @@ function MilestoneForm({ initial, onSave, onCancel }) {
   );
 }
 
-// ── Milestone gov-payment recorder — drives commission billing ───────────────
+// ── Milestone gov-payment recorder - drives commission billing ───────────────
 function MilestoneGovPaymentForm({ projectId, milestoneId, onDone, onCancel }) {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
@@ -120,7 +120,7 @@ function MilestoneGovPaymentForm({ projectId, milestoneId, onDone, onCancel }) {
 
   return (
     <div className="mt-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-2">
-      <p className="text-xs font-semibold text-emerald-800">Record what the government paid for this milestone — commission will be auto-calculated and invoiced.</p>
+      <p className="text-xs font-semibold text-emerald-800">Record what the government paid for this milestone - commission will be auto-calculated and invoiced.</p>
       <div className="flex gap-2 flex-wrap">
         <input type="number" placeholder="Amount ($) *" value={amount} onChange={e => setAmount(e.target.value)} className="w-32 text-sm border border-emerald-300 rounded-lg px-2 py-1.5" />
         <input type="date" value={date} onChange={e => setDate(e.target.value)} className="text-sm border border-emerald-300 rounded-lg px-2 py-1.5" />
@@ -134,7 +134,7 @@ function MilestoneGovPaymentForm({ projectId, milestoneId, onDone, onCancel }) {
   );
 }
 
-// ── Project documents — contract, SOW, delivery confirmation uploads ─────────
+// ── Project documents - contract, SOW, delivery confirmation uploads ─────────
 function ProjectDocuments({ projectId, documents = [], onChanged }) {
   const [uploading, setUploading] = useState(false);
 
@@ -303,11 +303,11 @@ function ProjectDetail({ projectId, onClose, onRefresh }) {
             <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2"><FileText className="w-4 h-4" /> Contract Info</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div><span className="text-gray-500">Value:</span> <span className="font-semibold text-green-700">{fmt(project.contractValue)}</span></div>
-              <div><span className="text-gray-500">NAICS:</span> <span className="font-mono">{project.naicsCode || '—'}</span></div>
-              <div><span className="text-gray-500">Solicitation:</span> <span className="font-mono">{project.solicitationNumber || '—'}</span></div>
-              <div><span className="text-gray-500">Set-Aside:</span> {project.setAside || '—'}</div>
-              <div><span className="text-gray-500">Owner:</span> {project.owner?.name || '—'}</div>
-              <div><span className="text-gray-500">Company:</span> {project.company?.name || '—'}</div>
+              <div><span className="text-gray-500">NAICS:</span> <span className="font-mono">{project.naicsCode || '-'}</span></div>
+              <div><span className="text-gray-500">Solicitation:</span> <span className="font-mono">{project.solicitationNumber || '-'}</span></div>
+              <div><span className="text-gray-500">Set-Aside:</span> {project.setAside || '-'}</div>
+              <div><span className="text-gray-500">Owner:</span> {project.owner?.name || '-'}</div>
+              <div><span className="text-gray-500">Company:</span> {project.company?.name || '-'}</div>
             </div>
           </div>
 
@@ -345,7 +345,7 @@ function ProjectDetail({ projectId, onClose, onRefresh }) {
               <h3 className="text-sm font-semibold text-green-800 flex items-center gap-2 mb-2"><Award className="w-4 h-4" /> Selected Vendor</h3>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div><span className="text-green-700">Name:</span> <strong>{project.selectedVendor.name}</strong></div>
-                <div><span className="text-green-700">Company:</span> {project.selectedVendor.company || '—'}</div>
+                <div><span className="text-green-700">Company:</span> {project.selectedVendor.company || '-'}</div>
                 <div><span className="text-green-700">Email:</span> {project.selectedVendor.email}</div>
                 <div><span className="text-green-700">Quote:</span> <span className="font-semibold text-green-800">{fmt(project.selectedVendor.quoteAmount)}</span></div>
               </div>
@@ -463,14 +463,14 @@ function ProjectDetail({ projectId, onClose, onRefresh }) {
                 {project.progressNotes.slice().reverse().map((n, i) => (
                   <div key={i} className="text-xs text-indigo-700 flex items-start gap-2">
                     <span className="text-indigo-400 shrink-0">{fmtD(n.date)}</span>
-                    <span>{n.progress}% — {n.note}</span>
+                    <span>{n.progress}% - {n.note}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Government Payment — cumulative summary, driven by milestone-level recordings above */}
+          {/* Government Payment - cumulative summary, driven by milestone-level recordings above */}
           <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
             <h3 className="text-sm font-semibold text-emerald-800 mb-2 flex items-center gap-2"><DollarSign className="w-4 h-4" /> Government Payment (cumulative)</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -479,7 +479,7 @@ function ProjectDetail({ projectId, onClose, onRefresh }) {
               <div><span className="text-emerald-700">First received:</span> {fmtD(project.govPaymentReceivedDate)}</div>
               <div><span className="text-emerald-700">Total received:</span> <strong className="text-emerald-800">{fmt(project.govPaymentAmount)}</strong></div>
             </div>
-            <p className="text-xs text-emerald-700 mt-2">Use "Gov Paid?" on each milestone above to record payments — commission is calculated and invoiced automatically per milestone.</p>
+            <p className="text-xs text-emerald-700 mt-2">Use "Gov Paid?" on each milestone above to record payments - commission is calculated and invoiced automatically per milestone.</p>
           </div>
         </div>
       </div>
@@ -580,7 +580,7 @@ export default function AdminManagedProjects() {
                     <p className="text-xs text-gray-500">{p.projectNumber} · {p.agency}</p>
                   </td>
                   <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[p.status]}`}>{STATUS_LABELS[p.status]}</span></td>
-                  <td className="px-4 py-3 hidden md:table-cell text-xs">{p.selectedVendor?.name || <span className="text-gray-400">—</span>}</td>
+                  <td className="px-4 py-3 hidden md:table-cell text-xs">{p.selectedVendor?.name || <span className="text-gray-400">-</span>}</td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     <div className="flex items-center gap-2">
                       <div className="w-16 bg-gray-200 rounded-full h-1.5"><div className="bg-indigo-600 h-1.5 rounded-full" style={{ width: `${p.overallProgress}%` }} /></div>

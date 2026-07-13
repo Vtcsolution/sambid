@@ -35,7 +35,7 @@ const colorMap = {
 
 const PLATFORM_URL = 'https://sambid.co';
 
-// ── Segment template menus — each segment gets relevant, plan-appropriate options ──
+// ── Segment template menus - each segment gets relevant, plan-appropriate options ──
 // Upgrade path: free/trial → pro → enterprise (no higher)
 const SEGMENT_TEMPLATES = {
   trial:      [{ label: 'Trial Expiry',         type: 'expiry'    },
@@ -66,7 +66,7 @@ const SEGMENT_TEMPLATES = {
                { label: 'Monthly Newsletter',    type: 'newsletter'}],
 };
 
-// ── Core template builder — segment + type aware ──────────────────────────────
+// ── Core template builder - segment + type aware ──────────────────────────────
 // Rule: NEVER suggest a downgrade or same-tier "upgrade". Enterprise = top tier.
 function buildSmartTemplate(segment, user, type = 'default') {
   const firstName = (user?.name || '').split(' ')[0] || 'there';
@@ -80,32 +80,32 @@ function buildSmartTemplate(segment, user, type = 'default') {
     const urgency = days <= 1 ? 'today' : `in ${days} day${days !== 1 ? 's' : ''}`;
 
     if (type === 'feature') return {
-      subject: `${firstName}, here's everything your Sambid Notify trial gives you`,
+      subject: `${firstName}, here's everything your Sambid trial gives you`,
       body: `Hi ${firstName},
 
-You're on a free trial of Sambid Notify and we want to make sure you're getting the most out of it.
+You're on a free trial of Sambid and we want to make sure you're getting the most out of it.
 
 Here's what's available to you right now:
-• **Full contract search** — browse thousands of open federal solicitations
-• **AI Proposal Builder** — generate complete 7-section government proposals
-• **Capability Statement writer** — AI-crafted company profiles in minutes
-• **RFP Analyzer** — upload any RFP and get a full compliance checklist
-• **Deadline calendar** — never miss a submission date
-• **Go/No-Go scoring** — AI win-probability analysis on every opportunity
+• **Full contract search** - browse thousands of open federal solicitations
+• **AI Proposal Builder** - generate complete 7-section government proposals
+• **Capability Statement writer** - AI-crafted company profiles in minutes
+• **RFP Analyzer** - upload any RFP and get a full compliance checklist
+• **Deadline calendar** - never miss a submission date
+• **Go/No-Go scoring** - AI win-probability analysis on every opportunity
 
 Your trial ends ${urgency}. Upgrade to Pro to keep all of this permanently.
 
-→ Upgrade to Pro — $79/month: ${PLATFORM_URL}/pricing
+→ Upgrade to Pro - $79/month: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'lastchance') return {
-      subject: `Last chance — your Sambid Notify trial ends ${urgency}`,
+      subject: `Last chance - your Sambid trial ends ${urgency}`,
       body: `Hi ${firstName},
 
-This is your final reminder — your free trial ends ${urgency}.
+This is your final reminder - your free trial ends ${urgency}.
 
 After that, your account reverts to the Free plan with only 2 daily contract matches and no AI tools.
 
@@ -115,20 +115,20 @@ After that, your account reverts to the Free plan with only 2 daily contract mat
 • Real-time deadline alerts
 • Unlimited saved opportunities
 
-We're offering **20% off your first month** — but only until your trial expires.
+We're offering **20% off your first month** - but only until your trial expires.
 
 → Upgrade now with code TRIAL20: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → trial expiry
     return {
-      subject: `${firstName}, your Sambid Notify trial ends ${urgency} — keep your access`,
+      subject: `${firstName}, your Sambid trial ends ${urgency} - keep your access`,
       body: `Hi ${firstName},
 
-Your free trial of Sambid Notify expires ${urgency}.
+Your free trial of Sambid expires ${urgency}.
 
 Without upgrading, you'll lose access to:
 • Daily federal contract matches tailored to your NAICS codes
@@ -138,24 +138,24 @@ Without upgrading, you'll lose access to:
 
 Upgrade to Pro for just **$79/month** and never miss another federal contract opportunity.
 
-→ Keep your access — upgrade now: ${PLATFORM_URL}/pricing
+→ Keep your access - upgrade now: ${PLATFORM_URL}/pricing
 
 Use code **TRIAL20** for 20% off your first month.
 
-Reply to this email if you have any questions — we're happy to help.
+Reply to this email if you have any questions - we're happy to help.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // ── FREE ───────────────────────────────────────────────────────────────────
   if (segment === 'free') {
     if (type === 'upgrade_starter') return {
-      subject: `${firstName}, try Sambid Notify Starter for just $29/month`,
+      subject: `${firstName}, try Sambid Starter for just $29/month`,
       body: `Hi ${firstName},
 
-You're currently on the Sambid Notify Free plan. If you're not ready for Pro, **Starter** is a great step up — and it's only **$29/month**.
+You're currently on the Sambid Free plan. If you're not ready for Pro, **Starter** is a great step up - and it's only **$29/month**.
 
 What you get on Starter:
 • **50 daily contract matches** (vs 2 on Free)
@@ -168,27 +168,27 @@ It's the easiest way to start winning more federal contracts without a big commi
 → Upgrade to Starter for $29/month: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'feature') return {
       subject: `${firstName}, you're missing these federal contracting tools`,
       body: `Hi ${firstName},
 
-You're on the Sambid Notify Free plan — which gives you 2 contract matches a day. But Pro members get access to a full AI-powered contracting toolkit:
+You're on the Sambid Free plan - which gives you 2 contract matches a day. But Pro members get access to a full AI-powered contracting toolkit:
 
-• **AI Proposal Builder** — complete government proposals written in seconds
-• **Capability Statement Generator** — professional company profiles for any solicitation
-• **RFP Compliance Checker** — never miss a requirement
+• **AI Proposal Builder** - complete government proposals written in seconds
+• **Capability Statement Generator** - professional company profiles for any solicitation
+• **RFP Compliance Checker** - never miss a requirement
 • **1,000 daily contract matches** vs 2 on Free
-• **Go/No-Go bid scoring** — know before you bid
+• **Go/No-Go bid scoring** - know before you bid
 
 The platform does the heavy lifting so you can focus on winning contracts.
 
 → See all Pro features: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → upgrade to Pro
@@ -196,7 +196,7 @@ The Sambid Notify Team`,
       subject: `${firstName}, you're leaving federal contracts on the table`,
       body: `Hi ${firstName},
 
-You've been on the Sambid Notify Free plan — but with only 2 matches a day, you're missing hundreds of contracts that fit your profile.
+You've been on the Sambid Free plan - but with only 2 matches a day, you're missing hundreds of contracts that fit your profile.
 
 Pro subscribers get:
 • **1,000 daily contract matches** (vs 2 on Free)
@@ -210,22 +210,22 @@ Pro subscribers get:
 → Upgrade to Pro: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // ── STARTER ────────────────────────────────────────────────────────────────
   if (segment === 'starter') {
     if (type === 'feature') return {
-      subject: `${firstName}, what's new on Sambid Notify this month`,
+      subject: `${firstName}, what's new on Sambid this month`,
       body: `Hi ${firstName}${biz},
 
-Thank you for being a Sambid Notify Starter subscriber. Here's what's new on the platform this month:
+Thank you for being a Sambid Starter subscriber. Here's what's new on the platform this month:
 
-• Improved contract search filters — find solicitations faster
-• Updated NAICS code matching algorithm — more accurate monthly matches
-• New deadline notification format — clearer summaries
-• Enhanced saved opportunities view — better organisation
+• Improved contract search filters - find solicitations faster
+• Updated NAICS code matching algorithm - more accurate monthly matches
+• New deadline notification format - clearer summaries
+• Enhanced saved opportunities view - better organisation
 
 Log in to see the updates on your dashboard:
 
@@ -236,14 +236,14 @@ Log in to see the updates on your dashboard:
 → Upgrade to Pro: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'thankyou') return {
-      subject: `Thank you for supporting Sambid Notify, ${firstName}`,
+      subject: `Thank you for supporting Sambid, ${firstName}`,
       body: `Hi ${firstName}${biz},
 
-I wanted to take a moment to personally thank you for being a Sambid Notify Starter subscriber.
+I wanted to take a moment to personally thank you for being a Sambid Starter subscriber.
 
 Your support helps us keep building the tools that small businesses need to compete in the federal contracting market.
 
@@ -253,12 +253,12 @@ A reminder of what your Starter subscription includes:
 • Saved opportunities tracker
 • Email support
 
-If you ever have questions, feedback, or need help finding the right contracts — just reply to this email.
+If you ever have questions, feedback, or need help finding the right contracts - just reply to this email.
 
 → Access your dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → upgrade to Pro
@@ -266,13 +266,13 @@ The Sambid Notify Team`,
       subject: `${firstName}, unlock AI-powered proposals with Pro`,
       body: `Hi ${firstName}${biz},
 
-Thank you for being a Sambid Notify Starter subscriber. We wanted to let you know about what you'd unlock by upgrading to **Pro**:
+Thank you for being a Sambid Starter subscriber. We wanted to let you know about what you'd unlock by upgrading to **Pro**:
 
-• **Full AI Proposal Builder** — complete 7-section government proposals in seconds
-• **AI RFP Analyzer** — upload any solicitation and get a compliance checklist
-• **Go/No-Go bid scoring** — AI win-probability analysis before you bid
+• **Full AI Proposal Builder** - complete 7-section government proposals in seconds
+• **AI RFP Analyzer** - upload any solicitation and get a compliance checklist
+• **Go/No-Go bid scoring** - AI win-probability analysis before you bid
 • **1,000 daily contract matches** (vs 50 on Starter)
-• **Teaming finder** — discover subcontracting partners
+• **Teaming finder** - discover subcontracting partners
 • **Monthly market intelligence** reports for your NAICS codes
 
 Upgrade to Pro for just **$79/month** and use code **LOYAL15** for 15% off.
@@ -280,7 +280,7 @@ Upgrade to Pro for just **$79/month** and use code **LOYAL15** for 15% off.
 → Upgrade to Pro today: ${PLATFORM_URL}/pricing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
@@ -290,28 +290,28 @@ The Sambid Notify Team`,
       subject: `${firstName}, new features just dropped for Pro subscribers`,
       body: `Hi ${firstName}${biz},
 
-Thank you for being a Sambid Notify Pro subscriber. We've shipped major updates this month — and as a Pro member, you get them all immediately.
+Thank you for being a Sambid Pro subscriber. We've shipped major updates this month - and as a Pro member, you get them all immediately.
 
 What's new:
-• **Enhanced AI Proposal Builder** — 12-section proposals with executive summary
-• **Smarter deadline alerts** — 14-day, 7-day, and 3-day reminders
-• **Improved contract matching** — updated NAICS scoring algorithm
-• **New market research digest** — weekly intelligence report for your market
-• **Faster Go/No-Go analysis** — results in under 10 seconds
+• **Enhanced AI Proposal Builder** - 12-section proposals with executive summary
+• **Smarter deadline alerts** - 14-day, 7-day, and 3-day reminders
+• **Improved contract matching** - updated NAICS scoring algorithm
+• **New market research digest** - weekly intelligence report for your market
+• **Faster Go/No-Go analysis** - results in under 10 seconds
 
 → Explore the new features: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'thankyou') return {
       subject: `Thank you for being a Pro subscriber, ${firstName}`,
       body: `Hi ${firstName}${biz},
 
-I wanted to personally thank you for being a Sambid Notify Pro subscriber.
+I wanted to personally thank you for being a Sambid Pro subscriber.
 
-You're part of the group of federal contractors using AI to win more contracts — and your support helps us keep building.
+You're part of the group of federal contractors using AI to win more contracts - and your support helps us keep building.
 
 Your Pro plan includes:
 • 1,000 daily contract matches
@@ -320,12 +320,12 @@ Your Pro plan includes:
 • Go/No-Go bid scoring
 • Priority support
 
-If there's anything we can do better or features you'd like to see, reply to this email — we read every response.
+If there's anything we can do better or features you'd like to see, reply to this email - we read every response.
 
 → Access your Pro dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → upgrade to Enterprise (the ONLY valid upgrade from Pro)
@@ -333,34 +333,34 @@ The Sambid Notify Team`,
       subject: `${firstName}, take your contracting to the next level with Enterprise`,
       body: `Hi ${firstName}${biz},
 
-You're on Sambid Notify Pro — and you're already ahead of most federal contractors. But if your team is growing or you're bidding on larger contracts, **Enterprise** is designed for you.
+You're on Sambid Pro - and you're already ahead of most federal contractors. But if your team is growing or you're bidding on larger contracts, **Enterprise** is designed for you.
 
 What Enterprise adds on top of your current Pro plan:
-• **Unlimited team members** — share access with your full BD team
-• **Dedicated account manager** — a real person who knows your market
-• **Custom NAICS tracking** — up to 50 NAICS codes monitored simultaneously
-• **Weekly market intelligence reports** — tailored for your specific market
-• **Custom SAM.gov alerts** — filtered by agency, value, or set-aside type
-• **Priority phone support** — skip the queue
+• **Unlimited team members** - share access with your full BD team
+• **Dedicated account manager** - a real person who knows your market
+• **Custom NAICS tracking** - up to 50 NAICS codes monitored simultaneously
+• **Weekly market intelligence reports** - tailored for your specific market
+• **Custom SAM.gov alerts** - filtered by agency, value, or set-aside type
+• **Priority phone support** - skip the queue
 
-Enterprise is available from **$499/month** (or **$4,788/year** — save 20%).
+Enterprise is available from **$499/month** (or **$4,788/year** - save 20%).
 
 → Talk to us about Enterprise: ${PLATFORM_URL}/pricing
 
-Reply to this email to schedule a 15-minute call — no obligation.
+Reply to this email to schedule a 15-minute call - no obligation.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
-  // ── ENTERPRISE — no upgrade option, they are at the top tier ──────────────
+  // ── ENTERPRISE - no upgrade option, they are at the top tier ──────────────
   if (segment === 'enterprise') {
     if (type === 'renewal') return {
-      subject: `${firstName}, your Sambid Notify Enterprise renewal is coming up`,
+      subject: `${firstName}, your Sambid Enterprise renewal is coming up`,
       body: `Hi ${firstName}${biz},
 
-Your Sambid Notify Enterprise subscription is coming up for renewal. We wanted to reach out early to make sure everything is in order.
+Your Sambid Enterprise subscription is coming up for renewal. We wanted to reach out early to make sure everything is in order.
 
 Your Enterprise plan includes:
 • Unlimited team member access
@@ -370,21 +370,21 @@ Your Enterprise plan includes:
 • Priority phone and email support
 • Custom SAM.gov alerts
 
-To renew or discuss your plan options, reply to this email or contact us directly — we'll take care of everything.
+To renew or discuss your plan options, reply to this email or contact us directly - we'll take care of everything.
 
 → Access your Enterprise dashboard: ${PLATFORM_URL}/dashboard
 
-Thank you for your continued trust in Sambid Notify.
+Thank you for your continued trust in Sambid.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'review') return {
       subject: `${firstName}, time for your quarterly account review`,
       body: `Hi ${firstName}${biz},
 
-As a Sambid Notify Enterprise subscriber, you're entitled to a quarterly account review with our team.
+As a Sambid Enterprise subscriber, you're entitled to a quarterly account review with our team.
 
 In this 30-minute call we'll cover:
 • Contract win rate and match quality for your NAICS codes
@@ -399,16 +399,16 @@ To schedule your review, simply reply to this email with your availability.
 We're committed to helping your team win more federal contracts.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'thankyou') return {
       subject: `${firstName}, thank you for being an Enterprise subscriber`,
       body: `Hi ${firstName}${biz},
 
-I wanted to personally reach out and thank you for being a Sambid Notify Enterprise subscriber.
+I wanted to personally reach out and thank you for being a Sambid Enterprise subscriber.
 
-Enterprise customers like you are the reason we keep building. Your feedback directly shapes the platform roadmap — and your team's success in federal contracting is our success too.
+Enterprise customers like you are the reason we keep building. Your feedback directly shapes the platform roadmap - and your team's success in federal contracting is our success too.
 
 A reminder of your full Enterprise benefits:
 • Unlimited team access and user seats
@@ -422,29 +422,29 @@ Is there anything we can improve for you or your team? Reply any time.
 → Access your Enterprise dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
-    // default → feature update (no upgrade CTA — they are on the highest tier)
+    // default → feature update (no upgrade CTA - they are on the highest tier)
     return {
-      subject: `${firstName}, your Sambid Notify Enterprise platform update`,
+      subject: `${firstName}, your Sambid Enterprise platform update`,
       body: `Hi ${firstName}${biz},
 
-Thank you for your continued trust in Sambid Notify Enterprise. We're committed to helping your team win more federal contracts.
+Thank you for your continued trust in Sambid Enterprise. We're committed to helping your team win more federal contracts.
 
 Platform updates this month:
-• **AI Proposal Builder** — now generates 12-section proposals with executive summary
-• **Team collaboration** — share and comment on saved opportunities with your team
-• **Market intelligence** — weekly digest now includes contract award trends
-• **Custom alerts** — improved filtering by agency, set-aside, and contract value
-• **Expanded NAICS tracking** — up to 50 codes monitored simultaneously
+• **AI Proposal Builder** - now generates 12-section proposals with executive summary
+• **Team collaboration** - share and comment on saved opportunities with your team
+• **Market intelligence** - weekly digest now includes contract award trends
+• **Custom alerts** - improved filtering by agency, set-aside, and contract value
+• **Expanded NAICS tracking** - up to 50 codes monitored simultaneously
 
-Your dedicated account manager is available for questions or a strategy session — just reply to this email.
+Your dedicated account manager is available for questions or a strategy session - just reply to this email.
 
 → Access your Enterprise dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
@@ -456,30 +456,30 @@ The Sambid Notify Team`,
       subject: `${firstName}, a special offer to keep your ${planLabel} subscription`,
       body: `Hi ${firstName}${biz},
 
-We noticed you haven't logged in recently. We don't want to lose you — so we'd like to make you an offer.
+We noticed you haven't logged in recently. We don't want to lose you - so we'd like to make you an offer.
 
-**Stay on your ${planLabel} plan and get 1 month free** — just reply to this email and we'll apply it to your account immediately.
+**Stay on your ${planLabel} plan and get 1 month free** - just reply to this email and we'll apply it to your account immediately.
 
 While you've been away, here's what you've been missing:
 • New federal contracts matched to your NAICS codes
 • Updated solicitation deadline calendar
 • Recent contract award data in your market
 
-We believe Sambid Notify can help your business win more federal contracts — give us another chance to prove it.
+We believe Sambid can help your business win more federal contracts - give us another chance to prove it.
 
 → Log back in: ${PLATFORM_URL}/dashboard
 
 Reply to this email to claim your free month.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 'checkin') return {
-      subject: `${firstName}, quick check-in from Sambid Notify`,
+      subject: `${firstName}, quick check-in from Sambid`,
       body: `Hi ${firstName}${biz},
 
-I'm reaching out because we haven't seen you on Sambid Notify in a while and want to make sure everything is okay with your account.
+I'm reaching out because we haven't seen you on Sambid in a while and want to make sure everything is okay with your account.
 
 Is there anything we can help you with?
 • A walkthrough of features you haven't tried yet?
@@ -487,12 +487,12 @@ Is there anything we can help you with?
 • Guidance on using the AI proposal tools?
 • Feedback on what's not working for you?
 
-Just reply to this email — I read every response and will get back to you within 24 hours.
+Just reply to this email - I read every response and will get back to you within 24 hours.
 
 → Log back in: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → win-back
@@ -508,24 +508,24 @@ Here's what's waiting for you right now:
 • AI-generated win probability scores on saved opportunities
 • Recent contract awards in your market
 
-Your account is fully active — log in to see what you've missed.
+Your account is fully active - log in to see what you've missed.
 
 → See your matched contracts: ${PLATFORM_URL}/dashboard
 
 If something isn't working for you, just reply to this email. We want to help.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // ── ALL PAID ───────────────────────────────────────────────────────────────
   if (segment === 'paid') {
     if (type === 'renewal') return {
-      subject: `${firstName}, your Sambid Notify subscription renewal notice`,
+      subject: `${firstName}, your Sambid subscription renewal notice`,
       body: `Hi ${firstName}${biz},
 
-Your Sambid Notify subscription is coming up for renewal. We wanted to give you a heads-up in advance.
+Your Sambid subscription is coming up for renewal. We wanted to give you a heads-up in advance.
 
 Your current plan benefits:
 • Daily federal contract matches for your NAICS codes
@@ -533,33 +533,33 @@ Your current plan benefits:
 • Deadline alerts and saved opportunities
 • Platform support
 
-To continue uninterrupted access, no action is needed — your subscription renews automatically.
+To continue uninterrupted access, no action is needed - your subscription renews automatically.
 
 If you'd like to upgrade your plan, change your payment method, or have any questions, reply to this email or visit your billing page.
 
 → Manage your subscription: ${PLATFORM_URL}/billing
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     if (type === 're_engage') return {
-      subject: `${firstName}, here's what's new on Sambid Notify`,
+      subject: `${firstName}, here's what's new on Sambid`,
       body: `Hi ${firstName}${biz},
 
-A quick update on what's new on Sambid Notify for paying subscribers this month:
+A quick update on what's new on Sambid for paying subscribers this month:
 
-• Faster AI proposal generation — now under 30 seconds for a full 7-section proposal
-• Improved contract match relevance — updated NAICS algorithm
-• New market awards dashboard — see who's winning in your space
-• Enhanced deadline calendar — colour-coded by urgency
+• Faster AI proposal generation - now under 30 seconds for a full 7-section proposal
+• Improved contract match relevance - updated NAICS algorithm
+• New market awards dashboard - see who's winning in your space
+• Enhanced deadline calendar - colour-coded by urgency
 
 Log in to explore the updates:
 
 → Access your dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → feature update
@@ -567,35 +567,35 @@ The Sambid Notify Team`,
       subject: `${firstName}, new platform features for subscribers`,
       body: `Hi ${firstName}${biz},
 
-Thank you for being a paying Sambid Notify subscriber. Here are the latest platform improvements available to you now:
+Thank you for being a paying Sambid subscriber. Here are the latest platform improvements available to you now:
 
-• **AI Proposal Builder** — now generates 12-section proposals with auto-filled details
-• **Smarter deadline alerts** — 14-day and 7-day advance notices
-• **New market intelligence** — monthly contract award trends for your NAICS codes
-• **Improved search filters** — filter by agency, value range, and set-aside type
+• **AI Proposal Builder** - now generates 12-section proposals with auto-filled details
+• **Smarter deadline alerts** - 14-day and 7-day advance notices
+• **New market intelligence** - monthly contract award trends for your NAICS codes
+• **Improved search filters** - filter by agency, value range, and set-aside type
 
 → Log in to explore: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // ── NO NAICS ───────────────────────────────────────────────────────────────
   if (segment === 'no_naics') {
     if (type === 'guide') return {
-      subject: `${firstName}, a quick guide to getting started with Sambid Notify`,
+      subject: `${firstName}, a quick guide to getting started with Sambid`,
       body: `Hi ${firstName},
 
-We want to help you get the most out of Sambid Notify. Here's how to get set up in 3 steps:
+We want to help you get the most out of Sambid. Here's how to get set up in 3 steps:
 
-**Step 1 — Add your NAICS codes (2 minutes)**
+**Step 1 - Add your NAICS codes (2 minutes)**
 Go to Settings → Profile and add the NAICS codes that match your business. This is how we find the right contracts for you.
 
-**Step 2 — Review your first matches**
+**Step 2 - Review your first matches**
 Once your codes are set, check your dashboard for matched solicitations. New matches are added every day.
 
-**Step 3 — Save and track opportunities**
+**Step 3 - Save and track opportunities**
 Bookmark contracts you're interested in and set deadline reminders so you never miss a submission date.
 
 → Complete your setup now: ${PLATFORM_URL}/settings
@@ -603,7 +603,7 @@ Bookmark contracts you're interested in and set deadline reminders so you never 
 If you're not sure which NAICS codes apply to your business, reply to this email and we'll help you identify the right ones.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → complete profile
@@ -611,7 +611,7 @@ The Sambid Notify Team`,
       subject: `${firstName}, one step left to start receiving contract matches`,
       body: `Hi ${firstName},
 
-Your Sambid Notify account is ready — but we're missing one important piece of information: your **NAICS codes**.
+Your Sambid account is ready - but we're missing one important piece of information: your **NAICS codes**.
 
 Without them, we can't match you with relevant federal contracts. It takes less than 2 minutes to add them.
 
@@ -625,21 +625,21 @@ Once set up, you'll receive:
 Need help finding the right NAICS codes? Reply to this email and we'll find them for you.
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // ── ALL USERS ──────────────────────────────────────────────────────────────
   if (segment === 'all') {
     if (type === 'newsletter') return {
-      subject: `Sambid Notify monthly update — what's new in federal contracting`,
+      subject: `Sambid monthly update - what's new in federal contracting`,
       body: `Hi ${firstName},
 
-Here's your monthly update from Sambid Notify.
+Here's your monthly update from Sambid.
 
 **Platform updates:**
 • AI Proposal Builder now generates 12-section proposals in under 30 seconds
-• New market intelligence dashboard — contract award trends by NAICS code
+• New market intelligence dashboard - contract award trends by NAICS code
 • Improved deadline calendar with colour-coded urgency indicators
 • Enhanced team collaboration features for paid subscribers
 
@@ -654,15 +654,15 @@ Companies that submit proposals within the first week of a solicitation opening 
 → See your matched contracts: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
 
     // default → platform update
     return {
-      subject: `Important update from Sambid Notify`,
+      subject: `Important update from Sambid`,
       body: `Hi ${firstName},
 
-We have an important update about the Sambid Notify platform.
+We have an important update about the Sambid platform.
 
 We've been working hard to improve your federal contracting experience. The latest updates include improved contract matching, faster AI tools, and a better deadline calendar.
 
@@ -671,21 +671,21 @@ Log in to see what's new:
 → Access your dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
     };
   }
 
   // Fallback
   return {
-    subject: `Important update from Sambid Notify`,
+    subject: `Important update from Sambid`,
     body: `Hi ${firstName},
 
-We have an update for your Sambid Notify account.
+We have an update for your Sambid account.
 
 → Access your dashboard: ${PLATFORM_URL}/dashboard
 
 Best regards,
-The Sambid Notify Team`,
+The Sambid Team`,
   };
 }
 
@@ -811,7 +811,7 @@ function EmailPreview({ subject, body, fromName, userName }) {
         <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-center">
           <div className="inline-flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-sm">S</div>
-            <span className="text-white font-bold text-base">{fromName || 'Sambid Notify'}</span>
+            <span className="text-white font-bold text-base">{fromName || 'Sambid'}</span>
           </div>
           <p className="text-white/70 text-xs mt-1">Federal Contract Intelligence</p>
         </div>
@@ -822,7 +822,7 @@ function EmailPreview({ subject, body, fromName, userName }) {
           <div>{lines.map((l, i) => renderLine(l, i))}</div>
           <hr className="border-gray-100 my-4" />
           <p className="text-xs text-gray-400 text-center">
-            © 2025 Sambid Notify · <span className="text-indigo-500">Manage preferences</span> · <span className="text-indigo-500">Dashboard</span>
+            © 2025 Sambid · <span className="text-indigo-500">Manage preferences</span> · <span className="text-indigo-500">Dashboard</span>
           </p>
         </div>
       </div>
@@ -839,7 +839,7 @@ export default function AdminCampaigns() {
   const [selectedUser,  setSelectedUser]  = useState(null);
   const [subject,       setSubject]       = useState('');
   const [body,          setBody]          = useState('');
-  const [fromName,      setFromName]      = useState('Sambid Notify');
+  const [fromName,      setFromName]      = useState('Sambid');
   const [sending,       setSending]       = useState(false);
   const [confirmDlg,    setConfirmDlg]    = useState(null);
   const [result,        setResult]        = useState(null);
@@ -946,7 +946,7 @@ export default function AdminCampaigns() {
         : '';
       const res = await adminAIAPI.generateContent({
         type: 'email_body',
-        context: `Professional re-engagement/marketing email for ${seg?.label} users of Sambid Notify (federal contracting intelligence SaaS). ${userCtx}. Platform URL: ${PLATFORM_URL}. Include subject line labeled "Subject:", greeting "Hi [First Name],", 2-3 body paragraphs, bullet list of features/benefits, a CTA line starting with → pointing to ${PLATFORM_URL}/pricing or /dashboard, and sign-off. Plain text with **bold** for emphasis.`,
+        context: `Professional re-engagement/marketing email for ${seg?.label} users of Sambid (federal contracting intelligence SaaS). ${userCtx}. Platform URL: ${PLATFORM_URL}. Include subject line labeled "Subject:", greeting "Hi [First Name],", 2-3 body paragraphs, bullet list of features/benefits, a CTA line starting with → pointing to ${PLATFORM_URL}/pricing or /dashboard, and sign-off. Plain text with **bold** for emphasis.`,
       });
       const content = res.data.data.content;
       const subjectMatch = content.match(/Subject:\s*(.+)/i);
@@ -1038,7 +1038,7 @@ export default function AdminCampaigns() {
               <div className="mt-2 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2">
                 <p className="font-semibold mb-1">Failed deliveries:</p>
                 {result.data.errorDetails.map((e, i) => (
-                  <p key={i}>{e.email} — {e.error}</p>
+                  <p key={i}>{e.email} - {e.error}</p>
                 ))}
               </div>
             )}
@@ -1083,7 +1083,7 @@ export default function AdminCampaigns() {
                       <p className="text-xs text-gray-400 truncate">{s.desc}</p>
                     </div>
                     <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md shrink-0 ${active ? `${c.bg} ${c.text}` : 'bg-gray-100 text-gray-500'}`}>
-                      {countsLoading ? '…' : (segmentCounts[s.value] ?? '—')}
+                      {countsLoading ? '…' : (segmentCounts[s.value] ?? '-')}
                     </span>
                   </button>
                 );
@@ -1196,7 +1196,7 @@ export default function AdminCampaigns() {
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1.5 block">Subject Line</label>
               <input value={subject} onChange={e => setSubject(e.target.value)}
-                placeholder="e.g. Your trial ends in 3 days — upgrade now"
+                placeholder="e.g. Your trial ends in 3 days - upgrade now"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white" />
             </div>
             <div>
@@ -1350,7 +1350,7 @@ export default function AdminCampaigns() {
                                 { label: 'Total',     val: log.totalUsers, color: 'text-gray-700'  },
                                 { label: 'Delivered', val: log.sent,       color: 'text-green-700' },
                                 { label: 'Failed',    val: log.failed,     color: 'text-red-600'   },
-                                { label: 'Rate', val: log.totalUsers > 0 ? `${Math.round((log.sent/log.totalUsers)*100)}%` : '—', color: 'text-indigo-700' },
+                                { label: 'Rate', val: log.totalUsers > 0 ? `${Math.round((log.sent/log.totalUsers)*100)}%` : '-', color: 'text-indigo-700' },
                               ].map(({ label, val, color }) => (
                                 <div key={label} className="bg-gray-50 rounded-xl p-3 text-center">
                                   <p className={`text-lg font-bold ${color}`}>{val}</p>

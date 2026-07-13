@@ -29,7 +29,7 @@ export const subscribe = async (req, res) => {
     // Send a welcome notification
     await sendPushToUser(
       req.user._id,
-      'Sambid Notify Alerts Active 🔔',
+      'Sambid Alerts Active 🔔',
       'You\'ll now get instant alerts when new contracts match your NAICS codes.',
       { url: '/opportunities' }
     );

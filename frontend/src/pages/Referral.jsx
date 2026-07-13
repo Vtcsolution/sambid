@@ -106,7 +106,7 @@ export default function ReferralPage() {
           </HowItWorks>
         </h1>
         <p className="text-sm sm:text-base text-gray-500 mt-0.5 sm:mt-1">
-          Earn commissions when friends purchase a plan — Starter: 20%, Pro: 20%, Enterprise: 15%.
+          Earn commissions when friends purchase a plan - Starter: 20%, Pro: 20%, Enterprise: 15%.
         </p>
       </div>
 
@@ -314,11 +314,11 @@ export default function ReferralPage() {
                       <p className="text-xs text-gray-400">{r.referee?.email}</p>
                     </td>
                     <td className="py-2.5 text-gray-500 text-xs">
-                      {r.referee?.createdAt ? new Date(r.referee.createdAt).toLocaleDateString() : '—'}
+                      {r.referee?.createdAt ? new Date(r.referee.createdAt).toLocaleDateString() : '-'}
                     </td>
                     <td className="py-2.5">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${PLAN_COLORS[r.referee?.plan] || 'bg-gray-100 text-gray-600'}`}>
-                        {r.referee?.plan || '—'}
+                        {r.referee?.plan || '-'}
                       </span>
                     </td>
                     <td className="py-2.5">
@@ -327,7 +327,7 @@ export default function ReferralPage() {
                       </span>
                     </td>
                     <td className="py-2.5 text-right font-semibold text-green-700">
-                      {r.commissionAmount > 0 ? `+$${r.commissionAmount.toFixed(2)}` : '—'}
+                      {r.commissionAmount > 0 ? `+$${r.commissionAmount.toFixed(2)}` : '-'}
                     </td>
                   </tr>
                 ))}

@@ -65,7 +65,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
         intent: 'CAPTURE',
         purchase_units: [{
           custom_id:   metadata.userId || '',
-          description: `Sambid Notify — ${planLabel} (${cycleLabel})`,
+          description: `Sambid — ${planLabel} (${cycleLabel})`,
           amount: {
             currency_code: currency,
             value,
@@ -74,7 +74,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
             }
           },
           items: [{
-            name:        `Sambid Notify ${planLabel}`,
+            name:        `Sambid ${planLabel}`,
             description: `${cycleLabel} subscription — AI-powered federal contract intelligence`,
             quantity:    '1',
             category:    'DIGITAL_GOODS',
@@ -82,7 +82,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
           }]
         }],
         application_context: {
-          brand_name:          'Sambid Notify',
+          brand_name:          'Sambid',
           shipping_preference: 'NO_SHIPPING',
           user_action:         'PAY_NOW',
           return_url:          `${process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173'}/payment/success`,

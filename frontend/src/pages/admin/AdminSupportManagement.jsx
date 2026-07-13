@@ -198,23 +198,23 @@ function MemberCard({ item, onProcessWithdrawal }) {
                     {referrals.map(r => (
                       <tr key={r._id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="py-2 px-2">
-                          <p className="font-semibold text-gray-800">{r.user?.name || '—'}</p>
-                          <p className="text-gray-400">{r.user?.email || '—'}</p>
+                          <p className="font-semibold text-gray-800">{r.user?.name || '-'}</p>
+                          <p className="text-gray-400">{r.user?.email || '-'}</p>
                         </td>
                         <td className="py-2 px-2">
                           {r.firstPurchasePlan
                             ? <span className={`px-1.5 py-0.5 rounded-full font-semibold capitalize ${PLAN_COLORS[r.firstPurchasePlan] || 'bg-gray-100 text-gray-600'}`}>{r.firstPurchasePlan}</span>
-                            : <span className="text-gray-400">—</span>}
+                            : <span className="text-gray-400">-</span>}
                         </td>
-                        <td className="py-2 px-2 font-bold text-emerald-600">{r.firstCommission > 0 ? fmt(r.firstCommission) : '—'}</td>
-                        <td className="py-2 px-2 font-bold text-violet-600">{r.totalRecurringEarned > 0 ? fmt(r.totalRecurringEarned) : '—'}</td>
+                        <td className="py-2 px-2 font-bold text-emerald-600">{r.firstCommission > 0 ? fmt(r.firstCommission) : '-'}</td>
+                        <td className="py-2 px-2 font-bold text-violet-600">{r.totalRecurringEarned > 0 ? fmt(r.totalRecurringEarned) : '-'}</td>
                         <td className="py-2 px-2">
                           {r.countsTowardTarget
                             ? <span className="text-green-600 font-semibold">Yes</span>
                             : <span className="text-gray-400">No</span>}
                         </td>
                         <td className="py-2 px-2 text-gray-400">
-                          {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                          {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
                         </td>
                       </tr>
                     ))}
@@ -339,7 +339,7 @@ function WithdrawalsTab({ onRefresh, members }) {
                       <td className="py-2.5 px-3">
                         {item.pendingWithdrawalCount > 0
                           ? <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-semibold">{item.pendingWithdrawalCount} ({fmt(item.pendingWithdrawalAmount)})</span>
-                          : <span className="text-gray-400">—</span>}
+                          : <span className="text-gray-400">-</span>}
                       </td>
                       <td className="py-2.5 px-3">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${item.member.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
@@ -388,7 +388,7 @@ function WithdrawalsTab({ onRefresh, members }) {
                 <div className="flex items-start gap-3 min-w-0">
                   <Clock className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                   <div className="min-w-0">
-                    <p className="font-semibold text-gray-900">{w.supportMember?.name || '—'}</p>
+                    <p className="font-semibold text-gray-900">{w.supportMember?.name || '-'}</p>
                     <p className="text-xs text-gray-400">{w.supportMember?.email}</p>
                     <p className="text-sm font-bold text-gray-800 mt-1">{fmt(w.amount)}</p>
                     <p className="text-xs text-gray-500 capitalize">{(w.method||'').replace(/_/g,' ')} · {new Date(w.createdAt).toLocaleDateString()}</p>
@@ -503,7 +503,7 @@ export default function AdminSupportManagement() {
             <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0"><Star className="w-4 h-4 text-emerald-600" /></div>
             <div>
               <p className="font-semibold text-gray-900">15% One-Time Commission</p>
-              <p className="text-xs text-gray-500 mt-0.5">Triggered on the first purchase by any referred company — Starter, Pro Monthly/Yearly, or Enterprise Monthly/Yearly.</p>
+              <p className="text-xs text-gray-500 mt-0.5">Triggered on the first purchase by any referred company - Starter, Pro Monthly/Yearly, or Enterprise Monthly/Yearly.</p>
             </div>
           </div>
           <div className="flex items-start gap-3">

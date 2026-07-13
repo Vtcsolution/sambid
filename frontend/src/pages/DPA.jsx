@@ -7,7 +7,7 @@ const LAST_UPDATED = 'July 1, 2026';
 const sections = [
   {
     title: '1. Introduction & Scope',
-    body: `This Data Processing Agreement ("DPA") is entered into between Sambid Notify ("Sambid", "Processor") and the customer entity that has agreed to the Sambid Terms of Service ("Controller"). This DPA forms part of the Agreement and governs the processing of personal data by Sambid on behalf of the Controller. This DPA applies where Sambid processes personal data submitted by the Controller in connection with the use of the Sambid platform.`,
+    body: `This Data Processing Agreement ("DPA") is entered into between Sambid ("Sambid", "Processor") and the customer entity that has agreed to the Sambid Terms of Service ("Controller"). This DPA forms part of the Agreement and governs the processing of personal data by Sambid on behalf of the Controller. This DPA applies where Sambid processes personal data submitted by the Controller in connection with the use of the Sambid platform.`,
   },
   {
     title: '2. Definitions',
@@ -61,7 +61,7 @@ const sections = [
   },
   {
     title: '7. Sub-Processors',
-    body: `Sambid uses the following categories of sub-processors to provide its services: (a) Cloud infrastructure — VPS hosting provider; (b) Database — MongoDB Atlas (MongoDB, Inc.); (c) Payment processing — Stripe, PayPal, Payoneer; (d) Email delivery — Hostinger Mail / SMTP service; (e) AI services — Anthropic (for AI-powered features). Sambid will notify the Controller at least 14 days before engaging any new sub-processor. The Controller may object to a new sub-processor within 14 days of such notice. Sambid imposes data protection obligations on all sub-processors equivalent to those in this DPA.`,
+    body: `Sambid uses the following categories of sub-processors to provide its services: (a) Cloud infrastructure - VPS hosting provider; (b) Database - MongoDB Atlas (MongoDB, Inc.); (c) Payment processing - Stripe, PayPal, Payoneer; (d) Email delivery - Hostinger Mail / SMTP service; (e) AI services - Anthropic (for AI-powered features). Sambid will notify the Controller at least 14 days before engaging any new sub-processor. The Controller may object to a new sub-processor within 14 days of such notice. Sambid imposes data protection obligations on all sub-processors equivalent to those in this DPA.`,
   },
   {
     title: '8. Data Retention & Deletion',
@@ -81,7 +81,7 @@ const sections = [
   },
   {
     title: '12. Contact',
-    body: `For DPA-related requests, enterprise data processing inquiries, or to request Standard Contractual Clauses, contact: privacy@sambid.co — Sambid Notify, Arlington, VA 22203, USA.`,
+    body: `For DPA-related requests, enterprise data processing inquiries, or to request Standard Contractual Clauses, contact: privacy@sambid.co - Sambid, Arlington, VA 22203, USA.`,
   },
 ];
 
@@ -89,8 +89,8 @@ export default function DPA() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Data Processing Agreement — Sambid"
-        description="Sambid's Data Processing Agreement (DPA) for enterprise customers — GDPR and CCPA compliant data processing terms for the federal contract intelligence platform."
+        title="Data Processing Agreement - Sambid"
+        description="Sambid's Data Processing Agreement (DPA) for enterprise customers - GDPR and CCPA compliant data processing terms for the federal contract intelligence platform."
         keywords="Sambid DPA, data processing agreement, GDPR compliance, federal contracting software data processing, enterprise data protection"
         canonical="https://sambid.co/dpa"
       />

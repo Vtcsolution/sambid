@@ -259,8 +259,8 @@ export default function CompanyProfile() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">Company Profile
                 <HowItWorks title="Company Profile" steps={[
-                  { title: 'Enter UEI & verify', description: 'Your 12-character Unique Entity ID is verified live against SAM.gov — imports your legal name, address, entity type, registration status' },
-                  { title: 'Add CAGE code & certifications', description: 'Track 8(a), WOSB, EDWOSB, HUBZone, SDVOSB, VOSB, SDB with expiry dates — get alerts before they expire' },
+                  { title: 'Enter UEI & verify', description: 'Your 12-character Unique Entity ID is verified live against SAM.gov - imports your legal name, address, entity type, registration status' },
+                  { title: 'Add CAGE code & certifications', description: 'Track 8(a), WOSB, EDWOSB, HUBZone, SDVOSB, VOSB, SDB with expiry dates - get alerts before they expire' },
                   { title: 'Set NAICS codes & capabilities', description: 'Company-level NAICS codes and a capabilities summary used by AI features' },
                   { title: 'AI uses this data automatically', description: 'Every AI feature (Bid Analysis, Proposals, Competitive Analysis) pulls your verified company data' },
                 ]} dataUsed={['SAM.gov Entity API', 'Your Input']} >

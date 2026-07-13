@@ -6,7 +6,7 @@ import api from '../services/api';
 const QUICK_QUESTIONS = [
   { label: 'How do I find contracts?', q: 'How do I find and search federal contracts on this platform?' },
   { label: 'How does AI proposal work?', q: 'How does the AI Proposal Builder work and how many credits does it cost?' },
-  { label: 'What are AI credits?', q: 'Explain the AI credits system — how many credits do I get and what do they cost?' },
+  { label: 'What are AI credits?', q: 'Explain the AI credits system - how many credits do I get and what do they cost?' },
   { label: 'How to track my bids?', q: 'How do I use the bid pipeline to track my proposals?' },
   { label: 'How to set up alerts?', q: 'How do I create smart alerts to get notified about new contracts?' },
   { label: 'What plan should I get?', q: 'What are the differences between Starter, Pro, and Enterprise plans?' },
@@ -172,7 +172,7 @@ export default function ChatBot() {
                     <span className={`font-semibold text-gray-900 ${expanded ? 'text-base' : 'text-sm'}`}>Hi! I'm your SamBid assistant.</span>
                   </div>
                   <p className={`text-gray-500 leading-relaxed ${expanded ? 'text-sm' : 'text-xs'}`}>
-                    I know every feature, page, and workflow on this platform. Ask me anything — how features work, where to find things, or how to get started.
+                    I know every feature, page, and workflow on this platform. Ask me anything - how features work, where to find things, or how to get started.
                   </p>
                 </div>
 

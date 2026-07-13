@@ -778,7 +778,7 @@ export default function AdminManagement() {
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">Admin Note (optional)</label>
                 <input value={approveNote} onChange={e => setApproveNote(e.target.value)}
-                  placeholder="e.g. Approved — strong LinkedIn network"
+                  placeholder="e.g. Approved - strong LinkedIn network"
                   className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" />
               </div>
             </div>
@@ -861,7 +861,7 @@ export default function AdminManagement() {
               <p className="text-xs text-gray-500">{payModal.supportMember?.email}</p>
               <p className="text-xs text-gray-500 capitalize">
                 Method: <strong>{(payModal.method || '').replace(/_/g, ' ')}</strong>
-                {' · '}Account: <strong>{payModal.accountDetails?.email || payModal.accountDetails?.account || '—'}</strong>
+                {' · '}Account: <strong>{payModal.accountDetails?.email || payModal.accountDetails?.account || '-'}</strong>
               </p>
             </div>
 
@@ -923,7 +923,7 @@ export default function AdminManagement() {
 
       {/* ── Support Referral Program ──────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        {/* Header — always visible, click to toggle member list */}
+        {/* Header - always visible, click to toggle member list */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-teal-100 rounded-xl flex items-center justify-center">
@@ -949,7 +949,7 @@ export default function AdminManagement() {
           </div>
         </div>
 
-        {/* ── Withdrawal Requests — always shown, loads on mount ── */}
+        {/* ── Withdrawal Requests - always shown, loads on mount ── */}
         {suppLoading && !showSupport ? (
           <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-teal-500" /></div>
         ) : (
@@ -1001,8 +1001,8 @@ export default function AdminManagement() {
                     {suppWithdrawals.filter(w => w.status === wTab).map(w => (
                       <tr key={w._id} className="hover:bg-gray-50 transition">
                         <td className="px-3 py-3">
-                          <p className="font-semibold text-gray-900">{w.supportMember?.name || '—'}</p>
-                          <p className="text-xs text-gray-400">{w.supportMember?.email || '—'}</p>
+                          <p className="font-semibold text-gray-900">{w.supportMember?.name || '-'}</p>
+                          <p className="text-xs text-gray-400">{w.supportMember?.email || '-'}</p>
                         </td>
                         <td className="px-3 py-3">
                           <span className="font-bold text-emerald-600 text-base">${w.amount.toFixed(2)}</span>
@@ -1011,7 +1011,7 @@ export default function AdminManagement() {
                           {(w.method || '').replace(/_/g, ' ')}
                         </td>
                         <td className="px-3 py-3 text-xs text-gray-600 max-w-[140px] truncate">
-                          {w.accountDetails?.email || w.accountDetails?.account || '—'}
+                          {w.accountDetails?.email || w.accountDetails?.account || '-'}
                         </td>
                         <td className="px-3 py-3 text-xs text-gray-400">
                           {new Date(w.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -1062,7 +1062,7 @@ export default function AdminManagement() {
               </div>
             )}
 
-            {/* Member stats — collapsible */}
+            {/* Member stats - collapsible */}
             {showSupport && (
               <div className="pt-4 border-t border-gray-100 space-y-3">
                 <h3 className="text-sm font-semibold text-gray-700">Support Member Balances</h3>
@@ -1097,7 +1097,7 @@ export default function AdminManagement() {
                             <td className="px-3 py-3">
                               {pendingWithdrawals > 0
                                 ? <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full font-medium">{pendingWithdrawals} pending</span>
-                                : <span className="text-gray-300 text-xs">—</span>}
+                                : <span className="text-gray-300 text-xs">-</span>}
                             </td>
                           </tr>
                         ))}

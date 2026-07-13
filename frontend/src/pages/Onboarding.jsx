@@ -1,8 +1,8 @@
 // frontend/src/pages/Onboarding.jsx
 // 3-step wizard shown on first login:
-//  Step 1 — Business info (name, type)
-//  Step 2 — NAICS code selection (searchable)
-//  Step 3 — Alert preferences (frequency, email opt-in)
+//  Step 1 - Business info (name, type)
+//  Step 2 - NAICS code selection (searchable)
+//  Step 3 - Alert preferences (frequency, email opt-in)
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -126,7 +126,7 @@ export default function Onboarding() {
             <Sparkles className="w-4 h-4" />
             Let's set up your account
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to Sambid Notify</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Welcome to Sambid</h1>
           <p className="text-gray-500 mt-2">3 quick steps to start finding federal contracts</p>
         </div>
 
@@ -227,7 +227,7 @@ export default function Onboarding() {
                       <span key={code} className="inline-flex items-center gap-1 bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-full font-medium">
                         {code}
                         <span className="hidden sm:inline opacity-80 text-xs">
-                          {entry?.label.split(' — ')[1]?.substring(0, 25)}
+                          {entry?.label.split(' - ')[1]?.substring(0, 25)}
                         </span>
                         <button onClick={() => removeNAICS(code)} className="ml-1 hover:bg-indigo-500 rounded-full p-0.5">
                           <X className="w-3 h-3" />
@@ -261,7 +261,7 @@ export default function Onboarding() {
                           className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b border-gray-50 last:border-0 transition-colors"
                         >
                           <span className="font-mono font-bold text-indigo-600 mr-2">{n.code}</span>
-                          <span className="text-gray-700">{n.label.split(' — ')[1]}</span>
+                          <span className="text-gray-700">{n.label.split(' - ')[1]}</span>
                         </button>
                       ))}
                     </div>
@@ -316,7 +316,7 @@ export default function Onboarding() {
                     {[
                       { value: 'realtime', label: 'Real-time',  desc: 'Instantly when a match is found (Pro/Enterprise)',  plan: 'pro' },
                       { value: 'daily',    label: 'Daily digest', desc: 'One email per day with all new matches',          plan: null },
-                      { value: 'weekly',   label: 'Weekly digest', desc: 'One email per week — less noise',               plan: null },
+                      { value: 'weekly',   label: 'Weekly digest', desc: 'One email per week - less noise',               plan: null },
                     ].map(opt => (
                       <label
                         key={opt.value}

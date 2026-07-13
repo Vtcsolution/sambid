@@ -61,7 +61,7 @@ function DevSimulateButton({ planName, billingCycle, onSuccess, onError, referra
       if (!orderRes.data.success) throw new Error(orderRes.data.message || 'Order creation failed');
       const invoiceId = orderRes.data.invoiceId;
 
-      // 2. Simulate capture — skips PayPal API entirely
+      // 2. Simulate capture - skips PayPal API entirely
       const captureRes = await paymentAPI.simulatePayPalCapture({ invoiceId });
       if (!captureRes.data.success) throw new Error(captureRes.data.message || 'Simulate capture failed');
 
@@ -82,7 +82,7 @@ function DevSimulateButton({ planName, billingCycle, onSuccess, onError, referra
       className="w-full mt-3 py-3 rounded-lg border-2 border-dashed border-yellow-400 bg-yellow-50 text-yellow-800 text-sm font-semibold hover:bg-yellow-100 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
     >
       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : '🧪'}
-      {loading ? 'Processing…' : 'Test Payment (Dev Only — bypasses PayPal)'}
+      {loading ? 'Processing…' : 'Test Payment (Dev Only - bypasses PayPal)'}
     </button>
   );
 }
@@ -108,7 +108,7 @@ function SmartButton({ amount, planName, billingCycle, onSuccess, onError, refer
   };
 
   const onApprove = async (data) => {
-    // Step 2: User approved in PayPal popup — capture + verify on backend
+    // Step 2: User approved in PayPal popup - capture + verify on backend
     const res = await paymentAPI.capturePayPalOrder({
       orderId:   data.orderID,
       invoiceId: invoiceIdRef.current
@@ -133,7 +133,7 @@ function SmartButton({ amount, planName, billingCycle, onSuccess, onError, refer
         console.error('PayPal SDK error:', err);
         onError(msg || 'PayPal encountered an error. Please try again.');
       }}
-      onCancel={() => onError('')}           // user cancelled — no error message needed
+      onCancel={() => onError('')}           // user cancelled - no error message needed
     />
   );
 }
@@ -148,7 +148,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
     try {
       const audio = new Audio(notificationSound);
       audio.volume = 0.8;
-      audio.play().catch(() => {}); // browsers may block autoplay — swallow silently
+      audio.play().catch(() => {}); // browsers may block autoplay - swallow silently
     } catch {}
   };
 
@@ -195,7 +195,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
           <p className="text-xs text-gray-500 mt-1 capitalize">{planName} Plan · {billingCycle} billing</p>
           {couponCode && (
             <p className="text-xs text-green-600 font-medium mt-1">
-              Coupon <strong>{couponCode}</strong> applied — 10% off
+              Coupon <strong>{couponCode}</strong> applied - 10% off
             </p>
           )}
           {referralBalanceToApply > 0 && (
@@ -219,7 +219,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
           </div>
         )}
 
-        {/* In dev mode skip the real PayPal SDK entirely — sandbox popup is unreliable locally */}
+        {/* In dev mode skip the real PayPal SDK entirely - sandbox popup is unreliable locally */}
         {import.meta.env.DEV ? (
           <DevSimulateButton
             planName={planName}
@@ -253,7 +253,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
         )}
 
         <p className="text-xs text-center text-gray-400 mt-4">
-          Payment processed securely by PayPal. Sambid Notify never stores your card details.
+          Payment processed securely by PayPal. Sambid never stores your card details.
         </p>
       </div>
     </>

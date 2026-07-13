@@ -150,7 +150,7 @@ const PHASES = [
     label: 'Find Every Opportunity',
     headline: 'Find Every Government Opportunity',
     description:
-      'Sambid scans SAM.gov, USASpending.gov, and FPDS around the clock — delivering matched federal contract opportunities directly to your dashboard, filtered by your NAICS codes, set-asides, and agency preferences.',
+      'Sambid scans SAM.gov, USASpending.gov, and FPDS around the clock - delivering matched federal contract opportunities directly to your dashboard, filtered by your NAICS codes, set-asides, and agency preferences.',
     points: [
       'Live SAM.gov data updated daily',
       'NAICS code + set-aside filtering (8a, WOSB, HUBZone…)',
@@ -166,7 +166,7 @@ const PHASES = [
     label: 'Search & Discover',
     headline: 'Deep Search with Solicitation Numbers',
     description:
-      'Search any federal contract by keyword, solicitation number, or NAICS code. Get full details including evaluation criteria, incumbents, attachments, and SAM.gov links — all in one place.',
+      'Search any federal contract by keyword, solicitation number, or NAICS code. Get full details including evaluation criteria, incumbents, attachments, and SAM.gov links - all in one place.',
     points: [
       'Solicitation number direct lookup',
       'Full contract details from SAM.gov',
@@ -182,7 +182,7 @@ const PHASES = [
     label: 'Deadline Calendar',
     headline: 'Win Contracts Up to 12 Months Early',
     description:
-      'Never miss a submission deadline again. Our visual calendar shows all upcoming deadlines for opportunities you are tracking — with automated reminders so you can plan bids well in advance.',
+      'Never miss a submission deadline again. Our visual calendar shows all upcoming deadlines for opportunities you are tracking - with automated reminders so you can plan bids well in advance.',
     points: [
       'Visual calendar with all tracked bids',
       'Automated deadline reminders via email',
@@ -198,7 +198,7 @@ const PHASES = [
     label: 'AI Predictions',
     headline: 'Know Your Win Probability Before You Bid',
     description:
-      'Our AI analyzes historical award patterns, competition level, agency preferences, and your company profile to predict win probability on every opportunity — so you bid smarter, not harder.',
+      'Our AI analyzes historical award patterns, competition level, agency preferences, and your company profile to predict win probability on every opportunity - so you bid smarter, not harder.',
     points: [
       'AI win probability score per contract',
       'Go/No-Go decision support',
@@ -214,7 +214,7 @@ const PHASES = [
     label: 'Build Winning Teams',
     headline: 'Find the Right Teaming Partners Instantly',
     description:
-      'Connect with complementary contractors to form winning teams. Find verified partners with matching NAICS codes, required certifications, and relevant past performance — all searchable in seconds.',
+      'Connect with complementary contractors to form winning teams. Find verified partners with matching NAICS codes, required certifications, and relevant past performance - all searchable in seconds.',
     points: [
       'Teaming partner search by NAICS & certifications',
       'Past performance and capability matching',
@@ -230,7 +230,7 @@ const PHASES = [
     label: 'Past Performance Intelligence',
     headline: 'See Who Is Winning in Your NAICS Code',
     description:
-      'Pull historical award data from USASpending.gov to discover which companies are winning contracts in your space, what agencies are awarding, and how much — so you can benchmark and position to win.',
+      'Pull historical award data from USASpending.gov to discover which companies are winning contracts in your space, what agencies are awarding, and how much - so you can benchmark and position to win.',
     points: [
       'Historical winner data by NAICS from USASpending',
       'Award amounts and agency patterns',
@@ -246,7 +246,7 @@ const PHASES = [
     label: 'AI Proposal Writing',
     headline: 'Respond to RFPs with One Click',
     description:
-      "Upload any RFP and Sambid's AI generates a complete, structured proposal draft aligned to evaluation criteria — in minutes. Cut proposal writing time from days to hours.",
+      "Upload any RFP and Sambid's AI generates a complete, structured proposal draft aligned to evaluation criteria - in minutes. Cut proposal writing time from days to hours.",
     points: [
       'One-click proposal draft generation',
       'RFP requirement and criteria extraction',
@@ -272,7 +272,7 @@ export default function Home() {
       <style>{ANIM_CSS}</style>
       <SEOHead
         title="Federal Contract Opportunity Alerts & SAM.gov Notifications"
-        description="Sambid delivers daily federal contract opportunities from SAM.gov, USASpending.gov & FPDS straight to your inbox. AI-matched alerts for small businesses. Start free — no credit card needed."
+        description="Sambid delivers daily federal contract opportunities from SAM.gov, USASpending.gov & FPDS straight to your inbox. AI-matched alerts for small businesses. Start free - no credit card needed."
         keywords="federal contract opportunities, SAM.gov alerts, government contracting software, federal procurement notifications, FPDS contract search, small business federal contracts, USASpending opportunities, federal RFP alerts, government contract finder, federal bid alerts, SAM.gov notification tool, AI federal contract matching, GovCon software, federal contracting platform for small business, win government contracts, federal contract bidding software, government RFP alerts, SAM.gov opportunity tracker, federal procurement software, contract opportunity finder"
         canonical="https://sambid.co/"
         jsonLd={HOME_JSON_LD}
@@ -283,7 +283,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3')] bg-cover bg-center opacity-10" />
         <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left — text */}
+            {/* Left - text */}
             <div className="hero-fade">
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm mb-6">
                 <Zap className="w-4 h-4 mr-2 text-yellow-400 shrink-0" />
@@ -297,7 +297,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base sm:text-xl text-indigo-100 mb-7 sm:mb-8 leading-relaxed max-w-lg">
-                Sambid scans SAM.gov daily and delivers matching federal contract opportunities straight to your dashboard — filtered by your NAICS codes, set-asides, and agency preferences.
+                Sambid scans SAM.gov daily and delivers matching federal contract opportunities straight to your dashboard - filtered by your NAICS codes, set-asides, and agency preferences.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -321,7 +321,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Right — dashboard screenshot (uploaded via admin) */}
+            {/* Right - dashboard screenshot (uploaded via admin) */}
             <div className="hero-fade relative" style={{ animationDelay: '0.2s' }}>
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
                 {heroImage ? (
@@ -374,7 +374,7 @@ export default function Home() {
               Everything You Need to Win Federal Contracts
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-              One automated platform — from discovery to signed contract
+              One automated platform - from discovery to signed contract
             </p>
           </FadeIn>
 
@@ -516,7 +516,7 @@ export default function Home() {
               {
                 name: 'Sarah Johnson',
                 role: 'CEO, Tech Solutions LLC',
-                content: 'Before Sambid I was spending hours on SAM.gov every morning. Now the matches come to me — filtered to exactly what we qualify for.',
+                content: 'Before Sambid I was spending hours on SAM.gov every morning. Now the matches come to me - filtered to exactly what we qualify for.',
                 rating: 5,
               },
               {

@@ -9,10 +9,10 @@ import { contactAPI } from '../services/api';
 
 const EMPLOYEE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+'];
 
-// Only $499+ plans — Starter/Pro are purchased directly on the Pricing page
+// Only $499+ plans - Starter/Pro are purchased directly on the Pricing page
 const PLAN_OPTIONS = [
-  { value: 'enterprise', label: 'Enterprise — $499/mo (or $4,788/yr)' },
-  { value: 'custom',     label: 'Custom / Enterprise Plus — Custom pricing' },
+  { value: 'enterprise', label: 'Enterprise - $499/mo (or $4,788/yr)' },
+  { value: 'custom',     label: 'Custom / Enterprise Plus - Custom pricing' },
 ];
 
 const PREMIUM_PLANS = [
@@ -250,7 +250,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-10 sm:py-16 px-4">
       <SEOHead
-        title="Contact Sambid — Get Help with Federal Contract Alerts"
+        title="Contact Sambid - Get Help with Federal Contract Alerts"
         description="Have a question about Sambid's federal contract notification platform? Contact our support team. We help government contractors get set up with SAM.gov alerts, billing, and account issues."
         keywords="contact Sambid, federal contracting support, SAM.gov alert help, government contracting software support, Sambid customer service"
         canonical="https://sambid.co/contact"
@@ -259,7 +259,7 @@ export default function Contact() {
         {/* Header */}
         <div className="text-center mb-7 sm:mb-10">
           <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
-            Enterprise Plans — $499/mo (or $4,788/yr, save 20%)
+            Enterprise Plans - $499/mo (or $4,788/yr, save 20%)
           </span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">Request an Enterprise Plan</h1>
           <p className="text-gray-600 text-sm sm:text-base md:text-lg">

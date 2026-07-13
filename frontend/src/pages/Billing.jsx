@@ -34,7 +34,7 @@ function downloadInvoicePDF(inv) {
   doc.setFontSize(16); doc.setTextColor(255,255,255); doc.setFont('helvetica','bold');
   doc.text('INVOICE', margin, 16);
   doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text('Sambid Notify', pageW - margin, 12, { align: 'right' });
+  doc.text('Sambid', pageW - margin, 12, { align: 'right' });
   doc.text('support@sambid.co', pageW - margin, 18, { align: 'right' });
 
   // Invoice meta
@@ -47,10 +47,10 @@ function downloadInvoicePDF(inv) {
   };
 
   field('Invoice Number:',  inv.invoiceNumber || inv._id);
-  field('Date:',            inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : '—');
-  field('Plan:',            (inv.plan || '—').charAt(0).toUpperCase() + (inv.plan || '').slice(1));
+  field('Date:',            inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : '-');
+  field('Plan:',            (inv.plan || '-').charAt(0).toUpperCase() + (inv.plan || '').slice(1));
   field('Billing Cycle:',   (inv.billingCycle || 'monthly').charAt(0).toUpperCase() + (inv.billingCycle || 'monthly').slice(1));
-  field('Payment Method:',  METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '—');
+  field('Payment Method:',  METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '-');
   field('Status:',          (inv.status || '').toUpperCase());
 
   y += 6;
@@ -78,9 +78,9 @@ const PLAN_PRICES = {
 const getRequestStatus = (req) => {
   if (req.status === 'completed') return { label: 'Plan Active', color: 'text-green-700 bg-green-50 border-green-200', icon: CheckCircle };
   if (req.status === 'rejected')  return { label: 'Rejected',    color: 'text-red-600 bg-red-50 border-red-200',     icon: XCircle };
-  if (req.status === 'approved' && req.paymentProofAt) return { label: 'Proof Submitted — Verifying', color: 'text-amber-700 bg-amber-50 border-amber-200', icon: Clock };
-  if (req.status === 'approved') return { label: 'Instructions Sent — Action Required', color: 'text-blue-700 bg-blue-50 border-blue-200', icon: CreditCard };
-  if (req.status === 'pending' && req.instructionsSentAt) return { label: 'Instructions Sent — Action Required', color: 'text-blue-700 bg-blue-50 border-blue-200', icon: CreditCard };
+  if (req.status === 'approved' && req.paymentProofAt) return { label: 'Proof Submitted - Verifying', color: 'text-amber-700 bg-amber-50 border-amber-200', icon: Clock };
+  if (req.status === 'approved') return { label: 'Instructions Sent - Action Required', color: 'text-blue-700 bg-blue-50 border-blue-200', icon: CreditCard };
+  if (req.status === 'pending' && req.instructionsSentAt) return { label: 'Instructions Sent - Action Required', color: 'text-blue-700 bg-blue-50 border-blue-200', icon: CreditCard };
   return { label: 'Under Review', color: 'text-gray-600 bg-gray-50 border-gray-200', icon: Clock };
 };
 
@@ -218,7 +218,7 @@ export default function Billing() {
             showToast('Payment successful! Your plan has been activated.');
           }
         })
-        .catch(() => showToast('Payment received — plan will activate shortly.'))
+        .catch(() => showToast('Payment received - plan will activate shortly.'))
         .finally(() => {
           window.history.replaceState({}, '', '/billing');
         });
@@ -250,7 +250,7 @@ export default function Billing() {
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">Billing & Invoices
                 <HowItWorks title="Billing & Invoices" steps={[
                   { title: 'View your plan', description: 'See your current plan, billing cycle, and when it renews or expires' },
-                  { title: 'Download invoices', description: 'PDF receipts for every payment — Stripe, PayPal, or Payoneer' },
+                  { title: 'Download invoices', description: 'PDF receipts for every payment - Stripe, PayPal, or Payoneer' },
                   { title: 'Manage subscription', description: 'Upgrade, downgrade, or cancel your plan. Request annual pricing for bulk discount' },
                 ]} dataUsed={['Your Payment History', 'Your Plan Details']} >
                   <p className="text-sm font-semibold text-gray-700 mt-2">Connected to:</p>
@@ -278,7 +278,7 @@ export default function Billing() {
             <p className="text-white/70 text-sm mb-1">Current Plan</p>
             <p className="text-2xl font-bold capitalize">{currentPlan}</p>
             <p className="text-white/70 text-sm mt-1">
-              {currentPlan === 'free' ? 'Free — no billing' : 'Billed monthly or annually'}
+              {currentPlan === 'free' ? 'Free - no billing' : 'Billed monthly or annually'}
             </p>
           </div>
           <CreditCard className="w-12 h-12 text-white/30" />
@@ -330,14 +330,14 @@ export default function Billing() {
                   {needsAction && (
                     <div className="bg-indigo-600 px-5 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="text-white">
-                        <p className="font-bold text-sm">Action required — complete your payment</p>
+                        <p className="font-bold text-sm">Action required - complete your payment</p>
                         <p className="text-indigo-200 text-xs mt-0.5">
                           You received payment instructions{req.instructionsSentAt ? ` on ${fmtD(req.instructionsSentAt)}` : ''}. After paying, click the button to notify us.
                         </p>
                       </div>
                       <button onClick={() => setProofModal(req)}
                         className="flex items-center gap-2 px-4 py-2.5 bg-white text-indigo-700 text-sm font-bold rounded-xl hover:bg-indigo-50 transition-colors shrink-0">
-                        <Send className="w-4 h-4" /> I've Paid — Submit Confirmation
+                        <Send className="w-4 h-4" /> I've Paid - Submit Confirmation
                       </button>
                     </div>
                   )}
@@ -360,7 +360,7 @@ export default function Billing() {
                     <div className="bg-amber-50 border-b border-amber-200 px-5 py-2.5 flex items-center gap-2">
                       <Clock className="w-4 h-4 text-amber-600 shrink-0" />
                       <p className="text-xs font-semibold text-amber-700">
-                        Payment proof submitted on {fmtD(req.paymentProofAt)} — our team is verifying. You'll get an email when your plan is activated.
+                        Payment proof submitted on {fmtD(req.paymentProofAt)} - our team is verifying. You'll get an email when your plan is activated.
                       </p>
                     </div>
                   )}
@@ -459,14 +459,14 @@ export default function Billing() {
                     <div className="col-span-2">
                       <p className="text-sm font-semibold text-gray-900">{inv.invoiceNumber || `INV-${inv._id?.slice(-6)}`}</p>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        {inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : '—'}
+                        {inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : '-'}
                         {inv.billingCycle && <span className="ml-2 capitalize">· {inv.billingCycle}</span>}
                       </p>
                     </div>
 
                     {/* Plan + status */}
                     <div className="hidden sm:flex flex-col gap-1">
-                      <span className="text-sm font-medium text-gray-700 capitalize">{inv.plan || '—'}</span>
+                      <span className="text-sm font-medium text-gray-700 capitalize">{inv.plan || '-'}</span>
                       <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border w-fit ${s.cls}`}>
                         <StatusIcon className="w-3 h-3" />
                         {s.label}
@@ -476,7 +476,7 @@ export default function Billing() {
                     {/* Amount */}
                     <div className="hidden sm:block">
                       <p className="text-sm font-bold text-gray-900">${Number(inv.amount || 0).toFixed(2)}</p>
-                      <p className="text-xs text-gray-400">{METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '—'}</p>
+                      <p className="text-xs text-gray-400">{METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '-'}</p>
                     </div>
 
                     {/* Download */}

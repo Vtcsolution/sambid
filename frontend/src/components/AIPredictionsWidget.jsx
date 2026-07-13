@@ -387,7 +387,7 @@ export default function AIPredictionsWidget({ userPlan }) {
               {data?.fromCache ? (
                 <div className="flex items-center gap-1.5 text-xs text-gray-400">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  Predictions from {new Date(data.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — refreshes every 4 hours
+                  Predictions from {new Date(data.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - refreshes every 4 hours
                 </div>
               ) : <div />}
               {credits && <AICreditsInline credits={credits} />}

@@ -30,7 +30,7 @@ function PlanBadge({ plan }) {
 
 // ── Days-left chip ────────────────────────────────────────────────────────────
 function DaysChip({ days, plan }) {
-  if (plan === 'free' || days === null) return <span className="text-gray-400 text-xs">—</span>;
+  if (plan === 'free' || days === null) return <span className="text-gray-400 text-xs">-</span>;
   if (days < 0)  return <span className="text-xs text-red-600 font-semibold">Expired</span>;
   if (days <= 7) return <span className="text-xs text-orange-600 font-semibold">{days}d left</span>;
   return <span className="text-xs text-gray-500">{days}d left</span>;
@@ -157,9 +157,9 @@ function UserDetail({ userId }) {
               ? <CheckCircle className="w-4 h-4 text-green-500" />
               : <XCircle className="w-4 h-4 text-gray-300" />}
           </div>
-          <div className="flex justify-between"><span className="text-gray-500">Business type</span><span className="font-medium capitalize">{data.businessType || '—'}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Referral code</span><span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">{data.referralCode || '—'}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Joined</span><span className="text-xs">{data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '—'}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Business type</span><span className="font-medium capitalize">{data.businessType || '-'}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Referral code</span><span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">{data.referralCode || '-'}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Joined</span><span className="text-xs">{data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '-'}</span></div>
         </div>
       </div>
 
@@ -394,7 +394,7 @@ export default function AdminUsers() {
                               <span className="text-indigo-700 text-xs font-bold">{(user.name || user.email || '?')[0].toUpperCase()}</span>
                             </div>
                             <div className="min-w-0">
-                              <p className="font-medium text-gray-900 truncate max-w-[160px]">{user.name || '—'}</p>
+                              <p className="font-medium text-gray-900 truncate max-w-[160px]">{user.name || '-'}</p>
                               <p className="text-xs text-gray-400 truncate max-w-[160px]">{user.email}</p>
                               {user.businessName && <p className="text-xs text-indigo-500 truncate max-w-[160px]">{user.businessName}</p>}
                             </div>
@@ -424,7 +424,7 @@ export default function AdminUsers() {
 
                         {/* Joined */}
                         <td className="px-4 py-3 text-gray-500 whitespace-nowrap text-xs">
-                          {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—'}
+                          {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '-'}
                         </td>
 
                         {/* Actions */}

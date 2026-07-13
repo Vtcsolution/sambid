@@ -38,8 +38,8 @@ function ReferralRow({ r }) {
     <>
       <tr className="border-b border-gray-50 hover:bg-gray-50 transition">
         <td className="py-3 px-3">
-          <p className="font-semibold text-gray-900">{r.user?.name || '—'}</p>
-          <p className="text-xs text-gray-400">{r.user?.email || '—'}</p>
+          <p className="font-semibold text-gray-900">{r.user?.name || '-'}</p>
+          <p className="text-xs text-gray-400">{r.user?.email || '-'}</p>
           {r.countsTowardTarget && (
             <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded mt-0.5 inline-block">Counts to target</span>
           )}
@@ -49,12 +49,12 @@ function ReferralRow({ r }) {
             <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${PLAN_COLORS[r.firstPurchasePlan] || PLAN_COLORS.free}`}>
               {r.firstPurchasePlan}
             </span>
-          ) : <span className="text-xs text-gray-400">—</span>}
+          ) : <span className="text-xs text-gray-400">-</span>}
         </td>
         <td className="py-3 px-3">
           {r.firstCommission > 0
             ? <span className="font-bold text-emerald-600">{fmt(r.firstCommission)}</span>
-            : <span className="text-xs text-gray-400">—</span>}
+            : <span className="text-xs text-gray-400">-</span>}
           <p className="text-xs text-gray-400">15% one-time</p>
         </td>
         <td className="py-3 px-3">
@@ -63,13 +63,13 @@ function ReferralRow({ r }) {
               <span className="font-bold text-violet-600">{fmt(r.totalRecurringEarned)}</span>
               <p className="text-xs text-gray-400">{recurring.length} renewals</p>
             </div>
-          ) : <span className="text-xs text-gray-400">—</span>}
+          ) : <span className="text-xs text-gray-400">-</span>}
         </td>
         <td className="py-3 px-3">
           <StatusBadge status={r.status} />
         </td>
         <td className="py-3 px-3 text-xs text-gray-400">
-          {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+          {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
         </td>
         <td className="py-3 px-3">
           {recurring.length > 0 && (
@@ -221,7 +221,7 @@ export default function SupportDashboard() {
           </div>
           <p className="text-xs text-emerald-200 mb-3">
             Companies signing up via your link get <strong>20% off</strong>.
-            You earn <strong>15%</strong> on their first purchase — and <strong>7.5%</strong> on Pro/Enterprise renewals once you hit 100 Pro/Enterprise referrals.
+            You earn <strong>15%</strong> on their first purchase - and <strong>7.5%</strong> on Pro/Enterprise renewals once you hit 100 Pro/Enterprise referrals.
           </p>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-white/20 rounded-xl px-3 py-2 text-xs sm:text-sm font-mono truncate">{referralLink}</div>
@@ -273,7 +273,7 @@ export default function SupportDashboard() {
                 <span>{targetGoal - proEnterpriseReferralCount} to go</span>
               </div>
               <p className="text-xs text-gray-400 mt-2">
-                Starter plan referrals do NOT count toward this target — only Pro and Enterprise purchases count.
+                Starter plan referrals do NOT count toward this target - only Pro and Enterprise purchases count.
               </p>
             </>
           )}

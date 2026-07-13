@@ -25,7 +25,7 @@ const PLAN_PRICES = {
 
 const DEFAULT_ACCOUNT_INFO = {
   payoneer: `Payoneer Account Email: payments@sambidnotify.com\nPayoneer ID: (your Payoneer ID)\n\nSteps to pay:\n1. Log in to your Payoneer account\n2. Go to "Pay" → "Pay to Email"\n3. Enter the email above\n4. Enter the exact amount\n5. Add the Reference # in the "Note" field`,
-  bank_transfer: `Bank Name: (Your Bank Name)\nAccount Name: Sambid Notify LLC\nAccount Number: XXXX-XXXX-XXXX\nRouting Number: XXXXXXXXX\nSWIFT/BIC: XXXXXXXX\n\nFor international transfers, use SWIFT code above.\nAdd the Reference # in the payment description.`,
+  bank_transfer: `Bank Name: (Your Bank Name)\nAccount Name: Sambid LLC\nAccount Number: XXXX-XXXX-XXXX\nRouting Number: XXXXXXXXX\nSWIFT/BIC: XXXXXXXX\n\nFor international transfers, use SWIFT code above.\nAdd the Reference # in the payment description.`,
   credit_card: `We will send a secure payment link to your email within 4 hours.\nYou can use any major credit or debit card (Visa, Mastercard, Amex).\n\nAlternatively, reply to this email with your preferred time and we will call you to process the payment securely.`,
 };
 
@@ -104,7 +104,7 @@ function SendInstructionsModal({ request, onClose, onSent }) {
           <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 grid grid-cols-3 gap-3 text-center text-sm">
             <div><p className="text-xs text-indigo-400 uppercase font-semibold">Plan</p><p className="font-bold text-indigo-800 capitalize">{planKey} {cycle}</p></div>
             <div><p className="text-xs text-indigo-400 uppercase font-semibold">Amount</p><p className="font-bold text-indigo-800 text-lg">${amount.toLocaleString()}</p></div>
-            <div><p className="text-xs text-indigo-400 uppercase font-semibold">User</p><p className="font-bold text-indigo-800 truncate">{request.userName || '—'}</p></div>
+            <div><p className="text-xs text-indigo-400 uppercase font-semibold">User</p><p className="font-bold text-indigo-800 truncate">{request.userName || '-'}</p></div>
           </div>
 
           <div>
@@ -216,7 +216,7 @@ function VerifyActivateModal({ request, onClose, onActivated }) {
             {invoice && (
               <div className="flex justify-between">
                 <span className="text-gray-500">Invoice #</span>
-                <span className="font-mono font-semibold text-gray-900">{invoice.invoiceNumber || '—'}</span>
+                <span className="font-mono font-semibold text-gray-900">{invoice.invoiceNumber || '-'}</span>
               </div>
             )}
             <div className="flex justify-between">
@@ -225,13 +225,13 @@ function VerifyActivateModal({ request, onClose, onActivated }) {
             </div>
           </div>
 
-          {/* User-submitted reference — the key thing to verify */}
+          {/* User-submitted reference - the key thing to verify */}
           <div className="border-2 border-amber-200 bg-amber-50 rounded-xl p-4">
             <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1 flex items-center gap-1.5">
               <Eye className="w-3.5 h-3.5" /> User-Submitted Payment Reference
             </p>
             <p className="font-mono text-lg font-bold text-amber-900">
-              {request.userPaymentRef || '—'}
+              {request.userPaymentRef || '-'}
             </p>
             {request.userPaymentNote && (
               <p className="text-xs text-amber-700 mt-1.5 italic">Note: "{request.userPaymentNote}"</p>
@@ -369,10 +369,10 @@ export default function AdminAnnualRequests() {
     } finally { setRejectSaving(false); }
   };
 
-  const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
   const planPrice = (plan, cycle) => {
     const p = PLAN_PRICES[plan];
-    if (!p) return '—';
+    if (!p) return '-';
     return cycle === 'yearly' ? `$${p.yearly.toLocaleString()}/yr` : `$${p.monthly}/mo`;
   };
 
@@ -503,7 +503,7 @@ export default function AdminAnnualRequests() {
                   <div className="bg-green-50 border-b border-green-200 px-5 py-2 flex items-center gap-2">
                     <BadgeCheck className="w-4 h-4 text-green-600 shrink-0" />
                     <p className="text-xs font-semibold text-green-700">
-                      Payment proof submitted by user — ready to verify and activate
+                      Payment proof submitted by user - ready to verify and activate
                     </p>
                   </div>
                 )}
@@ -514,13 +514,13 @@ export default function AdminAnnualRequests() {
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${PLAN_BADGE[req.requestedPlan] || 'bg-gray-100 text-gray-600'}`}>
-                          {(req.requestedPlan || '—').charAt(0).toUpperCase()}{(req.requestedPlan || '').slice(1)} Annual
+                          {(req.requestedPlan || '-').charAt(0).toUpperCase()}{(req.requestedPlan || '').slice(1)} Annual
                         </span>
                         <span className="text-sm font-bold text-gray-900">{planPrice(req.requestedPlan, req.billingCycle || 'yearly')}</span>
                       </div>
 
-                      <p className="font-semibold text-gray-900">{req.userName || req.user?.name || '—'}</p>
-                      <p className="text-sm text-gray-500">{req.userEmail || req.user?.email || '—'}</p>
+                      <p className="font-semibold text-gray-900">{req.userName || req.user?.name || '-'}</p>
+                      <p className="text-sm text-gray-500">{req.userEmail || req.user?.email || '-'}</p>
 
                       {req.user?.supportReferredBy ? (
                         <div className="mt-1.5 inline-flex items-center gap-1.5 bg-teal-50 border border-teal-200 text-teal-700 text-xs font-medium px-2.5 py-1 rounded-full">
@@ -531,10 +531,10 @@ export default function AdminAnnualRequests() {
                       ) : null}
 
                       <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-500">
-                        <span>Payment: <span className="font-medium text-gray-700">{(req.paymentMethod || '').replace(/_/g, ' ') || '—'}</span></span>
+                        <span>Payment: <span className="font-medium text-gray-700">{(req.paymentMethod || '').replace(/_/g, ' ') || '-'}</span></span>
                         <span>Submitted: <span className="font-medium text-gray-700">{fmtDate(req.createdAt)}</span></span>
                         {req.approvedAt && <span>Approved: <span className="font-medium text-gray-700">{fmtDate(req.approvedAt)}</span></span>}
-                        {invoice && <span>Invoice: <span className="font-mono font-semibold text-gray-700">{invoice.invoiceNumber || '—'}</span></span>}
+                        {invoice && <span>Invoice: <span className="font-mono font-semibold text-gray-700">{invoice.invoiceNumber || '-'}</span></span>}
                       </div>
 
                       {/* Step tracker */}
@@ -569,7 +569,7 @@ export default function AdminAnnualRequests() {
 
                     {/* Right: actions */}
                     <div className="flex flex-wrap gap-2 lg:flex-col lg:items-end shrink-0">
-                      {/* Primary action: Verify & Activate (proof received) — admin/super_admin only */}
+                      {/* Primary action: Verify & Activate (proof received) - admin/super_admin only */}
                       {isAdmin && proofReady && (
                         <button onClick={() => setVerifyModal(req)}
                           className="flex items-center gap-1.5 px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 shadow-sm transition-colors">
@@ -577,7 +577,7 @@ export default function AdminAnnualRequests() {
                         </button>
                       )}
 
-                      {/* Send Instructions — pending & approved */}
+                      {/* Send Instructions - pending & approved */}
                       {(req.status === 'pending' || req.status === 'approved') && (
                         <button onClick={() => setInstructModal(req)}
                           className="flex items-center gap-1.5 px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 text-sm font-medium rounded-lg hover:bg-indigo-100 transition-colors">
@@ -586,7 +586,7 @@ export default function AdminAnnualRequests() {
                         </button>
                       )}
 
-                      {/* Approve / Reject (pending only) — admin/super_admin only */}
+                      {/* Approve / Reject (pending only) - admin/super_admin only */}
                       {isAdmin && req.status === 'pending' && (
                         <>
                           <button onClick={() => handleApprove(req._id)} disabled={actionLoading === req._id + '_approve'}
@@ -601,7 +601,7 @@ export default function AdminAnnualRequests() {
                         </>
                       )}
 
-                      {/* Mark as Paid / Verify & Activate — admin/super_admin only */}
+                      {/* Mark as Paid / Verify & Activate - admin/super_admin only */}
                       {isAdmin && req.status === 'approved' && !hasProof && (
                         <div className="mt-1 lg:text-right">
                           <button onClick={() => setExpandedId(isExpanded ? null : req._id)}
@@ -691,7 +691,7 @@ export default function AdminAnnualRequests() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {invoices.map(inv => {
-                  const txId = inv.paypalCaptureId || inv.payoneerInvoiceId || '—';
+                  const txId = inv.paypalCaptureId || inv.payoneerInvoiceId || '-';
                   const statusColor = {
                     paid:      'bg-green-100 text-green-700',
                     pending:   'bg-amber-100 text-amber-700',
@@ -703,23 +703,23 @@ export default function AdminAnnualRequests() {
                   return (
                     <tr key={inv._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-5 py-3">
-                        <p className="font-medium text-gray-900">{inv.user?.name || '—'}</p>
-                        <p className="text-xs text-gray-400">{inv.user?.email || '—'}</p>
+                        <p className="font-medium text-gray-900">{inv.user?.name || '-'}</p>
+                        <p className="text-xs text-gray-400">{inv.user?.email || '-'}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${PLAN_BADGE[inv.plan] || 'bg-gray-100 text-gray-600'}`}>
-                          {inv.plan || '—'}
+                          {inv.plan || '-'}
                         </span>
                       </td>
                       <td className="px-4 py-3 font-bold text-gray-900">${(inv.amount || 0).toLocaleString()}</td>
                       <td className="px-4 py-3 text-gray-600 capitalize">
-                        {PAYMENT_METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '—'}
+                        {PAYMENT_METHOD_LABEL[inv.paymentMethod] || inv.paymentMethod || '-'}
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-700">{inv.invoiceNumber || '—'}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-700">{inv.invoiceNumber || '-'}</td>
                       <td className="px-4 py-3">
-                        {txId !== '—' ? (
+                        {txId !== '-' ? (
                           <span className="font-mono text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded">{txId}</span>
-                        ) : <span className="text-gray-300">—</span>}
+                        ) : <span className="text-gray-300">-</span>}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${statusColor}`}>

@@ -56,7 +56,7 @@ function generatePDF(logs, user, monthLabel, totalCredits) {
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
   doc.text(monthLabel, ML, 24);
   if (user) {
-    doc.text(`${user.businessName || user.userName || ''} — ${user.userEmail || ''}`, ML, 30);
+    doc.text(`${user.businessName || user.userName || ''} - ${user.userEmail || ''}`, ML, 30);
   }
 
   // Summary box
@@ -103,7 +103,7 @@ function generatePDF(logs, user, monthLabel, totalCredits) {
       (log.userName || log.userEmail || '').substring(0, 22),
       (log.featureLabel || log.feature).substring(0, 24),
       (log.model || '').substring(0, 20),
-      (log.opportunityTitle || '—').substring(0, 30),
+      (log.opportunityTitle || '-').substring(0, 30),
       String(log.creditsUsed),
     ];
     if (i % 2 === 0) { doc.setFillColor(249, 250, 251); doc.rect(ML, y - 3.5, CW, 6, 'F'); }
@@ -134,7 +134,7 @@ function generatePDF(logs, user, monthLabel, totalCredits) {
   for (let p = 1; p <= pages; p++) {
     doc.setPage(p);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(156, 163, 175);
-    doc.text('SamBid — AI Credits Report', ML, H - 6);
+    doc.text('SamBid - AI Credits Report', ML, H - 6);
     doc.text(`Page ${p} of ${pages}`, W - MR, H - 6, { align: 'right' });
   }
 
@@ -262,7 +262,7 @@ export default function AdminCreditUsage() {
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <h2 className="text-lg font-bold text-gray-900">{userDetail.user?.name || 'User'}</h2>
-                <p className="text-sm text-gray-500">{userDetail.user?.email} · {userDetail.user?.businessName || '—'} · Plan: <span className="font-semibold capitalize">{userDetail.user?.plan}</span></p>
+                <p className="text-sm text-gray-500">{userDetail.user?.email} · {userDetail.user?.businessName || '-'} · Plan: <span className="font-semibold capitalize">{userDetail.user?.plan}</span></p>
               </div>
               <div className="flex gap-2">
                 <button onClick={handleDownloadPDF}
@@ -316,7 +316,7 @@ export default function AdminCreditUsage() {
                       <td className="px-4 py-3 text-gray-500">{d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</td>
                       <td className="px-4 py-3 font-medium">{log.featureLabel}</td>
                       <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${TIER_COLORS[log.model] || 'bg-gray-100 text-gray-600'}`}>{log.model}</span></td>
-                      <td className="px-4 py-3 text-gray-500 max-w-[200px] truncate">{log.opportunityTitle || '—'}</td>
+                      <td className="px-4 py-3 text-gray-500 max-w-[200px] truncate">{log.opportunityTitle || '-'}</td>
                       <td className="px-4 py-3 text-center font-bold text-indigo-600">{log.creditsUsed}</td>
                       <td className="px-4 py-3 text-center text-gray-400">{log.creditsRemaining}</td>
                     </tr>
@@ -355,7 +355,7 @@ export default function AdminCreditUsage() {
                 <StatCard icon={Zap} label="Total Credits Used" value={summary.totalCredits} sub={summary.monthLabel} color="bg-indigo-50 text-indigo-600" />
                 <StatCard icon={Brain} label="Total AI Calls" value={summary.totalCalls} sub="All features combined" color="bg-violet-50 text-violet-600" />
                 <StatCard icon={Users} label="Active Users" value={summary.byUser.length} sub="Used AI this month" color="bg-blue-50 text-blue-600" />
-                <StatCard icon={TrendingUp} label="Top Feature" value={summary.byFeature[0]?.featureLabel || '—'} sub={summary.byFeature[0] ? `${summary.byFeature[0].totalCredits} credits` : ''} color="bg-green-50 text-green-600" />
+                <StatCard icon={TrendingUp} label="Top Feature" value={summary.byFeature[0]?.featureLabel || '-'} sub={summary.byFeature[0] ? `${summary.byFeature[0].totalCredits} credits` : ''} color="bg-green-50 text-green-600" />
               </div>
 
               {/* By Feature */}
@@ -504,10 +504,10 @@ export default function AdminCreditUsage() {
                             <p className="text-sm font-medium truncate max-w-[120px]">{log.userName}</p>
                             <p className="text-xs text-gray-400 truncate max-w-[120px]">{log.userEmail}</p>
                           </td>
-                          <td className="px-3 py-3 text-sm text-gray-600 max-w-[120px] truncate">{log.businessName || '—'}</td>
+                          <td className="px-3 py-3 text-sm text-gray-600 max-w-[120px] truncate">{log.businessName || '-'}</td>
                           <td className="px-3 py-3 text-sm font-medium">{log.featureLabel}</td>
                           <td className="px-3 py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${TIER_COLORS[log.model] || 'bg-gray-100 text-gray-600'}`}>{(log.model || '').replace('Claude ', '')}</span></td>
-                          <td className="px-3 py-3 text-xs text-gray-500 max-w-[180px] truncate">{log.opportunityTitle || '—'}</td>
+                          <td className="px-3 py-3 text-xs text-gray-500 max-w-[180px] truncate">{log.opportunityTitle || '-'}</td>
                           <td className="px-3 py-3"><span className="text-xs capitalize bg-gray-100 px-2 py-0.5 rounded-full">{log.plan}</span></td>
                           <td className="px-3 py-3 text-center font-bold text-indigo-600">{log.creditsUsed}</td>
                           <td className="px-3 py-3 text-center text-gray-400">{log.creditsRemaining}</td>

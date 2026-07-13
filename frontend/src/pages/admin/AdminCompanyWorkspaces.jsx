@@ -25,7 +25,7 @@ function authHeaders() {
 }
 
 function formatDate(d) {
-  if (!d) return '—';
+  if (!d) return '-';
   return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
@@ -61,7 +61,7 @@ function StatCard({ label, value, icon: Icon, color }) {
         <Icon className="w-6 h-6" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-gray-900">{value ?? '—'}</p>
+        <p className="text-2xl font-bold text-gray-900">{value ?? '-'}</p>
         <p className="text-sm text-gray-500">{label}</p>
       </div>
     </div>
@@ -146,12 +146,12 @@ function DetailModal({ companyId, onClose, onVerify, onDelete }) {
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-semibold">Plan</p>
-                <p className="capitalize font-medium text-gray-900">{company.owner?.plan || '—'}</p>
+                <p className="capitalize font-medium text-gray-900">{company.owner?.plan || '-'}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-semibold">UEI</p>
                 <div className="flex items-center gap-2">
-                  <p className="font-mono font-medium text-gray-900">{company.uei || '—'}</p>
+                  <p className="font-mono font-medium text-gray-900">{company.uei || '-'}</p>
                   {company.ueiVerified
                     ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Verified</span>
                     : <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">Unverified</span>
@@ -160,7 +160,7 @@ function DetailModal({ companyId, onClose, onVerify, onDelete }) {
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-semibold">CAGE</p>
-                <p className="font-mono font-medium text-gray-900">{company.cage || '—'}</p>
+                <p className="font-mono font-medium text-gray-900">{company.cage || '-'}</p>
               </div>
               {company.address?.city && (
                 <div>
@@ -438,7 +438,7 @@ export default function AdminCompanyWorkspaces() {
                             : <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
                           }
                         </div>
-                      ) : <span className="text-gray-300 text-xs">—</span>}
+                      ) : <span className="text-gray-300 text-xs">-</span>}
                     </td>
                     <td className="px-4 py-4 text-center">
                       <span className="inline-flex items-center gap-1 text-sm font-semibold text-gray-700">

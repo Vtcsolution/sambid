@@ -4,7 +4,7 @@ import { CheckCircle, Play, ArrowRight, ChevronLeft, Loader2, Sparkles, Zap } fr
 import api from '../services/api';
 import SEOHead from '../components/SEOHead';
 
-// Per-feature keyword targeting — long-tail search intent for each tool
+// Per-feature keyword targeting - long-tail search intent for each tool
 const FEATURE_KEYWORDS = {
   'contract-opportunities': 'federal contract opportunities, SAM.gov contract search, NAICS code matching, government contract finder, federal bid opportunities',
   'deadline-calendar':      'federal contract deadline tracker, SAM.gov submission deadlines, government bid calendar, contract due date reminders',
@@ -70,7 +70,7 @@ export default function FeatureShowcase() {
   const featureJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: `${feature.title} — Sambid`,
+    name: `${feature.title} - Sambid`,
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     description: feature.subtitle,
@@ -81,19 +81,19 @@ export default function FeatureShowcase() {
   return (
     <div className="bg-white overflow-hidden">
       <SEOHead
-        title={`${feature.title} — Sambid`}
-        description={`${feature.subtitle} Try Sambid free — AI-powered federal contract discovery for small businesses.`}
+        title={`${feature.title} - Sambid`}
+        description={`${feature.subtitle} Try Sambid free - AI-powered federal contract discovery for small businesses.`}
         keywords={FEATURE_KEYWORDS[slug] || `${feature.title.toLowerCase()}, federal contracting software, SAM.gov tools, government contract platform`}
         canonical={`https://sambid.co/features/${slug}`}
         jsonLd={featureJsonLd}
       />
 
-      {/* ── Hero — same as home page dark gradient ── */}
+      {/* ── Hero - same as home page dark gradient ── */}
       <section className="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 text-white">
         <div className="absolute inset-0 bg-black opacity-20" />
         <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left — text */}
+            {/* Left - text */}
             <div>
               <Link to="/features" className="inline-flex items-center gap-1 text-indigo-300 hover:text-white text-sm mb-6 transition-colors">
                 <ChevronLeft className="w-4 h-4" /> All Features
@@ -120,7 +120,7 @@ export default function FeatureShowcase() {
               </div>
             </div>
 
-            {/* Right — main video or thumbnail */}
+            {/* Right - main video or thumbnail */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5" style={{ aspectRatio: '16/9' }}>
                 {embedUrl && embedUrl !== 'direct' ? (
@@ -150,7 +150,7 @@ export default function FeatureShowcase() {
         </div>
       </section>
 
-      {/* ── Steps — alternating layout like home page phases ── */}
+      {/* ── Steps - alternating layout like home page phases ── */}
       {feature.steps?.length > 0 && (
         <section className="py-16 sm:py-20 bg-white">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,7 +173,7 @@ export default function FeatureShowcase() {
                       idx % 2 !== 0 ? 'bg-gray-50 border border-gray-100 shadow-sm' : 'bg-white'
                     } ${reversed ? 'lg:grid-flow-col-dense' : ''}`}
                   >
-                    {/* Visual block — video, image, or placeholder */}
+                    {/* Visual block - video, image, or placeholder */}
                     <div className={reversed ? 'lg:col-start-2' : ''}>
                       <div className="relative rounded-2xl overflow-hidden bg-indigo-50 border border-indigo-100 shadow-lg"
                         style={{ aspectRatio: '16/9' }}>
@@ -255,7 +255,7 @@ export default function FeatureShowcase() {
         </div>
       </section>
 
-      {/* ── CTA — same style as home page ── */}
+      {/* ── CTA - same style as home page ── */}
       <section className="relative bg-gradient-to-r from-indigo-600 to-indigo-800 py-16 sm:py-20">
         <div className="absolute inset-0 bg-black opacity-20" />
         <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">

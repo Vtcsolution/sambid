@@ -259,7 +259,7 @@ const MarketPanel = ({ insights }) => {
           { label: 'Active Contracts',   value: insights.totalOpportunities, color: 'text-indigo-600' },
           { label: 'Avg Contract Value', value: `$${(insights.avgContractValue || 0).toLocaleString()}`, color: 'text-green-600' },
           { label: 'Competition Level',  value: insights.competitionLevel, color: insights.competitionLevel === 'Low' ? 'text-green-600' : insights.competitionLevel === 'High' ? 'text-red-600' : 'text-amber-600' },
-          { label: 'Best Months',        value: insights.bestMonthsToSubmit?.join(', ') || '—', color: 'text-blue-600' },
+          { label: 'Best Months',        value: insights.bestMonthsToSubmit?.join(', ') || '-', color: 'text-blue-600' },
         ].map((s, i) => (
           <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 text-center">
             <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
@@ -369,7 +369,7 @@ export default function AIPredictions() {
       <PlanGate
         requiredPlan="pro"
         featureName="AI Contract Predictions"
-        description="Get personalized win-probability analysis, bid strategy, and market intelligence powered by AI — tailored to your NAICS codes and business profile. Available on Pro and Enterprise plans."
+        description="Get personalized win-probability analysis, bid strategy, and market intelligence powered by AI - tailored to your NAICS codes and business profile. Available on Pro and Enterprise plans."
       />
     );
   }
@@ -392,8 +392,8 @@ export default function AIPredictions() {
                 steps={[
                   { title: 'Scans your matched opportunities', description: 'Analyzes contracts in your feed that match your NAICS codes and business profile' },
                   { title: 'Win probability scoring', description: 'Each contract gets a 0-100% win probability based on your NAICS fit, set-aside eligibility, past performance, and competition level' },
-                  { title: 'Personalized bid strategy', description: '5-step action plan for each contract — what to do, who to contact, how to position' },
-                  { title: 'Urgency tracking', description: 'Critical (≤3 days), High (≤7), Medium (≤14), Low (>14) — focus on what needs action now' },
+                  { title: 'Personalized bid strategy', description: '5-step action plan for each contract - what to do, who to contact, how to position' },
+                  { title: 'Urgency tracking', description: 'Critical (≤3 days), High (≤7), Medium (≤14), Low (>14) - focus on what needs action now' },
                 ]}
                 dataUsed={['Your Opportunities Feed', 'USASpending (competitors)', 'Your Company Profile', 'Your Past Wins']}
               >
@@ -427,7 +427,7 @@ export default function AIPredictions() {
         {data?.fromCache && !loading && (
           <div className="flex items-center gap-2 text-xs text-gray-400 mb-4 bg-white border border-gray-100 rounded-xl px-4 py-2.5">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            Analysis from {new Date(data.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} —
+            Analysis from {new Date(data.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
             refreshes every 4 hours
             <span className="ml-auto text-indigo-500 font-medium">
               NAICS: {data.userProfile?.naicsCodes?.join(', ')}
@@ -435,12 +435,12 @@ export default function AIPredictions() {
           </div>
         )}
 
-        {/* AI unavailable banner — shows when basic scoring is used */}
+        {/* AI unavailable banner - shows when basic scoring is used */}
         {!loading && !error && data?.marketInsights?.outlookReason?.includes('AI narrative unavailable') && (
           <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 mb-4">
             <AlertTriangle className="w-4 h-4 shrink-0 text-amber-500" />
             <span>
-              <strong>Basic scoring mode</strong> — AI analysis is unavailable (check Anthropic API key in admin settings).
+              <strong>Basic scoring mode</strong> - AI analysis is unavailable (check Anthropic API key in admin settings).
               Predictions shown are based on data signals only, not AI analysis.
             </span>
           </div>

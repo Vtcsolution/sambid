@@ -35,7 +35,7 @@ function TwoFactorStep({ tempToken, rememberMe, onSuccess, onCancel }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 py-10 px-4">
       <SEOHead
-        title="Log In — Sambid Federal Contract Platform"
+        title="Log In - Sambid Federal Contract Platform"
         description="Log in to your Sambid account to view your daily matched federal contract opportunities, manage alerts, and track bids."
         keywords="login Sambid, federal contracting platform login, SAM.gov alert dashboard login"
         canonical="https://sambid.co/login"
@@ -47,7 +47,7 @@ function TwoFactorStep({ tempToken, rememberMe, onSuccess, onCancel }) {
               <span className="text-white font-bold text-base">S</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-              Sambid Notify
+              Sambid
             </span>
           </div>
           <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -200,7 +200,7 @@ export default function Login({ setIsAuthenticated, setUser }) {
               <span className="text-white font-bold text-base">S</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-              Sambid Notify
+              Sambid
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Welcome back</h1>

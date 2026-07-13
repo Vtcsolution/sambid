@@ -23,7 +23,7 @@ async function api(path, method = 'GET', body) {
 }
 
 function fmt(n)   { return n ? `$${Number(n).toLocaleString()}` : '$0'; }
-function fmtD(d)  { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'; }
+function fmtD(d)  { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'; }
 
 function downloadInvoicePDF(inv, companyName) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -35,7 +35,7 @@ function downloadInvoicePDF(inv, companyName) {
   doc.setFontSize(16); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
   doc.text('INVOICE', margin, 16);
   doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-  doc.text('Sambid Notify — Managed Service', pageW - margin, 12, { align: 'right' });
+  doc.text('Sambid - Managed Service', pageW - margin, 12, { align: 'right' });
   doc.text('support@sambid.co', pageW - margin, 18, { align: 'right' });
 
   doc.setTextColor(30, 30, 30); doc.setFontSize(10);
@@ -47,13 +47,13 @@ function downloadInvoicePDF(inv, companyName) {
   };
 
   field('Invoice Number:', inv.invoiceNumber || inv._id);
-  field('Bill To:',        companyName || '—');
+  field('Bill To:',        companyName || '-');
   field('Type:',           inv.type === 'monthly_fee' ? 'Monthly Retainer Fee' : 'Commission');
-  field('Date:',           inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—');
+  field('Date:',           inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '-');
   field('Due Date:',       fmtD(inv.dueDate));
   if (inv.contractValue > 0) field('Contract Value:', fmt(inv.contractValue));
   if (inv.commissionRate > 0) field('Commission Rate:', `${inv.commissionRate}%`);
-  field('Payment Method:', inv.paymentMethod ? inv.paymentMethod.charAt(0).toUpperCase() + inv.paymentMethod.slice(1) : '—');
+  field('Payment Method:', inv.paymentMethod ? inv.paymentMethod.charAt(0).toUpperCase() + inv.paymentMethod.slice(1) : '-');
   field('Status:',         (inv.status || '').toUpperCase());
   if (inv.notes) field('Notes:', inv.notes);
 
@@ -97,7 +97,7 @@ function StatCard({ label, value, icon: Icon, color }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 flex items-center gap-4">
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}><Icon className="w-6 h-6" /></div>
-      <div><p className="text-2xl font-bold text-gray-900">{value ?? '—'}</p><p className="text-sm text-gray-500">{label}</p></div>
+      <div><p className="text-2xl font-bold text-gray-900">{value ?? '-'}</p><p className="text-sm text-gray-500">{label}</p></div>
     </div>
   );
 }
@@ -207,7 +207,7 @@ function CommissionConfig({ ms, onSaved }) {
   );
 }
 
-// ── Opportunity picker — search real SAM.gov opportunities to auto-fill a bid ──
+// ── Opportunity picker - search real SAM.gov opportunities to auto-fill a bid ──
 function OpportunityPicker({ onPick }) {
   const [query,   setQuery]   = useState('');
   const [results, setResults] = useState([]);
@@ -255,14 +255,14 @@ function OpportunityPicker({ onPick }) {
       )}
       {open && !loading && query.trim().length >= 3 && results.length === 0 && (
         <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-xl p-3 text-xs text-gray-400 text-center">
-          No matching opportunities found — you can still fill in the fields below manually.
+          No matching opportunities found - you can still fill in the fields below manually.
         </div>
       )}
     </div>
   );
 }
 
-// ── Company eligibility profile — everything admin needs to know to bid well ──
+// ── Company eligibility profile - everything admin needs to know to bid well ──
 function CompanyProfileCard({ company }) {
   if (!company) return null;
   const certLabels = { '8a': '8(a)', wosb: 'WOSB', edwosb: 'EDWOSB', hubzone: 'HUBZone', sdvosb: 'SDVOSB', vosb: 'VOSB', sdb: 'SDB', other: 'Other' };
@@ -274,13 +274,13 @@ function CompanyProfileCard({ company }) {
         <div>
           <p className="text-gray-400">UEI</p>
           <p className="font-mono font-semibold text-gray-900 flex items-center gap-1">
-            {company.uei || '—'}
+            {company.uei || '-'}
             {company.ueiVerified && <ShieldCheck className="w-3.5 h-3.5 text-green-500" title="Verified" />}
           </p>
         </div>
         <div>
           <p className="text-gray-400">CAGE Code</p>
-          <p className="font-mono font-semibold text-gray-900">{company.cage || '—'}</p>
+          <p className="font-mono font-semibold text-gray-900">{company.cage || '-'}</p>
         </div>
         <div className="col-span-2">
           <p className="text-gray-400 mb-1">NAICS Codes</p>
@@ -309,7 +309,7 @@ function CompanyProfileCard({ company }) {
   );
 }
 
-// ── Bid documents — upload + list proposal/capability/contract files ─────────
+// ── Bid documents - upload + list proposal/capability/contract files ─────────
 function BidDocuments({ serviceId, bid, onChanged }) {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
@@ -360,7 +360,7 @@ function BidDocuments({ serviceId, bid, onChanged }) {
   );
 }
 
-// ── Stable field component — must be outside BidForm to avoid remount on every keystroke ──
+// ── Stable field component - must be outside BidForm to avoid remount on every keystroke ──
 function BidField({ label, field, type = 'text', placeholder = '', value, onChange }) {
   return (
     <div>
@@ -419,7 +419,7 @@ function BidForm({ serviceId, bid, onSaved, onCancel }) {
       {!bid && <OpportunityPicker onPick={handlePickOpportunity} />}
       {linkedOpp && (
         <div className="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-xs text-green-700">
-          <Link2 className="w-3.5 h-3.5 shrink-0" /> Linked to a real SAM.gov opportunity — fields auto-filled from live data.
+          <Link2 className="w-3.5 h-3.5 shrink-0" /> Linked to a real SAM.gov opportunity - fields auto-filled from live data.
         </div>
       )}
 
@@ -658,7 +658,7 @@ function ServiceDetail({ serviceId, onClose, onUpdate }) {
               <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${STATUS_COLORS[ms.status]}`}>{ms.status}</span>
             </div>
 
-            {/* Company eligibility profile — UEI, CAGE, NAICS, certifications */}
+            {/* Company eligibility profile - UEI, CAGE, NAICS, certifications */}
             <CompanyProfileCard company={ms.company} />
 
             {/* Quick stats */}
@@ -712,14 +712,14 @@ function ServiceDetail({ serviceId, onClose, onUpdate }) {
                               <p className="text-sm font-semibold text-gray-900 truncate">{bid.contractTitle}</p>
                               {bid.opportunity && <Link2 className="w-3 h-3 text-green-500 shrink-0" title="Linked to real SAM.gov data" />}
                             </div>
-                            <p className="text-xs text-gray-500">{bid.agency || '—'} {bid.solicitationNumber ? `· ${bid.solicitationNumber}` : ''}</p>
+                            <p className="text-xs text-gray-500">{bid.agency || '-'} {bid.solicitationNumber ? `· ${bid.solicitationNumber}` : ''}</p>
                             {bid.status === 'won' && (
                               <div className="mt-1 space-y-0.5">
                                 <p className="text-xs font-semibold text-green-700">{fmt(bid.wonValue)} won · Total commission: {fmt(bid.commissionAmount)} ({bid.commissionRate}%)</p>
-                                <p className="text-[11px] text-gray-500">Invoiced so far: {fmt(bid.commissionInvoiced)} — billed per milestone as the government pays</p>
+                                <p className="text-[11px] text-gray-500">Invoiced so far: {fmt(bid.commissionInvoiced)} - billed per milestone as the government pays</p>
                                 {projectForBid(bid._id) && (
                                   <p className="text-[11px] text-indigo-600">
-                                    Fulfillment project: <span className="font-mono">{projectForBid(bid._id).projectNumber}</span> — manage milestones &amp; gov payments in Subcontracting → Projects
+                                    Fulfillment project: <span className="font-mono">{projectForBid(bid._id).projectNumber}</span> - manage milestones &amp; gov payments in Subcontracting → Projects
                                   </p>
                                 )}
                               </div>
@@ -745,7 +745,7 @@ function ServiceDetail({ serviceId, onClose, onUpdate }) {
             {/* Invoices */}
             <div>
               <h3 className="font-bold text-gray-900 mb-3">Commission Invoices ({invoices.length})</h3>
-              <p className="text-xs text-gray-400 -mt-2 mb-3">Commission is billed per milestone — go to the fulfillment project to record each government payment as it's received.</p>
+              <p className="text-xs text-gray-400 -mt-2 mb-3">Commission is billed per milestone - go to the fulfillment project to record each government payment as it's received.</p>
               {invoices.length === 0 ? (
                 <p className="text-xs text-gray-400 text-center py-4">No invoices yet. Win a bid, then record government payments per milestone in the fulfillment project.</p>
               ) : (
@@ -927,7 +927,7 @@ export default function AdminManagedService() {
                 {services.map(s => (
                   <tr key={s._id} className="hover:bg-gray-50 transition">
                     <td className="px-5 py-4">
-                      <p className="font-semibold text-gray-900">{s.company?.name || '—'}</p>
+                      <p className="font-semibold text-gray-900">{s.company?.name || '-'}</p>
                       <p className="text-xs text-gray-500">{s.owner?.name} · {s.owner?.email}</p>
                     </td>
                     <td className="px-4 py-4 text-center hidden sm:table-cell">

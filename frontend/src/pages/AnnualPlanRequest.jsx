@@ -125,14 +125,14 @@ export default function AnnualPlanRequest() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-10 px-4">
-      <SEOHead title="Annual Plan Request — Sambid" noindex={true} />
+      <SEOHead title="Annual Plan Request - Sambid" noindex={true} />
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold mb-4">
             <Calendar className="w-3.5 h-3.5" />
-            Annual Plan — Manual Review & Activation
+            Annual Plan - Manual Review & Activation
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Request Annual Plan</h1>
           <p className="text-gray-500 text-sm max-w-md mx-auto">
@@ -257,7 +257,7 @@ export default function AnnualPlanRequest() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-800 text-sm">Bank Transfer / Wire / Invoice</p>
-                      <p className="text-xs text-gray-400">Submit a request — our team activates within 1 business day</p>
+                      <p className="text-xs text-gray-400">Submit a request - our team activates within 1 business day</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
                   </button>
@@ -354,7 +354,7 @@ export default function AnnualPlanRequest() {
                       className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors text-sm">
                       {loading
                         ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting…</>
-                        : <>Submit Request — {plan.price} <ArrowRight className="w-4 h-4" /></>}
+                        : <>Submit Request - {plan.price} <ArrowRight className="w-4 h-4" /></>}
                     </button>
 
                     <p className="text-center text-xs text-gray-400">

@@ -32,7 +32,7 @@ export const applyAsPartner = async (req, res) => {
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:20px;border-radius:12px 12px 0 0;color:white;text-align:center">
             <h2 style="margin:0">New Partner Application</h2>
-            <p style="margin:4px 0 0;opacity:.85;font-size:14px">Sambid Notify Partner Program</p>
+            <p style="margin:4px 0 0;opacity:.85;font-size:14px">Sambid Partner Program</p>
           </div>
           <div style="background:#f9fafb;padding:24px;border-radius:0 0 12px 12px">
             <table cellpadding="8" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;width:100%">
@@ -57,16 +57,16 @@ export const applyAsPartner = async (req, res) => {
     transporter.sendMail({
       from:    FROM.noreply(),
       to:      email,
-      subject: 'Application Received — Sambid Notify Partner Program',
+      subject: 'Application Received — Sambid Partner Program',
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:30px;border-radius:12px 12px 0 0;color:white;text-align:center">
             <h2 style="margin:0">Application Received!</h2>
-            <p style="margin:6px 0 0;opacity:.85">Sambid Notify Partner Program</p>
+            <p style="margin:6px 0 0;opacity:.85">Sambid Partner Program</p>
           </div>
           <div style="background:#f9fafb;padding:24px;border-radius:0 0 12px 12px">
             <p style="font-size:16px;color:#111827">Dear <strong>${name}</strong>,</p>
-            <p style="color:#374151">Thank you for applying to the Sambid Notify Partner Program. We have received your application and will review it within <strong>2–3 business days</strong>.</p>
+            <p style="color:#374151">Thank you for applying to the Sambid Partner Program. We have received your application and will review it within <strong>2–3 business days</strong>.</p>
             <div style="background:#ede9fe;border-radius:8px;padding:16px;margin:16px 0">
               <p style="margin:0 0 8px;font-weight:bold;color:#4f46e5">If approved, you will receive:</p>
               <ul style="margin:0;padding-left:20px;color:#4b5563;font-size:14px">
@@ -77,7 +77,7 @@ export const applyAsPartner = async (req, res) => {
               </ul>
             </div>
             <p style="color:#6b7280;font-size:13px">If you have any questions, reply to this email.</p>
-            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Notify Team</p>
+            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
           </div>
         </div>
       `,
@@ -155,12 +155,12 @@ export const processApplication = async (req, res) => {
       transporter.sendMail({
         from:    FROM.noreply(),
         to:      application.email,
-        subject: 'Welcome to the Sambid Notify Partner Program!',
+        subject: 'Welcome to the Sambid Partner Program!',
         html: `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
             <div style="background:linear-gradient(135deg,#16a34a,#15803d);padding:30px;border-radius:12px 12px 0 0;color:white;text-align:center">
               <h2 style="margin:0">You're Approved!</h2>
-              <p style="margin:6px 0 0;opacity:.85">Welcome to the Sambid Notify Partner Program</p>
+              <p style="margin:6px 0 0;opacity:.85">Welcome to the Sambid Partner Program</p>
             </div>
             <div style="background:#f9fafb;padding:24px;border-radius:0 0 12px 12px">
               <p style="font-size:16px;color:#111827">Dear <strong>${application.name}</strong>,</p>
@@ -193,7 +193,7 @@ export const processApplication = async (req, res) => {
               </div>
 
               <p style="color:#6b7280;font-size:13px">Please change your password after your first login.</p>
-              <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Notify Team</p>
+              <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
             </div>
           </div>
         `,
@@ -211,7 +211,7 @@ export const processApplication = async (req, res) => {
     transporter.sendMail({
       from:    FROM.noreply(),
       to:      application.email,
-      subject: 'Regarding Your Partner Application — Sambid Notify',
+      subject: 'Regarding Your Partner Application — Sambid',
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:#6b7280;padding:24px;border-radius:12px 12px 0 0;color:white;text-align:center">
@@ -219,11 +219,11 @@ export const processApplication = async (req, res) => {
           </div>
           <div style="background:#f9fafb;padding:24px;border-radius:0 0 12px 12px">
             <p style="color:#374151">Dear <strong>${application.name}</strong>,</p>
-            <p style="color:#374151">Thank you for your interest in the Sambid Notify Partner Program.</p>
+            <p style="color:#374151">Thank you for your interest in the Sambid Partner Program.</p>
             <p style="color:#374151">After reviewing your application, we are unable to move forward at this time.</p>
             ${adminNote ? `<div style="background:#fee2e2;border-radius:8px;padding:12px 16px;margin:12px 0"><p style="margin:0;color:#991b1b"><strong>Reason:</strong> ${adminNote}</p></div>` : ''}
             <p style="color:#6b7280">You are welcome to reapply in the future.</p>
-            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Notify Team</p>
+            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
           </div>
         </div>
       `,

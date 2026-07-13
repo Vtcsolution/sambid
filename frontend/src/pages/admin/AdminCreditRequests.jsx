@@ -48,7 +48,7 @@ function RequestRow({ req, onApprove, onReject, processing }) {
 
         {/* User */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">{user.name || '—'}</p>
+          <p className="text-sm font-semibold text-gray-900 truncate">{user.name || '-'}</p>
           <p className="text-xs text-gray-400 truncate">{user.email}</p>
         </div>
 
@@ -74,11 +74,11 @@ function RequestRow({ req, onApprove, onReject, processing }) {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
             <div>
               <p className="text-gray-400 mb-0.5">User Plan</p>
-              <p className="font-semibold text-gray-800 capitalize">{user.plan || '—'}</p>
+              <p className="font-semibold text-gray-800 capitalize">{user.plan || '-'}</p>
             </div>
             <div>
               <p className="text-gray-400 mb-0.5">Feature Triggered</p>
-              <p className="font-semibold text-gray-800">{req.feature || '—'}</p>
+              <p className="font-semibold text-gray-800">{req.feature || '-'}</p>
             </div>
             <div>
               <p className="text-gray-400 mb-0.5">Current Bonus Credits</p>
@@ -86,7 +86,7 @@ function RequestRow({ req, onApprove, onReject, processing }) {
             </div>
             <div className="col-span-2">
               <p className="text-gray-400 mb-0.5">PayPal Order ID</p>
-              <p className="font-mono text-gray-700 break-all text-[11px]">{req.paypalOrderId || '—'}</p>
+              <p className="font-mono text-gray-700 break-all text-[11px]">{req.paypalOrderId || '-'}</p>
             </div>
             <div>
               <p className="text-gray-400 mb-0.5">Submitted</p>

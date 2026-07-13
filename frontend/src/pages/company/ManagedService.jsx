@@ -29,9 +29,9 @@ const INV_STATUS = {
 };
 
 function fmt(n) { return n ? `$${Number(n).toLocaleString()}` : '$0'; }
-function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'; }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'; }
 
-// ── PDF generation — matches the same layout used for plan billing invoices ──
+// ── PDF generation - matches the same layout used for plan billing invoices ──
 function downloadCommissionInvoicePDF(inv, companyName) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageW = doc.internal.pageSize.getWidth();
@@ -42,7 +42,7 @@ function downloadCommissionInvoicePDF(inv, companyName) {
   doc.setFontSize(16); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
   doc.text('INVOICE', margin, 16);
   doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-  doc.text('Sambid Notify — Managed Service', pageW - margin, 12, { align: 'right' });
+  doc.text('Sambid - Managed Service', pageW - margin, 12, { align: 'right' });
   doc.text('support@sambid.co', pageW - margin, 18, { align: 'right' });
 
   doc.setTextColor(30, 30, 30); doc.setFontSize(10);
@@ -54,13 +54,13 @@ function downloadCommissionInvoicePDF(inv, companyName) {
   };
 
   field('Invoice Number:', inv.invoiceNumber || inv._id);
-  field('Bill To:',        companyName || '—');
+  field('Bill To:',        companyName || '-');
   field('Type:',           inv.type === 'monthly_fee' ? 'Monthly Retainer Fee' : 'Commission');
-  field('Date:',           inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—');
+  field('Date:',           inv.paidAt ? new Date(inv.paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '-');
   field('Due Date:',       fmtDate(inv.dueDate));
   if (inv.contractValue > 0) field('Contract Value:', fmt(inv.contractValue));
   if (inv.commissionRate > 0) field('Commission Rate:', `${inv.commissionRate}%`);
-  field('Payment Method:', inv.paymentMethod ? inv.paymentMethod.charAt(0).toUpperCase() + inv.paymentMethod.slice(1) : '—');
+  field('Payment Method:', inv.paymentMethod ? inv.paymentMethod.charAt(0).toUpperCase() + inv.paymentMethod.slice(1) : '-');
   field('Status:',         (inv.status || '').toUpperCase());
   if (inv.notes) field('Notes:', inv.notes);
 
@@ -94,14 +94,14 @@ export default function ManagedServicePage() {
 
   useEffect(() => { load(); }, []);
 
-  // Handle return from Stripe Checkout — confirm the invoice payment
+  // Handle return from Stripe Checkout - confirm the invoice payment
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const invoiceId = params.get('invoiceId');
     if (params.get('invoice_paid') === '1' && invoiceId) {
       companyAPI.confirmInvoiceStripe(invoiceId, {})
-        .then(res => { if (res.data.success) { setPayNotice('Payment successful — thank you!'); load(); } })
-        .catch(() => setPayNotice('Payment received — refreshing your invoice status.'))
+        .then(res => { if (res.data.success) { setPayNotice('Payment successful - thank you!'); load(); } })
+        .catch(() => setPayNotice('Payment received - refreshing your invoice status.'))
         .finally(() => window.history.replaceState({}, '', '/company/managed-service'));
     } else if (params.get('invoice_cancelled') === '1') {
       window.history.replaceState({}, '', '/company/managed-service');
@@ -175,13 +175,13 @@ export default function ManagedServicePage() {
       </div>
       <h1 className="text-2xl font-bold text-gray-900 mb-3">Win Contracts With Our Help</h1>
       <p className="text-gray-500 mb-2">Our team finds contracts, writes proposals, and manages your bids end-to-end.</p>
-      <p className="text-gray-500 mb-8">We earn a commission only when <strong>you win</strong> — our success is your success.</p>
+      <p className="text-gray-500 mb-8">We earn a commission only when <strong>you win</strong> - our success is your success.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 text-left">
         {[
           { icon: FileText,   title: 'We find contracts', desc: 'Matched to your NAICS, certifications, and past performance' },
           { icon: Briefcase,  title: 'We write proposals', desc: 'Professional bid writing by GovCon experts' },
-          { icon: DollarSign, title: 'Pay on win only',   desc: 'Commission taken from contract value — no win, no fee' },
+          { icon: DollarSign, title: 'Pay on win only',   desc: 'Commission taken from contract value - no win, no fee' },
         ].map(({ icon: Icon, title, desc }) => (
           <div key={title} className="bg-white rounded-2xl border border-gray-200 p-4">
             <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center mb-3">
@@ -221,17 +221,17 @@ export default function ManagedServicePage() {
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><Trophy className="w-6 h-6 text-indigo-600" /> Managed Service
             <HowItWorks title="Managed Bidding Service" steps={[
               { title: 'Apply for managed service', description: 'Sign up and our team reviews your company profile, NAICS codes, and certifications' },
-              { title: 'We find matching contracts', description: 'Our team identifies real SAM.gov opportunities that match your capabilities and set-aside eligibility — linked directly, not generic templates' },
+              { title: 'We find matching contracts', description: 'Our team identifies real SAM.gov opportunities that match your capabilities and set-aside eligibility - linked directly, not generic templates' },
               { title: 'We write and submit proposals', description: 'Professional proposal writing using your real past performance and competitive positioning' },
-              { title: 'You win — delivery begins immediately', description: 'A fulfillment project is created the moment you win, with milestones for the work ahead' },
-              { title: 'Commission billed per milestone, not all at once', description: 'As the government pays for each milestone of the contract, we invoice our commission for just that portion — no surprise lump-sum bill at win time' },
+              { title: 'You win - delivery begins immediately', description: 'A fulfillment project is created the moment you win, with milestones for the work ahead' },
+              { title: 'Commission billed per milestone, not all at once', description: 'As the government pays for each milestone of the contract, we invoice our commission for just that portion - no surprise lump-sum bill at win time' },
             ]} dataUsed={['Your Company Profile', 'SAM.gov Opportunities', 'USASpending Competitors', 'Your Past Performance']} >
               <p className="text-sm font-semibold text-gray-700 mt-2">Full workflow:</p>
               <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
                 <li><strong>Apply</strong> → team reviews within 24-48 hours</li>
                 <li><strong>Active</strong> → we identify bids, you see them here in real-time, with supporting documents</li>
                 <li><strong>Won</strong> → fulfillment project created automatically, no waiting</li>
-                <li><strong>Milestones</strong> → as the government pays each one, commission is billed for just that milestone — track progress below</li>
+                <li><strong>Milestones</strong> → as the government pays each one, commission is billed for just that milestone - track progress below</li>
                 <li>Connected to: <strong>Opportunities</strong>, <strong>AI Proposals</strong>, <strong>Subcontracting</strong> (admin side)</li>
               </ul>
             </HowItWorks>
@@ -324,7 +324,7 @@ export default function ManagedServicePage() {
                 <div className="flex items-start justify-between gap-3 cursor-pointer" onClick={() => setExpandBid(expandBid === bid._id ? null : bid._id)}>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-900 text-sm truncate">{bid.contractTitle}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{bid.agency || '—'} {bid.solicitationNumber ? `· ${bid.solicitationNumber}` : ''}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{bid.agency || '-'} {bid.solicitationNumber ? `· ${bid.solicitationNumber}` : ''}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${BID_STATUS[bid.status]?.color}`}>{BID_STATUS[bid.status]?.label}</span>
@@ -336,8 +336,8 @@ export default function ManagedServicePage() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-600 bg-gray-50 rounded-xl p-3">
                       <div><p className="text-gray-400 mb-0.5">Est. Value</p><p className="font-medium">{fmt(bid.estimatedValue)}</p></div>
                       <div><p className="text-gray-400 mb-0.5">Deadline</p><p className="font-medium">{fmtDate(bid.deadline)}</p></div>
-                      <div><p className="text-gray-400 mb-0.5">NAICS</p><p className="font-medium">{bid.naicsCode || '—'}</p></div>
-                      <div><p className="text-gray-400 mb-0.5">Set-Aside</p><p className="font-medium">{bid.setAside || '—'}</p></div>
+                      <div><p className="text-gray-400 mb-0.5">NAICS</p><p className="font-medium">{bid.naicsCode || '-'}</p></div>
+                      <div><p className="text-gray-400 mb-0.5">Set-Aside</p><p className="font-medium">{bid.setAside || '-'}</p></div>
                       {bid.opportunity && (
                         <div className="col-span-2 sm:col-span-1"><p className="text-gray-400 mb-0.5">Source</p><p className="font-medium flex items-center gap-1 text-indigo-600"><Link2 className="w-3 h-3" /> Verified SAM.gov listing</p></div>
                       )}
@@ -375,7 +375,7 @@ export default function ManagedServicePage() {
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-900 text-sm truncate">{bid.contractTitle}</p>
-                      <p className="text-xs text-gray-500">{bid.agency || '—'}</p>
+                      <p className="text-xs text-gray-500">{bid.agency || '-'}</p>
                     </div>
                     <div className="text-right shrink-0">
                       <p className="font-bold text-green-700">{fmt(bid.wonValue)}</p>
@@ -431,7 +431,7 @@ export default function ManagedServicePage() {
                   <div className="flex items-start justify-between gap-3 cursor-pointer" onClick={() => { setExpandProj(isExpanded ? null : proj._id); if (!isExpanded) loadProjectDetail(proj._id); }}>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900 text-sm truncate">{proj.title}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{proj.projectNumber} · {proj.agency || '—'}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{proj.projectNumber} · {proj.agency || '-'}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColors[proj.status]}`}>{statusLabels[proj.status]}</span>
@@ -452,7 +452,7 @@ export default function ManagedServicePage() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-600 bg-gray-50 rounded-xl p-3">
                         <div><p className="text-gray-400 mb-0.5">Contract Value</p><p className="font-semibold text-green-700">{fmt(proj.contractValue)}</p></div>
                         <div><p className="text-gray-400 mb-0.5">Deadline</p><p className="font-medium">{fmtDate(proj.deliveryDeadline)}</p></div>
-                        <div><p className="text-gray-400 mb-0.5">NAICS</p><p className="font-medium">{proj.naicsCode || '—'}</p></div>
+                        <div><p className="text-gray-400 mb-0.5">NAICS</p><p className="font-medium">{proj.naicsCode || '-'}</p></div>
                         {proj.selectedVendor?.name && (
                           <div><p className="text-gray-400 mb-0.5">Vendor</p><p className="font-medium">{proj.selectedVendor.name}</p></div>
                         )}
@@ -525,7 +525,7 @@ export default function ManagedServicePage() {
                           <h4 className="text-xs font-semibold text-indigo-800 mb-1.5">Recent Updates</h4>
                           {proj.progressNotes.slice(-3).reverse().map((n, i) => (
                             <p key={i} className="text-xs text-indigo-700 mb-0.5">
-                              <span className="text-indigo-400">{fmtDate(n.date)}</span> — {n.progress}% — {n.note}
+                              <span className="text-indigo-400">{fmtDate(n.date)}</span> - {n.progress}% - {n.note}
                             </p>
                           ))}
                         </div>

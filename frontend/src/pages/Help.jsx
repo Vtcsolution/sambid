@@ -37,7 +37,7 @@ const FAQ = [
   { q: 'How do I upgrade my plan?', a: 'Go to Settings → Billing, or visit the Pricing page and select your desired plan.' },
   { q: 'Why am I not seeing any opportunities?', a: 'Make sure you have NAICS codes set in your profile (Settings → Profile). Opportunities are matched based on these codes.' },
   { q: 'How does AI matching work?', a: 'Our AI scores each federal contract from SAM.gov against your business profile and NAICS codes, then ranks by match percentage.' },
-  { q: 'Can I export opportunities to PDF/CSV?', a: 'Yes — use the Export button on the Opportunities and Saved pages to download PDF or CSV.' },
+  { q: 'Can I export opportunities to PDF/CSV?', a: 'Yes - use the Export button on the Opportunities and Saved pages to download PDF or CSV.' },
   { q: 'How do referrals work?', a: 'Share your referral link from the Referral page. You earn a commission credit when someone signs up and subscribes using your link.' },
   { q: 'How do I reset my password?', a: 'Click "Forgot Password" on the login page. A reset link will be emailed to you.' },
 ];
@@ -479,7 +479,7 @@ function SuggestionPanel() {
 
           <input
             type="text" maxLength={200}
-            placeholder="Title — short summary of your idea *"
+            placeholder="Title - short summary of your idea *"
             value={form.title}
             onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
             className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -487,7 +487,7 @@ function SuggestionPanel() {
 
           <textarea
             rows={4} maxLength={5000}
-            placeholder="Describe your idea or feedback in detail — what problem it solves, how it would improve your experience… *"
+            placeholder="Describe your idea or feedback in detail - what problem it solves, how it would improve your experience… *"
             value={form.description}
             onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
             className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -510,7 +510,7 @@ function SuggestionPanel() {
         {loadingSugs ? (
           <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-indigo-500" /></div>
         ) : suggestions.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-6">No suggestions yet — be the first to share an idea!</p>
+          <p className="text-sm text-gray-400 text-center py-6">No suggestions yet - be the first to share an idea!</p>
         ) : (
           <div className="space-y-2">
             {suggestions.map(s => {
@@ -613,7 +613,7 @@ export default function Help() {
           <HowItWorks title="Help & Support" steps={[
             { title: 'Create a support ticket', description: 'Describe your issue, select category (Billing, Technical, Account, General), set priority, attach files' },
             { title: 'Track status', description: 'Tickets move through: Open → In Progress → Awaiting Reply → Resolved → Closed' },
-            { title: 'Get email replies', description: 'Our team responds via ticket thread — you get an email notification for each reply' },
+            { title: 'Get email replies', description: 'Our team responds via ticket thread - you get an email notification for each reply' },
             { title: 'AI Chat Assistant', description: 'Quick answers from our AI chatbot for common questions about the platform' },
           ]} dataUsed={['Your Tickets', 'FAQ Database']} />
         </h1>
@@ -636,7 +636,7 @@ export default function Help() {
         </div>
       )}
 
-      {/* Suggestion nudge popup — appears after ticket submit */}
+      {/* Suggestion nudge popup - appears after ticket submit */}
       {showSugNudge && (
         <div className="mb-5 flex items-center justify-between gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3.5 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center gap-2.5">
@@ -645,7 +645,7 @@ export default function Help() {
             </div>
             <div>
               <p className="text-sm font-semibold text-indigo-900">Have a feature idea or feedback?</p>
-              <p className="text-xs text-indigo-600 mt-0.5">While you wait — share a suggestion and help shape our roadmap.</p>
+              <p className="text-xs text-indigo-600 mt-0.5">While you wait - share a suggestion and help shape our roadmap.</p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">

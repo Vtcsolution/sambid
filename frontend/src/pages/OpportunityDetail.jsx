@@ -127,7 +127,7 @@ export default function OpportunityDetail() {
   const getSamSearchUrl = () => {
     const sol = getSolicitationNumber();
     if (sol) {
-      // Search by exact solicitation number — SAM.gov will show the exact match at top
+      // Search by exact solicitation number - SAM.gov will show the exact match at top
       return `https://sam.gov/search/?index=opp&q=${encodeURIComponent(sol)}&sort=-relevance`;
     }
     return null;
@@ -198,7 +198,7 @@ export default function OpportunityDetail() {
     return 'bg-gray-100 text-gray-700';
   };
 
-  // SAM.gov returns postedDate as "YYYY-MM-DD" (date-only, no time) — JS parses that as
+  // SAM.gov returns postedDate as "YYYY-MM-DD" (date-only, no time) - JS parses that as
   // midnight UTC, which in Eastern timezone shifts back to the previous day at 8 PM.
   // Detection: if time is 00:00:00 UTC it was a date-only value → show date in UTC to keep
   // the correct calendar day.  If there's a real time (non-zero UTC), show with Eastern tz.
@@ -207,10 +207,10 @@ export default function OpportunityDetail() {
     const dt = new Date(d);
     const isMidnightUTC = dt.getUTCHours() === 0 && dt.getUTCMinutes() === 0 && dt.getUTCSeconds() === 0;
     if (isMidnightUTC) {
-      // Date-only value from API — show correct calendar date without time
+      // Date-only value from API - show correct calendar date without time
       return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' });
     }
-    // Full timestamp — show with exact time in Eastern timezone
+    // Full timestamp - show with exact time in Eastern timezone
     return dt.toLocaleString('en-US', {
       year: 'numeric', month: 'short', day: '2-digit',
       hour: '2-digit', minute: '2-digit',
@@ -235,7 +235,7 @@ export default function OpportunityDetail() {
   const derivedSubCmd2 = opportunity.subCommand2  || agencyParts[4] || '';
   const derivedSubCmd3 = opportunity.subCommand3  || agencyParts[5] || '';
   // Show Office only if it's different from all hierarchy levels above.
-  // For old DB records: if office === subCommand3, the last hierarchy level IS the office —
+  // For old DB records: if office === subCommand3, the last hierarchy level IS the office -
   // display it under "Office" and suppress the "Sub Command 3" row to match SAM.gov layout.
   const hierarchySet = new Set([derivedDept, derivedSubTier, derivedMajCmd, derivedSubCmd1, derivedSubCmd2].filter(Boolean));
   const officeIsSubCmd3 = opportunity.office && opportunity.office === derivedSubCmd3;
@@ -260,7 +260,7 @@ export default function OpportunityDetail() {
           <div className="mb-4 flex items-start gap-3 p-4 bg-amber-50 border border-amber-300 rounded-xl">
             <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-amber-800">This is a sample placeholder — not a real SAM.gov opportunity</p>
+              <p className="text-sm font-semibold text-amber-800">This is a sample placeholder - not a real SAM.gov opportunity</p>
               <p className="text-xs text-amber-700 mt-0.5">
                 Your database was empty so sample records were created automatically. Go to <strong>Admin → Hybrid Data Pipeline</strong> and click <strong>"Test: Fetch Next 10"</strong> to load real opportunities from SAM.gov.
               </p>
@@ -277,9 +277,9 @@ export default function OpportunityDetail() {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{opportunity.title}</h1>
               <HowItWorks title="Opportunity Detail" steps={[
                 { title: 'Full SAM.gov data', description: 'All 40+ fields: dates, contracting office chain, award details, awardee, contacts, performance period, place of performance' },
-                { title: 'Run AI analysis', description: '5 AI tools: Summarize, Bid Analysis, Competitive Analysis, Risk Assessment, Q&A — all powered by real USASpending + SAM.gov data' },
+                { title: 'Run AI analysis', description: '5 AI tools: Summarize, Bid Analysis, Competitive Analysis, Risk Assessment, Q&A - all powered by real USASpending + SAM.gov data' },
                 { title: 'Save & track', description: 'Save to your list, add deadline to Google/Outlook/Apple calendar, export as PDF' },
-                { title: 'View on SAM.gov', description: 'One-click auto-search on SAM.gov — downloads official documents directly' },
+                { title: 'View on SAM.gov', description: 'One-click auto-search on SAM.gov - downloads official documents directly' },
               ]} dataUsed={['SAM.gov (40+ fields)', 'USASpending (competitors)', 'Your Company Profile']} >
                 <p className="text-sm font-semibold text-gray-700 mt-2">Connected to:</p>
                 <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
@@ -711,7 +711,7 @@ export default function OpportunityDetail() {
           {/* ── SAM.gov Direct Access ───────────────────────────────────── */}
           <div className="mt-6 pt-4 border-t border-gray-100 space-y-3">
 
-            {/* Solicitation Number — prominent copy box */}
+            {/* Solicitation Number - prominent copy box */}
             {solicitationNumber && (
               <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
                 <FileText className="w-5 h-5 text-indigo-500 shrink-0" />
@@ -769,7 +769,7 @@ export default function OpportunityDetail() {
               )}
             </div>
 
-            {/* Document guide banner — only for real records */}
+            {/* Document guide banner - only for real records */}
             {!opportunity.sourceId?.includes('SAMPLE') && <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
               <div className="flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
@@ -889,7 +889,7 @@ export default function OpportunityDetail() {
                 <div className="mb-4 border border-purple-200 rounded-xl overflow-hidden">
                   <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600">
                     <Sparkles className="w-4 h-4 text-white" />
-                    <span className="text-sm font-semibold text-white">Deep AI Analysis — All Documents</span>
+                    <span className="text-sm font-semibold text-white">Deep AI Analysis - All Documents</span>
                     {deepMeta && (
                       <span className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
                         deepMeta.docsAnalyzed > 0 ? 'bg-white/20 text-white' : 'bg-amber-200 text-amber-800'
@@ -971,7 +971,7 @@ export default function OpportunityDetail() {
               {Object.entries(attachAnalysis).map(([url, analysis]) => (
                 <div key={url} className="mt-3 bg-purple-50 border border-purple-100 rounded-xl p-4">
                   <p className="text-xs font-semibold text-purple-700 mb-2 flex items-center gap-1.5">
-                    <ScanSearch className="w-3.5 h-3.5" /> AI Analysis — {opportunity.resourceLinks.find(r => r.url === url)?.name || 'Document'}
+                    <ScanSearch className="w-3.5 h-3.5" /> AI Analysis - {opportunity.resourceLinks.find(r => r.url === url)?.name || 'Document'}
                   </p>
                   <div className="max-h-80 overflow-y-auto"><AIResponseRenderer content={analysis} className="text-xs" /></div>
                 </div>

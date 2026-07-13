@@ -91,11 +91,11 @@ export default function Alerts() {
             >
               <p className="text-sm font-semibold text-gray-700 mt-2">How profile matching works:</p>
               <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
-                <li><strong>NAICS match</strong> — your registered codes are compared against each opportunity's NAICS</li>
-                <li><strong>Set-aside fit</strong> — if it's 8(a), WOSB, HUBZone, SDVOSB — does your certification qualify?</li>
-                <li><strong>Value range</strong> — is the contract value within your proven range based on past wins?</li>
-                <li><strong>Agency history</strong> — have you or similar companies won from this agency before?</li>
-                <li><strong>Competition level</strong> — how many competitors have won similar contracts recently?</li>
+                <li><strong>NAICS match</strong> - your registered codes are compared against each opportunity's NAICS</li>
+                <li><strong>Set-aside fit</strong> - if it's 8(a), WOSB, HUBZone, SDVOSB - does your certification qualify?</li>
+                <li><strong>Value range</strong> - is the contract value within your proven range based on past wins?</li>
+                <li><strong>Agency history</strong> - have you or similar companies won from this agency before?</li>
+                <li><strong>Competition level</strong> - how many competitors have won similar contracts recently?</li>
               </ul>
             </HowItWorks>
           </h1>

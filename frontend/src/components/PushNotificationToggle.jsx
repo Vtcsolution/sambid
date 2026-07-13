@@ -1,5 +1,5 @@
 // frontend/src/components/PushNotificationToggle.jsx
-// Self-contained toggle card — drop it anywhere in the app.
+// Self-contained toggle card - drop it anywhere in the app.
 import { useState } from 'react';
 import { Bell, BellOff, BellRing, Loader2, CheckCircle, AlertCircle, Smartphone } from 'lucide-react';
 import { usePushNotifications } from '../hooks/usePushNotifications';
@@ -70,7 +70,7 @@ export default function PushNotificationToggle({ compact = false }) {
             <p className="font-semibold text-gray-900">Browser Push Notifications</p>
             <p className="text-xs text-gray-500 mt-0.5">
               {subscribed
-                ? 'Enabled — you\'ll get instant alerts when new contracts match your NAICS codes'
+                ? 'Enabled - you\'ll get instant alerts when new contracts match your NAICS codes'
                 : 'Get notified instantly when new matching contracts are found, even with the tab closed'
               }
             </p>

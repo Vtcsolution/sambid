@@ -22,8 +22,8 @@ const RATING_COLOR = {
   'Not Rated':     'bg-gray-100 text-gray-500',
 };
 
-const fmt = (n) => n ? `$${Number(n).toLocaleString()}` : '—';
-const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—';
+const fmt = (n) => n ? `$${Number(n).toLocaleString()}` : '-';
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '-';
 const toInput = (d) => d ? new Date(d).toISOString().split('T')[0] : '';
 
 const EMPTY_FORM = {
@@ -537,7 +537,7 @@ function RecordCard({ record, onEdit, onDelete, onExport }) {
                 <span className="font-medium text-gray-600">Key Personnel:</span>
                 <div className="mt-1 space-y-0.5">
                   {record.keyPersonnel.map((p, i) => (
-                    <div key={i}>{p.name}{p.title ? ` — ${p.title}` : ''}{p.clearance ? ` (${p.clearance})` : ''}</div>
+                    <div key={i}>{p.name}{p.title ? ` - ${p.title}` : ''}{p.clearance ? ` (${p.clearance})` : ''}</div>
                   ))}
                 </div>
               </div>
@@ -611,7 +611,7 @@ export default function PastPerformancePage() {
                 steps={[
                   { title: 'Add your federal contracts', description: 'Enter contract details: title, agency, value, dates, NAICS, role (prime/sub), CPARS rating, POC, key personnel' },
                   { title: 'Auto-format as SF-330 citations', description: 'One click → your contract formatted as an SF-330 past performance citation ready to paste into proposals' },
-                  { title: 'AI uses your real wins', description: 'Every AI feature (Bid Analysis, Proposals, Competitive Analysis, Risk Assessment) automatically pulls your stored past performance — no re-entering' },
+                  { title: 'AI uses your real wins', description: 'Every AI feature (Bid Analysis, Proposals, Competitive Analysis, Risk Assessment) automatically pulls your stored past performance - no re-entering' },
                   { title: 'Search & filter', description: 'Find past contracts by agency, NAICS, role, or contract type when building proposals' },
                 ]}
                 dataUsed={['Your Entered Contracts', 'USASpending (auto-imported wins)']}
@@ -629,7 +629,7 @@ export default function PastPerformancePage() {
             <p className="text-sm text-gray-500 mt-1">
               {records.length} contract{records.length !== 1 ? 's' : ''}
               {totalValue > 0 && <span className="ml-2 text-green-600 font-medium">{fmt(totalValue)} total value</span>}
-              <span className="ml-2 text-gray-400">— one-click export for SF-330 proposals</span>
+              <span className="ml-2 text-gray-400">- one-click export for SF-330 proposals</span>
             </p>
           </div>
           <button onClick={() => setModal('add')}

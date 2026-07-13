@@ -7,7 +7,7 @@ const LAST_UPDATED = 'July 1, 2026';
 const sections = [
   {
     title: '1. Purpose',
-    body: `This Non-Disclosure Agreement ("NDA") template governs the disclosure of confidential information between Sambid Notify ("Sambid") and enterprise clients, partners, or prospective customers ("Receiving Party") in connection with evaluation, integration, or use of the Sambid platform. Either party may be the disclosing party. This page describes our standard NDA terms. To execute a signed, binding NDA for your organization, contact legal@sambid.co.`,
+    body: `This Non-Disclosure Agreement ("NDA") template governs the disclosure of confidential information between Sambid ("Sambid") and enterprise clients, partners, or prospective customers ("Receiving Party") in connection with evaluation, integration, or use of the Sambid platform. Either party may be the disclosing party. This page describes our standard NDA terms. To execute a signed, binding NDA for your organization, contact legal@sambid.co.`,
   },
   {
     title: '2. Definition of Confidential Information',
@@ -59,7 +59,7 @@ export default function NDA() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Non-Disclosure Agreement — Sambid"
+        title="Non-Disclosure Agreement - Sambid"
         description="Sambid's standard NDA terms for enterprise clients, partners, and prospective customers evaluating our federal contract intelligence platform."
         keywords="Sambid NDA, non-disclosure agreement, federal contracting platform NDA, enterprise confidentiality agreement, government contracting software NDA"
         canonical="https://sambid.co/nda"

@@ -95,7 +95,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Nav sections — desktop */}
+          {/* Nav sections - desktop */}
           {sections.map(sec => (
             <div key={sec.key} className="hidden sm:block">
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">

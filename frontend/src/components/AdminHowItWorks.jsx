@@ -50,7 +50,7 @@ const ADMIN_HELP = {
     title: 'Support Tickets',
     steps: [
       { title: 'View all tickets', description: 'Search, filter by status (Open, In Progress, Resolved, Closed)' },
-      { title: 'Reply to tickets', description: 'Respond in-thread — user gets email notification for each reply' },
+      { title: 'Reply to tickets', description: 'Respond in-thread - user gets email notification for each reply' },
       { title: 'Track resolution', description: 'Move tickets through status workflow until resolved' },
     ],
     dataUsed: ['User Tickets', 'Email System'],
@@ -92,11 +92,11 @@ const ADMIN_HELP = {
   managedService: {
     title: 'Managed Service',
     steps: [
-      { title: 'Enroll companies', description: 'Search users, set commission rate (flat or tiered), monthly fee, cap — or let them self-apply (you get notified either way)' },
-      { title: 'Add bids — link real opportunities', description: 'Search your platform\'s live SAM.gov data and pick a real listing — fields auto-fill from it. Company\'s UEI, CAGE, NAICS, and certifications are shown so you know exactly what they qualify for before bidding' },
-      { title: 'Mark won → project auto-created', description: 'No manual "Create Project" step anymore — winning a bid instantly creates the fulfillment project so milestones can start right away' },
-      { title: 'Bill commission per milestone', description: 'No lump sum at win. As the government pays each delivery milestone (tracked in Subcontracting), record the payment there — commission is auto-calculated and invoiced for just that milestone, respecting the cap' },
-      { title: 'Upload documents', description: 'Attach proposals, capability statements, or contracts directly to a bid — the company can view and download them' },
+      { title: 'Enroll companies', description: 'Search users, set commission rate (flat or tiered), monthly fee, cap - or let them self-apply (you get notified either way)' },
+      { title: 'Add bids - link real opportunities', description: 'Search your platform\'s live SAM.gov data and pick a real listing - fields auto-fill from it. Company\'s UEI, CAGE, NAICS, and certifications are shown so you know exactly what they qualify for before bidding' },
+      { title: 'Mark won → project auto-created', description: 'No manual "Create Project" step anymore - winning a bid instantly creates the fulfillment project so milestones can start right away' },
+      { title: 'Bill commission per milestone', description: 'No lump sum at win. As the government pays each delivery milestone (tracked in Subcontracting), record the payment there - commission is auto-calculated and invoiced for just that milestone, respecting the cap' },
+      { title: 'Upload documents', description: 'Attach proposals, capability statements, or contracts directly to a bid - the company can view and download them' },
     ],
     dataUsed: ['Company Profiles (UEI/CAGE/NAICS/Certs)', 'Live SAM.gov Opportunities', 'Bid Tracking', 'Milestone-Based Commission Invoices'],
     connections: [
@@ -109,12 +109,12 @@ const ADMIN_HELP = {
   managedProjects: {
     title: 'Subcontracting Projects',
     steps: [
-      { title: 'Auto-created on bid win', description: 'No manual step — contract details copy over from the won bid automatically' },
+      { title: 'Auto-created on bid win', description: 'No manual step - contract details copy over from the won bid automatically' },
       { title: 'Get vendor quotes', description: 'Open RFQ → vendors submit quotes → compare and select best rate' },
       { title: 'Track milestones', description: 'Set milestones with due dates and vendor payment amounts → track progress 0-100%' },
-      { title: 'Record gov payment per milestone', description: 'Click "Gov Paid?" on a milestone, enter the amount the government paid — this auto-generates the commission invoice to the client for that milestone' },
-      { title: 'Pay the vendor', description: 'Separately, pay your subcontractor per milestone once their work is approved — independent from the commission billing to the client' },
-      { title: 'Upload documents', description: 'Attach the signed contract, SOW, or delivery confirmation — visible to the client' },
+      { title: 'Record gov payment per milestone', description: 'Click "Gov Paid?" on a milestone, enter the amount the government paid - this auto-generates the commission invoice to the client for that milestone' },
+      { title: 'Pay the vendor', description: 'Separately, pay your subcontractor per milestone once their work is approved - independent from the commission billing to the client' },
+      { title: 'Upload documents', description: 'Attach the signed contract, SOW, or delivery confirmation - visible to the client' },
     ],
     dataUsed: ['Won Bids', 'Vendor Quotes', 'Milestone Tracking', 'Per-Milestone Commission Invoices'],
     connections: [
@@ -141,7 +141,7 @@ const ADMIN_HELP = {
     title: 'Email Campaigns',
     steps: [
       { title: 'Create campaign', description: 'Write subject + body, select target segment (all users, trial expiring, inactive, etc.)' },
-      { title: 'Send to segment', description: 'Broadcast email to selected user group — tracks open/click rates' },
+      { title: 'Send to segment', description: 'Broadcast email to selected user group - tracks open/click rates' },
       { title: 'View history', description: 'See past campaigns, delivery stats, and engagement metrics' },
     ],
     dataUsed: ['User Segments', 'Email System'],
@@ -236,7 +236,7 @@ const ADMIN_HELP = {
   hybridFetch: {
     title: 'Hybrid Pipeline',
     steps: [
-      { title: 'Monitor fetch schedule', description: 'API fetch every 60 min + nightly bulk download — see status and last run times' },
+      { title: 'Monitor fetch schedule', description: 'API fetch every 60 min + nightly bulk download - see status and last run times' },
       { title: 'Trigger manual fetch', description: 'Start an immediate SAM.gov API fetch or bulk download' },
       { title: 'View stats', description: 'Records fetched, distribution counts, error logs, API quota usage' },
     ],
@@ -251,7 +251,7 @@ const ADMIN_HELP = {
     title: 'Credit Requests',
     steps: [
       { title: 'View pending requests', description: 'Users request additional AI credits via the Buy Credits flow' },
-      { title: 'Approve or reject', description: 'Approve adds credits to user\'s bonus pool — bonus credits don\'t reset monthly' },
+      { title: 'Approve or reject', description: 'Approve adds credits to user\'s bonus pool - bonus credits don\'t reset monthly' },
       { title: 'Add admin notes', description: 'Record reason for approval/rejection' },
     ],
     dataUsed: ['Credit Purchase Requests'],
@@ -278,7 +278,7 @@ const ADMIN_HELP = {
     title: 'Contact Inquiries',
     steps: [
       { title: 'View submissions', description: 'Contact form submissions from the public website' },
-      { title: 'Respond to inquiries', description: 'Reply via email — inquiry status updates to resolved' },
+      { title: 'Respond to inquiries', description: 'Reply via email - inquiry status updates to resolved' },
       { title: 'Track enterprise leads', description: 'Enterprise plan inquiries flagged for priority follow-up' },
     ],
     dataUsed: ['Contact Form Submissions'],
@@ -290,7 +290,7 @@ const ADMIN_HELP = {
   companies: {
     title: 'SAM Companies',
     steps: [
-      { title: 'Browse SAM.gov entities', description: 'Companies synced from SAM.gov Entity API — UEI, CAGE, certifications, NAICS codes' },
+      { title: 'Browse SAM.gov entities', description: 'Companies synced from SAM.gov Entity API - UEI, CAGE, certifications, NAICS codes' },
       { title: 'Search by UEI or name', description: 'Find specific companies and view their SAM.gov registration details' },
       { title: 'Add new companies', description: 'Manually fetch a company by UEI from SAM.gov into your database' },
     ],

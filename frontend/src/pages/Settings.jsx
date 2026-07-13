@@ -181,7 +181,7 @@ export default function Settings() {
     setNaicsSaving(true); setNaicsMsg({ text: '', type: '' });
     try {
       await opportunityAPI.updateProfile({ naicsCodes: selectedNAICS });
-      opportunityAPI.refreshMyFeed().catch(() => {}); // fire-and-forget — pulls new opps for updated codes
+      opportunityAPI.refreshMyFeed().catch(() => {}); // fire-and-forget - pulls new opps for updated codes
       setNaicsMsg({ text: `NAICS codes saved! Fetching new opportunities for your ${selectedNAICS.length > 0 ? selectedNAICS.length + ' code' + (selectedNAICS.length !== 1 ? 's' : '') + ' + their families' : 'codes'}…`, type: 'success' });
     } catch (e) {
       setNaicsMsg({ text: e.response?.data?.message || 'Failed to save', type: 'error' });
@@ -345,7 +345,7 @@ export default function Settings() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">Settings
             <HowItWorks title="Account Settings" steps={[
               { title: 'Profile', description: 'Update your name, business name, and business type' },
-              { title: 'NAICS Codes', description: 'Add/remove your industry codes — these determine which contracts you see' },
+              { title: 'NAICS Codes', description: 'Add/remove your industry codes - these determine which contracts you see' },
               { title: 'Notifications', description: 'Control email alerts: real-time, daily digest, or weekly summary + push notifications' },
               { title: 'Security', description: 'Change password, enable/disable Two-Factor Authentication (2FA), delete account' },
               { title: 'Appearance', description: 'Toggle dark mode for the dashboard' },
@@ -482,7 +482,7 @@ export default function Settings() {
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-1">NAICS Industry Codes</h2>
                 <p className="text-sm text-gray-500 mb-5">
-                  Add your NAICS codes. Each code automatically covers its entire 4-digit family — so <span className="font-mono font-medium text-indigo-600">541511</span> also pulls <span className="font-mono text-indigo-600">541512</span>, <span className="font-mono text-indigo-600">541513</span>, <span className="font-mono text-indigo-600">541519</span>. You can type any 6-digit code directly.
+                  Add your NAICS codes. Each code automatically covers its entire 4-digit family - so <span className="font-mono font-medium text-indigo-600">541511</span> also pulls <span className="font-mono text-indigo-600">541512</span>, <span className="font-mono text-indigo-600">541513</span>, <span className="font-mono text-indigo-600">541519</span>. You can type any 6-digit code directly.
                 </p>
                 <Toast msg={naicsMsg.text} type={naicsMsg.type} />
 
@@ -491,7 +491,7 @@ export default function Settings() {
                   <div className="space-y-3 mb-4">
                     {selectedNAICS.map(code => {
                       const entry = NAICS_CODES.find(n => n.code === code);
-                      const desc = entry?.label.split(' — ')[1] || 'Custom NAICS Code';
+                      const desc = entry?.label.split(' - ')[1] || 'Custom NAICS Code';
                       const family = getFamily(code);
                       const prefix = code.slice(0, 4);
                       return (
@@ -514,7 +514,7 @@ export default function Settings() {
                                     {family.map(n => (
                                       <span
                                         key={n.code}
-                                        title={n.label.split(' — ')[1]}
+                                        title={n.label.split(' - ')[1]}
                                         className={`text-xs px-2 py-0.5 rounded-full font-mono border ${
                                           n.code === code
                                             ? 'bg-indigo-600 text-white border-indigo-600'
@@ -551,7 +551,7 @@ export default function Settings() {
                       value={naicsQuery}
                       onChange={e => setNaicsQuery(e.target.value)}
                       onKeyDown={handleNaicsKeyDown}
-                      placeholder="Search by keyword or type any 6-digit code — press Enter to add directly"
+                      placeholder="Search by keyword or type any 6-digit code - press Enter to add directly"
                       className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm"
                     />
                     {naicsResults.length > 0 && (
@@ -564,7 +564,7 @@ export default function Settings() {
                             className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b border-gray-50 last:border-0 flex items-center gap-3"
                           >
                             <span className="font-mono font-bold text-indigo-600 w-14 flex-shrink-0">{n.code}</span>
-                            <span className="text-gray-700 flex-1 truncate">{n.label.split(' — ')[1]}</span>
+                            <span className="text-gray-700 flex-1 truncate">{n.label.split(' - ')[1]}</span>
                             {n.isCustom
                               ? <span className="ml-auto text-xs text-amber-600 flex-shrink-0 font-medium">+ Add custom</span>
                               : <span className="ml-auto text-xs text-indigo-500 flex-shrink-0">+ Add</span>}
@@ -588,7 +588,7 @@ export default function Settings() {
                 )}
 
                 <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700">
-                  <strong>How it works:</strong> Each NAICS code you add automatically expands to its entire 4-digit family group. For example, adding <span className="font-mono font-semibold">541511</span> also fetches opportunities coded as <span className="font-mono">541512</span>, <span className="font-mono">541513</span>, and <span className="font-mono">541519</span> — because contracting officers sometimes enter sibling codes by mistake. You can also type any code not in the list (like <span className="font-mono">467373</span>) and hit Enter.
+                  <strong>How it works:</strong> Each NAICS code you add automatically expands to its entire 4-digit family group. For example, adding <span className="font-mono font-semibold">541511</span> also fetches opportunities coded as <span className="font-mono">541512</span>, <span className="font-mono">541513</span>, and <span className="font-mono">541519</span> - because contracting officers sometimes enter sibling codes by mistake. You can also type any code not in the list (like <span className="font-mono">467373</span>) and hit Enter.
                 </div>
 
                 <div className="flex justify-end mt-6">
@@ -817,7 +817,7 @@ export default function Settings() {
                     </div>
                   )}
 
-                  {/* Idle — not enabled */}
+                  {/* Idle - not enabled */}
                   {!tfaEnabled && tfaStep === 'idle' && (
                     <div className="space-y-3">
                       <div className="p-4 bg-blue-50 rounded-xl text-sm text-blue-700">
@@ -1120,7 +1120,7 @@ export default function Settings() {
             {activeTab === 'appearance' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-1">Appearance</h2>
-                <p className="text-sm text-gray-500 mb-6">Customize how Sambid Notify looks for you.</p>
+                <p className="text-sm text-gray-500 mb-6">Customize how Sambid looks for you.</p>
 
                 {/* Dark mode toggle */}
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">

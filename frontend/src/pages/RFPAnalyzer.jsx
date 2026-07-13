@@ -29,11 +29,11 @@ export default function RFPAnalyzer() {
     setFileName(file.name);
     const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf';
     if (isPdf) {
-      // Store the raw File object — backend will parse the PDF
+      // Store the raw File object - backend will parse the PDF
       setFileObj(file);
       setRfpText('');
     } else {
-      // Plain text files — read on the client side
+      // Plain text files - read on the client side
       setFileObj(null);
       const reader = new FileReader();
       reader.onload = (e) => setRfpText(e.target.result);
@@ -87,7 +87,7 @@ export default function RFPAnalyzer() {
     doc.setFontSize(12); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
     doc.text('RFP Analysis Report', margin, 13);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-    doc.text(`Sambid Notify — ${new Date().toLocaleDateString()}`, pageW - margin, 13, { align: 'right' });
+    doc.text(`Sambid - ${new Date().toLocaleDateString()}`, pageW - margin, 13, { align: 'right' });
     doc.setTextColor(30, 30, 30); doc.setFontSize(9);
     const lines = doc.splitTextToSize(result, maxW);
     let y = 28;
@@ -143,7 +143,7 @@ export default function RFPAnalyzer() {
                 </ul>
               </HowItWorks>
             </div>
-            <p className="text-gray-500 text-sm">Select an opportunity, paste text, or upload a PDF — AI extracts everything you need.</p>
+            <p className="text-gray-500 text-sm">Select an opportunity, paste text, or upload a PDF - AI extracts everything you need.</p>
           </div>
         </div>
 
@@ -198,7 +198,7 @@ export default function RFPAnalyzer() {
                 ) : (
                   <>
                     <p className="text-sm font-medium text-gray-600">Drop your RFP file here or click to browse</p>
-                    <p className="text-xs text-gray-400 mt-1">Supports PDF and .txt — up to 15 MB</p>
+                    <p className="text-xs text-gray-400 mt-1">Supports PDF and .txt - up to 15 MB</p>
                   </>
                 )}
               </div>

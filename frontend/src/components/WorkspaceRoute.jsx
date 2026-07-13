@@ -8,10 +8,10 @@ export default function WorkspaceRoute({ children }) {
   const session = getWorkspaceSession();
 
   useEffect(() => {
-    if (!session) return; // normal user — no restriction
+    if (!session) return; // normal user - no restriction
 
     const pageKey = PATH_TO_PAGE_KEY[pathname];
-    if (!pageKey) return; // page not in the controlled list (e.g. /settings) — allow
+    if (!pageKey) return; // page not in the controlled list (e.g. /settings) - allow
 
     if (!canAccessPage(pageKey)) {
       // Redirect to first allowed page

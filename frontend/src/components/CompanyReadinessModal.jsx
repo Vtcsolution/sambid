@@ -90,10 +90,10 @@ export default function CompanyReadinessModal({ featureName, onProceed, onClose 
             {data.score === 100
               ? 'Perfect! The AI has everything it needs for a highly accurate analysis.'
               : data.score >= 80
-              ? 'Good profile — analysis will be accurate. A few items can make it even better.'
+              ? 'Good profile - analysis will be accurate. A few items can make it even better.'
               : data.score >= 50
-              ? 'Partial profile — the AI will make assumptions for missing items. Fill in more for better results.'
-              : 'Basic profile only — the AI will give a generic analysis. Please complete your profile for real results.'}
+              ? 'Partial profile - the AI will make assumptions for missing items. Fill in more for better results.'
+              : 'Basic profile only - the AI will give a generic analysis. Please complete your profile for real results.'}
           </p>
         </div>
 

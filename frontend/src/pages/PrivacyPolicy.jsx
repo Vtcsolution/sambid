@@ -7,14 +7,14 @@ const LAST_UPDATED = 'June 1, 2025';
 const sections = [
   {
     title: '1. Introduction',
-    body: `Sambid Notify ("Sambid", "we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information when you use the Sambid platform and related services. By using Sambid, you consent to the data practices described in this policy. If you are located in the European Economic Area (EEA) or the United Kingdom, this policy also serves as your GDPR notice.`,
+    body: `Sambid ("Sambid", "we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information when you use the Sambid platform and related services. By using Sambid, you consent to the data practices described in this policy. If you are located in the European Economic Area (EEA) or the United Kingdom, this policy also serves as your GDPR notice.`,
   },
   {
     title: '2. Information We Collect',
     subsections: [
       {
         label: 'Information You Provide Directly',
-        text: 'Account information (name, business name, email address, password), profile data (NAICS codes, certifications, SAM.gov registration number), payment information (processed and stored securely by Stripe, PayPal, or Payoneer — we never store raw card numbers), communications you send us (support tickets, contact form submissions), and content you generate on the platform (capability statements, proposal drafts, pipeline data).',
+        text: 'Account information (name, business name, email address, password), profile data (NAICS codes, certifications, SAM.gov registration number), payment information (processed and stored securely by Stripe, PayPal, or Payoneer - we never store raw card numbers), communications you send us (support tickets, contact form submissions), and content you generate on the platform (capability statements, proposal drafts, pipeline data).',
       },
       {
         label: 'Information Collected Automatically',
@@ -32,15 +32,15 @@ const sections = [
   },
   {
     title: '4. Legal Basis for Processing (GDPR)',
-    body: `For users in the EEA/UK, we process personal data under the following legal bases: Contract Performance — processing necessary to provide the services you have signed up for; Legitimate Interests — analytics, security, and platform improvement; Legal Obligation — compliance with applicable law; and Consent — for optional communications and non-essential cookies. You may withdraw consent at any time without affecting the lawfulness of prior processing.`,
+    body: `For users in the EEA/UK, we process personal data under the following legal bases: Contract Performance - processing necessary to provide the services you have signed up for; Legitimate Interests - analytics, security, and platform improvement; Legal Obligation - compliance with applicable law; and Consent - for optional communications and non-essential cookies. You may withdraw consent at any time without affecting the lawfulness of prior processing.`,
   },
   {
     title: '5. Information Sharing & Disclosure',
-    body: `We do not sell your personal information to third parties. We may share your information with: (a) Service providers who assist us in operating the platform (cloud hosting, email delivery, payment processing, analytics) under strict data processing agreements; (b) Law enforcement or government bodies where required by law or to protect rights and safety; (c) Acquirers in the event of a merger, acquisition, or sale of assets — you will be notified and given the opportunity to opt out; and (d) Other users only as required by features you have explicitly enabled (e.g., teaming partner finder shows your public business profile if you opt in).`,
+    body: `We do not sell your personal information to third parties. We may share your information with: (a) Service providers who assist us in operating the platform (cloud hosting, email delivery, payment processing, analytics) under strict data processing agreements; (b) Law enforcement or government bodies where required by law or to protect rights and safety; (c) Acquirers in the event of a merger, acquisition, or sale of assets - you will be notified and given the opportunity to opt out; and (d) Other users only as required by features you have explicitly enabled (e.g., teaming partner finder shows your public business profile if you opt in).`,
   },
   {
     title: '6. Cookies & Tracking Technologies',
-    body: `We use the following types of cookies: Essential Cookies — required for the platform to function (authentication tokens, session management); Analytics Cookies — help us understand how users interact with the platform (e.g., page visit counts, feature usage); Preference Cookies — remember your settings (dark mode, language). You can control non-essential cookies via the cookie consent banner when you first visit the site. Disabling essential cookies will prevent you from logging in. Third-party services (PayPal, Stripe) may set their own cookies when processing payments; these are governed by their respective privacy policies.`,
+    body: `We use the following types of cookies: Essential Cookies - required for the platform to function (authentication tokens, session management); Analytics Cookies - help us understand how users interact with the platform (e.g., page visit counts, feature usage); Preference Cookies - remember your settings (dark mode, language). You can control non-essential cookies via the cookie consent banner when you first visit the site. Disabling essential cookies will prevent you from logging in. Third-party services (PayPal, Stripe) may set their own cookies when processing payments; these are governed by their respective privacy policies.`,
   },
   {
     title: '7. Data Retention',
@@ -85,7 +85,7 @@ const sections = [
   },
   {
     title: '14. Contact Us',
-    body: `For privacy-related questions, to exercise your rights, or to report a privacy concern, please contact our Privacy Team at: privacy@sambid.co or write to Sambid Notify — Privacy, Arlington, VA 22203, USA. We will respond to all requests within 30 days.`,
+    body: `For privacy-related questions, to exercise your rights, or to report a privacy concern, please contact our Privacy Team at: privacy@sambid.co or write to Sambid - Privacy, Arlington, VA 22203, USA. We will respond to all requests within 30 days.`,
   },
 ];
 
@@ -93,7 +93,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Privacy Policy — Sambid"
+        title="Privacy Policy - Sambid"
         description="Sambid's Privacy Policy explains how we collect, use, and protect your data when you use our federal contract notification platform."
         keywords="Sambid privacy policy, federal contracting software data protection, SAM.gov platform privacy, GDPR compliance government contracting tool"
         canonical="https://sambid.co/privacy"

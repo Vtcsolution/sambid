@@ -4,7 +4,7 @@ const campaignLogSchema = new mongoose.Schema({
   segment:    { type: String, required: true },
   subject:    { type: String, required: true },
   bodyPreview:{ type: String, default: '' },       // first 200 chars of body
-  fromName:   { type: String, default: 'Sambid Notify' },
+  fromName:   { type: String, default: 'Sambid' },
   targetUserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   targetEmail:  { type: String, default: null },   // when single-user send
   totalUsers:      { type: Number, default: 0 },

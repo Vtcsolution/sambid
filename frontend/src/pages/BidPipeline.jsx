@@ -352,7 +352,7 @@ export default function BidPipeline() {
                 steps={[
                   { title: 'Save opportunities', description: 'Save contracts from your feed to start tracking them' },
                   { title: 'Drag through stages', description: 'Move cards: Saved → Researching → Drafting Proposal → Submitted → Won/Lost' },
-                  { title: 'Track win rate', description: 'See your conversion stats — how many bids become wins' },
+                  { title: 'Track win rate', description: 'See your conversion stats - how many bids become wins' },
                   { title: 'Add notes', description: 'Attach private notes to each opportunity for your team' },
                 ]}
                 dataUsed={['Your Saved Opportunities', 'Status Tracking']}
@@ -404,7 +404,7 @@ export default function BidPipeline() {
               { label: 'Active Bids',       value: stats.active,                       icon: FileText,     color: 'text-blue-600'   },
               { label: 'Submitted',         value: stats.submitted,                    icon: Send,         color: 'text-amber-600'  },
               { label: 'Win Rate',
-                value: stats.winRate !== null ? `${stats.winRate}%` : '—',
+                value: stats.winRate !== null ? `${stats.winRate}%` : '-',
                 icon: Trophy,
                 color: stats.winRate >= 50 ? 'text-green-600' : 'text-gray-500'
               },
@@ -448,7 +448,7 @@ export default function BidPipeline() {
           </div>
         )}
 
-        {/* Kanban board — horizontal scroll */}
+        {/* Kanban board - horizontal scroll */}
         {totalCards > 0 && (
           <div className="overflow-x-auto pb-4">
             <div className="flex gap-4" style={{ minWidth: `${COLUMNS.length * 272}px` }}>

@@ -55,7 +55,7 @@ export default function PlanGate({ requiredPlan = 'pro', featureName, descriptio
   const ctaText = requiredPlan === 'enterprise'
     ? 'Request Enterprise Access'
     : monthlyPrice != null
-      ? `Upgrade to ${planLabel} — $${monthlyPrice}/mo`
+      ? `Upgrade to ${planLabel} - $${monthlyPrice}/mo`
       : `Upgrade to ${planLabel}`;
 
   return (

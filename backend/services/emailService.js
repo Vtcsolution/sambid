@@ -43,7 +43,7 @@ export { transporter };
 // routing replies to the appropriate mailbox.
 const _smtpUser = () => process.env.SMTP_USER || process.env.EMAIL_USER;
 export const FROM = {
-  noreply: () => `"Sambid Notify" <${_smtpUser()}>`,
+  noreply: () => `"Sambid" <${_smtpUser()}>`,
   support: () => `"Sambid Support" <${_smtpUser()}>`,
   billing: () => `"Sambid Billing" <${_smtpUser()}>`,
   custom:  (name) => `"${name}" <${_smtpUser()}>`,
@@ -97,13 +97,13 @@ export const sendPasswordResetEmail = async (user, resetUrl) => {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937; margin-top:0;">Reset Your Password</h2>
         <p style="color:#4b5563;">Hi ${user.name || 'there'},</p>
-        <p style="color:#4b5563;">We received a request to reset the password for your Sambid Notify account. Click the button below to set a new password:</p>
+        <p style="color:#4b5563;">We received a request to reset the password for your Sambid account. Click the button below to set a new password:</p>
         <div style="text-align:center; margin:30px 0;">
           <a href="${resetUrl}" style="background:#6366f1; color:white; padding:14px 32px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px; display:inline-block;">
             Reset Password →
@@ -121,7 +121,7 @@ export const sendPasswordResetEmail = async (user, resetUrl) => {
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: 'Reset your Sambid Notify password',
+    subject: 'Reset your Sambid password',
     html
   });
 
@@ -135,13 +135,13 @@ export const sendEmailVerificationEmail = async (user, verifyUrl) => {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937; margin-top:0;">Verify Your Email</h2>
         <p style="color:#4b5563;">Hi ${user.name || 'there'},</p>
-        <p style="color:#4b5563;">Thanks for signing up! Please confirm your email address to get the most out of Sambid Notify.</p>
+        <p style="color:#4b5563;">Thanks for signing up! Please confirm your email address to get the most out of Sambid.</p>
         <div style="text-align:center; margin:30px 0;">
           <a href="${verifyUrl}" style="background:#6366f1; color:white; padding:14px 32px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px; display:inline-block;">
             Verify Email →
@@ -159,7 +159,7 @@ export const sendEmailVerificationEmail = async (user, verifyUrl) => {
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: 'Verify your Sambid Notify email',
+    subject: 'Verify your Sambid email',
     html
   });
 
@@ -488,7 +488,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -616,7 +616,7 @@ export const sendPlanActivatedEmail = async ({ name, email, planName, planExpire
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:12px;color:white;">
         <h1 style="margin:0;">🎉 Plan Activated!</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid Notify — Federal Contract Intelligence</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid — Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Your ${planLabel} Plan is Live, ${name}!</h2>
@@ -674,7 +674,7 @@ export const sendAdminPaymentAlert = async ({ userEmail, userName, planName, amo
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:12px;color:white;">
         <h1 style="margin:0;">💰 New Payment Received</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid Notify — Payment Alert</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid — Payment Alert</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Payment Details</h2>
@@ -740,7 +740,7 @@ export const sendPaymentConfirmationEmail = async ({ name, email, planName, amou
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:12px;color:white;">
         <h1 style="margin:0;">✅ Payment Confirmed</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid Notify — Federal Contract Intelligence</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid — Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Thank you, ${name}!</h2>
@@ -886,7 +886,7 @@ export const sendDeadlineReminder = async (user, opportunity, daysLeft) => {
           </a>
         </div>
         <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px;">
-          You're receiving this because you saved this opportunity in Sambid Notify.
+          You're receiving this because you saved this opportunity in Sambid.
         </p>
       </div>
     </div>
@@ -952,7 +952,7 @@ function formatCampaignBody(rawBody, primaryColor = '#4f46e5') {
 /**
  * Send a campaign email to a single user (used by admin campaign system)
  */
-export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid Notify') => {
+export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid') => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   const year = new Date().getFullYear();
   const formattedBody = formatCampaignBody(rawBody);
@@ -1000,7 +1000,7 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
               <a href="${frontendUrl}/dashboard" style="color:#6366f1;text-decoration:none;">Go to Dashboard</a>
             </p>
             <p style="color:#c4c4c4;font-size:11px;margin:10px 0 0;">
-              You received this because you have an account on Sambid Notify.<br>
+              You received this because you have an account on Sambid.<br>
               To unsubscribe, update your <a href="${frontendUrl}/settings" style="color:#9ca3af;">notification settings</a>.
             </p>
           </td>
@@ -1029,7 +1029,7 @@ export const sendWeeklyMarketResearchEmail = async (user, reportText) => {
     <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:12px;color:white;">
         <h1 style="margin:0;">📊 Weekly Market Intelligence</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid Notify Enterprise — ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid Enterprise — ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Your Federal Market Briefing</h2>
@@ -1085,7 +1085,7 @@ export const sendAdminUserActionAlert = async ({ action, userName, userEmail, de
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:18px;background:${meta.color};border-radius:12px;color:white;">
         <h1 style="margin:0;font-size:22px;">${meta.emoji} ${meta.title}</h1>
-        <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Sambid Notify — Admin Alert</p>
+        <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Sambid — Admin Alert</p>
       </div>
       <div style="padding:28px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <table style="width:100%;border-collapse:collapse;">
@@ -1173,7 +1173,7 @@ export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => 
   const userHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Ticket Created</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1290,7 +1290,7 @@ export const sendTicketReplyEmail = async (user, ticket, replyContent) => {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Reply</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1327,7 +1327,7 @@ export const sendTicketStatusEmail = async (user, ticket, status) => {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,${accentColor},#6366f1);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Ticket ${label}</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1456,7 +1456,7 @@ export const sendPaymentInstructionsEmail = async ({
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:24px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;font-size:24px;">Sambid Notify</h1>
+        <h1 style="margin:0;font-size:24px;">Sambid</h1>
         <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Federal Contract Intelligence</p>
       </div>
 
@@ -1464,7 +1464,7 @@ export const sendPaymentInstructionsEmail = async ({
         <h2 style="color:#1f2937;margin-top:0;">Payment Instructions for Your ${planLabel}</h2>
         <p style="color:#4b5563;line-height:1.6;">Hi ${userName || 'there'},</p>
         <p style="color:#4b5563;line-height:1.6;">
-          Thank you for choosing Sambid Notify! Below are the payment details to complete your subscription.
+          Thank you for choosing Sambid! Below are the payment details to complete your subscription.
           Once we confirm receipt of your payment, your account will be activated within 1 business day.
         </p>
 
@@ -1502,7 +1502,7 @@ export const sendPaymentInstructionsEmail = async ({
           Questions? Reply to this email or contact our support team. We're happy to help!
         </p>
         <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:28px;border-top:1px solid #f3f4f6;padding-top:16px;">
-          Sambid Notify · Federal Contract Intelligence<br>
+          Sambid · Federal Contract Intelligence<br>
           This email was sent by our admin team in response to your plan request.
         </p>
       </div>
@@ -1528,7 +1528,7 @@ export const sendWithdrawalRequestEmails = async ({ supportName, supportEmail, a
   const memberHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Commission Portal</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1562,7 +1562,7 @@ export const sendWithdrawalRequestEmails = async ({ supportName, supportEmail, a
           You'll receive another email when the status is updated. If you have any questions, contact our support team.
         </p>
         <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px;border-top:1px solid #f3f4f6;padding-top:16px;">
-          Sambid Notify · Federal Contract Intelligence
+          Sambid · Federal Contract Intelligence
         </p>
       </div>
     </div>`;
@@ -1637,7 +1637,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid Notify</h1>
+        <h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Commission Portal</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1674,7 +1674,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
           If you have any questions about this withdrawal, please contact our support team.
         </p>
         <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px;border-top:1px solid #f3f4f6;padding-top:16px;">
-          Sambid Notify · Federal Contract Intelligence
+          Sambid · Federal Contract Intelligence
         </p>
       </div>
     </div>`;
@@ -1683,7 +1683,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
     transporter.sendMail({
       from: FROM.billing(),
       to: supportEmail,
-      subject: `${cfg.emoji} Withdrawal ${cfg.label} — ${amountStr} | Sambid Notify`,
+      subject: `${cfg.emoji} Withdrawal ${cfg.label} — ${amountStr} | Sambid`,
       html,
     }),
   ];

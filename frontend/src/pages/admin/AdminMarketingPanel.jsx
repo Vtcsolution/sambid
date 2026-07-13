@@ -304,7 +304,7 @@ export default function AdminMarketingPanel() {
               </button>
             </div>
             <div className="px-6 py-4 space-y-3">
-              <p className="text-sm text-gray-600">Rejecting <strong>{rejectDlg.name}</strong> — they will be notified by email.</p>
+              <p className="text-sm text-gray-600">Rejecting <strong>{rejectDlg.name}</strong> - they will be notified by email.</p>
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Reason <span className="text-gray-400">(optional)</span></label>
                 <textarea rows={3} value={rejectReason} onChange={e => setRejectReason(e.target.value)}

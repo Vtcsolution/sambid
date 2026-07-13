@@ -118,7 +118,7 @@ export default function AdminPayments() {
       case 'manual':
         return { label: 'Manual', color: 'bg-purple-100 text-purple-700' };
       default:
-        return { label: method || '—', color: 'bg-gray-100 text-gray-600' };
+        return { label: method || '-', color: 'bg-gray-100 text-gray-600' };
     }
   };
 

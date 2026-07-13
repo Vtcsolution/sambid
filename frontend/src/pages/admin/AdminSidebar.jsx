@@ -141,7 +141,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
           <Link to="/admin/dashboard" className="flex items-center space-x-3">
             <SambidLogo size={36} />
             <div>
-              <h1 className="text-lg font-bold text-white">Sambid Notify</h1>
+              <h1 className="text-lg font-bold text-white">Sambid</h1>
               <p className="text-xs text-indigo-300">Admin Panel</p>
             </div>
           </Link>

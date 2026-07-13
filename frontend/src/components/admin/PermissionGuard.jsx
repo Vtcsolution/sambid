@@ -2,7 +2,7 @@ import { useLocation, Navigate } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
 
-// Wrap any admin page — shows "Access Denied" if role lacks permission
+// Wrap any admin page - shows "Access Denied" if role lacks permission
 export default function PermissionGuard({ permission, children, redirect = false }) {
   const { can, canAccessPage, role } = useAdminPermission();
   const location = useLocation();

@@ -5,10 +5,10 @@ import { Target, Heart, Lightbulb, Shield, TrendingUp, ArrowRight, Search, Globe
 import SEOHead from '../components/SEOHead';
 
 const values = [
-  { icon: Target,    title: 'Accuracy First',       description: 'Every contract match is filtered to your exact NAICS codes. We surface what\'s relevant — nothing else.' },
+  { icon: Target,    title: 'Accuracy First',       description: 'Every contract match is filtered to your exact NAICS codes. We surface what\'s relevant - nothing else.' },
   { icon: Heart,     title: 'Built for Small Business', description: 'Most federal contracting tools are built for large primes. Sambid is designed for small businesses competing for their first contracts.' },
-  { icon: Lightbulb, title: 'AI That Actually Helps', description: 'AI proposal tools, RFP analysis, and Go/No-Go scoring — built to save hours of work on every bid you pursue.' },
-  { icon: Shield,    title: 'Data You Can Trust',   description: 'All contract data comes directly from SAM.gov — the official US federal procurement database. No stale third-party feeds.' },
+  { icon: Lightbulb, title: 'AI That Actually Helps', description: 'AI proposal tools, RFP analysis, and Go/No-Go scoring - built to save hours of work on every bid you pursue.' },
+  { icon: Shield,    title: 'Data You Can Trust',   description: 'All contract data comes directly from SAM.gov - the official US federal procurement database. No stale third-party feeds.' },
 ];
 
 const problems = [
@@ -26,7 +26,7 @@ export default function About() {
   return (
     <div className="bg-white">
       <SEOHead
-        title="About Sambid — Our Mission to Help Federal Contractors Win"
+        title="About Sambid - Our Mission to Help Federal Contractors Win"
         description="Sambid was built to level the playing field for small and mid-size businesses competing for US federal contracts. Learn about our mission, our team, and why we built the smartest federal contract alert platform."
         keywords="about Sambid, federal contracting company, government contract alert startup, small business federal contracting tools, federal procurement platform mission, GovCon software company, federal contracting technology startup, best federal contracting platform"
         canonical="https://sambid.co/about"
@@ -44,7 +44,7 @@ export default function About() {
               Federal Contract Intelligence<br />for Every Small Business
             </h1>
             <p className="text-base sm:text-xl text-indigo-100 max-w-3xl mx-auto leading-relaxed">
-              Sambid was built to solve one problem: making it easy for small businesses to find, track, and win federal contracts — without spending hours on SAM.gov every day.
+              Sambid was built to solve one problem: making it easy for small businesses to find, track, and win federal contracts - without spending hours on SAM.gov every day.
             </p>
           </motion.div>
         </div>
@@ -63,7 +63,7 @@ export default function About() {
               <p className="text-gray-600 mb-6 leading-relaxed text-sm sm:text-base">
                 The US federal government awards over <strong>$700 billion</strong> in contracts every year. More than
                 <strong> $160 billion</strong> of that goes to small businesses. But most small contractors never see
-                the majority of opportunities they qualify for — because finding them takes too much time and the tools that exist were built for large primes.
+                the majority of opportunities they qualify for - because finding them takes too much time and the tools that exist were built for large primes.
               </p>
               <ul className="space-y-3">
                 {problems.map((problem, i) => (
@@ -82,7 +82,7 @@ export default function About() {
             >
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5">How Sambid Fixes It</h2>
               <p className="text-gray-600 mb-6 leading-relaxed text-sm sm:text-base">
-                Enter your NAICS codes once. Sambid scans SAM.gov daily, filters every active contract to what matches your industry, and puts the results in a clean dashboard — with alerts, AI proposal tools, and competitive intelligence built in.
+                Enter your NAICS codes once. Sambid scans SAM.gov daily, filters every active contract to what matches your industry, and puts the results in a clean dashboard - with alerts, AI proposal tools, and competitive intelligence built in.
               </p>
               <ul className="space-y-3">
                 {[

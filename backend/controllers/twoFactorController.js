@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import crypto from 'crypto';
 import User from '../models/User.js';
 
-const APP_NAME = 'Sambid Notify';
+const APP_NAME = 'Sambid';
 
 // POST /api/auth/2fa/setup
 // Generates a new TOTP secret + QR code for the authenticated user.

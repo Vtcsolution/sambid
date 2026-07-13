@@ -113,7 +113,7 @@ function FeatureEditor({ feature, onSave, onCancel }) {
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Hero Video (YouTube link OR upload MP4) — optional, overrides thumbnail</label>
+        <label className="text-xs font-medium text-gray-500 mb-1 block">Hero Video (YouTube link OR upload MP4) - optional, overrides thumbnail</label>
         <div className="flex gap-2">
           <input value={f.videoUrl} onChange={e => set('videoUrl', e.target.value)} placeholder="https://youtube.com/watch?v=... or upload →" className="flex-1 text-sm border rounded-lg px-3 py-2" />
           <UploadBtn label="Upload Video" accept="video/mp4,video/webm,video/quicktime" onUploaded={url => set('videoUrl', url)} />
@@ -265,7 +265,7 @@ export default function AdminFeatureShowcase() {
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-indigo-600" /> Feature Showcase Pages
           </h1>
-          <p className="text-sm text-gray-500">Manage public feature pages — video, steps, benefits. Visitors see these before signup.</p>
+          <p className="text-sm text-gray-500">Manage public feature pages - video, steps, benefits. Visitors see these before signup.</p>
         </div>
         <div className="flex gap-2">
           {features.length === 0 && (

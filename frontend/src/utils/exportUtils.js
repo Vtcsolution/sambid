@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 // ── Branding ──────────────────────────────────────────────────────────────────
-const BRAND      = 'Sambid Notify';
+const BRAND      = 'Sambid';
 const BRAND_COLOR = [79, 70, 229];   // indigo-600 in RGB
 const GRAY        = [107, 114, 128];
 const DARK        = [17, 24, 39];

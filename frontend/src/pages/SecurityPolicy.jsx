@@ -23,7 +23,7 @@ const sections = [
     subsections: [
       {
         label: 'Hosting & Network',
-        text: 'Sambid is hosted on a dedicated VPS with firewall rules restricting all inbound traffic except ports 80 (HTTP), 443 (HTTPS), and the application port behind NGINX reverse proxy. SSH access is restricted to authorized IP addresses with key-based authentication only — password authentication is disabled.',
+        text: 'Sambid is hosted on a dedicated VPS with firewall rules restricting all inbound traffic except ports 80 (HTTP), 443 (HTTPS), and the application port behind NGINX reverse proxy. SSH access is restricted to authorized IP addresses with key-based authentication only - password authentication is disabled.',
       },
       {
         label: 'Database',
@@ -98,7 +98,7 @@ const sections = [
   },
   {
     title: '12. Contact',
-    body: `For security-related inquiries, vulnerability reports, or to request security documentation for enterprise procurement: security@sambid.co — Sambid Notify, Arlington, VA 22203, USA. Response time: within 48 hours for security reports, within 5 business days for documentation requests.`,
+    body: `For security-related inquiries, vulnerability reports, or to request security documentation for enterprise procurement: security@sambid.co - Sambid, Arlington, VA 22203, USA. Response time: within 48 hours for security reports, within 5 business days for documentation requests.`,
   },
 ];
 
@@ -106,7 +106,7 @@ export default function SecurityPolicy() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Security — Sambid"
+        title="Security - Sambid"
         description="Sambid's security practices: encryption, access controls, incident response, and data protection measures for our federal contract intelligence platform."
         keywords="Sambid security, federal contracting platform security, SaaS data security, GDPR security compliance, government contract software security"
         canonical="https://sambid.co/security"
@@ -167,7 +167,7 @@ export default function SecurityPolicy() {
         <div className="mt-10 p-5 bg-indigo-50 border border-indigo-100 rounded-2xl text-center">
           <p className="text-sm text-indigo-800 font-medium mb-1">Found a security issue?</p>
           <p className="text-sm text-indigo-700">
-            Report it to <a href="mailto:security@sambid.co" className="underline hover:text-indigo-900">security@sambid.co</a> — we respond within 48 hours.
+            Report it to <a href="mailto:security@sambid.co" className="underline hover:text-indigo-900">security@sambid.co</a> - we respond within 48 hours.
           </p>
           <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-500">
             <Link to="/privacy" className="hover:text-indigo-700 transition-colors">Privacy Policy</Link>

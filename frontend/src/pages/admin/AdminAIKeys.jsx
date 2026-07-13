@@ -25,7 +25,7 @@ function StatusDot({ valid, configured }) {
 }
 
 function fmtNum(n) {
-  if (!n) return '—';
+  if (!n) return '-';
   const num = Number(n);
   if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
   if (num >= 1_000) return `${(num / 1_000).toFixed(0)}K`;
@@ -202,7 +202,7 @@ function ProviderCard({ data, name, icon, color, gradient, logo, links }) {
               </div>
             )}
 
-            {/* Real Token Usage — tracked from actual API calls */}
+            {/* Real Token Usage - tracked from actual API calls */}
             {data.tokenStats?.totals && (data.tokenStats.totals.calls > 0 || data.configured) && (
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
@@ -447,7 +447,7 @@ export default function AdminAIKeys() {
           {data.platformUsage?.byModel?.length > 0 && (
             <div className="bg-white rounded-2xl border border-gray-200 p-5">
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-4">
-                <BarChart3 className="w-4 h-4 text-indigo-500" /> Platform AI Usage by Model — {data.platformUsage.month}
+                <BarChart3 className="w-4 h-4 text-indigo-500" /> Platform AI Usage by Model - {data.platformUsage.month}
               </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">

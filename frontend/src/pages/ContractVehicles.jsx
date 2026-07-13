@@ -81,8 +81,8 @@ export default function ContractVehicles() {
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">Contract Vehicle Tracker
                 <HowItWorks title="Contract Vehicles" steps={[
                   { title: 'Track your vehicles', description: 'Add GSA MAS, SEWP V, OASIS+, 8(a) STARS III, and any other contract vehicles your company holds' },
-                  { title: 'Expiry alerts', description: 'Color-coded warnings: Red (<30 days), Yellow (30-90 days), Green (>90 days) — never let a vehicle expire' },
-                  { title: 'Quick-add common vehicles', description: 'Pre-loaded list of major GWACs and IDIQs — click to add instantly' },
+                  { title: 'Expiry alerts', description: 'Color-coded warnings: Red (<30 days), Yellow (30-90 days), Green (>90 days) - never let a vehicle expire' },
+                  { title: 'Quick-add common vehicles', description: 'Pre-loaded list of major GWACs and IDIQs - click to add instantly' },
                 ]} dataUsed={['Your Vehicles', 'Expiry Dates']} >
                   <p className="text-sm font-semibold text-gray-700 mt-2">Why this matters:</p>
                   <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
@@ -103,7 +103,7 @@ export default function ContractVehicles() {
 
         {/* Common Vehicles Quick Add */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-6">
-          <p className="text-sm font-semibold text-gray-700 mb-3">Quick Add — Common Contract Vehicles</p>
+          <p className="text-sm font-semibold text-gray-700 mb-3">Quick Add - Common Contract Vehicles</p>
           <div className="flex flex-wrap gap-2">
             {COMMON_VEHICLES.map(v => {
               const already = vehicles.find(x => x.name === v.name);

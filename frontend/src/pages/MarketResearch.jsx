@@ -42,7 +42,7 @@ export default function MarketResearch() {
     doc.setFontSize(13); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
     doc.text('Federal Market Research Report', margin, 14);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-    doc.text(`Sambid Notify — ${new Date().toLocaleDateString()}`, pageW - margin, 14, { align: 'right' });
+    doc.text(`Sambid - ${new Date().toLocaleDateString()}`, pageW - margin, 14, { align: 'right' });
     doc.setTextColor(30, 30, 30); doc.setFontSize(9);
     const lines = doc.splitTextToSize(report, maxW);
     let y = 30;
@@ -136,7 +136,7 @@ export default function MarketResearch() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-purple-500" />
-                Market Intelligence Report — {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                Market Intelligence Report - {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </h3>
               <div className="flex gap-2">
                 <button onClick={generate} title="Regenerate" className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition">

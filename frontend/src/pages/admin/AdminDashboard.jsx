@@ -362,7 +362,7 @@ function SupportDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Dashboard<AdminHowItWorks page="dashboard" /></h1>
-            <p className="text-sm text-gray-500 mt-1">Welcome back, {adminName} — here's your referral overview.</p>
+            <p className="text-sm text-gray-500 mt-1">Welcome back, {adminName} - here's your referral overview.</p>
           </div>
           <button onClick={fetchStats}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 shadow-sm shrink-0 self-start sm:self-auto">
@@ -436,7 +436,7 @@ function SupportDashboard() {
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-gray-900">{canWithdraw ? 'Withdrawal Available!' : 'Keep earning…'}</p>
               {canWithdraw
-                ? <p className="text-xs text-emerald-700">Balance <strong>${(referralBalance || 0).toFixed(2)}</strong> — go to Referral Earnings to request</p>
+                ? <p className="text-xs text-emerald-700">Balance <strong>${(referralBalance || 0).toFixed(2)}</strong> - go to Referral Earnings to request</p>
                 : (
                   <div className="mt-1">
                     <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden w-full max-w-[180px]">
@@ -482,13 +482,13 @@ function SupportDashboard() {
                   {referrals.slice(0, 10).map(r => (
                     <tr key={r._id} className="hover:bg-gray-50 transition">
                       <td className="px-4 py-3">
-                        <p className="font-semibold text-gray-900">{r.user?.name || '—'}</p>
-                        <p className="text-xs text-gray-400">{r.user?.email || '—'}</p>
+                        <p className="font-semibold text-gray-900">{r.user?.name || '-'}</p>
+                        <p className="text-xs text-gray-400">{r.user?.email || '-'}</p>
                       </td>
                       <td className="px-4 py-3">
                         {r.planPurchased
                           ? <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${PLAN_COLORS[r.planPurchased] || PLAN_COLORS.free}`}>{r.planPurchased}</span>
-                          : <span className="text-xs text-gray-400">—</span>}
+                          : <span className="text-xs text-gray-400">-</span>}
                       </td>
                       <td className="px-4 py-3">
                         {r.paidAmount > 0
@@ -496,12 +496,12 @@ function SupportDashboard() {
                               <span className="font-medium text-gray-700">${r.paidAmount.toFixed(2)}</span>
                               {r.discountAmount > 0 && <p className="text-xs text-emerald-600">saved ${r.discountAmount.toFixed(2)}</p>}
                             </div>
-                          : <span className="text-xs text-gray-400">—</span>}
+                          : <span className="text-xs text-gray-400">-</span>}
                       </td>
                       <td className="px-4 py-3">
                         {r.commissionAmount > 0
                           ? <span className="font-bold text-emerald-600">${r.commissionAmount.toFixed(2)}</span>
-                          : <span className="text-xs text-gray-400">—</span>}
+                          : <span className="text-xs text-gray-400">-</span>}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -513,7 +513,7 @@ function SupportDashboard() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-400">
-                        {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                        {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
                       </td>
                     </tr>
                   ))}
@@ -723,10 +723,10 @@ function AdminMainDashboard() {
             <div className="bg-gray-50 rounded-lg p-3">
               <p className="text-gray-500 text-xs font-medium uppercase mb-1">Fetch Schedule</p>
               <ul className="space-y-1 text-gray-600 text-xs mt-1">
-                <li>🕕 <strong>6 AM daily</strong> — full fetch + distribute</li>
-                <li>🔄 <strong>Every 30 min</strong> — master store refresh</li>
-                <li>⏰ <strong>Every hour</strong> — user distribution</li>
-                <li>🌙 <strong>Midnight</strong> — daily counter reset</li>
+                <li>🕕 <strong>6 AM daily</strong> - full fetch + distribute</li>
+                <li>🔄 <strong>Every 30 min</strong> - master store refresh</li>
+                <li>⏰ <strong>Every hour</strong> - user distribution</li>
+                <li>🌙 <strong>Midnight</strong> - daily counter reset</li>
               </ul>
               <p className="text-gray-400 text-xs mt-2">Total runs this session: {sf.totalFetchRuns || 0}</p>
             </div>
@@ -793,7 +793,7 @@ function AdminMainDashboard() {
           </div>
         </div>
 
-        {/* ── Recent Invoices — super_admin only ───────────────────────────── */}
+        {/* ── Recent Invoices - super_admin only ───────────────────────────── */}
         {isSuperAdmin && <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Recent Invoices</h2>

@@ -78,8 +78,8 @@ export default function WinningBidsPage() {
             Past Award Analysis
             <HowItWorks title="Winning Bids Analysis" steps={[
               { title: 'Enter any NAICS code', description: 'Search by your NAICS codes (auto-loaded) or add custom codes to research any market' },
-              { title: 'See real USASpending awards', description: 'Who won contracts in this NAICS in the last 3-5 years — real company names, real dollar amounts, real agencies' },
-              { title: 'Benchmark your pricing', description: 'See average award values, top agencies, contract types — know exactly what the market pays' },
+              { title: 'See real USASpending awards', description: 'Who won contracts in this NAICS in the last 3-5 years - real company names, real dollar amounts, real agencies' },
+              { title: 'Benchmark your pricing', description: 'See average award values, top agencies, contract types - know exactly what the market pays' },
               { title: 'Identify competitors', description: 'The same companies that appear here are the ones you compete against in Bid Analysis and Competitive Analysis' },
             ]} dataUsed={['USASpending.gov (3-5 years)', 'Your NAICS Codes']} >
               <p className="text-sm font-semibold text-gray-700 mt-2">Connected to:</p>
@@ -95,7 +95,7 @@ export default function WinningBidsPage() {
             Research already-awarded federal contracts to benchmark pricing and identify target agencies.
           </p>
           <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
-            <strong>📊 Research only —</strong> these contracts are already awarded. For open bids you can apply to, visit the <strong>Opportunities</strong> page.
+            <strong>📊 Research only -</strong> these contracts are already awarded. For open bids you can apply to, visit the <strong>Opportunities</strong> page.
           </div>
         </div>
 
@@ -187,7 +187,7 @@ export default function WinningBidsPage() {
           </div>
         </div>
 
-        {/* Analysis results — auto-fetched whenever selectedNAICS changes */}
+        {/* Analysis results - auto-fetched whenever selectedNAICS changes */}
         {selectedNAICS ? (
           <WinningBidsAnalysis key={selectedNAICS} naicsCode={selectedNAICS} autoFetch={true} />
         ) : !profileLoading && (

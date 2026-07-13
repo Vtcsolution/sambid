@@ -143,7 +143,7 @@ export default function AdminProspectOutreach() {
     try {
       const { data } = await adminProspectAPI.quickAdd({ email, companyName: name });
       if (data.success) {
-        // Reload prospect list — the new entry will now appear in the DB section
+        // Reload prospect list - the new entry will now appear in the DB section
         loadProspects();
         // If the saved prospect has an _id, swap the custom entry for the DB entry
         if (data.data?._id) {
@@ -152,7 +152,7 @@ export default function AdminProspectOutreach() {
         }
       }
     } catch {
-      // Adding failed silently — stays as custom entry and will still send
+      // Adding failed silently - stays as custom entry and will still send
     }
   };
 
@@ -241,7 +241,7 @@ export default function AdminProspectOutreach() {
     <div className="flex h-full min-h-0" style={{ height: 'calc(100vh - 64px)' }}>
 
       {/* ══════════════════════════════════════════════════════════════════
-          LEFT PANEL — Company Selector + Custom Emails
+          LEFT PANEL - Company Selector + Custom Emails
       ══════════════════════════════════════════════════════════════════ */}
       <div className="w-72 xl:w-80 border-r border-gray-200 flex flex-col bg-white shrink-0">
 
@@ -436,7 +436,7 @@ export default function AdminProspectOutreach() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-          RIGHT PANEL — Email Composer
+          RIGHT PANEL - Email Composer
       ══════════════════════════════════════════════════════════════════ */}
       <div className="flex-1 overflow-y-auto bg-gray-50 min-w-0">
 
@@ -579,10 +579,10 @@ export default function AdminProspectOutreach() {
               </div>
             )}
 
-            {/* Step 1 — Email type toggles */}
+            {/* Step 1 - Email type toggles */}
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                Step 1 — Pick Email Type (AI auto-generates)
+                Step 1 - Pick Email Type (AI auto-generates)
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {EMAIL_TYPES.map(type => (
@@ -635,12 +635,12 @@ export default function AdminProspectOutreach() {
               </div>
             )}
 
-            {/* Step 2 — Editable email */}
+            {/* Step 2 - Editable email */}
             {!generating && (subject || bodyText) && (
               <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    Step 2 — Review & Edit
+                    Step 2 - Review & Edit
                     {aiSource && (
                       <span className={`ml-2 normal-case font-normal ${aiSource === 'template' ? 'text-amber-600' : 'text-indigo-500'}`}>
                         <Sparkles className="w-3 h-3 inline -mt-0.5 mr-0.5" />

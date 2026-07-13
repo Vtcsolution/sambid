@@ -80,7 +80,7 @@ export default function AdminUserSegments() {
         <div className={`${SEGMENT_CONFIG[active].bg} border ${SEGMENT_CONFIG[active].border} rounded-2xl p-5`}>
           <div className="flex items-center justify-between mb-4">
             <h3 className={`font-semibold ${SEGMENT_CONFIG[active].color}`}>
-              {SEGMENT_CONFIG[active].label} — Sample Users (top 10)
+              {SEGMENT_CONFIG[active].label} - Sample Users (top 10)
             </h3>
             <a href={`/admin/campaigns`}
               className={`text-xs font-semibold flex items-center gap-1 ${SEGMENT_CONFIG[active].color} hover:underline`}>

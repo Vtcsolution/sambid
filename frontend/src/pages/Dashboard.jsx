@@ -74,7 +74,7 @@ export default function Dashboard() {
           sessionStorage.setItem('userPlan', serverPlan);
           // If plan just got activated (was trial/free → enterprise/pro/starter), reload inquiry
           if (['enterprise', 'pro', 'starter'].includes(serverPlan) && ['trial', 'free'].includes(storedPlan)) {
-            setOpenInquiry(null); // clear the banner — plan is now active
+            setOpenInquiry(null); // clear the banner - plan is now active
           }
         }
       }
@@ -172,7 +172,7 @@ export default function Dashboard() {
               <CheckCircle className="w-5 h-5 shrink-0 text-emerald-600 mt-0.5 sm:mt-0" />
               <div>
                 <p className="text-sm font-semibold">Step 2: Set up your Company Profile for better AI analysis</p>
-                <p className="text-xs opacity-75 mt-0.5">Add your UEI, CAGE code, certifications (8(a), WOSB, HUBZone, SDVOSB) — AI uses this to check set-aside eligibility and write personalized proposals.</p>
+                <p className="text-xs opacity-75 mt-0.5">Add your UEI, CAGE code, certifications (8(a), WOSB, HUBZone, SDVOSB) - AI uses this to check set-aside eligibility and write personalized proposals.</p>
               </div>
             </div>
             <a href="/company/profile"
@@ -187,7 +187,7 @@ export default function Dashboard() {
           <div className="mb-5 sm:mb-6 flex items-start sm:items-center gap-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 sm:px-6 py-4 rounded-2xl shadow-lg">
             <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 mt-0.5 sm:mt-0" />
             <div>
-              <p className="font-bold text-base sm:text-lg">Welcome to Sambid Notify, {firstName}! 🎉</p>
+              <p className="font-bold text-base sm:text-lg">Welcome to Sambid, {firstName}! 🎉</p>
               <p className="text-indigo-100 text-xs sm:text-sm mt-0.5">Your account is set up. We're fetching contracts that match your NAICS codes right now.</p>
             </div>
           </div>
@@ -287,11 +287,11 @@ export default function Dashboard() {
                 { title: 'Auto-matched contracts', description: 'Opportunities from SAM.gov are automatically matched to your NAICS codes and scored by AI' },
                 { title: 'Track your pipeline', description: 'See contracts in your feed, saved opportunities, upcoming deadlines, and active alerts' },
                 { title: 'AI predictions', description: 'Win probability scores for upcoming contracts based on your company profile and past performance' },
-                { title: 'Quick actions', description: 'Jump to any feature — browse contracts, manage alerts, analyze winning bids, or generate proposals' },
+                { title: 'Quick actions', description: 'Jump to any feature - browse contracts, manage alerts, analyze winning bids, or generate proposals' },
               ]}
               dataUsed={['SAM.gov', 'Your NAICS Codes', 'Your Plan Limits']}
             >
-              <p className="text-sm font-semibold text-gray-700 mt-2">Your starting point — connected to everything:</p>
+              <p className="text-sm font-semibold text-gray-700 mt-2">Your starting point - connected to everything:</p>
               <ul className="text-xs text-gray-500 list-disc list-inside space-y-0.5 mt-1">
                 <li><strong>Opportunities</strong> → your matched contracts feed (click stat card to go there)</li>
                 <li><strong>Saved Opportunities</strong> → bookmarked contracts you're tracking</li>

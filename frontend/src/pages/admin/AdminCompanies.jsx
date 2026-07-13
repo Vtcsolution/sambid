@@ -216,7 +216,7 @@ function PriorityBadge({ priority }) {
 }
 
 function SourceBadges({ sources = [] }) {
-  if (!sources.length) return <span className="text-gray-300 text-xs">—</span>;
+  if (!sources.length) return <span className="text-gray-300 text-xs">-</span>;
   return (
     <div className="flex flex-wrap gap-1">
       {sources.map(s => {
@@ -246,7 +246,7 @@ function CompanyRow({ company }) {
       >
         <td className="px-4 py-3">
           <div className="font-medium text-gray-900 text-sm leading-tight">
-            {company.legalBusinessName || '—'}
+            {company.legalBusinessName || '-'}
           </div>
           {company.dbaName && (
             <div className="text-xs text-gray-400">DBA: {company.dbaName}</div>
@@ -254,14 +254,14 @@ function CompanyRow({ company }) {
         </td>
         <td className="px-4 py-3">
           <span className="font-mono text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">
-            {company.ueiSAM || '—'}
+            {company.ueiSAM || '-'}
           </span>
         </td>
         <td className="px-4 py-3">
-          <span className="font-mono text-xs text-gray-600">{company.cageCode || '—'}</span>
+          <span className="font-mono text-xs text-gray-600">{company.cageCode || '-'}</span>
         </td>
         <td className="px-4 py-3">
-          {addrStr ? <span className="text-xs text-gray-600">{addrStr}</span> : '—'}
+          {addrStr ? <span className="text-xs text-gray-600">{addrStr}</span> : '-'}
         </td>
         <td className="px-4 py-3">
           <div className="flex flex-wrap gap-1">
@@ -419,7 +419,7 @@ function CompanyRow({ company }) {
                       <span key={i}
                         className={`px-2 py-0.5 rounded text-xs font-mono ${n.isPrimary ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'bg-gray-100 text-gray-600'}`}
                         title={n.description}>
-                        {n.code}{n.description ? ` — ${n.description}` : ''}
+                        {n.code}{n.description ? ` - ${n.description}` : ''}
                       </span>
                     ))}
                   </div>
@@ -576,7 +576,7 @@ export default function AdminCompanies() {
     try {
       const res = await adminPanelAPI.syncCompanies({ maxPages: 100 });
       if (res.data.success) {
-        showToast('SAM.gov sync started — requests are serialized to avoid rate limits…');
+        showToast('SAM.gov sync started - requests are serialized to avoid rate limits…');
       } else {
         showToast(res.data.message || 'Sync failed to start');
         setSyncing(false);
@@ -696,7 +696,7 @@ export default function AdminCompanies() {
   };
 
   const fmtNumber = (n) => (n ?? 0).toLocaleString();
-  const fmtDate   = (d) => d ? new Date(d).toLocaleString() : '—';
+  const fmtDate   = (d) => d ? new Date(d).toLocaleString() : '-';
   const hasFilters = search || naicsFilter || stateFilter || priorityFilter || sourceFilter;
   const breakdown = sourceStats?.breakdown;
 
@@ -717,7 +717,7 @@ export default function AdminCompanies() {
             <Building2 className="w-6 h-6 text-indigo-600" /> Federal Contractor Directory
           <AdminHowItWorks page="companies" /></h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Aggregated from SAM.gov · USASpending.gov · FPDS.gov · SBA DSBS — deduplicated by UEI
+            Aggregated from SAM.gov · USASpending.gov · FPDS.gov · SBA DSBS - deduplicated by UEI
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -750,7 +750,7 @@ export default function AdminCompanies() {
           <button
             onClick={handleSync}
             disabled={syncing || stats?.quota?.exhausted}
-            title={stats?.quota?.exhausted ? 'Daily API quota exhausted — resets at midnight UTC' : ''}
+            title={stats?.quota?.exhausted ? 'Daily API quota exhausted - resets at midnight UTC' : ''}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RefreshCw className={`w-4 h-4 ${stats?.samIsSyncing ? 'animate-spin' : ''}`} />
@@ -782,7 +782,7 @@ export default function AdminCompanies() {
           </div>
           <p className="text-xs text-amber-600 mt-3 flex items-center gap-1">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            For companies with emails and phone numbers, use <strong className="mx-0.5">Sync SAM.gov</strong> — it fetches the official federal contractor registry with full contact details.
+            For companies with emails and phone numbers, use <strong className="mx-0.5">Sync SAM.gov</strong> - it fetches the official federal contractor registry with full contact details.
           </p>
         </div>
       )}
@@ -794,7 +794,7 @@ export default function AdminCompanies() {
             <span className="font-medium text-gray-700">SAM.gov API Quota (today)</span>
             <span className={stats.quota.exhausted ? 'text-red-600 font-semibold' : 'text-gray-500'}>
               {stats.quota.used} / {stats.quota.limit} requests used
-              {stats.quota.exhausted ? ' — EXHAUSTED' : ` (${stats.quota.remaining} remaining)`}
+              {stats.quota.exhausted ? ' - EXHAUSTED' : ` (${stats.quota.remaining} remaining)`}
             </span>
           </div>
           <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -808,7 +808,7 @@ export default function AdminCompanies() {
           </div>
           {stats.quota.exhausted && (
             <p className="text-xs text-red-600 mt-1.5">
-              Daily quota reached — SAM.gov resets at midnight UTC tonight.
+              Daily quota reached - SAM.gov resets at midnight UTC tonight.
               <span className="font-semibold"> USASpending sync is still available</span> (free, no quota) but does not include emails.
               For email/phone data, come back after midnight and click "Sync SAM.gov".
             </p>
@@ -830,11 +830,11 @@ export default function AdminCompanies() {
             }
             <span className="font-medium">
               {stats.samIsSyncing && stats.status === 'rate_limited'
-                ? `SAM.gov rate limit — resuming in ${rateLimitCountdown || '…'}`
+                ? `SAM.gov rate limit - resuming in ${rateLimitCountdown || '…'}`
                 : stats.samIsSyncing
-                  ? `Syncing SAM.gov — page ${stats.currentPage} of ~${stats.totalPages || '?'}`
+                  ? `Syncing SAM.gov - page ${stats.currentPage} of ~${stats.totalPages || '?'}`
                   : sourceStats?.sources?.usaspending?.isSyncing
-                    ? `Syncing USASpending.gov — page ${sourceStats.sources.usaspending.currentPage || '?'}`
+                    ? `Syncing USASpending.gov - page ${sourceStats.sources.usaspending.currentPage || '?'}`
                     : 'Syncing…'
               }
             </span>
@@ -851,7 +851,7 @@ export default function AdminCompanies() {
         </div>
       )}
 
-      {/* Stats cards — row 1: totals + breakdown */}
+      {/* Stats cards - row 1: totals + breakdown */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard icon={Database}   label="Total Companies"  value={fmtNumber(breakdown?.total ?? stats?.totalCompanies)} color="indigo" />
         <StatCard icon={TrendingUp} label="New Today"        value={fmtNumber(stats?.newToday)} color="green" />
@@ -1039,7 +1039,7 @@ export default function AdminCompanies() {
                     <RefreshCw className="w-4 h-4" /> Sync SAM.gov
                   </button>
                 </div>
-                <p className="text-xs text-gray-400">USASpending.gov requires no API key — data loads immediately</p>
+                <p className="text-xs text-gray-400">USASpending.gov requires no API key - data loads immediately</p>
               </>
             )}
           </div>

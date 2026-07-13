@@ -235,14 +235,14 @@ export const generateContent = async (req, res) => {
     // type: 'email_subject', 'email_body', 'announcement', 'push_notification', 'blog_intro'
 
     const prompts = {
-      email_subject: `Generate 5 compelling email subject lines for a federal contracting SaaS platform (Sambid Notify). Context: ${context}. Make them personalized, urgent, and benefit-focused. Output as numbered list.`,
-      email_body: `Write a professional marketing email for Sambid Notify, a federal contracting intelligence platform. Context/purpose: ${context}. Include: subject line, greeting, 2-3 body paragraphs, clear CTA button text, sign-off. Keep it concise (150-200 words for body).`,
-      announcement: `Write a platform announcement for Sambid Notify users. Context: ${context}. Format: headline, 2 sentences of context, bullet points of what's new, CTA. Enthusiastic but professional tone.`,
-      push_notification: `Write 5 browser push notification messages for Sambid Notify. Context: ${context}. Each must be under 80 characters. Format: [Title] | [Body]. Make them compelling and action-oriented.`,
-      blog_intro: `Write a 200-word blog post introduction for Sambid Notify's blog. Topic: ${context}. Target audience: small business federal contractors. SEO-friendly, informative, ends with a hook to keep reading.`,
+      email_subject: `Generate 5 compelling email subject lines for a federal contracting SaaS platform (Sambid). Context: ${context}. Make them personalized, urgent, and benefit-focused. Output as numbered list.`,
+      email_body: `Write a professional marketing email for Sambid, a federal contracting intelligence platform. Context/purpose: ${context}. Include: subject line, greeting, 2-3 body paragraphs, clear CTA button text, sign-off. Keep it concise (150-200 words for body).`,
+      announcement: `Write a platform announcement for Sambid users. Context: ${context}. Format: headline, 2 sentences of context, bullet points of what's new, CTA. Enthusiastic but professional tone.`,
+      push_notification: `Write 5 browser push notification messages for Sambid. Context: ${context}. Each must be under 80 characters. Format: [Title] | [Body]. Make them compelling and action-oriented.`,
+      blog_intro: `Write a 200-word blog post introduction for Sambid's blog. Topic: ${context}. Target audience: small business federal contractors. SEO-friendly, informative, ends with a hook to keep reading.`,
     };
 
-    const prompt = prompts[type] || `Generate helpful content for Sambid Notify platform. Type: ${type}. Context: ${context}`;
+    const prompt = prompts[type] || `Generate helpful content for Sambid platform. Type: ${type}. Context: ${context}`;
     const content = await chat('You are an expert SaaS marketer specializing in federal contracting platforms.', prompt);
 
     res.json({ success: true, data: { content, type } });
@@ -388,7 +388,7 @@ export const sendCampaign = async (req, res) => {
       segment,
       subject,
       bodyPreview:  body.slice(0, 200),
-      fromName:     fromName || 'Sambid Notify',
+      fromName:     fromName || 'Sambid',
       targetUserId: targetUserId || null,
       targetEmail:  targetUserId ? users[0]?.email : null,
       totalUsers:   users.length,
@@ -413,7 +413,7 @@ export const sendCampaign = async (req, res) => {
       const recipients = [];
       for (const user of users) {
         try {
-          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid Notify');
+          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid');
           sent++;
           recipients.push({ name: user.name || '', email: user.email, delivered: true });
           await new Promise(r => setTimeout(r, 200));

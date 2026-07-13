@@ -15,7 +15,7 @@ const featureDemoLinks = [
   { path: '/features/go-no-go',              label: 'Go/No-Go Decision',      desc: '10-factor scoring matrix' },
   { path: '/features/competitive-analysis',   label: 'Competitive Analysis',   desc: 'Real competitor intelligence' },
   { path: '/features/risk-assessment',        label: 'Risk Assessment',        desc: '7-category risk matrix' },
-  { path: '/features/managed-service',        label: 'Managed Bidding',        desc: 'We bid for you — pay on win' },
+  { path: '/features/managed-service',        label: 'Managed Bidding',        desc: 'We bid for you - pay on win' },
   { path: '/features/deadline-calendar',      label: 'Deadline Calendar',      desc: 'Never miss a due date' },
   { path: '/features/bid-pipeline',           label: 'Bid Pipeline',           desc: 'Track bids through stages' },
 ];
@@ -83,7 +83,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
         <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${isDashboardRoute && isAuthenticated ? '' : 'max-w-[1440px]'}`}>
           <div className="flex justify-between items-center h-16">
 
-            {/* Left — hamburger + logo */}
+            {/* Left - hamburger + logo */}
             <div className="flex items-center gap-2">
               {isAuthenticated && isDashboardRoute ? (
                 <button
@@ -167,7 +167,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
                     )}
                   </div>
 
-                  {/* How It Works — animated standalone button */}
+                  {/* How It Works - animated standalone button */}
                   <Link
                     to="/how-it-works"
                     onClick={() => setIsFeaturesOpen(false)}
@@ -208,7 +208,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
               )}
             </div>
 
-            {/* Right — auth + notifications */}
+            {/* Right - auth + notifications */}
             <div className="flex items-center gap-1 sm:gap-2">
               {isAuthenticated && isDashboardRoute && (
                 <>

@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import UserNotificationDropdown from './components/UserNotificationDropdown';
 
-// Deferred layout components — not needed for first paint
+// Deferred layout components - not needed for first paint
 const Sidebar       = lazy(() => import('./components/Sidebar'));
 const AdminLayout   = lazy(() => import('./pages/admin/AdminLayout'));
 const AdminRoute    = lazy(() => import('./pages/admin/AdminRoute'));
@@ -109,7 +109,7 @@ const DocumentLibrary   = lazy(() => import('./pages/company/DocumentLibrary'));
 const CompanyJoin       = lazy(() => import('./pages/company/CompanyJoin'));
 const WorkspaceLogin    = lazy(() => import('./pages/WorkspaceLogin'));
 
-// Eagerly loaded — truly tiny, always visible
+// Eagerly loaded - truly tiny, always visible
 import ScrollToTop from './components/ScrollToTop';
 import Footer from './components/Footer';
 import WorkspaceRoute from './components/WorkspaceRoute';
@@ -138,7 +138,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
-  // Apply the theme for the active panel — admin panel and the user dashboard
+  // Apply the theme for the active panel - admin panel and the user dashboard
   // each have their own dark mode preference, so toggling one doesn't affect
   // the other. Re-runs whenever navigation crosses between panels.
   useEffect(() => {
@@ -160,7 +160,7 @@ function App() {
       setIsAuthenticated(true);
       setUser({ email: userEmail, name: userName || userEmail.split('@')[0], role });
     } else {
-      // Workspace mode — per-tab session in sessionStorage
+      // Workspace mode - per-tab session in sessionStorage
       try {
         const ws = JSON.parse(sessionStorage.getItem('workspaceSession') || 'null');
         if (ws?.token) {
@@ -171,7 +171,7 @@ function App() {
     }
   }, []);
 
-  // Get current path — use useLocation() so re-renders happen on navigation
+  // Get current path - use useLocation() so re-renders happen on navigation
   const currentPath = location.pathname;
   const isAdminRoute   = currentPath.startsWith('/admin');
 
@@ -195,7 +195,7 @@ function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* noindex injected in AdminLayout itself */}
-          {/* Public admin login — no AdminRoute guard */}
+          {/* Public admin login - no AdminRoute guard */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
           {/* Protected admin panel */}
@@ -248,7 +248,7 @@ function App() {
   // Regular app layout for non-admin routes
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      {/* Default noindex for all protected/dashboard routes — public pages override this with their own SEOHead */}
+      {/* Default noindex for all protected/dashboard routes - public pages override this with their own SEOHead */}
       {isProtectedRoute && (
         <Helmet>
           <meta name="robots" content="noindex, nofollow" />
@@ -265,7 +265,7 @@ function App() {
         />
       )}
 
-      {/* Navbar — always visible, shifts right when sidebar is showing */}
+      {/* Navbar - always visible, shifts right when sidebar is showing */}
       <div className={`sticky top-0 z-50 ${shouldShowSidebar ? 'md:ml-72' : ''}`}>
         <Navbar
           isAuthenticated={isAuthenticated}
@@ -277,7 +277,7 @@ function App() {
       </div>
 
       {/* Main content area - add margin ONLY when sidebar is visible */}
-      {/* AI support chatbot — shown on all non-admin pages */}
+      {/* AI support chatbot - shown on all non-admin pages */}
       <ScrollToTop />
       <SupportChatbot />
       <CookieConsent />
@@ -302,7 +302,7 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/annual-plan-request" element={<AnnualPlanRequest />} />
 
-            {/* Protected Routes (Dashboard area) — wrapped with WorkspaceRoute for page-level access control */}
+            {/* Protected Routes (Dashboard area) - wrapped with WorkspaceRoute for page-level access control */}
             <Route path="/dashboard"            element={<WorkspaceRoute><Dashboard /></WorkspaceRoute>} />
             <Route path="/opportunities"        element={<WorkspaceRoute><Opportunities /></WorkspaceRoute>} />
             <Route path="/opportunity/:id"      element={<OpportunityDetail />} />
@@ -342,10 +342,10 @@ function App() {
             <Route path="/company/documents" element={<WorkspaceRoute><DocumentLibrary /></WorkspaceRoute>} />
             <Route path="/company/join"      element={<CompanyJoin />} />
 
-            {/* Company Workspace login — public, no auth */}
+            {/* Company Workspace login - public, no auth */}
             <Route path="/workspace/login"   element={<WorkspaceLogin />} />
 
-            {/* Support Portal — separate from admin panel and user dashboard */}
+            {/* Support Portal - separate from admin panel and user dashboard */}
             <Route path="/support/login"     element={<SupportLogin />} />
             <Route path="/support/dashboard" element={<SupportDashboard />} />
           </Routes>

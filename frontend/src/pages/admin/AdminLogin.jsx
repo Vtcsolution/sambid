@@ -42,14 +42,14 @@ export default function AdminLogin() {
           <div className="inline-flex items-center justify-center mb-4">
             <SambidLogo size={56} />
           </div>
-          <h1 className="text-3xl font-bold text-white">Sambid Notify</h1>
+          <h1 className="text-3xl font-bold text-white">Sambid</h1>
           <p className="text-indigo-300 mt-1">Admin Control Panel</p>
         </div>
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <h2 className="text-xl font-bold text-gray-900 mb-1">Administrator Login</h2>
-          <p className="text-gray-500 text-sm mb-6">Restricted access — authorized personnel only.</p>
+          <p className="text-gray-500 text-sm mb-6">Restricted access - authorized personnel only.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

@@ -255,7 +255,7 @@ export default function AdminSupportEarnings() {
                         <p className="text-xs text-gray-500 capitalize">{(w.method || '').replace(/_/g, ' ')} · {new Date(w.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                         {w.adminNote && <p className="text-xs text-gray-400 mt-0.5 italic">"{w.adminNote}"</p>}
 
-                        {/* Payment proof — shown only when paid */}
+                        {/* Payment proof - shown only when paid */}
                         {w.status === 'paid' && (
                           <div className="mt-2 space-y-1">
                             {w.paymentId && (
@@ -314,20 +314,20 @@ export default function AdminSupportEarnings() {
                 {referrals.map(r => (
                   <tr key={r._id} className="border-b border-gray-50 hover:bg-gray-50 transition">
                     <td className="py-3 px-3">
-                      <p className="font-semibold text-gray-900">{r.user?.name || '—'}</p>
-                      <p className="text-xs text-gray-400">{r.user?.email || '—'}</p>
+                      <p className="font-semibold text-gray-900">{r.user?.name || '-'}</p>
+                      <p className="text-xs text-gray-400">{r.user?.email || '-'}</p>
                     </td>
                     <td className="py-3 px-3">
                       {r.planPurchased ? (
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${PLAN_COLORS[r.planPurchased] || PLAN_COLORS.free}`}>
                           {r.planPurchased}
                         </span>
-                      ) : <span className="text-xs text-gray-400">—</span>}
+                      ) : <span className="text-xs text-gray-400">-</span>}
                     </td>
                     <td className="py-3 px-3">
                       {r.commissionAmount > 0
                         ? <span className="font-bold text-emerald-600">${r.commissionAmount.toFixed(2)}</span>
-                        : <span className="text-xs text-gray-400">—</span>}
+                        : <span className="text-xs text-gray-400">-</span>}
                     </td>
                     <td className="py-3 px-3">
                       {r.paidAmount > 0 ? (
@@ -335,11 +335,11 @@ export default function AdminSupportEarnings() {
                           <span className="font-medium text-gray-700">${r.paidAmount.toFixed(2)}</span>
                           {r.discountAmount > 0 && <p className="text-xs text-emerald-600">saved ${r.discountAmount.toFixed(2)}</p>}
                         </div>
-                      ) : <span className="text-xs text-gray-400">—</span>}
+                      ) : <span className="text-xs text-gray-400">-</span>}
                     </td>
                     <td className="py-3 px-3"><StatusBadge status={r.status} /></td>
                     <td className="py-3 px-3 text-xs text-gray-400">
-                      {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                      {r.user?.createdAt ? new Date(r.user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
                     </td>
                   </tr>
                 ))}

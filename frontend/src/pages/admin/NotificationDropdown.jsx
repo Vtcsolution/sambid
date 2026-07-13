@@ -108,7 +108,7 @@ export default function NotificationDropdown() {
 
     const onTicketNew   = (d) => injectLive('ticket_created',
       `🎫 New ticket: ${d.ticketNumber}`,
-      `${d.userName} — ${d.subject}`, '/admin/tickets');
+      `${d.userName} - ${d.subject}`, '/admin/tickets');
     const onUserReply   = (d) => injectLive('ticket_reply',
       `💬 User replied: ${d.ticketNumber}`,
       `${d.userName}: ${d.message?.content?.slice(0, 80) || ''}`, '/admin/tickets');

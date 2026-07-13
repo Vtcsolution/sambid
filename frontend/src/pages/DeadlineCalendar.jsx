@@ -30,10 +30,10 @@ const fmtVal = (v) => {
 };
 
 const URGENCY = {
-  critical: { dot: 'bg-red-500',    badge: 'bg-red-100 text-red-700 border-red-200',    label: 'Critical — ≤3 days' },
-  urgent:   { dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-700 border-orange-200', label: 'Urgent — ≤7 days' },
-  soon:     { dot: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-700 border-yellow-200', label: 'Soon — ≤14 days' },
-  normal:   { dot: 'bg-green-400',  badge: 'bg-green-100 text-green-700 border-green-200',    label: 'On track — >14 days' },
+  critical: { dot: 'bg-red-500',    badge: 'bg-red-100 text-red-700 border-red-200',    label: 'Critical - ≤3 days' },
+  urgent:   { dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-700 border-orange-200', label: 'Urgent - ≤7 days' },
+  soon:     { dot: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-700 border-yellow-200', label: 'Soon - ≤14 days' },
+  normal:   { dot: 'bg-green-400',  badge: 'bg-green-100 text-green-700 border-green-200',    label: 'On track - >14 days' },
   expired:  { dot: 'bg-gray-300',   badge: 'bg-gray-100 text-gray-500 border-gray-200',       label: 'Expired' },
 };
 
@@ -247,9 +247,9 @@ export default function DeadlineCalendar() {
             <HowItWorks
               title="Deadline Calendar"
               steps={[
-                { title: 'Deadlines from your feed', description: 'Shows response due dates for all opportunities matched to your NAICS codes — both from your personal feed and saved list' },
+                { title: 'Deadlines from your feed', description: 'Shows response due dates for all opportunities matched to your NAICS codes - both from your personal feed and saved list' },
                 { title: 'Color-coded urgency', description: 'Red = 3 days or less (critical), Orange = 7 days (urgent), Yellow = 14 days (soon), Green = 14+ days (on track), Gray = expired' },
-                { title: 'Click any date', description: 'See all contracts due that day — title, agency, value, days remaining, and direct link to opportunity detail' },
+                { title: 'Click any date', description: 'See all contracts due that day - title, agency, value, days remaining, and direct link to opportunity detail' },
                 { title: 'Sync to your calendar', description: 'Download .ICS file to import all deadlines into Google Calendar, Outlook, or Apple Calendar with one click' },
               ]}
               dataUsed={['Your Matched Opportunities', 'Your Saved Opportunities', 'SAM.gov Due Dates']}
@@ -443,7 +443,7 @@ export default function DeadlineCalendar() {
               </div>
             )}
 
-            {/* Upcoming this month — quick list */}
+            {/* Upcoming this month - quick list */}
             {!loading && stats?.upcoming > 0 && (
               <div className="mt-4 bg-white rounded-2xl shadow-sm overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100">

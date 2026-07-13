@@ -67,7 +67,7 @@ const sections = [
   },
   {
     title: '16. Contact Information',
-    body: `If you have questions about these Terms, please contact us at: legal@sambid.co or write to Sambid Notify, Arlington, VA 22203, USA.`,
+    body: `If you have questions about these Terms, please contact us at: legal@sambid.co or write to Sambid, Arlington, VA 22203, USA.`,
   },
 ];
 
@@ -75,7 +75,7 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Terms of Service — Sambid"
+        title="Terms of Service - Sambid"
         description="Read Sambid's Terms of Service. Understand your rights and obligations when using our federal contract opportunity notification platform."
         keywords="Sambid terms of service, federal contracting software terms, SAM.gov platform user agreement, government contracting tool terms"
         canonical="https://sambid.co/terms"
@@ -95,7 +95,7 @@ export default function TermsOfService() {
           </div>
           <p className="text-gray-500 text-sm">Effective date: {LAST_UPDATED} · Last updated: {LAST_UPDATED}</p>
           <p className="mt-4 text-gray-600 leading-relaxed">
-            Please read these Terms of Service carefully before using the Sambid platform. These terms constitute a legally binding agreement between you and Sambid Notify regarding your use of our services.
+            Please read these Terms of Service carefully before using the Sambid platform. These terms constitute a legally binding agreement between you and Sambid regarding your use of our services.
           </p>
         </div>
 

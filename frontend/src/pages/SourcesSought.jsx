@@ -65,7 +65,7 @@ export default function SourcesSought() {
     doc.setFontSize(12); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
     doc.text('Sources Sought Response', margin, 13);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-    doc.text(`Sambid Notify — ${new Date().toLocaleDateString()}`, pageW - margin, 13, { align: 'right' });
+    doc.text(`Sambid - ${new Date().toLocaleDateString()}`, pageW - margin, 13, { align: 'right' });
     doc.setTextColor(30, 30, 30); doc.setFontSize(9);
     const lines = doc.splitTextToSize(result, maxW);
     let y = 28;
@@ -113,7 +113,7 @@ export default function SourcesSought() {
                 steps={[
                   { title: 'Select opportunity or enter details', description: 'Choose from saved opportunities to auto-fill, or enter the RFI/Sources Sought details manually' },
                   { title: 'AI generates 8-section response', description: 'Company ID, executive summary, capability narrative, past performance, technical approach, teaming strategy, questions, and statement of interest' },
-                  { title: 'Get on the agency\'s radar', description: 'Submit your response before the RFP drops — agencies remember who responded to the Sources Sought' },
+                  { title: 'Get on the agency\'s radar', description: 'Submit your response before the RFP drops - agencies remember who responded to the Sources Sought' },
                 ]}
                 dataUsed={['Opportunity Data', 'Your Company Profile', 'Your Certifications']}
               >
@@ -127,7 +127,7 @@ export default function SourcesSought() {
                 </ul>
               </HowItWorks>
             </div>
-            <p className="text-gray-500 text-sm">Select an opportunity or enter details — respond to RFIs before the full RFP drops.</p>
+            <p className="text-gray-500 text-sm">Select an opportunity or enter details - respond to RFIs before the full RFP drops.</p>
           </div>
         </div>
 
@@ -215,7 +215,7 @@ export default function SourcesSought() {
                     <label className={labelCls}>Scope / Description</label>
                     <textarea value={form.description} onChange={e => set('description', e.target.value)}
                       rows={4} className={inputCls}
-                      placeholder="Paste the description from the SAM.gov notice — the more detail the better..." />
+                      placeholder="Paste the description from the SAM.gov notice - the more detail the better..." />
                   </div>
                   <div>
                     <label className={labelCls}>Key Requirements <span className="font-normal text-gray-400">(bullet points or list)</span></label>

@@ -164,7 +164,7 @@ function extractDominantColor(file, onColor) {
 function ProGate() {
   const { getMonthly } = usePlans();
   const proPrice = getMonthly('pro');
-  const ctaText = proPrice != null ? `Upgrade to Pro — $${proPrice}/mo` : 'Upgrade to Pro';
+  const ctaText = proPrice != null ? `Upgrade to Pro - $${proPrice}/mo` : 'Upgrade to Pro';
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
@@ -270,7 +270,7 @@ function OpportunitySelector({ selected, onSelect }) {
   );
 }
 
-// ── Individual input — module-level to prevent remount on each keystroke ───────
+// ── Individual input - module-level to prevent remount on each keystroke ───────
 function ProposalField({ icon: Icon, label, fieldKey, value, placeholder, fields, onChange, type = 'text' }) {
   return (
     <div>
@@ -367,7 +367,7 @@ function SectionCard({ section, index, editFields, onBodyChange }) {
                   className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors">
                   <X className="w-3.5 h-3.5" /> Cancel
                 </button>
-                <span className="text-xs text-gray-400 ml-2">Edit the text directly — changes apply to PDF export</span>
+                <span className="text-xs text-gray-400 ml-2">Edit the text directly - changes apply to PDF export</span>
               </div>
             </div>
           ) : (
@@ -395,7 +395,7 @@ function generateProposalPDF({ proposal, fields, theme, selected, aiProvider, se
   const [mr2, mg2, mb2] = lightenRgb(theme.primaryColor, 0.70);
 
   // ════════════════════════════════════════════════════════════
-  // PAGE 1 — PROFESSIONAL COVER PAGE
+  // PAGE 1 - PROFESSIONAL COVER PAGE
   // ════════════════════════════════════════════════════════════
 
   // Colored top band
@@ -443,7 +443,7 @@ function generateProposalPDF({ proposal, fields, theme, selected, aiProvider, se
   doc.setTextColor(255, 255, 255);
   doc.text('PROPOSAL FOR:', ML, topH - 58);
 
-  // Contract title — big, white, bold
+  // Contract title - big, white, bold
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(19);
   doc.setTextColor(255, 255, 255);
@@ -539,12 +539,12 @@ function generateProposalPDF({ proposal, fields, theme, selected, aiProvider, se
 
   // ── Confidential notice ────────────────────────────────────────────────────
   doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(140, 140, 150);
-  doc.text('CONFIDENTIAL — FOR OFFICIAL USE ONLY', W/2, H - 14, { align: 'center' });
+  doc.text('CONFIDENTIAL - FOR OFFICIAL USE ONLY', W/2, H - 14, { align: 'center' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5); doc.setTextColor(175, 175, 185);
   doc.text('This document contains proprietary and confidential information. Unauthorized distribution is prohibited.', W/2, H - 9, { align: 'center' });
 
   // ════════════════════════════════════════════════════════════
-  // PAGES 2+ — CONTENT
+  // PAGES 2+ - CONTENT
   // ════════════════════════════════════════════════════════════
   doc.addPage();
   let y = 20;
@@ -599,7 +599,7 @@ function generateProposalPDF({ proposal, fields, theme, selected, aiProvider, se
         y += lineH + 1.5;
 
       } else {
-        // Normal paragraph — detect **bold** spans
+        // Normal paragraph - detect **bold** spans
         const parts = trimmed.split(/(\*\*[^*]+\*\*)/g);
         const fullText = trimmed.replace(/\*\*/g, '');
         const wrapped  = doc.splitTextToSize(fullText, CW);
@@ -607,7 +607,7 @@ function generateProposalPDF({ proposal, fields, theme, selected, aiProvider, se
 
         // Simple approach: if has bold markers, render word by word; otherwise straight text
         if (parts.length > 1) {
-          // Inline bold rendering — render line by line
+          // Inline bold rendering - render line by line
           doc.setFontSize(10); doc.setTextColor(45, 45, 50);
           let xPos = ML;
           let lineCount = 0;
@@ -824,7 +824,7 @@ export default function ProposalBuilder() {
                 steps={[
                   { title: 'Select or enter opportunity', description: 'Choose from saved opportunities (auto-fills all fields) or enter contract details manually' },
                   { title: 'AI generates 7-section proposal', description: 'Cover Letter, Executive Summary, Technical Approach, Management Plan, Past Performance, Pricing Strategy, Conclusion' },
-                  { title: 'Uses your REAL data', description: 'Your actual past wins from USASpending, real competitor pricing, verified company profile — not generic templates' },
+                  { title: 'Uses your REAL data', description: 'Your actual past wins from USASpending, real competitor pricing, verified company profile - not generic templates' },
                   { title: 'Export branded PDF', description: 'Choose from 6 color themes (Indigo, Navy, Forest, Crimson, Slate, Teal) and download professional PDF' },
                 ]}
                 dataUsed={['SAM.gov (full SOW)', 'USASpending (competitors)', 'Your Past Wins', 'Your Certifications']}
@@ -928,7 +928,7 @@ export default function ProposalBuilder() {
               {fields.date          && <span><strong>Date:</strong> {fields.date}</span>}
               {fields.agencyContact && <span><strong>To:</strong> {fields.agencyContact}{fields.recipientTitle ? `, ${fields.recipientTitle}` : ''}</span>}
               {fields.agencyAddr1   && <span><strong>Agency Addr:</strong> {fields.agencyAddr1}</span>}
-              {fields.senderName    && <span><strong>From:</strong> {fields.senderName}{fields.senderTitle ? ` — ${fields.senderTitle}` : ''}</span>}
+              {fields.senderName    && <span><strong>From:</strong> {fields.senderName}{fields.senderTitle ? ` - ${fields.senderTitle}` : ''}</span>}
               {fields.email         && <span><strong>Email:</strong> {fields.email}</span>}
               {fields.phone         && <span><strong>Phone:</strong> {fields.phone}</span>}
             </div>
@@ -943,7 +943,7 @@ export default function ProposalBuilder() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-violet-600 text-white rounded-full flex items-center justify-center text-sm font-bold shrink-0">3</div>
             <div className="text-left">
-              <p className="text-sm font-semibold text-gray-900">PDF Branding <span className="text-xs font-normal text-gray-400 ml-1">optional — already looks great with defaults</span></p>
+              <p className="text-sm font-semibold text-gray-900">PDF Branding <span className="text-xs font-normal text-gray-400 ml-1">optional - already looks great with defaults</span></p>
               <p className="text-xs text-gray-400">Set brand color, logo, and PDF style</p>
             </div>
           </div>
@@ -986,7 +986,7 @@ export default function ProposalBuilder() {
             {/* Sample upload */}
             <div>
               <p className="text-xs font-semibold text-gray-600 mb-1">Auto-Extract Color from Image</p>
-              <p className="text-xs text-gray-400 mb-2">Upload a letterhead or brochure — we detect your brand color automatically.</p>
+              <p className="text-xs text-gray-400 mb-2">Upload a letterhead or brochure - we detect your brand color automatically.</p>
               <div onClick={() => sampleInputRef.current?.click()}
                 className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors">
                 {extracting
@@ -1058,7 +1058,7 @@ export default function ProposalBuilder() {
           ? <><Loader2 className="w-5 h-5 animate-spin" />Generating your proposal…</>
           : <><Sparkles className="w-5 h-5" />{proposal ? 'Regenerate Full Proposal' : 'Generate Full Proposal'}</>}
       </button>
-      {loading && <p className="text-xs text-center text-gray-400 mb-6">This takes 15–30 seconds — AI is writing all 7 sections with your details…</p>}
+      {loading && <p className="text-xs text-center text-gray-400 mb-6">This takes 15–30 seconds - AI is writing all 7 sections with your details…</p>}
 
       {/* ── Result ──────────────────────────────────────────────────────────── */}
       {proposal && (
@@ -1089,7 +1089,7 @@ export default function ProposalBuilder() {
           {docsAnalyzed > 0 && (
             <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 mb-3">
               <FileText className="w-3.5 h-3.5 shrink-0" />
-              <span><strong>{docsAnalyzed} RFP document{docsAnalyzed !== 1 ? 's' : ''} analyzed</strong> — proposal written from actual solicitation files</span>
+              <span><strong>{docsAnalyzed} RFP document{docsAnalyzed !== 1 ? 's' : ''} analyzed</strong> - proposal written from actual solicitation files</span>
             </div>
           )}
 

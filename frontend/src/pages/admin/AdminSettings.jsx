@@ -157,7 +157,7 @@ export default function AdminSettings() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-xl font-bold text-gray-900">Platform Settings<AdminHowItWorks page="settings" /></h1>
-          <p className="text-sm text-gray-500 mt-0.5">All changes apply instantly — no server restart needed.</p>
+          <p className="text-sm text-gray-500 mt-0.5">All changes apply instantly - no server restart needed.</p>
         </div>
         <button onClick={handleSave} disabled={saving}
           className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl disabled:opacity-60 transition-colors shadow-sm shrink-0 self-start sm:self-auto">
@@ -187,7 +187,7 @@ export default function AdminSettings() {
             <div>
               <p className="font-medium text-gray-900 text-sm">Admin Panel Dark Mode</p>
               <p className="text-xs text-gray-500 mt-0.5">
-                {isDark ? 'Currently using dark theme' : 'Currently using light theme'} — applies only to the admin panel
+                {isDark ? 'Currently using dark theme' : 'Currently using light theme'} - applies only to the admin panel
               </p>
             </div>
           </div>
@@ -234,7 +234,7 @@ export default function AdminSettings() {
           </div>
         </div>
         <div className="border-t border-gray-100 pt-4">
-          <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wide">Sender Addresses — all route through SMTP credentials above</p>
+          <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wide">Sender Addresses - all route through SMTP credentials above</p>
           <div className="grid grid-cols-3 gap-4">
             <TextInput label="System / No-Reply" value={g('email').emailNoreply || ''} onChange={v => set('email','emailNoreply',v)} placeholder="noreply@sambid.co" hint="Password resets, alerts, digests." />
             <TextInput label="Support" value={g('email').emailSupport || ''} onChange={v => set('email','emailSupport',v)} placeholder="support@sambid.co" hint="Tickets, suggestions, enterprise inquiries." />
@@ -244,7 +244,7 @@ export default function AdminSettings() {
       </SectionCard>
 
       {/* ── 3. AI (OpenAI + Gemini) ─────────────────────────────────────── */}
-      <SectionCard icon={Zap} color="bg-violet-50 text-violet-700" title="AI — OpenAI / Gemini">
+      <SectionCard icon={Zap} color="bg-violet-50 text-violet-700" title="AI - OpenAI / Gemini">
         <SecretInput label="OpenAI API Key"
           value={g('api').openaiApiKey || ''}
           onChange={v => set('api','openaiApiKey',v)}
@@ -274,12 +274,12 @@ export default function AdminSettings() {
             value={g('api').samApiKey3 || ''}
             onChange={v => set('api','samApiKey3',v)}
             placeholder="SAM-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            hint="3rd key — adds another 1,000 requests/day to your quota." />
+            hint="3rd key - adds another 1,000 requests/day to your quota." />
           <SecretInput label="SAM.gov API Key 4 (Backup)"
             value={g('api').samApiKey4 || ''}
             onChange={v => set('api','samApiKey4',v)}
             placeholder="SAM-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            hint="4th key — 4 keys total = 4,000 requests/day, enough to fully resolve all active contracts nightly." />
+            hint="4th key - 4 keys total = 4,000 requests/day, enough to fully resolve all active contracts nightly." />
           <TextInput label="SAM.gov API URL" value={g('api').samApiUrl || ''} onChange={v => set('api','samApiUrl',v)}
             placeholder="https://api.sam.gov/opportunities/v2/search" />
           <div className="col-span-2">
@@ -290,7 +290,7 @@ export default function AdminSettings() {
       </SectionCard>
 
       {/* ── 5. Payment Gateway Control ─────────────────────────────────── */}
-      <SectionCard icon={CreditCard} color="bg-green-50 text-green-700" title="Payment Gateways — Enable / Disable">
+      <SectionCard icon={CreditCard} color="bg-green-50 text-green-700" title="Payment Gateways - Enable / Disable">
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 flex items-start gap-2 mb-2">
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>Toggle which payment methods appear on the checkout page. Disabled gateways are hidden from users. Save to apply.</span>
@@ -397,7 +397,7 @@ export default function AdminSettings() {
           <div className="col-span-2">
             <TextInput label="API Base URL" value={g('payment').payoneerApiBase || ''} onChange={v => set('payment','payoneerApiBase',v)}
               placeholder="https://api.sandbox.payoneer.com"
-              hint="Sandbox: api.sandbox.payoneer.com — Live: api.payoneer.com" />
+              hint="Sandbox: api.sandbox.payoneer.com - Live: api.payoneer.com" />
           </div>
           <SecretInput label="Client ID" value={g('payment').payoneerClientId || ''} onChange={v => set('payment','payoneerClientId',v)} placeholder="payoneer_client_id" />
           <SecretInput label="Client Secret" value={g('payment').payoneerClientSecret || ''} onChange={v => set('payment','payoneerClientSecret',v)} placeholder="payoneer_client_secret" />

@@ -19,8 +19,8 @@ const CHANNELS = [
 ];
 
 const BENEFITS = [
-  { icon: DollarSign, color: 'bg-emerald-100 text-emerald-600', title: '20% Commission', desc: 'Earn 20% on every payment your referred company makes — recurring!' },
-  { icon: Gift,       color: 'bg-violet-100 text-violet-600',   title: '20% Discount',  desc: 'Your referred companies get 20% off any plan — makes selling easy.' },
+  { icon: DollarSign, color: 'bg-emerald-100 text-emerald-600', title: '20% Commission', desc: 'Earn 20% on every payment your referred company makes - recurring!' },
+  { icon: Gift,       color: 'bg-violet-100 text-violet-600',   title: '20% Discount',  desc: 'Your referred companies get 20% off any plan - makes selling easy.' },
   { icon: TrendingUp, color: 'bg-blue-100 text-blue-600',       title: 'Passive Income', desc: 'Commission keeps coming every billing cycle, not just the first payment.' },
   { icon: Shield,     color: 'bg-amber-100 text-amber-600',     title: 'Withdraw at $100', desc: 'Request a payout once your balance reaches $100 via PayPal or bank.' },
   { icon: Zap,        color: 'bg-pink-100 text-pink-600',       title: 'Instant Dashboard', desc: 'Real-time view of your referrals, conversions, and earnings in your panel.' },
@@ -35,12 +35,12 @@ const STEPS = [
 ];
 
 const FAQ = [
-  { q: 'Do I need to be a US-based company?',           a: 'No — anyone from anywhere in the world can apply.' },
+  { q: 'Do I need to be a US-based company?',           a: 'No - anyone from anywhere in the world can apply.' },
   { q: 'Is there a sign-up fee?',                       a: 'Absolutely not. Joining the program is 100% free.' },
   { q: 'When do I get paid?',                           a: 'You can request a withdrawal once your balance reaches $100. We process payouts within 3–5 business days.' },
   { q: 'How long does commission last?',                a: 'As long as the referred company keeps their subscription, you keep earning. It is recurring.' },
   { q: 'What counts as a valid referral?',              a: 'A company that signs up via your unique link and purchases any paid plan.' },
-  { q: 'Can I refer multiple companies?',               a: 'Yes — there is no limit. The more you refer, the more you earn.' },
+  { q: 'Can I refer multiple companies?',               a: 'Yes - there is no limit. The more you refer, the more you earn.' },
 ];
 
 export default function BecomePartner() {
@@ -115,7 +115,7 @@ export default function BecomePartner() {
             </span>
           </h1>
           <p className="text-lg text-indigo-200 max-w-2xl mx-auto mb-8">
-            Join the Sambid Notify partner program. Share your referral link, help companies
+            Join the Sambid partner program. Share your referral link, help companies
             win government contracts, and earn <strong>20% recurring commission</strong> on every payment.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -183,7 +183,7 @@ export default function BecomePartner() {
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 text-center mt-4">Recurring — earned every year while the companies remain subscribed.</p>
+            <p className="text-xs text-gray-400 text-center mt-4">Recurring - earned every year while the companies remain subscribed.</p>
           </div>
         </div>
       </section>
@@ -252,7 +252,7 @@ export default function BecomePartner() {
                 Why do you want to join? <span className="text-red-500">*</span>
               </label>
               <textarea value={form.motivation} onChange={set('motivation')} rows={4} required
-                placeholder="Tell us a bit about yourself and why you're interested in the Sambid Notify partner program…"
+                placeholder="Tell us a bit about yourself and why you're interested in the Sambid partner program…"
                 className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none" />
             </div>
 
@@ -299,7 +299,7 @@ export default function BecomePartner() {
       {/* ── Footer CTA ──────────────────────────────────────────────────────── */}
       <section className="py-14 px-4 bg-indigo-600 text-white text-center">
         <h2 className="text-2xl sm:text-3xl font-bold mb-3">Ready to start earning?</h2>
-        <p className="text-indigo-200 mb-6 text-sm">Join hundreds of partners already earning with Sambid Notify.</p>
+        <p className="text-indigo-200 mb-6 text-sm">Join hundreds of partners already earning with Sambid.</p>
         <a href="#apply" className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-indigo-700 rounded-xl font-semibold hover:bg-indigo-50 transition text-sm">
           Apply Now <ArrowRight className="w-4 h-4" />
         </a>

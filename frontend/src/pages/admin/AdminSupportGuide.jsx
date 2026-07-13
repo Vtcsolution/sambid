@@ -13,7 +13,7 @@ import { adminPanelAPI, supportAPI } from '../../services/adminApi';
 const fmt = n => `$${Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const pct = r => `${+(Number(r || 0) * 100).toFixed(2)}%`;
 
-// Fallback prices — only used until the live plan prices load (or if the fetch fails).
+// Fallback prices - only used until the live plan prices load (or if the fetch fails).
 const FALLBACK = {
   starter:    { displayName: 'Starter',    priceMonthly: 29,  priceYearly: 279  },
   pro:        { displayName: 'Pro',        priceMonthly: 79,  priceYearly: 758  },
@@ -99,7 +99,7 @@ function Calculator({ planList, first, recurring, target }) {
         {unlocked ? (
           <>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Monthly Recurring ({pct(recurring)}) — after unlock</span>
+              <span className="text-sm text-gray-600">Monthly Recurring ({pct(recurring)}) - after unlock</span>
               <span className="text-lg font-black text-indigo-600">{fmt(recurringMonthly)}/mo</span>
             </div>
             <div className="flex items-center justify-between">
@@ -254,21 +254,21 @@ export default function AdminSupportGuide() {
     { label: 'Halfway to Target', refs: half,       active: false, note: `${half} Pro/Enterprise counted toward ${target} goal` },
     { label: 'Target Unlocked!',  refs: target,     active: true,  note: '🎉 Recurring commissions now active' },
     { label: 'Scale Up',          refs: target * 2, active: true,  note: `${fmt(target * 2 * recurringPerProMo * 12)}+ per year from recurring alone` },
-    { label: 'Full Passive Mode', refs: target * 5, active: true,  note: `${fmt(target * 5 * recurringPerProMo * 12)}+/year — true lifetime income` },
+    { label: 'Full Passive Mode', refs: target * 5, active: true,  note: `${fmt(target * 5 * recurringPerProMo * 12)}+/year - true lifetime income` },
   ];
 
   const faqs = [
     {
       q: `What counts toward the ${target} Pro/Enterprise target?`,
-      a: `Only companies that make their FIRST purchase on the Pro or Enterprise plan (monthly or yearly) count toward your ${target} target. Starter plan purchases do NOT count. Once a company buys Pro or Enterprise for the first time, they count — even if they later downgrade.`,
+      a: `Only companies that make their FIRST purchase on the Pro or Enterprise plan (monthly or yearly) count toward your ${target} target. Starter plan purchases do NOT count. Once a company buys Pro or Enterprise for the first time, they count - even if they later downgrade.`,
     },
     {
       q: `When exactly do I earn the ${pct(first)} one-time commission?`,
-      a: `You earn ${pct(first)} the moment a referred company completes their very first payment — on any plan (Starter, Pro, or Enterprise, monthly or yearly). This is a one-time reward per company. You do not earn ${pct(first)} again if the same company renews.`,
+      a: `You earn ${pct(first)} the moment a referred company completes their very first payment - on any plan (Starter, Pro, or Enterprise, monthly or yearly). This is a one-time reward per company. You do not earn ${pct(first)} again if the same company renews.`,
     },
     {
       q: `Once I unlock recurring commissions, what triggers the ${pct(recurring)}?`,
-      a: `After you hit ${target} Pro/Enterprise referrals, every time any of your referred companies pays their Pro or Enterprise renewal — monthly or yearly — you earn ${pct(recurring)} of that payment automatically. Starter renewals do not earn recurring commissions.`,
+      a: `After you hit ${target} Pro/Enterprise referrals, every time any of your referred companies pays their Pro or Enterprise renewal - monthly or yearly - you earn ${pct(recurring)} of that payment automatically. Starter renewals do not earn recurring commissions.`,
     },
     {
       q: 'How do I know if someone used my referral link?',
@@ -280,11 +280,11 @@ export default function AdminSupportGuide() {
     },
     {
       q: 'What happens if a referred company cancels and then re-subscribes later?',
-      a: `If a company cancels and comes back, their renewal payment still earns you ${pct(recurring)} recurring — provided your recurring commission is already unlocked. You only earn the ${pct(first)} one-time on their original first-ever purchase.`,
+      a: `If a company cancels and comes back, their renewal payment still earns you ${pct(recurring)} recurring - provided your recurring commission is already unlocked. You only earn the ${pct(first)} one-time on their original first-ever purchase.`,
     },
     {
       q: 'What discount does the referred company get?',
-      a: 'Any company that signs up through your referral link automatically gets 20% off their plan — applied at checkout. This discount makes it easier for you to convince companies to use your link since they benefit directly.',
+      a: 'Any company that signs up through your referral link automatically gets 20% off their plan - applied at checkout. This discount makes it easier for you to convince companies to use your link since they benefit directly.',
     },
     {
       q: 'Do I earn commissions on yearly plan purchases?',
@@ -292,7 +292,7 @@ export default function AdminSupportGuide() {
     },
     {
       q: 'What is the best type of company to refer?',
-      a: 'The ideal referral is a small business that actively bids on US federal government contracts — typically with $100K to $10M in annual contract revenue. These companies need contract opportunity alerts and bid analysis tools most urgently and are the most likely to pay for Pro or Enterprise plans.',
+      a: 'The ideal referral is a small business that actively bids on US federal government contracts - typically with $100K to $10M in annual contract revenue. These companies need contract opportunity alerts and bid analysis tools most urgently and are the most likely to pay for Pro or Enterprise plans.',
     },
   ];
 
@@ -322,7 +322,7 @@ export default function AdminSupportGuide() {
             Your Path to<br />Lifetime Earnings
           </h2>
           <p className="text-indigo-100 text-base max-w-xl mb-6">
-            Follow this step-by-step guide to earn commissions today, build toward the {target}-company target, and unlock a monthly income stream that pays you every time a company renews — forever.
+            Follow this step-by-step guide to earn commissions today, build toward the {target}-company target, and unlock a monthly income stream that pays you every time a company renews - forever.
           </p>
           <div className="flex flex-wrap gap-4">
             {[
@@ -345,16 +345,16 @@ export default function AdminSupportGuide() {
       {/* ── How commissions work ─────────────────────────────────────────── */}
       <section>
         <h2 className="text-xl font-bold text-gray-900 mb-1">How Commissions Work</h2>
-        <p className="text-sm text-gray-500 mb-5">Two reward types — one immediate, one long-term.</p>
+        <p className="text-sm text-gray-500 mb-5">Two reward types - one immediate, one long-term.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          {/* Type 1 — one-time (green = money earned now) */}
+          {/* Type 1 - one-time (green = money earned now) */}
           <div className="bg-white rounded-2xl border border-green-200 p-6">
             <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-4">
               <Star className="w-5 h-5 text-green-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">{pct(first)} One-Time Commission</h3>
-            <p className="text-sm text-gray-500 mb-4">Earned the instant a referred company makes their very first payment — regardless of plan.</p>
+            <p className="text-sm text-gray-500 mb-4">Earned the instant a referred company makes their very first payment - regardless of plan.</p>
             <div className="space-y-2">
               {oneTimeRows.map(([plan, price]) => (
                 <div key={plan} className="flex items-center justify-between text-sm">
@@ -369,13 +369,13 @@ export default function AdminSupportGuide() {
             </div>
           </div>
 
-          {/* Type 2 — recurring (indigo = premium / brand) */}
+          {/* Type 2 - recurring (indigo = premium / brand) */}
           <div className="bg-white rounded-2xl border border-indigo-200 p-6">
             <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
               <Trophy className="w-5 h-5 text-indigo-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-1">{pct(recurring)} Recurring Commission</h3>
-            <p className="text-sm text-gray-500 mb-2">Earned every month/year when referred companies renew their Pro or Enterprise plan — <strong>after you hit {target} Pro/Enterprise referrals.</strong></p>
+            <p className="text-sm text-gray-500 mb-2">Earned every month/year when referred companies renew their Pro or Enterprise plan - <strong>after you hit {target} Pro/Enterprise referrals.</strong></p>
             <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 mb-4">
               <p className="text-xs text-gray-600 font-semibold flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5" /> Locked until you refer {target} Pro/Enterprise companies
@@ -407,7 +407,7 @@ export default function AdminSupportGuide() {
             title="Get Set Up"
             steps={[
               'Copy your unique referral link from the Referral Earnings page.',
-              'Understand your 20% discount advantage — companies save money by using your link.',
+              'Understand your 20% discount advantage - companies save money by using your link.',
               'Identify your first 10 target contacts: small federal contractors you already know.',
               'Prepare a short outreach message (see templates below).',
             ]}
@@ -417,7 +417,7 @@ export default function AdminSupportGuide() {
             number={2} color="green" icon={TrendingUp} timeframe="Week 1–4"
             title={`Start Earning ${pct(first)}`}
             steps={[
-              'Share your referral link broadly — LinkedIn, email, direct message.',
+              'Share your referral link broadly - LinkedIn, email, direct message.',
               'Focus on ANY plan first to build your balance and cash flow.',
               `Every signup earns you ${pct(first)} on their first purchase automatically.`,
               `Example: 20 companies buy ${dn('starter')} (${fmt(starterM)}) → you earn ${fmt(20 * starterM * first)} immediately.`,
@@ -429,10 +429,10 @@ export default function AdminSupportGuide() {
             number={3} color="indigo" icon={Target} timeframe="Month 1–6"
             title={`Hit the ${target} Target`}
             steps={[
-              `Shift focus to Pro and Enterprise plan referrals — these count toward the ${target} target.`,
+              `Shift focus to Pro and Enterprise plan referrals - these count toward the ${target} target.`,
               `Starter referrals still earn ${pct(first)} but do NOT count toward the target.`,
-              `Promote the ${dn('pro')} plan (${fmt(proM)}/mo) as the sweet spot — affordable for small contractors.`,
-              'Emphasize the value: contract alerts, bid analysis, teaming finder — all in Pro.',
+              `Promote the ${dn('pro')} plan (${fmt(proM)}/mo) as the sweet spot - affordable for small contractors.`,
+              'Emphasize the value: contract alerts, bid analysis, teaming finder - all in Pro.',
               `${target} ${dn('pro')} signups earns you: ${target} × ${fmt(proM)} × ${pct(first)} = ${fmt(target * proM * first)} in one-time commissions.`,
             ]}
             result={`Milestone: ${target} Pro/Enterprise → Recurring commissions UNLOCK forever.`}
@@ -442,12 +442,12 @@ export default function AdminSupportGuide() {
             title="Collect Lifetime Passive Income"
             steps={[
               `Once unlocked, you earn ${pct(recurring)} every time any of your referred Pro/Enterprise companies renew.`,
-              'You do nothing — renewals happen automatically each month or year.',
+              'You do nothing - renewals happen automatically each month or year.',
               `${target} ${dn('pro')} Monthly companies renewing = ${target} × ${fmt(proM)} × ${pct(recurring)} = ${fmt(target * proM * recurring)} every month.`,
-              'Add more referrals to grow your passive base — there\'s no cap.',
+              'Add more referrals to grow your passive base - there\'s no cap.',
               'Keep referring to earn more one-time AND grow your recurring pool.',
             ]}
-            result="This is true passive income — it keeps paying as long as companies stay subscribed."
+            result="This is true passive income - it keeps paying as long as companies stay subscribed."
           />
         </div>
       </section>
@@ -474,7 +474,7 @@ export default function AdminSupportGuide() {
             {
               icon: Rocket,
               title: 'GovCon Startups',
-              desc: 'Businesses just entering the federal contracting space — typically 1–5 years old with a few early wins. They\'re actively growing and need every edge.',
+              desc: 'Businesses just entering the federal contracting space - typically 1–5 years old with a few early wins. They\'re actively growing and need every edge.',
               tags: ['SAM.gov registered', 'UEI holders', 'New NAICS codes'],
             },
             {
@@ -520,8 +520,8 @@ export default function AdminSupportGuide() {
               icon: Mail, color: 'bg-green-100 text-green-600',
               title: 'Direct Email Outreach',
               how: [
-                'Use the Federal Prospects section in the panel — already has small contractors',
-                'Personalize each email — mention their company name and a recent contract',
+                'Use the Federal Prospects section in the panel - already has small contractors',
+                'Personalize each email - mention their company name and a recent contract',
                 'Keep it short: 3 sentences max + your referral link',
                 'Subject line: "Free tool for [CompanyName] to win more federal contracts"',
               ],
@@ -576,17 +576,17 @@ export default function AdminSupportGuide() {
             {
               label: 'LinkedIn DM',
               badge: 'bg-blue-100 text-blue-700',
-              msg: `Hi [Name], I noticed [Company] has been winning contracts in [agency/sector] — impressive work! I came across a platform called Sambid Notify that sends real-time alerts for federal contract opportunities matching your NAICS codes + a 20% discount for new signups. Thought it might be useful for your team: [YOUR REFERRAL LINK]. Happy to answer any questions!`,
+              msg: `Hi [Name], I noticed [Company] has been winning contracts in [agency/sector] - impressive work! I came across a platform called Sambid that sends real-time alerts for federal contract opportunities matching your NAICS codes + a 20% discount for new signups. Thought it might be useful for your team: [YOUR REFERRAL LINK]. Happy to answer any questions!`,
             },
             {
               label: 'Email Subject + Body',
               badge: 'bg-green-100 text-green-700',
-              msg: `Subject: Federal contract alerts for [CompanyName] (+ 20% off)\n\nHi [Name],\n\nI work with a platform that helps small federal contractors like [Company] find and track bid opportunities before the competition. It covers USASpending, SAM.gov, and FPDS — all in one dashboard.\n\nRight now there's a 20% discount for new signups through my link: [YOUR REFERRAL LINK]\n\nWould love to hear what you think. No obligation at all.\n\nBest,\n[Your Name]`,
+              msg: `Subject: Federal contract alerts for [CompanyName] (+ 20% off)\n\nHi [Name],\n\nI work with a platform that helps small federal contractors like [Company] find and track bid opportunities before the competition. It covers USASpending, SAM.gov, and FPDS - all in one dashboard.\n\nRight now there's a 20% discount for new signups through my link: [YOUR REFERRAL LINK]\n\nWould love to hear what you think. No obligation at all.\n\nBest,\n[Your Name]`,
             },
             {
               label: 'Short Text / Forum Post',
               badge: 'bg-purple-100 text-purple-700',
-              msg: `Anyone here using Sambid Notify for contract tracking? It aggregates SAM.gov + USASpending alerts in one place. There's 20% off new signups right now: [YOUR REFERRAL LINK] — figured it'd be useful for small contractors.`,
+              msg: `Anyone here using Sambid for contract tracking? It aggregates SAM.gov + USASpending alerts in one place. There's 20% off new signups right now: [YOUR REFERRAL LINK] - figured it'd be useful for small contractors.`,
             },
           ].map(({ label, badge, msg }) => (
             <div key={label} className="bg-white rounded-2xl border border-gray-200 p-5">
@@ -626,17 +626,17 @@ export default function AdminSupportGuide() {
             {
               icon: Clock, color: 'text-blue-600 bg-blue-100',
               tip: 'Follow up exactly once, 3–5 days later',
-              detail: 'A single follow-up can double your conversion rate. Most people don\'t respond the first time — not because they\'re not interested.',
+              detail: 'A single follow-up can double your conversion rate. Most people don\'t respond the first time - not because they\'re not interested.',
             },
             {
               icon: BarChart3, color: 'text-green-600 bg-green-100',
               tip: 'Use the Federal Prospects database in the panel',
-              detail: 'The admin panel already has a list of small federal contractors with emails. You have a built-in prospect list — use it.',
+              detail: 'The admin panel already has a list of small federal contractors with emails. You have a built-in prospect list - use it.',
             },
             {
               icon: Shield, color: 'text-purple-600 bg-purple-100',
               tip: 'Mention specific certifications they hold',
-              detail: 'If they\'re 8(a), HUBZone, or SDVOSB, mention it. Show you know their business — it builds trust and improves open rates dramatically.',
+              detail: 'If they\'re 8(a), HUBZone, or SDVOSB, mention it. Show you know their business - it builds trust and improves open rates dramatically.',
             },
             {
               icon: Heart, color: 'text-indigo-600 bg-indigo-100',
@@ -676,7 +676,7 @@ export default function AdminSupportGuide() {
                   <td className="px-4 py-3 font-semibold text-gray-900">{m.label}</td>
                   <td className="px-4 py-3 text-gray-600">{m.refs} {dn('pro')}</td>
                   <td className="px-4 py-3 font-bold text-green-600">{fmt(m.refs * oneTimePerPro)}</td>
-                  <td className="px-4 py-3 font-bold text-indigo-600">{m.active ? `${fmt(m.refs * recurringPerProMo)}/mo` : '—'}</td>
+                  <td className="px-4 py-3 font-bold text-indigo-600">{m.active ? `${fmt(m.refs * recurringPerProMo)}/mo` : '-'}</td>
                   <td className="px-4 py-3 text-xs text-gray-500">{m.note}</td>
                 </tr>
               ))}

@@ -65,11 +65,11 @@ const CATEGORIES = [
     faqs: [
       {
         q: 'What exactly is Sambid?',
-        a: 'Sambid is an AI-powered federal contract discovery platform. It connects to SAM.gov, USASpending.gov, and FPDS — and automatically finds, filters, and delivers federal contract opportunities matched to your business profile. Think of it as your automated federal business development team.',
+        a: 'Sambid is an AI-powered federal contract discovery platform. It connects to SAM.gov, USASpending.gov, and FPDS - and automatically finds, filters, and delivers federal contract opportunities matched to your business profile. Think of it as your automated federal business development team.',
       },
       {
         q: 'How is Sambid different from just searching SAM.gov manually?',
-        a: 'SAM.gov is a raw database — you search it manually, wade through thousands of irrelevant listings, and repeat every day. Sambid does that work automatically: it scans every morning, filters to your NAICS codes and preferences, and delivers only the contracts you can actually win. Plus AI proposal tools, deadline tracking, teaming finder, and past performance intelligence — none of which SAM.gov offers.',
+        a: 'SAM.gov is a raw database - you search it manually, wade through thousands of irrelevant listings, and repeat every day. Sambid does that work automatically: it scans every morning, filters to your NAICS codes and preferences, and delivers only the contracts you can actually win. Plus AI proposal tools, deadline tracking, teaming finder, and past performance intelligence - none of which SAM.gov offers.',
       },
       {
         q: 'What data sources does Sambid use?',
@@ -81,11 +81,11 @@ const CATEGORIES = [
       },
       {
         q: 'How does the AI proposal writer work?',
-        a: 'Upload or paste the RFP text. Sambid\'s AI reads the solicitation, extracts all requirements and evaluation criteria, and generates a structured proposal draft — technical volume, management approach, executive summary — in under 2 minutes. You edit, refine, and submit. It does not replace your expertise; it eliminates the blank-page problem.',
+        a: 'Upload or paste the RFP text. Sambid\'s AI reads the solicitation, extracts all requirements and evaluation criteria, and generates a structured proposal draft - technical volume, management approach, executive summary - in under 2 minutes. You edit, refine, and submit. It does not replace your expertise; it eliminates the blank-page problem.',
       },
       {
         q: 'Can I use Sambid on mobile?',
-        a: 'Yes. Sambid is fully responsive and works on any device — phone, tablet, or desktop. Email alerts work on any device too. For heavy proposal work, desktop is recommended.',
+        a: 'Yes. Sambid is fully responsive and works on any device - phone, tablet, or desktop. Email alerts work on any device too. For heavy proposal work, desktop is recommended.',
       },
     ],
   },
@@ -96,7 +96,7 @@ const CATEGORIES = [
     faqs: [
       {
         q: 'Is there a free trial?',
-        a: 'Yes — sign up with no credit card required. Your free trial gives you 15 real contract matches from SAM.gov based on your NAICS codes so you can see exactly what Sambid finds for your business before paying anything.',
+        a: 'Yes - sign up with no credit card required. Your free trial gives you 15 real contract matches from SAM.gov based on your NAICS codes so you can see exactly what Sambid finds for your business before paying anything.',
       },
       {
         q: 'What happens after the free trial?',
@@ -104,15 +104,15 @@ const CATEGORIES = [
       },
       {
         q: 'Can I cancel anytime?',
-        a: 'Yes — cancel anytime from your account settings. No cancellation fees, no calls required. If you cancel a monthly plan, you keep access until the end of the billing period.',
+        a: 'Yes - cancel anytime from your account settings. No cancellation fees, no calls required. If you cancel a monthly plan, you keep access until the end of the billing period.',
       },
       {
         q: 'What is the difference between the plans?',
-        a: 'The main differences are: (1) number of contract matches per month — Starter: 500, Pro: 3,000, Enterprise: unlimited; (2) how far back SAM.gov data goes — Starter: 14 days, Pro: 60 days, Enterprise: 180 days; (3) Pro and Enterprise get real-time alerts instead of just daily digest. All plans include AI tools, deadline calendar, and the full feature set.',
+        a: 'The main differences are: (1) number of contract matches per month - Starter: 500, Pro: 3,000, Enterprise: unlimited; (2) how far back SAM.gov data goes - Starter: 14 days, Pro: 60 days, Enterprise: 180 days; (3) Pro and Enterprise get real-time alerts instead of just daily digest. All plans include AI tools, deadline calendar, and the full feature set.',
       },
       {
         q: 'Do you offer annual plans?',
-        a: 'Yes — annual plans are available at a discounted rate. Contact us or visit the pricing page to see annual pricing options.',
+        a: 'Yes - annual plans are available at a discounted rate. Contact us or visit the pricing page to see annual pricing options.',
       },
     ],
   },
@@ -142,11 +142,11 @@ const CATEGORIES = [
     faqs: [
       {
         q: 'How accurate is the AI win prediction?',
-        a: 'The win probability is based on historical award patterns in your NAICS code, competition level, agency spending behavior, and your company certifications. It is a data-informed estimate — not a guarantee. Customers report it accurately identifies high-probability bids vs. long-shots in most cases.',
+        a: 'The win probability is based on historical award patterns in your NAICS code, competition level, agency spending behavior, and your company certifications. It is a data-informed estimate - not a guarantee. Customers report it accurately identifies high-probability bids vs. long-shots in most cases.',
       },
       {
         q: 'Can I use the AI proposal writer for any contract?',
-        a: 'Yes — paste or upload any RFP from SAM.gov or any other source. The AI works with any federal solicitation including RFPs, RFQs, Sources Sought notices, and BAAs.',
+        a: 'Yes - paste or upload any RFP from SAM.gov or any other source. The AI works with any federal solicitation including RFPs, RFQs, Sources Sought notices, and BAAs.',
       },
       {
         q: 'Will the AI proposal match my company\'s tone and style?',
@@ -154,7 +154,7 @@ const CATEGORIES = [
       },
       {
         q: 'Does the AI generate false information (hallucinate)?',
-        a: 'We use verified SAM.gov data as the grounding source for all AI-generated content. The AI works from the actual RFP text you provide — it does not invent facts about contracts. For proposals, it generates structure and language based on your input, not fabricated details.',
+        a: 'We use verified SAM.gov data as the grounding source for all AI-generated content. The AI works from the actual RFP text you provide - it does not invent facts about contracts. For proposals, it generates structure and language based on your input, not fabricated details.',
       },
     ],
   },
@@ -177,7 +177,7 @@ const CATEGORIES = [
       },
       {
         q: 'Can I change my NAICS codes after signing up?',
-        a: 'Yes — update your NAICS codes, certifications, and preferences any time from your Settings page. Changes take effect on the next morning scan.',
+        a: 'Yes - update your NAICS codes, certifications, and preferences any time from your Settings page. Changes take effect on the next morning scan.',
       },
       {
         q: 'What if I do not get any matches?',
@@ -218,8 +218,8 @@ export default function FAQ() {
     <div className="bg-white overflow-hidden">
       <style>{ANIM_CSS}</style>
       <SEOHead
-        title="FAQ — Sambid Federal Contract Platform"
-        description="Frequently asked questions about Sambid — federal contract discovery, SAM.gov automation, AI proposal tools, pricing, and account setup."
+        title="FAQ - Sambid Federal Contract Platform"
+        description="Frequently asked questions about Sambid - federal contract discovery, SAM.gov automation, AI proposal tools, pricing, and account setup."
         keywords="Sambid FAQ, federal contracting software questions, SAM.gov platform help, federal contract alerts FAQ, how does Sambid work, federal contract software comparison, SAM.gov automation tool questions"
         canonical="https://sambid.co/faq"
         jsonLd={FAQ_JSON_LD}
@@ -238,7 +238,7 @@ export default function FAQ() {
               Frequently Asked Questions
             </h1>
             <p className="text-base sm:text-xl text-indigo-100 leading-relaxed">
-              Everything you need to know about Sambid — platform, pricing, AI tools, and getting started.
+              Everything you need to know about Sambid - platform, pricing, AI tools, and getting started.
             </p>
           </div>
         </div>
@@ -346,7 +346,7 @@ export default function FAQ() {
             Ready to Get Started?
           </h2>
           <p className="text-base sm:text-lg text-indigo-100 mb-7">
-            Free trial — 15 real SAM.gov matches — no credit card required.
+            Free trial - 15 real SAM.gov matches - no credit card required.
           </p>
           <Link
             to={ctaTo}
