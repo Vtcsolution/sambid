@@ -327,11 +327,12 @@ export const getOpportunities = async (req, res) => {
 
     // ── Enterprise: query master store directly — ALL records where dueDate > today ──
     // Bypasses the personal feed so the user always sees everything in the DB.
-    // No source filter — enterprise sees SAM.gov solicitations AND active federal
-    // contract awards (usaspending records where performance period is still open).
+    // SAM.gov solicitations ONLY — usaspending award records are market
+    // intelligence, not biddable opportunities, and confused users in the feed.
     if (req.user.plan === 'enterprise') {
       const masterQuery = {
         dueDate: { $gt: now },  // strictly future — only requirement for enterprise
+        source: { $ne: 'usaspending' },
         // Hide records whose description is still an unresolved SAM.gov URL —
         // they appear automatically once the nightly completion pass fills them in.
         description: { $not: /^https?:\/\/.*api\.sam\.gov/ },

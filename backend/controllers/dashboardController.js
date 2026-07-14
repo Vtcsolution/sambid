@@ -120,7 +120,8 @@ export const getDashboardStats = async (req, res) => {
     if (user.plan === 'enterprise') {
       const naics = user.naicsCodes || [];
       const enterpriseBase = {
-        dueDate: { $gt: now },  // enterprise sees all sources — sam + usaspending
+        dueDate: { $gt: now },
+        source: { $ne: 'usaspending' }, // SAM.gov opportunities only — awards are not biddable
         ...(naics.length ? { naicsCode: { $in: naics } } : {}),
         description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
       };
@@ -273,6 +274,7 @@ export const getCalendarEvents = async (req, res) => {
       const naics = req.user.naicsCodes || [];
       const masterQuery = {
         dueDate: { $gte: windowStart, $lte: windowEnd },
+        source: { $ne: 'usaspending' }, // SAM.gov opportunities only
         ...(naics.length ? { naicsCode: { $in: naics } } : {}),
         description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
       };

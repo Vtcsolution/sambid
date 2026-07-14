@@ -458,6 +458,7 @@ export const getUserPredictions = async (user, forceRefresh = false) => {
   if (user.plan === 'enterprise') {
     const masterQuery = {
       dueDate: { $gt: new Date() },
+      source: { $ne: 'usaspending' }, // predict on biddable SAM.gov opportunities only
       ...(user.naicsCodes?.length ? { naicsCode: { $in: user.naicsCodes } } : {}),
       description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
     };
