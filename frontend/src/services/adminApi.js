@@ -131,7 +131,7 @@ export const adminAIAPI = {
   getRevenueForecast: () => adminApi.get('/admin-ai/revenue-forecast'),
   sendCampaign:       (d)    => adminApi.post('/admin-ai/send-campaign', d),
   getSegmentUsers:    (seg)  => adminApi.get('/admin-ai/segment-users', { params: { segment: seg } }),
-  getCampaignHistory: (page) => adminApi.get('/admin-ai/campaign-history', { params: { page, limit: 20 } }),
+  getCampaignHistory: (page, segment) => adminApi.get('/admin-ai/campaign-history', { params: { page, limit: 20, ...(segment ? { segment } : {}) } }),
 };
 
 // ── Support Tickets (admin) ───────────────────────────────────────────────────

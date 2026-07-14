@@ -7,7 +7,7 @@ import {
   CheckCircle, AlertCircle, X, Clock,
   Building2, History, ArrowLeft, Plus, UserPlus,
 } from 'lucide-react';
-import { adminProspectAPI } from '../../services/adminApi';
+import { adminProspectAPI, adminAIAPI } from '../../services/adminApi';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
 
 const EMAIL_TYPES = [
@@ -76,6 +76,21 @@ export default function AdminProspectOutreach() {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory]         = useState(null);
   const [histLoading, setHistLoading] = useState(false);
+
+  // All-sent history modal (every outreach email ever sent)
+  const [showAllHist, setShowAllHist]       = useState(false);
+  const [allHist, setAllHist]               = useState([]);
+  const [allHistLoading, setAllHistLoading] = useState(false);
+
+  const openAllHistory = async () => {
+    setShowAllHist(true);
+    setAllHistLoading(true);
+    try {
+      const r = await adminAIAPI.getCampaignHistory(1, 'Prospect Outreach');
+      if (r.data.success) setAllHist(r.data.data.logs || []);
+    } catch {}
+    setAllHistLoading(false);
+  };
 
   // ── Load prospects with email ───────────────────────────────────────────────
   const loadProspects = useCallback(async () => {
@@ -293,6 +308,13 @@ export default function AdminProspectOutreach() {
               }`}
             >
               <UserPlus className="w-3 h-3" /> Add Custom
+            </button>
+            <button
+              onClick={openAllHistory}
+              className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
+              title="All sent outreach emails"
+            >
+              <History className="w-3 h-3" /> Sent
             </button>
           </div>
         </div>
@@ -749,6 +771,53 @@ export default function AdminProspectOutreach() {
                 : <><Send className="w-4 h-4" /> Send to {totalRecipients} {totalRecipients === 1 ? 'Recipient' : 'Recipients'}</>
               }
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── All Sent Emails modal ──────────────────────────────────────────── */}
+      {showAllHist && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowAllHist(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <History className="w-4 h-4 text-indigo-500" /> Sent Outreach Emails
+              </h3>
+              <button onClick={() => setShowAllHist(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {allHistLoading ? (
+                <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-indigo-500" /></div>
+              ) : allHist.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center py-10">No outreach emails sent yet.</p>
+              ) : allHist.map(log => (
+                <div key={log._id} className="border border-gray-100 rounded-xl p-3">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{log.subject}</p>
+                    <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${
+                      log.status === 'success' ? 'bg-green-50 text-green-600'
+                      : log.status === 'partial' ? 'bg-amber-50 text-amber-600'
+                      : 'bg-red-50 text-red-600'
+                    }`}>
+                      {log.sent} sent{log.failed > 0 ? ` · ${log.failed} failed` : ''}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-1.5">
+                    {new Date(log.createdAt).toLocaleString()} · {log.fromName}
+                  </p>
+                  {log.recipients?.length > 0 && (
+                    <p className="text-xs text-gray-600 truncate">
+                      To: {log.recipients.map(r => r.email).filter(Boolean).join(', ')}
+                    </p>
+                  )}
+                  {log.bodyPreview && (
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-2">{log.bodyPreview}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

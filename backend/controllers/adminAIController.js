@@ -454,14 +454,17 @@ export const getCampaignHistory = async (req, res) => {
     const limit = Math.min(50, parseInt(req.query.limit || '20'));
     const skip  = (page - 1) * limit;
 
+    // Optional segment filter (e.g. 'Prospect Outreach' for the outreach page history)
+    const filter = req.query.segment ? { segment: req.query.segment } : {};
+
     const [logs, total] = await Promise.all([
-      CampaignLog.find()
+      CampaignLog.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .populate('targetUserId', 'name email')
         .lean(),
-      CampaignLog.countDocuments(),
+      CampaignLog.countDocuments(filter),
     ]);
 
     res.json({ success: true, data: { logs, total, page, pages: Math.ceil(total / limit) } });
