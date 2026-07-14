@@ -697,8 +697,9 @@ const resolveFromAddress = (fromAlias) => {
 };
 
 export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templateType, fromAlias }, sentBy = 'admin') => {
-  const results = { sent: 0, failed: 0, noEmail: 0, errors: [] };
+  const results = { sent: 0, failed: 0, noEmail: 0, errors: [], recipients: [], fromAddress: null };
   const fromAddress = resolveFromAddress(fromAlias);
+  results.fromAddress = fromAddress;
 
   for (const prospect of prospects) {
     const email = prospect.primaryEmail || (prospect.allEmails?.[0]);
@@ -721,6 +722,7 @@ export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templ
       });
 
       results.sent++;
+      results.recipients.push({ name: prospect.companyName || '', email, delivered: true });
       // Skip history for manually-added custom recipients (no DB doc)
       if (prospect._id) {
         await prospect.constructor.findByIdAndUpdate(prospect._id, {
@@ -741,6 +743,7 @@ export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templ
       }
     } catch (err) {
       results.failed++;
+      results.recipients.push({ name: prospect.companyName || '', email, delivered: false });
       results.errors.push({ id: prospect._id, name: prospect.companyName, error: err.message });
     }
   }

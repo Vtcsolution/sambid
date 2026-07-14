@@ -11,6 +11,7 @@ import {
   getTemplateList, renderTemplate, sendBulkProspectEmails,
   generateEmailWithAI, sendBulkCustomEmails, EMAIL_TYPE_LIST,
 } from '../services/prospectEmailService.js';
+import CampaignLog from '../models/admin/CampaignLog.js';
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
 export const getProspectStats = async (req, res) => {
@@ -333,6 +334,22 @@ export const sendProspectEmails = async (req, res) => {
 
     if (subject && bodyText) {
       const results = await sendBulkCustomEmails(allProspects, { subject, bodyText, templateType: templateType || 'custom', fromAlias }, sentBy);
+
+      // Record the send in campaign history so EVERY outreach email is auditable
+      // (visible under Admin → Campaigns → history alongside user campaigns).
+      CampaignLog.create({
+        segment:     'Prospect Outreach',
+        subject,
+        bodyPreview: bodyText.slice(0, 200),
+        fromName:    `${sentBy} via ${results.fromAddress || 'Sambid'}`,
+        totalUsers:  allProspects.length,
+        sent:        results.sent,
+        failed:      results.failed,
+        recipients:  results.recipients || [],
+        failedEmails: (results.errors || []).map(e => e.name || '').filter(Boolean),
+        status: results.failed === 0 ? 'success' : results.sent > 0 ? 'partial' : 'failed',
+      }).catch(err => console.warn('CampaignLog write failed:', err.message));
+
       return res.json({
         success: true,
         message: `Sent: ${results.sent}, failed: ${results.failed}, no email: ${results.noEmail}`,
