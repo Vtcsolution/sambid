@@ -91,12 +91,28 @@ export const fetchUSAspendingOpportunities = async (naicsCode = null, limit = 50
       return 'https://www.usaspending.gov/search/';
     };
 
+    // USASpending's "Description" is a short title-like string. Build a real
+    // description from the award facts so users see meaningful detail instead
+    // of the title repeated.
+    const buildAwardDescription = (award) => {
+      const parts = [];
+      parts.push(`${award.Description || 'Federal contract award'}.`);
+      parts.push('This is an ACTIVE federal contract award (not an open solicitation), recorded on USAspending.gov.');
+      if (award["Recipient Name"])   parts.push(`Awarded to: ${award["Recipient Name"]}.`);
+      if (award["Awarding Agency"])  parts.push(`Awarding agency: ${award["Awarding Agency"]}.`);
+      if (award["Award Amount"])     parts.push(`Total contract value: $${Number(award["Award Amount"]).toLocaleString()}.`);
+      if (award["Start Date"] || award["End Date"]) parts.push(`Period of performance: ${award["Start Date"] || 'n/a'} to ${award["End Date"] || 'n/a'}.`);
+      if (award.naics_code)          parts.push(`NAICS code: ${award.naics_code}.`);
+      parts.push('Why this matters to you: while the period of performance is open, the prime contractor may need subcontractors or teaming partners for this work — and the award shows exactly what this agency buys and at what price, which is valuable intelligence for your own future bids.');
+      return parts.join(' ');
+    };
+
     // Transform to schema
     const opportunities = data.results.map(award => ({
       source: 'usaspending',
       sourceId: award.generated_unique_award_id || award["Award ID"] || `usa_${Date.now()}_${Math.random()}`,
       title: award.Description ? award.Description.substring(0, 200) : 'Federal Contract Award',
-      description: award.Description || 'No description available',
+      description: buildAwardDescription(award),
       agency: award["Awarding Agency"] || 'Federal Agency',
       estimatedValue: award["Award Amount"] || 0,
       postedDate: award["Start Date"] ? new Date(award["Start Date"]) : new Date(),
