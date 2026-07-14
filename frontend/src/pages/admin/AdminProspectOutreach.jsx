@@ -140,21 +140,12 @@ export default function AdminProspectOutreach() {
     setCustomNameInput('');
     setResult(null);
 
-    // Save to database in the background, then refresh the list so it appears as a DB prospect
-    try {
-      const { data } = await adminProspectAPI.quickAdd({ email, companyName: name });
-      if (data.success) {
-        // Reload prospect list - the new entry will now appear in the DB section
-        loadProspects();
-        // If the saved prospect has an _id, swap the custom entry for the DB entry
-        if (data.data?._id) {
-          setCustomEmails(prev => prev.filter(e => e.email !== email));
-          setSelected(s => new Set([...s, data.data._id]));
-        }
-      }
-    } catch {
-      // Adding failed silently - stays as custom entry and will still send
-    }
+    // Save to the prospect database in the background for future campaigns.
+    // IMPORTANT: keep the entry in customEmails — do NOT swap it for the DB
+    // record. The list only loads the first 500 prospects, so the new record
+    // is usually not in it; the old swap made the entry vanish from the
+    // screen AND from the send payload.
+    adminProspectAPI.quickAdd({ email, companyName: name }).catch(() => {});
   };
 
   const removeCustomEmail = (id) => {
