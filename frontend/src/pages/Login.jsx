@@ -126,7 +126,9 @@ export default function Login({ setIsAuthenticated, setUser }) {
     const { token, name, email, _id, plan, role } = data.data || data;
     clearAuthStorage();
 
-    const store = remember ? localStorage : sessionStorage;
+    // Always localStorage: sessionStorage is per-tab, so Ctrl+click / open-in-new-tab
+    // showed the user as logged out. "Remember me" no longer changes storage scope.
+    const store = localStorage;
     store.setItem('authToken',  token);
     store.setItem('userEmail',  email);
     store.setItem('userName',   name);
