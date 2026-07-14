@@ -143,7 +143,12 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
   const [sideSearch, setSideSearch] = useState('');
 
   useEffect(() => {
-    if (user?.email) fetchUserProfile();
+    if (!user?.email) return;
+    fetchUserProfile();
+    // Auto-refresh the stats (Matches This Month) every 60s so the sidebar
+    // stays in sync with the live opportunity counts without a page reload.
+    const timer = setInterval(fetchUserProfile, 60_000);
+    return () => clearInterval(timer);
   }, [user, location.pathname]);
 
   const fetchUserProfile = async () => {

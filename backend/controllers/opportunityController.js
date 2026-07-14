@@ -843,6 +843,24 @@ export const updateUserProfile = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const access = await checkUserAccess(req.user);
+
+    // Enterprise reads the master store live, so the sidebar counter must be the
+    // SAME live number the opportunities list shows — the cumulative distribution
+    // counter drifts (it keeps counting matches whose deadlines have passed).
+    let matchesUsed = access.monthlyUsed;
+    if (access.plan === 'enterprise') {
+      const liveQuery = {
+        dueDate: { $gt: new Date() },
+        source: { $ne: 'usaspending' },
+        description: { $not: /^https?:\/\/.*api\.sam\.gov/ },
+      };
+      if (req.user.naicsCodes?.length) {
+        const prefixes = [...new Set(req.user.naicsCodes.map(c => c.slice(0, 4)))];
+        liveQuery.naicsCode = { $regex: new RegExp(`^(${prefixes.join('|')})`) };
+      }
+      matchesUsed = await Opportunity.countDocuments(liveQuery);
+    }
+
     res.json({
       success: true,
       user: {
@@ -854,7 +872,7 @@ export const getUserProfile = async (req, res) => {
         plan:             access.plan,
         planExpiresAt:    req.user.planExpiresAt,
         trialEndDate:     req.user.trialEndDate,
-        monthlyMatchesUsed: access.monthlyUsed,
+        monthlyMatchesUsed: matchesUsed,
         monthlyLimit:       access.monthlyLimit,
         daysLeft:         access.daysLeft,
         isTrialActive:    req.user.isTrialActive
