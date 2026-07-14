@@ -303,7 +303,7 @@ export const generateProspectEmail = async (req, res) => {
 // Send with custom (AI-generated + possibly edited) content
 export const sendProspectEmails = async (req, res) => {
   try {
-    const { prospectIds, customRecipients, subject, bodyText, templateType, templateId } = req.body;
+    const { prospectIds, customRecipients, subject, bodyText, templateType, templateId, fromAlias } = req.body;
 
     const hasIds    = Array.isArray(prospectIds)       && prospectIds.length > 0;
     const hasCustom = Array.isArray(customRecipients)  && customRecipients.length > 0;
@@ -332,7 +332,7 @@ export const sendProspectEmails = async (req, res) => {
     const sentBy = req.admin?.name || req.admin?.email || 'Admin';
 
     if (subject && bodyText) {
-      const results = await sendBulkCustomEmails(allProspects, { subject, bodyText, templateType: templateType || 'custom' }, sentBy);
+      const results = await sendBulkCustomEmails(allProspects, { subject, bodyText, templateType: templateType || 'custom', fromAlias }, sentBy);
       return res.json({
         success: true,
         message: `Sent: ${results.sent}, failed: ${results.failed}, no email: ${results.noEmail}`,

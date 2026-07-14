@@ -70,6 +70,7 @@ export default function AdminProspectOutreach() {
   const [genError, setGenError]     = useState('');
   const [sending, setSending]       = useState(false);
   const [result, setResult]         = useState(null);
+  const [fromAlias, setFromAlias]   = useState('main'); // main | noreply | support | billing
 
   // History panel
   const [showHistory, setShowHistory] = useState(false);
@@ -220,6 +221,7 @@ export default function AdminProspectOutreach() {
         subject:          subject.trim(),
         bodyText:         bodyText.trim(),
         templateType:     activeType || 'custom',
+        fromAlias,
       });
       setResult(data.data);
       if (selected.size === 1) {
@@ -652,6 +654,20 @@ export default function AdminProspectOutreach() {
                     className="flex items-center gap-1 text-xs text-gray-500 hover:text-indigo-600 disabled:opacity-40 transition-colors">
                     <RefreshCw className="w-3 h-3" /> Regenerate
                   </button>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Send From</label>
+                  <select
+                    value={fromAlias}
+                    onChange={e => setFromAlias(e.target.value)}
+                    className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-300 outline-none text-gray-900 bg-white"
+                  >
+                    <option value="main">zia@sambid.co (Main)</option>
+                    <option value="noreply">noreply@sambid.co</option>
+                    <option value="support">support@sambid.co</option>
+                    <option value="billing">billing@sambid.co</option>
+                  </select>
                 </div>
 
                 <div>

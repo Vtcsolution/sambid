@@ -684,8 +684,21 @@ export const buildCustomEmailHtml = (bodyText, trackingId = null) => {
 
 // ── Bulk send with custom AI/edited content ───────────────────────────────────
 
-export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templateType }, sentBy = 'admin') => {
+// Sender aliases — all authenticate as SMTP_USER (the real Hostinger mailbox);
+// aliases only change the visible From address.
+const resolveFromAddress = (fromAlias) => {
+  const map = {
+    noreply: process.env.EMAIL_NOREPLY,
+    support: process.env.EMAIL_SUPPORT,
+    billing: process.env.EMAIL_BILLING,
+    main:    process.env.SMTP_USER || process.env.EMAIL_USER,
+  };
+  return map[fromAlias] || process.env.EMAIL_USER;
+};
+
+export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templateType, fromAlias }, sentBy = 'admin') => {
   const results = { sent: 0, failed: 0, noEmail: 0, errors: [] };
+  const fromAddress = resolveFromAddress(fromAlias);
 
   for (const prospect of prospects) {
     const email = prospect.primaryEmail || (prospect.allEmails?.[0]);
@@ -701,7 +714,7 @@ export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templ
       const html = buildCustomEmailHtml(personalBody, trackingId);
 
       await getTransporter().sendMail({
-        from: `"${FROM_NAME}" <${process.env.EMAIL_USER}>`,
+        from: `"${FROM_NAME}" <${fromAddress}>`,
         to:   email,
         subject: personalSubject,
         html,
