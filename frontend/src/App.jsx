@@ -1,9 +1,10 @@
 // frontend/src/App.jsx
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import UserNotificationDropdown from './components/UserNotificationDropdown';
+import { setNavigator } from './utils/navigation';
 
 // Deferred layout components - not needed for first paint
 const Sidebar       = lazy(() => import('./components/Sidebar'));
@@ -126,6 +127,12 @@ function PageLoader() {
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Let code outside the component tree (axios 401 interceptors) navigate
+  // client-side instead of forcing a full page reload.
+  useEffect(() => { setNavigator(navigate); }, [navigate]);
+
   const isProtectedRoute = !['/', '/pricing', '/about', '/how-it-works', '/contact',
     '/signup', '/login', '/forgot-password', '/reset-password', '/terms', '/privacy',
     '/dpa', '/security', '/nda',

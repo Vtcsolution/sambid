@@ -158,10 +158,10 @@ export default function Dashboard() {
                 <p className="text-xs opacity-75 mt-0.5">Tell us your industry codes so we can show contracts that match your business.</p>
               </div>
             </div>
-            <a href="/settings?tab=naics"
+            <Link to="/settings?tab=naics"
               className="self-start sm:self-auto shrink-0 text-xs font-semibold px-3 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">
               Add NAICS Codes →
-            </a>
+            </Link>
           </div>
         )}
 
@@ -175,10 +175,10 @@ export default function Dashboard() {
                 <p className="text-xs opacity-75 mt-0.5">Add your UEI, CAGE code, certifications (8(a), WOSB, HUBZone, SDVOSB) - AI uses this to check set-aside eligibility and write personalized proposals.</p>
               </div>
             </div>
-            <a href="/company/profile"
+            <Link to="/company/profile"
               className="self-start sm:self-auto shrink-0 text-xs font-semibold px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
               Set Up Company Profile →
-            </a>
+            </Link>
           </div>
         )}
 

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { FileEdit, Sparkles, Copy, Download, CheckCircle, Loader2, Lock,
          Search, ChevronDown, ChevronUp, Building2, DollarSign,
          RefreshCw, BookOpen, Target, Briefcase, Users, TrendingUp, FileText,
@@ -176,9 +177,9 @@ function ProGate() {
         The Full AI Proposal Builder generates complete, personalized government proposals with branded PDF export.
         Available on Pro and Enterprise plans.
       </p>
-      <a href="/pricing" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
+      <Link to="/pricing" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
         <Sparkles className="w-4 h-4" />{ctaText}
-      </a>
+      </Link>
     </div>
   );
 }

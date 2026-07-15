@@ -1,5 +1,6 @@
 // frontend/src/components/PayPalPayment.jsx
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { AlertCircle, Loader2, CheckCircle, ShieldCheck } from 'lucide-react';
 import { paymentAPI } from '../services/api';
@@ -140,6 +141,7 @@ function SmartButton({ amount, planName, billingCycle, onSuccess, onError, refer
 
 // ── Exported component ───────────────────────────────────────────────────────
 export default function PayPalPayment({ amount, planName, billingCycle, onSuccess, onClose, referralBalanceToApply = 0, couponCode = '' }) {
+  const navigate = useNavigate();
   const [error,          setError]        = useState('');
   const [showToast,      setShowToast]    = useState(false);
   const [activatedPlan,  setActivatedPlan] = useState('');
@@ -164,7 +166,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
     // After 3 seconds: close modal + redirect to opportunities (with refresh flag)
     setTimeout(() => {
       onSuccess?.();
-      window.location.href = '/opportunities?activated=1';
+      navigate('/opportunities?activated=1');
     }, 3000);
   };
 

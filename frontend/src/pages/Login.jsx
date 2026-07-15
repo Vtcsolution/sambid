@@ -140,7 +140,7 @@ export default function Login({ setIsAuthenticated, setUser }) {
     setUser({ email, name, id: _id, plan, role });
 
     if (role === 'admin') {
-      window.location.href = '/admin/dashboard';
+      navigate('/admin/dashboard');
     } else if (redirectTo) {
       navigate(redirectTo);
     } else {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Headphones, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { adminAuthAPI } from '../services/adminApi';
 
@@ -106,9 +106,9 @@ export default function SupportLogin() {
           <div className="mt-6 pt-4 border-t border-gray-100 text-center">
             <p className="text-xs text-gray-400">
               Support team access only.<br />
-              <a href="/" className="text-emerald-500 hover:underline">Back to main site</a>
+              <Link to="/" className="text-emerald-500 hover:underline">Back to main site</Link>
               {' · '}
-              <a href="/admin/login" className="text-gray-400 hover:underline">Admin Panel</a>
+              <Link to="/admin/login" className="text-gray-400 hover:underline">Admin Panel</Link>
             </p>
           </div>
         </div>

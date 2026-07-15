@@ -1,6 +1,6 @@
 // frontend/src/components/admin/AdminHeader.jsx
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, Settings } from 'lucide-react';
 import NotificationDropdown from './NotificationDropdown';
 import SambidLogo from '../../components/SambidLogo';
@@ -8,6 +8,7 @@ import SambidLogo from '../../components/SambidLogo';
 export default function AdminHeader({ admin, onMenuClick }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -21,7 +22,7 @@ export default function AdminHeader({ admin, onMenuClick }) {
 
   const handleLogout = () => {
     ['adminToken', 'adminName', 'adminEmail', 'adminRole'].forEach(k => localStorage.removeItem(k));
-    window.location.href = '/admin/login';
+    navigate('/admin/login');
   };
 
   return (

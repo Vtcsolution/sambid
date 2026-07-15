@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ThumbsUp, ThumbsDown, Loader2, Lock, Sparkles, AlertCircle, Search, FileText, Clock, DollarSign, Building, ChevronDown, Database, CheckCircle } from 'lucide-react';
 import { aiAPI, opportunityAPI, savedAPI } from '../services/api';
 import HowItWorks from '../components/HowItWorks';
@@ -98,7 +99,7 @@ export default function GoNoGo() {
         <Lock className="w-10 h-10 text-indigo-400 mx-auto mb-3" />
         <h2 className="text-xl font-bold text-gray-900 mb-2">Pro Feature</h2>
         <p className="text-gray-500 mb-5">Go/No-Go Workflow requires Pro or Enterprise plan.</p>
-        <a href="/pricing" className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition inline-block">Upgrade Now</a>
+        <Link to="/pricing" className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition inline-block">Upgrade Now</Link>
       </div>
     </div>
   );

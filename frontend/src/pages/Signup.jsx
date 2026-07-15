@@ -460,13 +460,13 @@ export default function Signup({ setIsAuthenticated, setUser }) {
                   />
                   <label className="ml-2 text-sm text-gray-600">
                     I agree to the{' '}
-                    <a href="/terms" className="text-indigo-600 hover:text-indigo-500">
+                    <Link to="/terms" className="text-indigo-600 hover:text-indigo-500">
                       Terms of Service
-                    </a>{' '}
+                    </Link>{' '}
                     and{' '}
-                    <a href="/privacy" className="text-indigo-600 hover:text-indigo-500">
+                    <Link to="/privacy" className="text-indigo-600 hover:text-indigo-500">
                       Privacy Policy
-                    </a>
+                    </Link>
                   </label>
                 </div>
                 {errors.acceptTerms && (

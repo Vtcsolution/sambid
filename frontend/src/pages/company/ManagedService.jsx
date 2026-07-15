@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Trophy, FileText, DollarSign, Clock, CheckCircle, XCircle, Loader, AlertTriangle, ChevronDown, ChevronUp, Briefcase, Package, MapPin, Target, Truck, ShieldCheck, Download, Link2, CreditCard } from 'lucide-react';
 import { companyAPI } from '../../services/api';
 import HowItWorks from '../../components/HowItWorks';
@@ -196,7 +197,7 @@ export default function ManagedServicePage() {
       {applyErr && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" /> {applyErr}
-          {applyErr.includes('company') && <a href="/company/profile" className="underline font-semibold ml-1">Create Company Profile →</a>}
+          {applyErr.includes('company') && <Link to="/company/profile" className="underline font-semibold ml-1">Create Company Profile →</Link>}
         </div>
       )}
       <button onClick={handleApply} disabled={applying}

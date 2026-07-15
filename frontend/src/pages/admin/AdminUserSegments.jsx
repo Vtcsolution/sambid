@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AdminHowItWorks from '../../components/AdminHowItWorks';
 import PermissionGuard from '../../components/admin/PermissionGuard';
 import { Users, AlertTriangle, Clock, TrendingUp, UserX, ArrowUpRight, Crown, Loader2, RefreshCw, Mail } from 'lucide-react';
@@ -82,10 +83,10 @@ export default function AdminUserSegments() {
             <h3 className={`font-semibold ${SEGMENT_CONFIG[active].color}`}>
               {SEGMENT_CONFIG[active].label} - Sample Users (top 10)
             </h3>
-            <a href={`/admin/campaigns`}
+            <Link to="/admin/campaigns"
               className={`text-xs font-semibold flex items-center gap-1 ${SEGMENT_CONFIG[active].color} hover:underline`}>
               <Mail className="w-3.5 h-3.5" /> Send Campaign to Segment
-            </a>
+            </Link>
           </div>
           <div className="space-y-2">
             {data.samples[active].map(u => (

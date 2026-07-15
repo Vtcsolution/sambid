@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FolderOpen, Upload, FileText, Trash2, Download, MessageSquare,
   Loader, CheckCircle, XCircle, Search, Filter, Plus, X, ChevronDown, ChevronUp, Send
@@ -317,9 +318,9 @@ export default function DocumentLibrary() {
         <FolderOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
         <h2 className="text-lg font-bold text-gray-900 mb-2">No Company Workspace</h2>
         <p className="text-gray-500 text-sm mb-4">Create a company profile first to use the document library.</p>
-        <a href="/company/profile" className="inline-block bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
+        <Link to="/company/profile" className="inline-block bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
           Go to Company Profile
-        </a>
+        </Link>
       </div>
     </div>
   );

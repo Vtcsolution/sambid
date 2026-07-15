@@ -1,6 +1,6 @@
 // frontend/src/pages/Settings.jsx
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Briefcase, Bell, Shield, Crown, Moon, Sun,
   Search, X, Check, Loader2, CheckCircle, AlertCircle,
@@ -46,6 +46,7 @@ function Toast({ msg, type }) {
 }
 
 export default function Settings() {
+  const navigate = useNavigate();
   const [activeTab,  setActiveTab]  = useState('profile');
   const [userData,   setUserData]   = useState(null);
   const [loading,    setLoading]    = useState(true);
@@ -322,7 +323,7 @@ export default function Settings() {
       await authAPI.deleteAccount({ password: delPassword, confirmation: delConfirmText, token: delOtp.trim() });
       localStorage.clear();
       sessionStorage.clear();
-      window.location.href = '/';
+      navigate('/');
     } catch (e) {
       setDelMsg({ text: e.response?.data?.message || 'Failed to delete account.', type: 'error' });
       setDelLoading(false);

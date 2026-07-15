@@ -1,5 +1,6 @@
 // frontend/src/components/PayoneerPayment.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Loader2, AlertCircle, CheckCircle, ShieldCheck } from 'lucide-react';
 import { paymentAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
@@ -26,6 +27,7 @@ function ActivationToast({ plan }) {
 }
 
 export default function PayoneerPayment({ amount, planName, billingCycle, onSuccess, onClose }) {
+  const navigate = useNavigate();
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState('');
   const [showToast, setShowToast]   = useState(false);
@@ -47,7 +49,7 @@ export default function PayoneerPayment({ amount, planName, billingCycle, onSucc
     sessionStorage.setItem('userPlan', plan || planName);
     setTimeout(() => {
       onSuccess?.();
-      window.location.href = '/opportunities?activated=1';
+      navigate('/opportunities?activated=1');
     }, 3000);
   };
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { adminAuthAPI } from '../../services/adminApi';
 import SambidLogo from '../../components/SambidLogo';
@@ -101,7 +101,7 @@ export default function AdminLogin() {
           <div className="mt-6 pt-4 border-t border-gray-100 text-center">
             <p className="text-xs text-gray-400">
               This panel is for administrators only.<br />
-              <a href="/" className="text-indigo-500 hover:underline">← Back to main site</a>
+              <Link to="/" className="text-indigo-500 hover:underline">← Back to main site</Link>
             </p>
           </div>
         </div>

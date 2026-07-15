@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FileSearch, Loader2, Copy, Download, CheckCircle, Lock,
   RefreshCw, AlertCircle, ChevronDown, ChevronUp, Sparkles,
@@ -85,7 +86,7 @@ export default function SourcesSought() {
         <Lock className="w-10 h-10 text-purple-400 mx-auto mb-3" />
         <h2 className="text-xl font-bold text-gray-900 mb-2">Pro Feature</h2>
         <p className="text-gray-500 mb-5">Sources Sought Generator is available on Pro and Enterprise plans.</p>
-        <a href="/pricing" className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition inline-block">Upgrade Now</a>
+        <Link to="/pricing" className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition inline-block">Upgrade Now</Link>
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { paymentAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
 
 export default function PayoneerReturn() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [status, setStatus] = useState('loading'); // loading | success | error
   const [message, setMessage] = useState('');
   const [plan, setPlan] = useState('');
@@ -36,7 +37,7 @@ export default function PayoneerReturn() {
           localStorage.setItem('userPlan', activatedPlan);
           sessionStorage.setItem('userPlan', activatedPlan);
           setStatus('success');
-          setTimeout(() => { window.location.href = '/opportunities?activated=1'; }, 3000);
+          setTimeout(() => { navigate('/opportunities?activated=1'); }, 3000);
         } else {
           setStatus('error');
           setMessage(res.data.message || 'Payment capture failed.');

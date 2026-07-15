@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Users, UserPlus, Crown, Shield, Briefcase, FileEdit, Eye, User, Loader, Trash2, Copy, CheckCircle, XCircle, Clock, LogOut, AlertTriangle, KeyRound, Link2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { companyAPI } from '../../services/api';
 import { useUserPlan } from '../../hooks/useUserPlan';
@@ -250,9 +251,9 @@ export default function TeamManagement() {
         <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
         <h2 className="text-lg font-bold text-gray-900 mb-2">No Company Workspace</h2>
         <p className="text-gray-500 text-sm mb-4">Create a company profile first to manage your team.</p>
-        <a href="/company/profile" className="inline-block bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
+        <Link to="/company/profile" className="inline-block bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
           Go to Company Profile
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -316,7 +317,7 @@ export default function TeamManagement() {
                   <p className="text-sm font-semibold text-amber-800">Team member limit reached</p>
                   <p className="text-xs text-amber-700 mt-0.5">
                     Your {plan} plan allows up to {memberLimit} active members.{' '}
-                    <a href="/pricing" className="underline font-semibold">Upgrade your plan</a> to add more.
+                    <Link to="/pricing" className="underline font-semibold">Upgrade your plan</Link> to add more.
                   </p>
                 </div>
               </div>

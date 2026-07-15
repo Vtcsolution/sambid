@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Building2, Mail, Phone, Users, MessageSquare,
   CheckCircle, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
@@ -266,7 +266,7 @@ export default function Contact() {
             Fill in your details below. Our team reviews every request and activates your plan within <strong>1 business day</strong>.
           </p>
           <p className="text-xs sm:text-sm text-gray-400 mt-2">
-            Looking for Starter or Pro? <a href="/pricing" className="text-indigo-600 hover:underline">Purchase directly on the Pricing page →</a>
+            Looking for Starter or Pro? <Link to="/pricing" className="text-indigo-600 hover:underline">Purchase directly on the Pricing page →</Link>
           </p>
         </div>
 

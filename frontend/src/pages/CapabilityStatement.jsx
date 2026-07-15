@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FileText, Sparkles, Copy, Download, CheckCircle, Loader2, Lock, RefreshCw, Building2, Target, Award, Users } from 'lucide-react';
 import { aiAPI } from '../services/api';
 import AIResponseRenderer from '../components/AIResponseRenderer';
@@ -125,9 +126,9 @@ export default function CapabilityStatement() {
             {getMonthly('enterprise') != null && getYearly('enterprise') != null
               ? ` ($${getMonthly('enterprise')}/mo or $${getYearly('enterprise')}/yr)` : ''} plans.
           </p>
-          <a href="/pricing" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
+          <Link to="/pricing" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
             Upgrade Now <Sparkles className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
     );

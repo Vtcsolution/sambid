@@ -1,5 +1,6 @@
 // Separate axios instance for admin panel — uses adminToken, not authToken
 import axios from 'axios';
+import { redirectTo } from '../utils/navigation';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -28,7 +29,7 @@ adminApi.interceptors.response.use(
       localStorage.removeItem('adminName');
       localStorage.removeItem('adminEmail');
       localStorage.removeItem('adminRole');
-      window.location.href = '/admin/login';
+      redirectTo('/admin/login');
     }
     return Promise.reject(err);
   }

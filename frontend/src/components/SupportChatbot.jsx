@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { MessageCircle, X, Send, Loader2, Bot, User, MinusCircle } from 'lucide-react';
 import { contactAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
@@ -209,7 +210,7 @@ export default function SupportChatbot() {
                   </button>
                 </div>
                 <p className="text-center text-xs text-gray-400 mt-1.5">
-                  AI Assistant · <a href="/contact" className="text-indigo-500 hover:underline">Human support</a>
+                  AI Assistant · <Link to="/contact" className="text-indigo-500 hover:underline">Human support</Link>
                 </p>
               </div>
             </>

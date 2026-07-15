@@ -1,5 +1,6 @@
 // frontend/src/services/api.js
 import axios from 'axios';
+import { redirectTo } from '../utils/navigation';
 
 // Make sure the BASE_URL includes /api
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
@@ -52,7 +53,7 @@ api.interceptors.response.use(
       redirectingToLogin = true;
       clearAuthStorage();
       setTimeout(() => {
-        window.location.href = '/login';
+        redirectTo('/login');
         redirectingToLogin = false;
       }, 100);
     }

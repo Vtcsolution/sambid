@@ -1,4 +1,4 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Link } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
 
@@ -23,10 +23,10 @@ export default function PermissionGuard({ permission, children, redirect = false
             Your role <span className="font-semibold text-gray-700 capitalize">({role.replace('_', ' ')})</span> does not have permission to access this page.
           </p>
           <p className="text-gray-400 text-xs">Contact your super admin to request access.</p>
-          <a href="/admin/dashboard"
+          <Link to="/admin/dashboard"
             className="inline-block mt-5 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
             ← Back to Dashboard
-          </a>
+          </Link>
         </div>
       </div>
     );

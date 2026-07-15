@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Users, Search, Loader2, Lock, Mail, Building2, Award, Filter } from 'lucide-react';
 import api from '../services/api';
 import { useUserPlan } from '../hooks/useUserPlan';
@@ -58,7 +59,7 @@ export default function TeamingFinder() {
           {getMonthly('enterprise') != null && getYearly('enterprise') != null
             ? ` ($${getMonthly('enterprise')}/mo or $${getYearly('enterprise')}/yr)` : ''}.
         </p>
-        <a href="/contact" className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition inline-block">Request Enterprise</a>
+        <Link to="/contact" className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition inline-block">Request Enterprise</Link>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
@@ -50,6 +51,7 @@ function ActivationToast({ plan }) {
 }
 
 function CardForm({ amount, planName, billingCycle, onSuccess, onClose }) {
+  const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -109,7 +111,7 @@ function CardForm({ amount, planName, billingCycle, onSuccess, onClose }) {
       setShowToast(true);
       setTimeout(() => {
         onSuccess?.();
-        window.location.href = '/opportunities?activated=1';
+        navigate('/opportunities?activated=1');
       }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Payment failed. Please try again.');
