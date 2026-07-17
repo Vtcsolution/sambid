@@ -948,7 +948,7 @@ function EmailPreview({ subject, body, fromName, userName }) {
         {/* Email header */}
         <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-center">
           <div className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-sm">S</div>
+            <img src="/apple-touch-icon.png" alt="Sambid" className="w-8 h-8 rounded-lg" />
             <span className="text-white font-bold text-base">{fromName || 'Sambid'}</span>
           </div>
           <p className="text-white/70 text-xs mt-1">Federal Contract Intelligence</p>
