@@ -114,6 +114,7 @@ export default function Opportunities() {
 
   // Potential matches + expired popup
   const [potentialMatches, setPotentialMatches] = useState([]);
+  const [lockedMatches, setLockedMatches] = useState([]);
   const [showPotential, setShowPotential] = useState(true);
   const [expiredPopup, setExpiredPopup] = useState(null); // opp object to show warning for
 
@@ -253,6 +254,7 @@ export default function Opportunities() {
       if (response.data.success) {
         setOpportunities(response.data.data || []);
         setPotentialMatches(response.data.potentialMatches || []);
+        setLockedMatches(response.data.lockedMatches || []);
         setUserProfile(response.data.userProfile);
         setPagination(prev => ({
           ...prev,
@@ -1152,6 +1154,50 @@ export default function Opportunities() {
             )}
           </div>
         )}
+        {/* ── Locked Top Matches (trial/free upsell — REAL exact-NAICS scores) ── */}
+        {lockedMatches.length > 0 && (
+          <div className="mt-8">
+            <div className="flex items-center gap-2 px-1 mb-3">
+              <Zap className="w-4 h-4 text-indigo-600" />
+              <span className="font-semibold text-indigo-900 text-sm">
+                Your Top Matches — locked on your current plan
+              </span>
+              <span className="text-xs text-indigo-500 hidden sm:inline">
+                (Exact matches to your NAICS codes — upgrade to see them)
+              </span>
+            </div>
+            <div className="space-y-3">
+              {lockedMatches.map((opp, i) => (
+                <div key={opp._id || i} className="bg-white rounded-xl border border-indigo-200 border-l-4 border-l-indigo-500 shadow-sm p-5 hover:shadow-md transition-all">
+                  <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start gap-2 flex-wrap mb-1">
+                        <h3 className="flex-1 text-sm font-semibold text-gray-400">{opp.title}</h3>
+                        <span className={`px-2 py-0.5 rounded text-xs font-semibold shrink-0 ${getMatchColor(opp.aiMatchScore)}`}>
+                          {opp.aiMatchScore}% Match
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-2">{opp.agency}</p>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                        {opp.estimatedValue && <span className="text-green-700 font-semibold">${opp.estimatedValue.toLocaleString()}</span>}
+                        {opp.setAside && <span className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded">{opp.setAside}</span>}
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Due: {opp.dueDate ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
+                        {opp.noticeType && <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">{opp.noticeType}</span>}
+                      </div>
+                    </div>
+                    <div className="shrink-0">
+                      <Link to="/pricing"
+                        className="flex items-center gap-1 px-3 py-2 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors whitespace-nowrap">
+                        🔒 Upgrade to Unlock
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Potential Matches (Problem 1: wrong NAICS by CO) ───────────────── */}
         {potentialMatches.length > 0 && (
           <div className="mt-8">
@@ -1189,9 +1235,13 @@ export default function Opportunities() {
                           <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-300 shrink-0">
                             ⚠️ Potential Match
                           </span>
-                          <span className={`px-2 py-0.5 rounded text-xs font-semibold shrink-0 ${getMatchColor(opp.aiMatchScore)}`}>
-                            {opp.aiMatchScore}% Match
-                          </span>
+                          {/* sector matches cap at 45% by design — a low % badge on a locked
+                              card discourages upgrading, so hide it for locked cards */}
+                          {!opp.locked && (
+                            <span className={`px-2 py-0.5 rounded text-xs font-semibold shrink-0 ${getMatchColor(opp.aiMatchScore)}`}>
+                              {opp.aiMatchScore}% Match
+                            </span>
+                          )}
                         </div>
                         <p className="text-xs text-gray-500 mb-1">{opp.agency}</p>
                         <p className="text-xs text-amber-700 bg-amber-50 px-2 py-1 rounded mb-2">{opp.potentialMatchReason}</p>

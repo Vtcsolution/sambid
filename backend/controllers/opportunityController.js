@@ -605,6 +605,44 @@ export const getOpportunities = async (req, res) => {
             canApply: false,
           };
         });
+        // best sector matches first
+        potentialMatches.sort((a, b) => (b.aiMatchScore || 0) - (a.aiMatchScore || 0));
+      } catch {}
+    }
+
+    // ── Locked top matches (trial/free upsell) ──────────────────────────────
+    // The sector-fallback "potential matches" score ≤45% by nature (different
+    // NAICS), which makes a weak upgrade pitch. The REAL sell is the user's own
+    // exact-NAICS matches beyond the daily cap — genuinely high scores, shown
+    // masked. Scores are real, never inflated.
+    let lockedMatches = [];
+    if (['trial', 'free'].includes(req.user.plan) && pageNum === 1 && req.user.naicsCodes?.length > 0) {
+      try {
+        const feedOppIds = valid.map(uo => uo._id || uo.opportunity?._id).filter(Boolean);
+        const exactOpps = await Opportunity.find({
+          naicsCode: { $in: req.user.naicsCodes },
+          dueDate: { $gt: now },
+          source: { $ne: 'usaspending' },
+          _id: { $nin: feedOppIds },
+        }).sort({ postedDate: -1 }).limit(120).lean();
+
+        lockedMatches = exactOpps
+          .map(opp => ({ opp, score: calculateMatchScore(opp, req.user).score }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 5)
+          .map(({ opp, score }) => ({
+            _id:            opp._id,
+            locked:         true,
+            title:          '🔒 Top matched contract — details locked',
+            agency:         String(opp.agency || 'Federal agency').split('>')[0].trim(),
+            estimatedValue: opp.estimatedValue || null,
+            setAside:       opp.setAside || null,
+            noticeType:     opp.noticeType || null,
+            dueDate:        opp.dueDate,
+            aiMatchScore:   score, // REAL score — exact NAICS matches rank high honestly
+            status:         'active',
+            canApply:       false,
+          }));
       } catch {}
     }
 
@@ -612,6 +650,7 @@ export const getOpportunities = async (req, res) => {
       success: true,
       data: paginated,
       potentialMatches,
+      lockedMatches,
       userProfile: {
         naicsCodes:         req.user.naicsCodes || [],
         plan:               access.plan,
