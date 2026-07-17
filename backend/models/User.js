@@ -37,6 +37,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  // Soft delete (admin trash) — deleted users are hidden and blocked from
+  // logging in, but stay in the database and can be restored by an admin.
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
   // Trial tracking
   trialStartDate: {
     type: Date,

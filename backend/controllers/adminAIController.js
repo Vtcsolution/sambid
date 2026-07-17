@@ -341,7 +341,7 @@ export const getSegmentUsers = async (req, res) => {
       filter = segmentFilters[segment] || {};
     }
 
-    const users = await User.find(filter)
+    const users = await User.find({ ...filter, isDeleted: { $ne: true } })
       .select('name email plan isTrialActive trialEndDate lastMatchReset naicsCodes createdAt businessName planExpiresAt')
       .lean();
 
@@ -412,7 +412,7 @@ export const sendCampaign = async (req, res) => {
       } else {
         baseFilter = segmentFilters[segment] || {};
       }
-      const filter = { ...baseFilter, emailAlertsEnabled: { $ne: false } };
+      const filter = { ...baseFilter, emailAlertsEnabled: { $ne: false }, isDeleted: { $ne: true } };
       users = await User.find(filter).select('name email');
       if (users.length === 0)
         return res.status(400).json({ success: false, message: 'No users found for this segment.' });

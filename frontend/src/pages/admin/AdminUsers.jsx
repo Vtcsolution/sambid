@@ -4,9 +4,11 @@ import {
   Users, Search, RefreshCw, ChevronDown, ChevronUp,
   Shield, Crown, Zap, Sparkles, User, Mail, Calendar,
   Activity, DollarSign, Bookmark, CheckCircle, XCircle,
-  Clock, Edit3, X, Loader2, AlertTriangle, TrendingUp
+  Clock, Edit3, X, Loader2, AlertTriangle, TrendingUp,
+  Trash2, RotateCcw,
 } from 'lucide-react';
 import { adminPanelAPI } from '../../services/adminApi';
+import ConfirmModal from '../../components/ConfirmModal';
 
 // ── Plan badge ────────────────────────────────────────────────────────────────
 const PLAN_STYLES = {
@@ -247,20 +249,51 @@ export default function AdminUsers() {
   const [sortDir,  setSortDir]  = useState('desc');
   const [expanded, setExpanded] = useState(null);
   const [editing,  setEditing]  = useState(null);
+  const [view,     setView]     = useState('active'); // 'active' | 'trash'
+  const [confirmDel, setConfirmDel] = useState(null); // user pending delete confirmation
+  const [actionMsg,  setActionMsg]  = useState('');
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (v = view) => {
     setLoading(true);
     try {
-      const r = await adminPanelAPI.getAllUsers();
+      const r = await adminPanelAPI.getAllUsers(v === 'trash' ? 'trash' : undefined);
       if (r.data.success) setUsers(r.data.data);
     } catch (e) {
       console.error('Load users error:', e);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [view]);
 
   useEffect(() => { load(); }, [load]);
+
+  const switchView = (v) => {
+    setView(v);
+    setExpanded(null);
+    setEditing(null);
+    setActionMsg('');
+  };
+
+  const handleDelete = async (user) => {
+    setConfirmDel(null);
+    try {
+      const r = await adminPanelAPI.deleteUser(user._id);
+      setActionMsg(r.data?.message || 'User moved to trash.');
+      setUsers(prev => prev.filter(u => u._id !== user._id));
+    } catch (e) {
+      setActionMsg(e.response?.data?.message || 'Could not delete user.');
+    }
+  };
+
+  const handleRestore = async (user) => {
+    try {
+      const r = await adminPanelAPI.restoreUser(user._id);
+      setActionMsg(r.data?.message || 'User restored.');
+      setUsers(prev => prev.filter(u => u._id !== user._id));
+    } catch (e) {
+      setActionMsg(e.response?.data?.message || 'Could not restore user.');
+    }
+  };
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
@@ -305,6 +338,15 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-6">
+      <ConfirmModal
+        isOpen={!!confirmDel}
+        title={`Move ${confirmDel?.name || confirmDel?.email || 'user'} to trash?`}
+        message={`${confirmDel?.email || ''} will be hidden from the platform and blocked from logging in. Nothing is permanently deleted — you can restore them anytime from the Trash tab.`}
+        confirmLabel="Move to Trash"
+        variant="danger"
+        onConfirm={() => handleDelete(confirmDel)}
+        onCancel={() => setConfirmDel(null)}
+      />
       <div>
 
         {/* Header */}
@@ -315,12 +357,35 @@ export default function AdminUsers() {
               All Users
               <AdminHowItWorks page="users" />
             </h1>
-            <p className="text-sm text-gray-500 mt-1">{users.length} total users registered</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {view === 'trash' ? `${users.length} deleted user${users.length !== 1 ? 's' : ''} in trash` : `${users.length} total users registered`}
+            </p>
           </div>
-          <button onClick={load} className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 shadow-sm transition-colors shrink-0 self-start sm:self-auto">
-            <RefreshCw className="w-4 h-4" /> Refresh
-          </button>
+          <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+            {/* Active / Trash view switch */}
+            <div className="flex bg-gray-100 rounded-lg p-0.5">
+              <button onClick={() => switchView('active')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${view === 'active' ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+                Active
+              </button>
+              <button onClick={() => switchView('trash')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${view === 'trash' ? 'bg-white text-red-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+                <Trash2 className="w-3.5 h-3.5" /> Trash
+              </button>
+            </div>
+            <button onClick={() => load()} className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 shadow-sm transition-colors">
+              <RefreshCw className="w-4 h-4" /> Refresh
+            </button>
+          </div>
         </div>
+
+        {/* Result of the last delete/restore action */}
+        {actionMsg && (
+          <div className="mb-4 flex items-center justify-between gap-2 text-sm text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-2.5">
+            <span>{actionMsg}</span>
+            <button onClick={() => setActionMsg('')} className="text-indigo-300 hover:text-indigo-500"><X className="w-4 h-4" /></button>
+          </div>
+        )}
 
         {/* Plan distribution chips */}
         <div className="flex flex-wrap gap-2 mb-5">
@@ -430,18 +495,35 @@ export default function AdminUsers() {
                         {/* Actions */}
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => setEditing(editing === user._id ? null : user._id)}
-                              title="Change plan"
-                              className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => setExpanded(expanded === user._id ? null : user._id)}
-                              title="View details"
-                              className={`p-1.5 rounded-lg transition-colors ${expanded === user._id ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50'}`}>
-                              {expanded === user._id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                            </button>
+                            {view === 'trash' ? (
+                              <button
+                                onClick={() => handleRestore(user)}
+                                title="Restore user"
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 rounded-lg transition-colors">
+                                <RotateCcw className="w-3.5 h-3.5" /> Restore
+                              </button>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => setEditing(editing === user._id ? null : user._id)}
+                                  title="Change plan"
+                                  className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                                  <Edit3 className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => setExpanded(expanded === user._id ? null : user._id)}
+                                  title="View details"
+                                  className={`p-1.5 rounded-lg transition-colors ${expanded === user._id ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50'}`}>
+                                  {expanded === user._id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                </button>
+                                <button
+                                  onClick={() => setConfirmDel(user)}
+                                  title="Move to trash"
+                                  className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </>
+                            )}
                           </div>
                         </td>
                       </tr>

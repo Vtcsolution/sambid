@@ -39,6 +39,7 @@ import {
   updateUserPlan,
   updateUserRole,
   deleteUser,
+  restoreUser,
   grantCredits,
   unlockUser,
   testEmail,
@@ -118,6 +119,7 @@ router.put('/users/:id/plan', updateUserPlan);
 router.put('/users/:id/role', updateUserRole);
 router.put('/users/:id/grant-credits', grantCredits);
 router.put('/users/:id/unlock', unlockUser);
+router.put('/users/:id/restore', restoreUser);
 router.delete('/users/:id', deleteUser);
 
 // Referral management

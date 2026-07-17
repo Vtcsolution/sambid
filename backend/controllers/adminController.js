@@ -499,9 +499,11 @@ export const updateInvoiceStatus = async (req, res) => {
 // @route   GET /api/admin/users
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find()
+    // Default view = active users only; ?view=trash lists soft-deleted users
+    const inTrash = req.query.view === 'trash';
+    const users = await User.find(inTrash ? { isDeleted: true } : { isDeleted: { $ne: true } })
       .select('-password')
-      .sort({ createdAt: -1 });
+      .sort(inTrash ? { deletedAt: -1 } : { createdAt: -1 });
     
     // Calculate days left for each user
     const usersWithExpiry = users.map(user => {
@@ -646,22 +648,48 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
-// @desc    Delete user
+// @desc    Move user to trash (soft delete — restorable)
 // @route   DELETE /api/admin/users/:id
 export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findByIdAndDelete(id);
+    const user = await User.findByIdAndUpdate(
+      id,
+      { isDeleted: true, deletedAt: new Date() },
+      { new: true }
+    );
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    console.log(`🗑️ Admin deleted user ${user.email}`);
+    console.log(`🗑️ Admin moved user to trash: ${user.email}`);
 
-    res.json({ success: true, message: 'User deleted successfully' });
+    res.json({ success: true, message: `${user.name || user.email} moved to trash. You can restore them anytime.` });
   } catch (error) {
     console.error('Delete user error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Restore a soft-deleted user from trash
+// @route   PUT /api/admin/users/:id/restore
+export const restoreUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: false, deletedAt: null },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    console.log(`♻️ Admin restored user from trash: ${user.email}`);
+
+    res.json({ success: true, message: `${user.name || user.email} restored successfully.` });
+  } catch (error) {
+    console.error('Restore user error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

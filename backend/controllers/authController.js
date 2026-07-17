@@ -214,6 +214,11 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    // Soft-deleted (in admin trash) — blocked until an admin restores them
+    if (user.isDeleted) {
+      return res.status(403).json({ success: false, message: 'This account has been deactivated. Contact support if you believe this is a mistake.' });
+    }
+
     // Account lockout check
     if (user.lockUntil && user.lockUntil > new Date()) {
       const mins = Math.ceil((user.lockUntil - new Date()) / 60000);
