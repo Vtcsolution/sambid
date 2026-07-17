@@ -135,9 +135,9 @@ After that, your account reverts to the Free plan with only 2 daily contract mat
 • Real-time deadline alerts
 • Unlimited saved opportunities
 
-We're offering **20% off your first month** - but only until your trial expires.
+We're offering **10% off your first month** with coupon code **SUP-RANA-5V83Y** - apply it on the pricing page before your trial expires.
 
-→ Upgrade now with code TRIAL20: ${PLATFORM_URL}/pricing
+→ Upgrade now with code SUP-RANA-5V83Y: ${PLATFORM_URL}/pricing
 
 Best regards,
 The Sambid Team`,
@@ -160,7 +160,7 @@ Upgrade to Pro for just **${price("pro")}/month** and never miss another federal
 
 → Keep your access - upgrade now: ${PLATFORM_URL}/pricing
 
-Use code **TRIAL20** for 20% off your first month.
+Use coupon code **SUP-RANA-5V83Y** for 10% off your first month - we offer it just for you.
 
 Reply to this email if you have any questions - we're happy to help.
 
@@ -295,7 +295,7 @@ Thank you for being a Sambid Starter subscriber. We wanted to let you know about
 • **Teaming finder** - discover subcontracting partners
 • **Monthly market intelligence** reports for your NAICS codes
 
-Upgrade to Pro for just **${price("pro")}/month** and use code **LOYAL15** for 15% off.
+Upgrade to Pro for just **${price("pro")}/month** and use coupon code **SUP-RANA-5V83Y** for 10% off.
 
 → Upgrade to Pro today: ${PLATFORM_URL}/pricing
 
@@ -726,7 +726,7 @@ The Sambid Team`,
     };
 
     if (type === 'offer') return {
-      subject: `${firstName}, finish your ${pPlan} upgrade today - 10% back + your matches are piling up`,
+      subject: `${firstName}, finish your ${pPlan} upgrade today - 10% off, just for you`,
       body: `Hi ${firstName},
 
 Since you started your **${pPlan} plan** purchase ${ago}, Sambid has kept finding contracts matched to your business - they're sitting in your feed right now, and some of their deadlines are already counting down.
@@ -735,11 +735,9 @@ Every day on trial limits is a day your competitors see opportunities you don't.
 
 ${planPitch}
 
-To make it easy to finish today: complete your purchase and reply with code **FINISH10** - we'll credit **10% of your first payment** back to your account.
+To make it easy to finish today: apply coupon code **SUP-RANA-5V83Y** on the payment page - it gives you **10% off**, our offer just for you.
 
 → Finish your upgrade now (${pAmount} ${pCycle}): ${PLATFORM_URL}/billing
-
-This credit is only valid while your current invoice is open.
 
 Best regards,
 The Sambid Team`,
