@@ -797,6 +797,55 @@ export const getOpportunityById = async (req, res) => {
     const { score, reasons } = calculateMatchScore(opportunity, req.user);
     const isActive = opportunity.dueDate && new Date(opportunity.dueDate) > new Date();
 
+    // ── Trial/free paywall ────────────────────────────────────────────────
+    // All opportunity data is public on SAM.gov — the product is the matching,
+    // documents, and direct links. For trial/free users we strip exactly the
+    // fields that would let someone find the notice on SAM.gov for free
+    // (solicitation number, notice ID, resource links, contacts). Opportunities
+    // that aren't even in their matched feed are fully locked.
+    const isLimitedPlan = ['trial', 'free'].includes(req.user?.plan);
+    if (isLimitedPlan) {
+      const inFeed = await UserOpportunity.exists({ user: req.user._id, opportunity: opportunity._id });
+      const obj = opportunity.toObject();
+
+      if (!inFeed) {
+        // fully locked: enough to want it, not enough to find it
+        return res.json({
+          success: true,
+          locked: true,
+          data: {
+            _id:            obj._id,
+            title:          '🔒 Locked opportunity',
+            agency:         String(obj.agency || 'Federal agency').split('>')[0].trim(),
+            estimatedValue: obj.estimatedValue || null,
+            setAside:       obj.setAside || null,
+            dueDate:        obj.dueDate,
+            aiMatchScore:   score,
+            status:         isActive ? 'active' : 'historical',
+            canApply:       false,
+          },
+        });
+      }
+
+      // in their feed: full read access, but the SAM.gov escape hatches are
+      // removed — no solicitation number, notice ID, documents, or contacts.
+      delete obj.solicitationNumber;
+      delete obj.noticeId;
+      obj.resourceLinks   = [];
+      obj.pointOfContacts = [];
+      return res.json({
+        success: true,
+        restricted: true, // frontend shows upgrade prompts on the locked sections
+        data: {
+          ...obj,
+          aiMatchScore:  score,
+          matchReasons:  reasons,
+          status:        isActive ? 'active' : 'historical',
+          canApply:      isActive,
+        },
+      });
+    }
+
     res.json({
       success: true,
       data: {

@@ -1971,6 +1971,49 @@ const _deadlineFtr = () => `
   </div>`;
 
 /**
+ * MASKED teaser for trial/free users — creates urgency without leaking anything
+ * searchable on SAM.gov. Deliberately NO title words, NO full agency chain,
+ * NO NAICS code, NO solicitation number: title + agency + NAICS is enough to
+ * find the notice on SAM.gov for free, which would let trial users bypass the
+ * paywall entirely. Value, set-aside, match strength, and the countdown stay —
+ * they sell the opportunity but can't locate it.
+ */
+export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
+  const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
+  const html = `
+    ${_deadlineHdr('linear-gradient(135deg,#f59e0b,#d97706)', '🔒', 'A Matched Contract Is About to Expire')}
+    <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+      <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
+      <p style="color:#4b5563;">A federal contract <strong>matched to your NAICS codes</strong> reaches its submission deadline in <strong style="color:#dc2626;">${timeLabel}</strong> — and on your current plan, its details are locked.</p>
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:18px;margin:20px 0;">
+        <h3 style="margin:0 0 10px;color:#9ca3af;font-size:16px;">🔒 Contract details locked — upgrade to view</h3>
+        <table style="width:100%;font-size:14px;color:#4b5563;border-collapse:collapse;">
+          <tr><td style="padding:4px 0;width:130px;"><strong>Agency</strong></td><td>${topAgency}</td></tr>
+          <tr><td style="padding:4px 0;"><strong>Match</strong></td><td style="color:#16a34a;font-weight:bold;">Matched to your NAICS codes</td></tr>
+          ${opp.estimatedValue ? `<tr><td style="padding:4px 0;"><strong>Value</strong></td><td>$${Number(opp.estimatedValue).toLocaleString()}</td></tr>` : ''}
+          ${opp.setAside ? `<tr><td style="padding:4px 0;"><strong>Set-Aside</strong></td><td>${opp.setAside}</td></tr>` : ''}
+          <tr><td style="padding:4px 0;"><strong>Deadline</strong></td><td><strong style="color:#dc2626;">${timeLabel} remaining</strong></td></tr>
+        </table>
+        <div style="margin-top:14px;text-align:center;">
+          <a href="${process.env.FRONTEND_URL || ''}/pricing"
+             style="background:#6366f1;color:white;padding:10px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;display:inline-block;">
+            Unlock This Opportunity →
+          </a>
+        </div>
+      </div>
+      <p style="color:#6b7280;font-size:13px;">When this deadline passes, the contract is gone — someone else wins it. Upgrading unlocks the full title, documents, contacts, and the direct SAM.gov link for every match.</p>
+      ${_deadlineFtr()}`;
+
+  await transporter.sendMail({
+    from: FROM.noreply(),
+    to: user.email,
+    subject: `🔒 ${timeLabel} left on a contract matched to your business`,
+    html,
+  });
+  console.log(`📧 Teaser deadline alert sent to ${user.email} (${user.plan}, ${timeLabel} left)`);
+};
+
+/**
  * "Upcoming deadline" — first notice when an opp enters the user's alert window
  */
 export const sendDeadlineUpcomingAlert = async (user, opp, daysLeft) => {

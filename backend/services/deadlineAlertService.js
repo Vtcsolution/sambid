@@ -14,10 +14,17 @@ import {
   sendDeadlineUpcomingAlert,
   sendDeadline1DayAlert,
   sendDeadlineFinalAlert,
+  sendDeadlineTeaserAlert,
 } from './emailService.js';
 
 const MS_PER_HOUR = 60 * 60 * 1000;
 const MS_PER_MIN  = 60 * 1000;
+
+// Trial/free users get MASKED teaser emails (no title/agency-chain/NAICS —
+// that data is enough to find the notice on SAM.gov for free and bypass the
+// paywall) at a REDUCED frequency: the upcoming notice + ONE 1-day teaser,
+// no final-hour barrage. Paid plans get the full detailed alerts unchanged.
+const isLimitedPlan = (user) => ['trial', 'free'].includes(user.plan);
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -58,7 +65,11 @@ export const checkUpcomingDeadlineAlerts = async () => {
           if (await alreadySent(user._id, opp._id, 'upcoming', 1)) continue;
 
           const daysLeft = Math.ceil((new Date(opp.dueDate) - now) / (24 * MS_PER_HOUR));
-          await sendDeadlineUpcomingAlert(user, opp, daysLeft);
+          if (isLimitedPlan(user)) {
+            await sendDeadlineTeaserAlert(user, opp, `${daysLeft} day${daysLeft !== 1 ? 's' : ''}`);
+          } else {
+            await sendDeadlineUpcomingAlert(user, opp, daysLeft);
+          }
           await markSent(user._id, opp._id, 'upcoming', 1, opp.dueDate);
           sent++;
         }
@@ -102,7 +113,8 @@ export const check1DayDeadlineAlerts = async () => {
           const sentCount = await DeadlineAlert.countDocuments({
             user: user._id, opportunity: opp._id, alertType: '1day',
           });
-          if (sentCount >= 5) continue;
+          // trial/free: ONE teaser instead of the 5-email countdown barrage
+          if (sentCount >= (isLimitedPlan(user) ? 1 : 5)) continue;
 
           const nextIndex = sentCount + 1;
           if (await alreadySent(user._id, opp._id, '1day', nextIndex)) continue;
@@ -119,7 +131,11 @@ export const check1DayDeadlineAlerts = async () => {
           }
 
           const hoursLeft = (new Date(opp.dueDate) - now) / MS_PER_HOUR;
-          await sendDeadline1DayAlert(user, opp, nextIndex, hoursLeft);
+          if (isLimitedPlan(user)) {
+            await sendDeadlineTeaserAlert(user, opp, `~${Math.max(1, Math.round(hoursLeft))} hours`);
+          } else {
+            await sendDeadline1DayAlert(user, opp, nextIndex, hoursLeft);
+          }
           await markSent(user._id, opp._id, '1day', nextIndex, opp.dueDate);
           sent++;
         }
@@ -153,6 +169,9 @@ export const checkFinalHourDeadlineAlerts = async () => {
             match: { dueDate: { $gt: now, $lte: high } },
           })
           .lean();
+
+        // trial/free users don't get the final-hour barrage at all
+        if (isLimitedPlan(user)) continue;
 
         for (const { opportunity: opp } of userOpps) {
           if (!opp) continue;

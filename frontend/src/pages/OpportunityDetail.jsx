@@ -17,6 +17,8 @@ export default function OpportunityDetail() {
   const [loading, setLoading] = useState(true);
   const [generatingProposal, setGeneratingProposal] = useState(false);
   const [proposalOutline, setProposalOutline] = useState(null);
+  const [accessLocked, setAccessLocked] = useState(false);     // trial/free: not in their feed — full paywall
+  const [accessRestricted, setAccessRestricted] = useState(false); // trial/free: viewable but docs/contacts/SAM link stripped
   const { plan: userPlan } = useUserPlan();
 
   // Save feature states
@@ -52,6 +54,8 @@ export default function OpportunityDetail() {
       const response = await opportunityAPI.getById(id);
       if (response.data.success) {
         setOpportunity(response.data.data);
+        setAccessLocked(!!response.data.locked);
+        setAccessRestricted(!!response.data.restricted);
       }
     } catch (error) {
       console.error('Error fetching opportunity:', error);
@@ -222,6 +226,42 @@ export default function OpportunityDetail() {
     if (!d) return 'N/A';
     return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
   };
+
+  // ── Trial/free full paywall: opportunity is outside their matched feed ──
+  if (accessLocked) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+          <button onClick={() => navigate('/opportunities')}
+            className="flex items-center text-sm text-gray-600 hover:text-indigo-600 mb-6 transition-colors">
+            <ChevronLeft className="w-4 h-4 mr-1" /> Back to Opportunities
+          </button>
+          <Card className="text-center py-12 px-6">
+            <div className="w-16 h-16 mx-auto mb-5 bg-indigo-100 rounded-2xl flex items-center justify-center">
+              <Shield className="w-8 h-8 text-indigo-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">This opportunity is locked</h1>
+            <p className="text-gray-500 mb-1">
+              {opportunity.agency} · {opportunity.setAside || 'Federal contract'}
+              {opportunity.estimatedValue ? ` · $${Number(opportunity.estimatedValue).toLocaleString()}` : ''}
+            </p>
+            {opportunity.dueDate && (
+              <p className="text-sm text-red-500 font-semibold mb-6">
+                Deadline: {new Date(opportunity.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </p>
+            )}
+            <p className="text-gray-600 max-w-md mx-auto mb-8">
+              Upgrade your plan to see the full title, description, official documents,
+              contracting contacts, and the direct SAM.gov link — for this and every contract matched to your business.
+            </p>
+            <Button onClick={() => navigate('/pricing')} className="px-8">
+              Upgrade to Unlock →
+            </Button>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const solicitationNumber = getSolicitationNumber();
   const samSearchUrl = getSamSearchUrl();
@@ -709,6 +749,26 @@ export default function OpportunityDetail() {
           )}
 
           {/* ── SAM.gov Direct Access ───────────────────────────────────── */}
+          {accessRestricted ? (
+            /* Trial/free: the SAM.gov escape hatches (solicitation number, direct
+               link, documents, contacts) are stripped server-side — sell the upgrade */
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <div className="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-xl p-5 text-center">
+                <div className="w-11 h-11 mx-auto mb-3 bg-indigo-100 rounded-xl flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-indigo-600" />
+                </div>
+                <p className="font-bold text-gray-900 mb-1">Documents, contacts & SAM.gov link are locked on your plan</p>
+                <p className="text-sm text-gray-600 max-w-lg mx-auto mb-4">
+                  Upgrade to unlock the official solicitation documents (RFP/SOW), the contracting
+                  officer's contact details, the solicitation number, and the one-click SAM.gov link —
+                  everything you need to actually bid on this contract.
+                </p>
+                <Button onClick={() => navigate('/pricing')} className="px-6">
+                  Upgrade to Unlock →
+                </Button>
+              </div>
+            </div>
+          ) : (
           <div className="mt-6 pt-4 border-t border-gray-100 space-y-3">
 
             {/* Solicitation Number - prominent copy box */}
@@ -780,6 +840,7 @@ export default function OpportunityDetail() {
               </div>
             </div>}
           </div>
+          )}
 
           {/* ── Our app actions ─────────────────────────────────────────────── */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 pt-4 border-t border-gray-100 mt-2">
