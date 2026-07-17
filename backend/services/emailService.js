@@ -34,6 +34,11 @@ const transporter = {
 // Called by settingsService after admin updates SMTP credentials
 export const resetEmailTransporter = () => { _transporter = null; };
 
+// Sambid logo for email headers — must be a hosted PNG (email clients strip
+// SVG). apple-touch-icon.png is the square bell icon served by the frontend.
+const LOGO_URL = `${process.env.FRONTEND_URL || 'https://sambid.co'}/apple-touch-icon.png`;
+const LOGO_IMG = `<img src="${LOGO_URL}" width="48" height="48" alt="Sambid" style="display:block;margin:0 auto 10px;border-radius:12px;" />`;
+
 // Export transporter so other controllers can send mail via the same SMTP config
 export { transporter };
 
@@ -62,7 +67,7 @@ export const sendPasswordResetOtpEmail = async (user, otp) => {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -97,7 +102,7 @@ export const sendPasswordResetEmail = async (user, resetUrl) => {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -135,7 +140,7 @@ export const sendEmailVerificationEmail = async (user, verifyUrl) => {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -173,7 +178,7 @@ export const sendTrialReminder = async (user, daysLeft) => {
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; color: white;">
-        <h1 style="margin: 0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin: 0;">Sambid</h1>
         <p style="margin: 5px 0 0; opacity: 0.9;">Federal Contract Intelligence</p>
       </div>
       
@@ -380,7 +385,7 @@ export const sendDailyDigest = async (user, opportunities) => {
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; color: white;">
-        <h1 style="margin: 0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin: 0;">Sambid</h1>
         <p style="margin: 5px 0 0;">Your Daily Contract Matches</p>
       </div>
       
@@ -488,7 +493,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:12px; color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0; opacity:.9;">Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -981,7 +986,7 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
     <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);border-radius:16px 16px 0 0;padding:32px 40px 28px;text-align:center;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
         <td style="text-align:center;">
-          <div style="display:inline-block;background:rgba(255,255,255,.2);width:44px;height:44px;border-radius:11px;line-height:44px;font-size:22px;font-weight:900;color:white;margin-bottom:10px;">S</div>
+          <img src="${LOGO_URL}" width="44" height="44" alt="Sambid" style="display:inline-block;border-radius:11px;margin-bottom:10px;" />
           <div style="color:white;font-size:22px;font-weight:800;letter-spacing:-0.5px;">${fromName}</div>
           <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:3px;letter-spacing:0.5px;">FEDERAL CONTRACT INTELLIGENCE</div>
         </td>
@@ -1143,7 +1148,7 @@ export const sendWeeklyDigest = async (user, opportunities) => {
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; padding: 20px; background: #6366f1; border-radius: 12px; color: white;">
-        <h1 style="margin: 0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin: 0;">Sambid</h1>
         <p style="margin: 5px 0 0;">Your Weekly Contract Digest</p>
       </div>
       
@@ -1186,7 +1191,7 @@ export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => 
   const userHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Ticket Created</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1303,7 +1308,7 @@ export const sendTicketReplyEmail = async (user, ticket, replyContent) => {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Reply</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1340,7 +1345,7 @@ export const sendTicketStatusEmail = async (user, ticket, status) => {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,${accentColor},#6366f1);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Ticket ${label}</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1386,7 +1391,7 @@ export const sendSuggestionEmail = async (user, suggestion, adminEmails = []) =>
   const userHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Feedback Received</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1469,7 +1474,7 @@ export const sendPaymentInstructionsEmail = async ({
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:24px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;font-size:24px;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;font-size:24px;">Sambid</h1>
         <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Federal Contract Intelligence</p>
       </div>
 
@@ -1541,7 +1546,7 @@ export const sendWithdrawalRequestEmails = async ({ supportName, supportEmail, a
   const memberHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Commission Portal</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -1650,7 +1655,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-        <h1 style="margin:0;">Sambid</h1>
+        ${LOGO_IMG}<h1 style="margin:0;">Sambid</h1>
         <p style="margin:5px 0 0;opacity:.9;">Support Commission Portal</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">

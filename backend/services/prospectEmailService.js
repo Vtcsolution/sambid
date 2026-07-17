@@ -28,8 +28,11 @@ const FROM_NAME = `${PLATFORM_NAME} Team`;
 
 // ── Shared HTML helpers ───────────────────────────────────────────────────────
 
+const LOGO_URL = `${PLATFORM_URL}/apple-touch-icon.png`;
+
 const header = () => `
   <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:28px 32px;border-radius:12px 12px 0 0;text-align:center;">
+    <img src="${LOGO_URL}" width="48" height="48" alt="${PLATFORM_NAME}" style="display:block;margin:0 auto 10px;border-radius:12px;" />
     <h1 style="margin:0;color:#fff;font-size:22px;font-family:Arial,sans-serif;font-weight:800;letter-spacing:-0.5px;">${PLATFORM_NAME}</h1>
     <p style="margin:4px 0 0;color:rgba(255,255,255,.8);font-size:13px;font-family:Arial,sans-serif;">${PLATFORM_TAGLINE}</p>
   </div>`;
