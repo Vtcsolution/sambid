@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import Plan from '../models/Plan.js';
 import { generateText } from '../services/geminiService.js';
 import { distributeToUser } from '../services/schedulerService.js';
+import { price } from '../services/planPricingService.js';
 import { createCheckoutSessionForInquiry } from '../services/stripeService.js';
 import {
   sendEnterpriseInquiryConfirmation,
@@ -27,10 +28,11 @@ const buildSystemPrompt = async () => {
       Features: ${features}`;
     }).join('\n\n');
   } catch {
-    planDetails = `  • Free — $0/mo: 2 daily matches, 10 saved, 5 alerts
-  • Starter — $29/mo: 500 matches/month, 100 saved, priority email support
-  • Pro — $79/mo: 3,000 matches/month, unlimited saved/alerts, AI proposals, full API access
-  • Enterprise — $499/mo: unlimited matches, dedicated manager, custom integrations, all features
+    // fallback still uses live cached prices from planPricingService, never hardcoded
+    planDetails = `  • Free — $0/mo: 3 daily matches, 10 saved, 5 alerts
+  • Starter — ${price('starter')}/mo (${price('starter', 'yearly')}/yr): daily matched opportunities, saved list, deadline alerts
+  • Pro — ${price('pro')}/mo (${price('pro', 'yearly')}/yr): full AI tools, proposals, RFP analysis, unlimited saved/alerts
+  • Enterprise — ${price('enterprise')}/mo (${price('enterprise', 'yearly')}/yr): unlimited matches, dedicated manager, custom integrations
   • Custom/Enterprise Plus — custom pricing: unlimited matches, multi-seat, white-label, SLA`;
   }
 
@@ -156,7 +158,7 @@ RESPONSE RULES
 // Simple rule-based AI analysis for admin email
 const buildAiAnalysis = ({ company, employees, planInterest, message }) => {
   const lines = [];
-  if (planInterest === 'enterprise') lines.push('• High-value lead — Enterprise plan ($499/mo · $4,788/yr).');
+  if (planInterest === 'enterprise') lines.push(`• High-value lead — Enterprise plan (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr).`);
   if (planInterest === 'custom')     lines.push('• Custom/Enterprise Plus lead — requires pricing discussion.');
   if (employees) lines.push(`• Company size: ${employees} employees.`);
   if (company)   lines.push(`• Organisation: ${company}.`);
@@ -182,7 +184,7 @@ export const submitContactForm = async (req, res) => {
       userId: req.user?._id || null,
     });
 
-    const planLabel = planInterest === 'enterprise' ? 'Enterprise ($499/mo · $4,788/yr)'
+    const planLabel = planInterest === 'enterprise' ? `Enterprise (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr)`
                     : planInterest === 'custom'     ? 'Custom Enterprise'
                     : planInterest || 'General';
 

@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
+import { price, priceNum, pricingLine } from './planPricingService.js';
 
 let _transporter = null;
 const getTransporter = () => {
@@ -156,7 +157,7 @@ export const EMAIL_TEMPLATES = {
           ${[
             ['Real-time SAM.gov alerts', '❌ Daily digest only', '✅ Instant notifications'],
             ['AI NAICS-based matching', '⚠️ Keyword only', '✅ AI + award history'],
-            ['Pricing', '❌ $800–$2,500/mo', '✅ From $29/mo'],
+            ['Pricing', '❌ $800–$2,500/mo', `✅ From ${price('starter')}/mo`],
             ['Teaming partner finder', '❌ Not included', '✅ Built in'],
             ['Small business set-aside focus', '⚠️ Limited', '✅ Full support'],
             ['Setup time', '⚠️ 2–4 weeks', '✅ Under 5 minutes'],
@@ -241,16 +242,17 @@ export const EMAIL_TEMPLATES = {
     id: 'pricing',
     name: 'Pricing & Plans',
     category: 'Conversion',
-    subject: 'Custom pricing for {{companyName}} — starting at $29/month',
+    // getter → evaluated on access, so it always uses LIVE DB prices
+    get subject() { return `Custom pricing for {{companyName}} — starting at ${price('starter')}/month`; },
     preview: 'Transparent, contractor-friendly plans with no long-term contracts.',
     buildHtml: (v) => wrap(`
       ${h2(`${PLATFORM_NAME} pricing built for contractors like ${v.company}`)}
       ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we keep our pricing simple and transparent — no per-seat fees, no hidden costs, no 12-month lock-ins.`)}
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
         ${[
-          ['Starter', '$29/mo', ['25 AI-matched alerts/month', 'SAM.gov monitoring', 'Basic competitor view', 'Email support'], false],
-          ['Pro', '$79/mo', ['Unlimited alerts', 'Real-time SAM.gov + FPDS + USASpending', 'Full competitor intelligence', 'Teaming partner finder', 'Proposal pipeline', 'Priority support'], true],
-          ['Enterprise', '$499/mo · $4,788/yr', ['Everything in Pro', 'Multi-user team access', 'API data export', 'Custom NAICS watchlists', 'Dedicated account manager', 'White-glove onboarding'], false],
+          ['Starter', `${price('starter')}/mo`, ['25 AI-matched alerts/month', 'SAM.gov monitoring', 'Basic competitor view', 'Email support'], false],
+          ['Pro', `${price('pro')}/mo`, ['Unlimited alerts', 'Real-time SAM.gov + FPDS + USASpending', 'Full competitor intelligence', 'Teaming partner finder', 'Proposal pipeline', 'Priority support'], true],
+          ['Enterprise', `${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr`, ['Everything in Pro', 'Multi-user team access', 'API data export', 'Custom NAICS watchlists', 'Dedicated account manager', 'White-glove onboarding'], false],
         ].map(([plan, price, feats, recommended]) => `
           <tr>
             <td style="padding:0;padding-bottom:12px;">
@@ -370,7 +372,7 @@ export const EMAIL_TEMPLATES = {
         <div style="color:#fff;font-size:32px;font-weight:900;font-family:monospace;letter-spacing:6px;background:rgba(255,255,255,.15);display:inline-block;padding:10px 24px;border-radius:8px;">FEDWIN40</div>
         <div style="color:rgba(255,255,255,.8);font-size:13px;font-family:Arial,sans-serif;margin-top:8px;">40% off your first 3 months on any paid plan</div>
       </div>
-      ${p(`Here's what you get on the ${highlight('Pro plan')} ($79 → $47/month for 3 months):`)}
+      ${p(`Here's what you get on the ${highlight('Pro plan')} (${price('pro')} → $${Math.round((priceNum('pro') || 0) * 0.6)}/month for 3 months):`)}
       ${ul([
         `Unlimited AI-matched federal contract alerts`,
         `Real-time monitoring across SAM.gov, FPDS, and USASpending.gov`,
@@ -480,12 +482,13 @@ export const sendBulkProspectEmails = async (prospects, templateId, sentBy = 'ad
 const TYPE_CONTEXT = {
   intro:      'Write a warm introductory email presenting Sambid as the ideal tool for this federal contractor. Explain clearly what Sambid does and why it matters for their business.',
   features:   "Highlight Sambid's 5 key features: AI-powered NAICS opportunity matching, real-time SAM.gov alerts, competitor intelligence dashboard, teaming partner finder, and proposal workspace.",
-  competitor: 'Compare Sambid to GovWin IQ and Deltek. Emphasize Sambid costs $29–79/mo vs competitors at $800–2,500/mo, setup is 5 minutes vs 2–4 weeks, and AI matching is more accurate.',
+  // getters → evaluated on access with LIVE DB prices, not baked at import
+  get competitor() { return `Compare Sambid to GovWin IQ and Deltek. Emphasize Sambid costs ${price('starter')}–${price('pro')}/mo vs competitors at $800–2,500/mo, setup is 5 minutes vs 2–4 weeks, and AI matching is more accurate.`; },
   campaign:   'Explain how Sambid helps federal contractors run a better business development campaign — identify more opportunities, track competitors, and win more contracts with less manual work.',
-  cost:       "Focus entirely on cost savings. Sambid starts at $29/mo vs competitors at $800–2,500/mo. Show the math on annual savings and what they could reinvest in BD or operations.",
+  get cost() { return `Focus entirely on cost savings. Sambid starts at ${price('starter')}/mo vs competitors at $800–2,500/mo. Show the math on annual savings and what they could reinvest in BD or operations.`; },
   time:       'Focus entirely on time savings. Contractors spend 8+ hours per week monitoring SAM.gov manually. Sambid automates this completely with instant matching alerts.',
   trial:      'Offer a free 3-day Pro trial of Sambid — no credit card required, full access to all features, easy cancellation. Create urgency with a 3-day window.',
-  pricing:    'Present Sambid pricing: Starter $29/mo ($278/yr), Pro $79/mo ($758/yr), Enterprise $499/mo ($4,788/yr — save 20%). All include 3-day free trial.',
+  get pricing() { return `Present Sambid pricing: ${pricingLine()} — yearly saves ~20%. All include 3-day free trial.`; },
   success:    'Share success metrics: contractors on Sambid identify 40% more relevant opportunities per month, save 8 hours/week, and report an average of $180K in additional annual contract revenue.',
   followup:   "Write a gentle follow-up to someone who didn't respond to a previous Sambid email. Be brief (3 short paragraphs), remind them of the opportunity, and offer a 15-minute no-pitch demo.",
 };
@@ -521,7 +524,7 @@ const STATIC_TEMPLATES = {
   }),
   competitor: (v) => ({
     subject: `${v.company}: a smarter alternative to GovWin IQ`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nTools like GovWin IQ and Deltek were designed for large prime contractors with dedicated BD teams and $1,500/month budgets. Sambid was built for every federal contractor — including growing companies like ${v.company}.\n\nHere's a quick comparison:\n\nSambid vs GovWin IQ:\n- Price: $29/mo vs $800–2,500/mo\n- Setup: 5 minutes vs 2–4 weeks\n- SAM.gov alerts: real-time vs daily digest\n- AI matching: NAICS + award history vs keyword search only\n- Small business set-aside focus: full support vs limited\n\nFor contractors at ${v.company}'s stage, every dollar in BD budget matters. Sambid gives you enterprise-grade intelligence at a fraction of the cost.\n\nSee the full comparison and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nTools like GovWin IQ and Deltek were designed for large prime contractors with dedicated BD teams and $1,500/month budgets. Sambid was built for every federal contractor — including growing companies like ${v.company}.\n\nHere's a quick comparison:\n\nSambid vs GovWin IQ:\n- Price: ${price('starter')}/mo vs $800–2,500/mo\n- Setup: 5 minutes vs 2–4 weeks\n- SAM.gov alerts: real-time vs daily digest\n- AI matching: NAICS + award history vs keyword search only\n- Small business set-aside focus: full support vs limited\n\nFor contractors at ${v.company}'s stage, every dollar in BD budget matters. Sambid gives you enterprise-grade intelligence at a fraction of the cost.\n\nSee the full comparison and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
   }),
   campaign: (v) => ({
     subject: `How ${v.company} can run a better federal BD campaign`,
@@ -529,7 +532,7 @@ const STATIC_TEMPLATES = {
   }),
   cost: (v) => ({
     subject: `${v.company}: save $15,000+ per year on BD intelligence`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nIf ${v.company} is currently using GovWin IQ or a similar tool, you're likely paying $1,500–2,500 per month — that's $18,000–$30,000 per year just for contract discovery.\n\nSambid delivers the same intelligence — real-time SAM.gov alerts, AI opportunity matching, competitor intelligence — starting at $29/month. That's a potential saving of $17,000+ per year that you can reinvest in proposal writing, staffing, or certifications.\n\nAnd if you're currently monitoring SAM.gov manually, consider this: at just 1 hour per day, that's 250+ hours per year of BD time that Sambid automates completely.\n\nThe math is straightforward. The setup takes 5 minutes.\n\nStart free at ${PLATFORM_URL} — no credit card required.\n\nBest regards,\nThe Sambid Team`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nIf ${v.company} is currently using GovWin IQ or a similar tool, you're likely paying $1,500–2,500 per month — that's $18,000–$30,000 per year just for contract discovery.\n\nSambid delivers the same intelligence — real-time SAM.gov alerts, AI opportunity matching, competitor intelligence — starting at ${price('starter')}/month. That's a potential saving of thousands per year that you can reinvest in proposal writing, staffing, or certifications.\n\nAnd if you're currently monitoring SAM.gov manually, consider this: at just 1 hour per day, that's 250+ hours per year of BD time that Sambid automates completely.\n\nThe math is straightforward. The setup takes 5 minutes.\n\nStart free at ${PLATFORM_URL} — no credit card required.\n\nBest regards,\nThe Sambid Team`,
   }),
   time: (v) => ({
     subject: `${v.company}: get back 8 hours a week on federal contracting`,
@@ -540,8 +543,8 @@ const STATIC_TEMPLATES = {
     bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI'd like to offer ${v.company} a free 3-day Pro trial of Sambid — no credit card required, no commitment, and full access to every feature.\n\nDuring your trial you'll have:\n- Unlimited AI-matched contract alerts for your NAICS codes\n- Real-time monitoring across SAM.gov, USASpending.gov, and FPDS\n- Full competitor intelligence dashboard\n- Teaming partner finder\n- Proposal pipeline workspace\n- Dedicated onboarding support\n\nThis offer is available for the next 3 days. After that, trial access reverts to the free tier (5 alerts/month).\n\nClaim your free trial at ${PLATFORM_URL} — setup takes under 5 minutes.\n\nAny questions? Reply to this email and we'll respond within a few hours.\n\nBest regards,\nThe Sambid Team`,
   }),
   pricing: (v) => ({
-    subject: `Sambid pricing for ${v.company} — starting at $29/month`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI wanted to share Sambid's pricing — because we hear from contractors that the biggest surprise is how affordable it is compared to alternatives.\n\nStarter — $29/month\n25 AI-matched alerts/month, SAM.gov monitoring, basic competitor view, email support.\n\nPro — $79/month (most popular)\nUnlimited alerts, real-time SAM.gov + FPDS + USASpending monitoring, full competitor intelligence, teaming partner finder, proposal pipeline, priority support.\n\nEnterprise — $499/month\nEverything in Pro plus multi-user team access, API data export, custom NAICS watchlists, and a dedicated account manager.\n\nAll plans include a 3-day free trial. No credit card required to start. Cancel anytime — no annual contracts.\n\nFor comparison, GovWin IQ starts at $800/month and Deltek at $1,500+.\n\nSee all plans and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
+    subject: `Sambid pricing for ${v.company} — starting at ${price('starter')}/month`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI wanted to share Sambid's pricing — because we hear from contractors that the biggest surprise is how affordable it is compared to alternatives.\n\nStarter — ${price('starter')}/month\n25 AI-matched alerts/month, SAM.gov monitoring, basic competitor view, email support.\n\nPro — ${price('pro')}/month (most popular)\nUnlimited alerts, real-time SAM.gov + FPDS + USASpending monitoring, full competitor intelligence, teaming partner finder, proposal pipeline, priority support.\n\nEnterprise — ${price('enterprise')}/month\nEverything in Pro plus multi-user team access, API data export, custom NAICS watchlists, and a dedicated account manager.\n\nAll plans include a 3-day free trial. No credit card required to start. Cancel anytime — no annual contracts.\n\nFor comparison, GovWin IQ starts at $800/month and Deltek at $1,500+.\n\nSee all plans and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
   }),
   success: (v) => ({
     subject: `How contractors like ${v.company} win 40% more contracts with Sambid`,
@@ -580,7 +583,7 @@ PLATFORM (Sambid):
 - AI-powered federal contract discovery platform
 - Monitors SAM.gov, USASpending.gov, FPDS in real-time
 - Features: AI NAICS matching, instant alerts, competitor intelligence, teaming finder, proposal workspace
-- Plans: Starter $29/mo · Pro $79/mo · Enterprise $499/mo
+- Plans: ${pricingLine()}
 - Website: ${PLATFORM_URL}
 
 EMAIL TYPE: ${templateType.toUpperCase()}

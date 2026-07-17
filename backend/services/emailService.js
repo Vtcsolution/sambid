@@ -2,6 +2,7 @@
 import nodemailer from 'nodemailer';
 import User from '../models/User.js';
 import Opportunity from '../models/Opportunity.js';
+import { price } from './planPricingService.js';
 
 // Lazy transporter — reads env vars at first use so admin updates take effect.
 let _transporter = null;
@@ -200,7 +201,7 @@ export const sendTrialReminder = async (user, daysLeft) => {
         </div>
         
         <div style="background: #e0e7ff; padding: 20px; border-radius: 8px; text-align: center;">
-          <h3 style="margin: 0 0 10px; color: #4338ca;">Upgrade to Pro - $79/month</h3>
+          <h3 style="margin: 0 0 10px; color: #4338ca;">Upgrade to Pro - ${price('pro')}/month</h3>
           <p style="margin: 0 0 15px; color: #3730a3;">Get unlimited daily matches + AI proposal generation</p>
           <a href="${process.env.FRONTEND_URL}/pricing" style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Upgrade Now →
@@ -236,15 +237,15 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
   const planTable = `
     <table style="width:100%;border-collapse:collapse;font-size:13px;color:#374151;">
       <tr>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Starter</strong> — $29/mo</td>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">500 matches/month · 14-day window</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Starter</strong> — ${price('starter')}/mo</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">Daily matched opportunities · deadline alerts</td>
       </tr>
       <tr>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Pro</strong> — $49/mo</td>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">3,000 matches/month · AI proposals · 60-day window</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Pro</strong> — ${price('pro')}/mo</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">3,000 matches/month · AI proposals · RFP analysis</td>
       </tr>
       <tr>
-        <td style="padding:7px 0;"><strong>Enterprise</strong> — $99/mo</td>
+        <td style="padding:7px 0;"><strong>Enterprise</strong> — ${price('enterprise')}/mo</td>
         <td style="padding:7px 0;">Unlimited matches · Real-time alerts · Full API access</td>
       </tr>
     </table>`;
@@ -356,8 +357,8 @@ export const sendTrialExpiredNotification = async (user) => {
         
         <div style="background: #e0e7ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="margin: 0 0 10px; color: #4338ca;">Choose a plan to continue:</h3>
-          <p style="margin: 5px 0;"><strong>Pro - $79/month</strong> - Unlimited matches + AI proposals</p>
-          <p style="margin: 5px 0;"><strong>Enterprise - $499/month (or $4,788/year, save 20%)</strong> - Real-time alerts + dedicated support</p>
+          <p style="margin: 5px 0;"><strong>Pro - ${price('pro')}/month</strong> - Unlimited matches + AI proposals</p>
+          <p style="margin: 5px 0;"><strong>Enterprise - ${price('enterprise')}/month (or ${price('enterprise', 'yearly')}/year, save 20%)</strong> - Real-time alerts + dedicated support</p>
           <a href="${process.env.FRONTEND_URL}/pricing" style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
             View Plans →
           </a>
@@ -488,7 +489,7 @@ export const sendRealTimeAlert = async (user, opportunity) => {
  * Send enterprise inquiry confirmation to user
  */
 export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, planInterest }) => {
-  const planLabel = planInterest === 'enterprise' ? 'Enterprise ($499/mo · $4,788/yr)' : planInterest || 'Enterprise';
+  const planLabel = planInterest === 'enterprise' ? `Enterprise (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr)` : planInterest || 'Enterprise';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -512,7 +513,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
           </ul>
         </div>
         <div style="background:#ede9fe; border-radius:8px; padding:16px; margin:20px 0; text-align:center;">
-          <p style="margin:0 0 8px; color:#4c1d95; font-weight:600;">Enterprise Plan — $499/month (or $4,788/year)</p>
+          <p style="margin:0 0 8px; color:#4c1d95; font-weight:600;">Enterprise Plan — ${price('enterprise')}/month (or ${price('enterprise', 'yearly')}/year)</p>
           <p style="margin:0; color:#6d28d9; font-size:14px;">10,000 daily matches · Dedicated manager · Custom integrations · Full API access</p>
         </div>
         <p style="color:#6b7280; font-size:14px;">
@@ -538,7 +539,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
 export const sendEnterpriseInquiryAdminAlert = async (inquiry, aiAnalysis) => {
   const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
   const { name, email, company, phone, employees, planInterest, message } = inquiry;
-  const planLabel = planInterest === 'enterprise' ? 'Enterprise ($499/mo · $4,788/yr)' : planInterest || 'Enterprise';
+  const planLabel = planInterest === 'enterprise' ? `Enterprise (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr)` : planInterest || 'Enterprise';
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
   const html = `

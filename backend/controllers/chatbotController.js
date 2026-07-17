@@ -3,8 +3,11 @@ import { spendAICredits } from '../services/aiCreditService.js';
 import Admin from '../models/Admin.js';
 import AdminNotification from '../models/admin/AdminNotification.js';
 import { transporter, FROM } from '../services/emailService.js';
+import { price, pricingLine } from '../services/planPricingService.js';
 
-const PLATFORM_KNOWLEDGE = `You are SamBid AI Assistant — a friendly, helpful chatbot inside the SamBid Notify federal contracting platform. You help users understand features, navigate pages, and get started with government contracting.
+// Function (not const) so every request reads LIVE plan prices from the DB
+// cache — never a stale hardcoded amount.
+const PLATFORM_KNOWLEDGE = () => `You are SamBid AI Assistant — a friendly, helpful chatbot inside the SamBid Notify federal contracting platform. You help users understand features, navigate pages, and get started with government contracting.
 
 YOUR PERSONALITY:
 - Talk like a helpful human teammate, NOT a robot. Be warm, casual, and encouraging.
@@ -77,7 +80,7 @@ PLATFORM PAGES & FEATURES:
 
 21. [Managed Winning](/company/managed-service) — Our team bids for you, commission on win. Full service federal contracting.
 
-22. [Upgrade My Plan](/pricing) — Plans: Trial (free, limited), Starter ($49/mo), Pro ($99/mo), Enterprise (custom). Pro unlocks all AI features.
+22. [Upgrade My Plan](/pricing) — Plans: Trial (free, limited), then ${pricingLine()}. Pro unlocks all AI features. Always quote these exact prices — they come live from the pricing database.
 
 23. [Billing & Invoices](/billing) — Download receipts, manage payment methods, view invoice history.
 
@@ -133,7 +136,7 @@ export const chatWithBot = async (req, res) => {
     const userContext = `User: ${req.user.name || 'User'}, Plan: ${req.user.plan || 'free'}, Email: ${req.user.email}`;
     const userPrompt = `${userContext}\n\nUser's question: ${message.trim()}`;
 
-    const response = await chat(PLATFORM_KNOWLEDGE, userPrompt, 512);
+    const response = await chat(PLATFORM_KNOWLEDGE(), userPrompt, 512);
 
     res.json({ success: true, data: { reply: response } });
   } catch (err) {
