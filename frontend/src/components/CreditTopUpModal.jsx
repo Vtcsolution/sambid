@@ -3,8 +3,7 @@ import { X, Zap, CheckCircle, Loader2, ShieldCheck, AlertCircle, Sparkles, Brain
 import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { creditTopupAPI } from '../services/api';
 import { useUserPlan } from '../hooks/useUserPlan';
-
-const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
+import usePayPalClientId from '../hooks/usePayPalClientId';
 
 // ── Credit packs by plan tier ─────────────────────────────────────────────────
 const STARTER_PACKS = [
@@ -117,6 +116,7 @@ function PackCard({ pack, selected, onSelect, isPro }) {
 // ── Main modal ────────────────────────────────────────────────────────────────
 export default function CreditTopUpModal({ feature = 'general', creditsData, onClose }) {
   const { plan } = useUserPlan();
+  const { clientId: PAYPAL_CLIENT_ID, loading: clientIdLoading } = usePayPalClientId();
   const [selected, setSelected] = useState(null);
   const [step,     setStep]     = useState('pick'); // pick | pay | done
   const [error,    setError]    = useState('');
@@ -224,9 +224,13 @@ export default function CreditTopUpModal({ feature = 'general', creditsData, onC
                   </div>
                 )}
 
-                {PAYPAL_CLIENT_ID ? (
+                {clientIdLoading ? (
+                  <div className="flex items-center justify-center gap-2 py-5 text-gray-500 text-sm">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Loading payment options…
+                  </div>
+                ) : PAYPAL_CLIENT_ID ? (
                   <PayPalScriptProvider
-                    key={pack.id}
+                    key={`${pack.id}-${PAYPAL_CLIENT_ID}`}
                     options={{ clientId: PAYPAL_CLIENT_ID, currency: 'USD', intent: 'capture', components: 'buttons' }}
                   >
                     <PayPalLoader />

@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { AlertCircle, Loader2, CheckCircle, ShieldCheck } from 'lucide-react';
 import { paymentAPI } from '../services/api';
+import usePayPalClientId from '../hooks/usePayPalClientId';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
-
-const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
 
 // ── Notification toast ──────────────────────────────────────────────────────
 function ActivationToast({ plan, onClose }) {
@@ -142,6 +141,7 @@ function SmartButton({ amount, planName, billingCycle, onSuccess, onError, refer
 // ── Exported component ───────────────────────────────────────────────────────
 export default function PayPalPayment({ amount, planName, billingCycle, onSuccess, onClose, referralBalanceToApply = 0, couponCode = '' }) {
   const navigate = useNavigate();
+  const { clientId: PAYPAL_CLIENT_ID, loading: clientIdLoading } = usePayPalClientId();
   const [error,          setError]        = useState('');
   const [showToast,      setShowToast]    = useState(false);
   const [activatedPlan,  setActivatedPlan] = useState('');
@@ -173,6 +173,14 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
   const handleError = (msg) => {
     if (msg) setError(msg);
   };
+
+  if (clientIdLoading) {
+    return (
+      <div className="flex items-center justify-center gap-2 py-8 text-gray-500 text-sm">
+        <Loader2 className="w-4 h-4 animate-spin" /> Loading payment options…
+      </div>
+    );
+  }
 
   if (!PAYPAL_CLIENT_ID) {
     return (
@@ -233,7 +241,7 @@ export default function PayPalPayment({ amount, planName, billingCycle, onSucces
           />
         ) : (
           <PayPalScriptProvider
-            key={`${planName}-${billingCycle}-${amount}`}
+            key={`${planName}-${billingCycle}-${amount}-${PAYPAL_CLIENT_ID}`}
             options={{
               clientId:   PAYPAL_CLIENT_ID,
               currency:   'USD',
