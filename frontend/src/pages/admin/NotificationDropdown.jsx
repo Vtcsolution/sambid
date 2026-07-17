@@ -1,7 +1,7 @@
 // frontend/src/components/admin/NotificationDropdown.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, CheckCircle, CreditCard, Users, AlertCircle, MessageSquare, Ticket, Star } from 'lucide-react';
+import { Bell, CheckCircle, CreditCard, Users, AlertCircle, MessageSquare, Ticket, Star, MailOpen } from 'lucide-react';
 import { adminPanelAPI as adminAPI } from '../../services/adminApi';
 import { getSocket } from '../../hooks/useSocket';
 import notificationSound from '../../assets/sounds/admin_notification.mp3';
@@ -122,10 +122,15 @@ export default function NotificationDropdown() {
       ));
     };
 
+    const onEmailOpened = (d) => injectLive('email_opened',
+      `📬 Email opened by ${d.recipientName || d.recipientEmail}`,
+      `Opened "${d.subject}"`, '/admin/notifications');
+
     if (socket) {
       socket.on('ticket:new',         onTicketNew);
       socket.on('ticket:user_reply',  onUserReply);
       socket.on('ticket:updated',     onTicketUpdate);
+      socket.on('email:opened',       onEmailOpened);
     }
 
     return () => {
@@ -135,6 +140,7 @@ export default function NotificationDropdown() {
         socket.off('ticket:new',        onTicketNew);
         socket.off('ticket:user_reply', onUserReply);
         socket.off('ticket:updated',    onTicketUpdate);
+        socket.off('email:opened',      onEmailOpened);
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,6 +210,7 @@ export default function NotificationDropdown() {
       case 'ticket_created': return <Ticket        className="w-4 h-4 text-indigo-500" />;
       case 'ticket_reply':   return <MessageSquare className="w-4 h-4 text-blue-500" />;
       case 'plan_activated': return <Star          className="w-4 h-4 text-amber-500" />;
+      case 'email_opened':   return <MailOpen      className="w-4 h-4 text-emerald-500" />;
       default:               return <Bell          className="w-4 h-4 text-gray-500" />;
     }
   };

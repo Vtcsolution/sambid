@@ -145,6 +145,7 @@ export default function AdminNotifications() {
       case 'ticket_created':    return <Mail className="w-5 h-5 text-red-500" />;
       case 'ticket_reply':      return <Send className="w-5 h-5 text-indigo-500" />;
       case 'suggestion':        return <Bell className="w-5 h-5 text-pink-500" />;
+      case 'email_opened':      return <Mail className="w-5 h-5 text-emerald-500" />;
       default:                  return <Bell className="w-5 h-5 text-gray-500" />;
     }
   };
@@ -163,6 +164,7 @@ export default function AdminNotifications() {
       case 'ticket_created':     return 'bg-red-50 border-red-200';
       case 'ticket_reply':       return 'bg-indigo-50 border-indigo-200';
       case 'suggestion':         return 'bg-pink-50 border-pink-200';
+      case 'email_opened':       return 'bg-emerald-50 border-emerald-200';
       default:                   return 'bg-gray-50 border-gray-200';
     }
   };

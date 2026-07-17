@@ -5,6 +5,7 @@ import ContactInquiry from '../models/ContactInquiry.js';
 import SavedOpportunity from '../models/SavedOpportunity.js';
 import AdminNotification from '../models/admin/AdminNotification.js';
 import CampaignLog from '../models/admin/CampaignLog.js';
+import TrackedEmail from '../models/TrackedEmail.js';
 import { openaiChat as chat } from '../services/geminiService.js';
 import { sendBroadcastEmailToSegment } from '../services/emailService.js';
 
@@ -456,7 +457,7 @@ export const sendCampaign = async (req, res) => {
       const recipients = [];
       for (const user of users) {
         try {
-          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid', fromAlias);
+          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid', fromAlias, log._id);
           sent++;
           recipients.push({ name: user.name || '', email: user.email, delivered: true });
           await new Promise(r => setTimeout(r, 200));
@@ -509,6 +510,25 @@ export const getCampaignHistory = async (req, res) => {
         .lean(),
       CampaignLog.countDocuments(filter),
     ]);
+
+    // Attach open-tracking stats (pixel opens recorded in TrackedEmail)
+    const logIds = logs.map(l => l._id);
+    if (logIds.length > 0) {
+      const opens = await TrackedEmail.find(
+        { campaign: { $in: logIds }, openedAt: { $ne: null } },
+        'campaign recipientEmail openedAt openCount'
+      ).lean();
+      const byCampaign = {};
+      for (const o of opens) {
+        const key = o.campaign.toString();
+        (byCampaign[key] ||= []).push({ email: o.recipientEmail, openedAt: o.openedAt, openCount: o.openCount });
+      }
+      for (const log of logs) {
+        const opened = byCampaign[log._id.toString()] || [];
+        log.opened = opened.length;
+        log.openedRecipients = opened;
+      }
+    }
 
     res.json({ success: true, data: { logs, total, page, pages: Math.ceil(total / limit) } });
   } catch (err) {

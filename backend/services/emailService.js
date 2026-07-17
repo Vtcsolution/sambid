@@ -1,7 +1,9 @@
 // backend/services/emailService.js
 import nodemailer from 'nodemailer';
+import { randomBytes } from 'crypto';
 import User from '../models/User.js';
 import Opportunity from '../models/Opportunity.js';
+import TrackedEmail from '../models/TrackedEmail.js';
 import { price } from './planPricingService.js';
 
 // Lazy transporter — reads env vars at first use so admin updates take effect.
@@ -34,6 +36,37 @@ const transporter = {
 
 // Called by settingsService after admin updates SMTP credentials
 export const resetEmailTransporter = () => { _transporter = null; };
+
+// ── Open tracking for "normal" emails (plan / payment / trial / campaigns) ────
+// Injects a 1x1 pixel and records a TrackedEmail doc. When the recipient opens
+// the email, /api/track/email-open/:trackingId fires an admin notification.
+// Deliberately NOT used for bulk opportunity/deadline emails — the volume would
+// flood the admin panel.
+const TRACK_BASE_URL = () =>
+  process.env.TRACK_BASE_URL || process.env.FRONTEND_URL || 'https://sambid.co';
+
+export const sendTrackedMail = async (options, { emailType = 'other', recipientName = '', userId = null, campaignId = null } = {}) => {
+  try {
+    const trackingId = randomBytes(16).toString('hex');
+    const pixel = `<img src="${TRACK_BASE_URL()}/api/track/email-open/${trackingId}" width="1" height="1" style="display:none;border:0;" alt="">`;
+    options.html = options.html.includes('</body>')
+      ? options.html.replace('</body>', `${pixel}</body>`)
+      : options.html + pixel;
+    await TrackedEmail.create({
+      trackingId,
+      recipientEmail: options.to,
+      recipientName,
+      user: userId,
+      campaign: campaignId,
+      emailType,
+      subject: options.subject,
+    });
+  } catch (err) {
+    // Tracking failure must never block the actual email
+    console.error('[sendTrackedMail] tracking setup failed:', err.message);
+  }
+  return transporter.sendMail(options);
+};
 
 // Sambid logo for email headers — must be a hosted PNG (email clients strip
 // SVG). apple-touch-icon.png is the square bell icon served by the frontend.
@@ -216,12 +249,12 @@ export const sendTrialReminder = async (user, daysLeft) => {
     </div>
   `;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from: FROM.noreply(),
     to: user.email,
     subject: `${daysLeft} days left in your free trial - Upgrade to continue`,
     html: emailHtml
-  });
+  }, { emailType: 'trial_reminder', recipientName: user.name, userId: user._id });
   
   console.log(`📧 Trial reminder sent to ${user.email} (${daysLeft} days left)`);
 };
@@ -367,12 +400,12 @@ export const sendTrialExpiredNotification = async (user) => {
     </div>
   `;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from: FROM.noreply(),
     to: user.email,
     subject: 'Your free trial has ended - Choose a plan to continue',
     html: emailHtml
-  });
+  }, { emailType: 'trial_expired', recipientName: user.name, userId: user._id });
   
   console.log(`📧 Trial expired notification sent to ${user.email}`);
 };
@@ -657,12 +690,12 @@ export const sendPlanActivatedEmail = async ({ name, email, planName, planExpire
     </div>
   `;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from: FROM.billing(),
     to: email,
     subject: `🎉 Your ${planLabel} Plan is Now Active — Welcome aboard!`,
     html,
-  });
+  }, { emailType: 'plan_activated', recipientName: name });
 
   console.log(`📧 Plan activation email sent to ${email}`);
 };
@@ -787,12 +820,12 @@ export const sendPaymentConfirmationEmail = async ({ name, email, planName, amou
       </div>
     </div>`;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from: FROM.billing(),
     to: email,
     subject: `✅ Payment confirmed — ${planLabel} plan activated ($${amount})`,
     html,
-  });
+  }, { emailType: 'payment_confirmation', recipientName: name });
 
   console.log(`📧 Payment confirmation email sent to ${email} (${planLabel} $${amount})`);
 };
@@ -971,7 +1004,7 @@ const resolveCampaignFromAddress = (fromAlias) => {
   return map[fromAlias] || process.env.SMTP_USER || process.env.EMAIL_USER;
 };
 
-export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid', fromAlias = 'main') => {
+export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid', fromAlias = 'main', campaignLogId = null) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   const year = new Date().getFullYear();
   const formattedBody = formatCampaignBody(rawBody);
@@ -1031,12 +1064,12 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
 </body>
 </html>`;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from:    `"${fromName}" <${resolveCampaignFromAddress(fromAlias)}>`,
     to:      user.email,
     subject,
     html,
-  });
+  }, { emailType: 'campaign', recipientName: user.name, userId: user._id, campaignId: campaignLogId });
 };
 
 /**
@@ -1527,12 +1560,12 @@ export const sendPaymentInstructionsEmail = async ({
       </div>
     </div>`;
 
-  await transporter.sendMail({
+  await sendTrackedMail({
     from: FROM.billing(),
     to,
     subject: `Payment Instructions — ${planLabel} ($${Number(amount).toLocaleString()}) [Ref: ${reference}]`,
     html,
-  });
+  }, { emailType: 'payment_instructions', recipientName: userName || '' });
   console.log(`📧 Payment instructions sent to ${to} (ref: ${reference})`);
 };
 

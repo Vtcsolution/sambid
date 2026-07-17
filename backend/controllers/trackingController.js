@@ -3,6 +3,9 @@
 // Called by email clients (pixel load = open, link click = click).
 
 import Prospect from '../models/Prospect.js';
+import TrackedEmail from '../models/TrackedEmail.js';
+import AdminNotification from '../models/admin/AdminNotification.js';
+import { emitToAdmins } from '../socket.js';
 
 // 1x1 transparent PNG — returned immediately for open tracking
 const PIXEL = Buffer.from(
@@ -35,6 +38,72 @@ export const trackOpen = async (req, res) => {
     );
   } catch (err) {
     console.error('[track-open]', err.message);
+  }
+};
+
+// Open tracking for normal user emails (plan / payment / trial / campaigns).
+// Notifies admins ONCE per email — on the first open only, so repeat opens
+// (or a campaign to a large segment) never flood the admin panel.
+const EMAIL_TYPE_LABELS = {
+  plan_activated:       'Plan Activated email',
+  payment_confirmation: 'Payment Confirmation email',
+  payment_instructions: 'Payment Instructions email',
+  trial_reminder:       'Trial Reminder email',
+  trial_expired:        'Trial Expired email',
+  campaign:             'Campaign email',
+  other:                'email',
+};
+
+export const trackEmailOpen = async (req, res) => {
+  const { trackingId } = req.params;
+
+  // Return pixel immediately — don't keep the email client waiting
+  res.set('Content-Type', 'image/png');
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+  res.send(PIXEL);
+
+  if (!trackingId) return;
+
+  try {
+    const now = new Date();
+    // Returns the PRE-update doc — openedAt === null means this is the first open
+    const doc = await TrackedEmail.findOneAndUpdate(
+      { trackingId },
+      { $inc: { openCount: 1 }, $set: { lastOpenedAt: now } },
+      { new: false }
+    );
+    if (!doc || doc.openedAt) return; // unknown id, or already notified
+
+    await TrackedEmail.updateOne({ trackingId }, { $set: { openedAt: now } });
+
+    const who = doc.recipientName || doc.recipientEmail;
+    const label = EMAIL_TYPE_LABELS[doc.emailType] || 'email';
+    const notification = await AdminNotification.create({
+      title:   `📬 Email opened by ${who}`,
+      message: `${who} (${doc.recipientEmail}) opened the ${label}: "${doc.subject}"`,
+      type:     'email_opened',
+      priority: 'low',
+      metadata: {
+        recipientEmail: doc.recipientEmail,
+        recipientName:  doc.recipientName,
+        emailType:      doc.emailType,
+        subject:        doc.subject,
+        sentAt:         doc.sentAt,
+        userId:         doc.user,
+      },
+    });
+
+    emitToAdmins('email:opened', {
+      notificationId: notification._id,
+      recipientEmail: doc.recipientEmail,
+      recipientName:  doc.recipientName,
+      emailType:      doc.emailType,
+      subject:        doc.subject,
+      openedAt:       now,
+    });
+  } catch (err) {
+    console.error('[track-email-open]', err.message);
   }
 };
 

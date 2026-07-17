@@ -1514,6 +1514,9 @@ export default function AdminCampaigns() {
                               {log.failed > 0 && (
                                 <span className="text-xs text-red-500">{log.failed} failed</span>
                               )}
+                              {log.opened > 0 && (
+                                <span className="text-xs font-semibold text-emerald-600">👁 {log.opened} opened</span>
+                              )}
                             </div>
                           </div>
                           <div className="text-right shrink-0">
@@ -1530,10 +1533,11 @@ export default function AdminCampaigns() {
 
                         {isExpanded && (
                           <div className="mt-3 space-y-3">
-                            <div className="grid grid-cols-4 gap-3">
+                            <div className="grid grid-cols-5 gap-3">
                               {[
                                 { label: 'Total',     val: log.totalUsers, color: 'text-gray-700'  },
                                 { label: 'Delivered', val: log.sent,       color: 'text-green-700' },
+                                { label: 'Opened',    val: log.opened || 0, color: 'text-emerald-600' },
                                 { label: 'Failed',    val: log.failed,     color: 'text-red-600'   },
                                 { label: 'Rate', val: log.totalUsers > 0 ? `${Math.round((log.sent/log.totalUsers)*100)}%` : '-', color: 'text-indigo-700' },
                               ].map(({ label, val, color }) => (
@@ -1553,7 +1557,9 @@ export default function AdminCampaigns() {
                                   </p>
                                 </div>
                                 <div className="divide-y divide-gray-50 max-h-48 overflow-y-auto">
-                                  {log.recipients.map((r, i) => (
+                                  {log.recipients.map((r, i) => {
+                                    const openInfo = log.openedRecipients?.find(o => o.email === r.email);
+                                    return (
                                     <div key={i} className="flex items-center justify-between px-3 py-2">
                                       <div className="flex items-center gap-2 min-w-0">
                                         <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center shrink-0">
@@ -1564,15 +1570,24 @@ export default function AdminCampaigns() {
                                           <p className="text-xs text-gray-500 truncate">{r.email}</p>
                                         </div>
                                       </div>
-                                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ml-2 ${
-                                        r.delivered
-                                          ? 'bg-green-100 text-green-700'
-                                          : 'bg-red-100 text-red-600'
-                                      }`}>
-                                        {r.delivered ? '✓ Sent' : '✗ Failed'}
-                                      </span>
+                                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                                        {openInfo && (
+                                          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"
+                                            title={`First opened ${new Date(openInfo.openedAt).toLocaleString()} · ${openInfo.openCount} open${openInfo.openCount !== 1 ? 's' : ''}`}>
+                                            👁 Opened
+                                          </span>
+                                        )}
+                                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                          r.delivered
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-red-100 text-red-600'
+                                        }`}>
+                                          {r.delivered ? '✓ Sent' : '✗ Failed'}
+                                        </span>
+                                      </div>
                                     </div>
-                                  ))}
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
