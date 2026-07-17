@@ -422,10 +422,13 @@ export const updateProfile = async (req, res) => {
 
     await user.save();
 
-    // If NAICS codes changed → immediately distribute matching opportunities to this user's feed
+    // If NAICS codes changed → immediately distribute matching opportunities to
+    // this user's feed AND (first time only) send the instant "your first
+    // matched contracts" email — grabs the new user's attention right away
+    // instead of waiting for the hourly alert crons.
     if (naicsChanged && naicsCodes?.length > 0) {
-      import('../services/schedulerService.js').then(({ distributeToUser }) => {
-        distributeToUser(user).catch(e => console.warn('Post-NAICS distribution error:', e.message));
+      import('../services/schedulerService.js').then(({ sendFirstMatchesNow }) => {
+        sendFirstMatchesNow(user).catch(e => console.warn('First-matches email error:', e.message));
       }).catch(() => {});
     }
 
@@ -495,6 +498,14 @@ export const verifyEmail = async (req, res) => {
       userEmail: user.email,
       details: { 'Plan': user.plan },
     }).catch(() => {});
+
+    // If they already set NAICS codes before verifying, send their instant
+    // "first matched contracts" email right now (fire-and-forget, once ever)
+    if (user.naicsCodes?.length) {
+      import('../services/schedulerService.js').then(({ sendFirstMatchesNow }) => {
+        sendFirstMatchesNow(user).catch(e => console.warn('First-matches email error:', e.message));
+      }).catch(() => {});
+    }
 
     res.json({ success: true, message: 'Email verified successfully!' });
   } catch (error) {

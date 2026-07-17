@@ -2014,6 +2014,62 @@ export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
 };
 
 /**
+ * Instant "first matches" email — sent the moment a new user's NAICS codes
+ * produce their first matched opportunities (no waiting for the hourly crons).
+ * Trial/free users get MASKED teaser rows (nothing searchable on SAM.gov) plus
+ * the total match count to create pull toward the dashboard and the upgrade.
+ */
+export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
+  const frontendUrl = process.env.FRONTEND_URL || 'https://sambid.co';
+  const isLimited = ['trial', 'free'].includes(user.plan);
+
+  const rows = opps.slice(0, 3).map((opp, i) => {
+    const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
+    const due = opp.dueDate
+      ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : '—';
+    const titleHtml = isLimited
+      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
+      : `${opp.title || 'Untitled opportunity'}`;
+    return `
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:10px 0;">
+        <p style="margin:0 0 6px;font-size:15px;font-weight:bold;color:#1f2937;">${titleHtml}</p>
+        <table style="width:100%;font-size:13px;color:#4b5563;border-collapse:collapse;">
+          <tr><td style="padding:2px 0;width:110px;"><strong>Agency</strong></td><td>${topAgency}</td></tr>
+          ${opp.estimatedValue ? `<tr><td style="padding:2px 0;"><strong>Value</strong></td><td>$${Number(opp.estimatedValue).toLocaleString()}</td></tr>` : ''}
+          ${opp.setAside ? `<tr><td style="padding:2px 0;"><strong>Set-Aside</strong></td><td>${opp.setAside}</td></tr>` : ''}
+          <tr><td style="padding:2px 0;"><strong>Deadline</strong></td><td style="color:#dc2626;font-weight:bold;">${due}</td></tr>
+        </table>
+      </div>`;
+  }).join('');
+
+  const moreCount = Math.max(0, totalMatches - opps.length);
+  const html = `
+    ${_deadlineHdr('linear-gradient(135deg,#6366f1,#8b5cf6)', '🎯', 'Your First Matched Contracts Are In')}
+    <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+      <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
+      <p style="color:#4b5563;">Great news — your NAICS codes just matched <strong>${totalMatches || opps.length} active federal contract${(totalMatches || opps.length) !== 1 ? 's' : ''}</strong> in our database. Here ${opps.length === 1 ? 'is the first one' : 'are your first matches'}:</p>
+      ${rows}
+      ${moreCount > 0 ? `<p style="color:#6b7280;font-size:14px;text-align:center;margin:14px 0;">…and <strong>${moreCount} more matched contract${moreCount !== 1 ? 's' : ''}</strong> ${isLimited ? 'locked on your current plan' : 'waiting in your feed'}.</p>` : ''}
+      <div style="margin:18px 0;text-align:center;">
+        <a href="${frontendUrl}/opportunities"
+           style="background:#6366f1;color:white;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block;">
+          View My Matches →
+        </a>
+      </div>
+      ${isLimited ? `<p style="color:#6b7280;font-size:13px;text-align:center;">Your plan shows ${opps.length} match${opps.length !== 1 ? 'es' : ''} per day. <a href="${frontendUrl}/pricing" style="color:#6366f1;font-weight:bold;">Upgrade</a> to unlock every match — full details, documents, contacts, and deadline alerts.</p>` : ''}
+      ${_deadlineFtr()}`;
+
+  await transporter.sendMail({
+    from: FROM.noreply(),
+    to: user.email,
+    subject: `🎯 ${totalMatches || opps.length} federal contract${(totalMatches || opps.length) !== 1 ? 's' : ''} matched to your business`,
+    html,
+  });
+  console.log(`📧 Welcome matches email sent to ${user.email} (${opps.length} shown, ${totalMatches} total)`);
+};
+
+/**
  * "Upcoming deadline" — first notice when an opp enters the user's alert window
  */
 export const sendDeadlineUpcomingAlert = async (user, opp, daysLeft) => {

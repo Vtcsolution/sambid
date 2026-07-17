@@ -566,6 +566,54 @@ export const startScheduler = () => {
 // On-demand distribution for a single user.
 export { distributeToUser };
 
+// ── Instant first-matches email ────────────────────────────────────────────────
+// Called right after a new user's NAICS codes are saved (and after email
+// verification): distributes matches immediately, then sends the one-time
+// "your first matched contracts" email — no waiting for the hourly crons.
+// Guarded by user.welcomeMatchesSentAt so it can never send twice.
+export const sendFirstMatchesNow = async (userDoc) => {
+  try {
+    const { default: User } = await import('../models/User.js');
+    const { default: UserOpportunity } = await import('../models/UserOpportunity.js');
+    const { default: Opportunity } = await import('../models/Opportunity.js');
+    const { sendWelcomeMatchesEmail } = await import('./emailService.js');
+
+    const user = await User.findById(userDoc._id || userDoc);
+    if (!user) return;
+    if (!user.naicsCodes?.length) return;                // nothing to match yet
+
+    // Always refresh their feed on a NAICS change (this replaced the direct
+    // distributeToUser call at the trigger sites) …
+    await distributeToUser(user).catch(() => {});
+
+    // … but the welcome email itself goes out only once, ever.
+    if (user.welcomeMatchesSentAt) return;
+    if (user.emailAlertsEnabled === false) return;
+
+    const feed = await UserOpportunity.find({ user: user._id })
+      .sort({ fetchedAt: -1 })
+      .limit(3)
+      .populate('opportunity')
+      .lean();
+    const opps = feed.map(f => f.opportunity).filter(Boolean);
+    if (opps.length === 0) return; // no matches yet — the crons will cover it later
+
+    // Total active matches across the master store — the hunger number
+    const naicsPrefixes = [...new Set(user.naicsCodes.map(c => String(c).slice(0, 4)))];
+    const totalMatches = await Opportunity.countDocuments({
+      dueDate: { $gt: new Date() },
+      naicsCode: { $in: naicsPrefixes.map(p => new RegExp(`^${p}`)) },
+    }).catch(() => opps.length);
+
+    await sendWelcomeMatchesEmail(user, opps, totalMatches || opps.length);
+
+    user.welcomeMatchesSentAt = new Date();
+    await user.save({ validateBeforeSave: false });
+  } catch (err) {
+    console.error('sendFirstMatchesNow error:', err.message);
+  }
+};
+
 // Manual trigger (used by admin refresh endpoint)
 export const triggerManualFetch = async () => {
   console.log('🔧 Manual fetch triggered');

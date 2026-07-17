@@ -47,6 +47,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  // One-time "first matched contracts" email — sent immediately after the
+  // user's NAICS codes produce their first matches (no waiting for crons).
+  welcomeMatchesSentAt: {
+    type: Date,
+    default: null,
+  },
   // Trial tracking
   trialStartDate: {
     type: Date,
