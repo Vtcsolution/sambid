@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, Zap, AlertCircle, CheckCircle,
   TrendingUp, Shield, Target, Award,
+  XCircle, Users, SlidersHorizontal, FileText, BellRing, Timer,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import SEOHead from '../components/SEOHead';
@@ -46,19 +47,33 @@ function FlowChip({ kind, children }) {
   );
 }
 
-const BEFORE = [
-  '20-person team monitoring SAM.gov manually',
-  '150 solicitations/day - 90% irrelevant',
-  '$50,000/proposal for a human writer',
-  'Missed deadlines, wrong NAICS, lost bids',
-  'Bid decision: 3 days + consultant fees',
-];
-const AFTER = [
-  '1–2 people, fully automated daily discovery',
-  'Only matched, scored, ranked opportunities',
-  'AI proposal draft in under 3 minutes',
-  'Alerts at 7d / 24h / 1h - never miss a deadline',
-  'Go/No-Go answer in 30 seconds',
+// Row-by-row transformation: each pain sits directly across from its fix
+const COMPARE = [
+  {
+    icon: Users, topic: 'Team Size',
+    before: <><strong className="text-gray-900">20-person team</strong> monitoring SAM.gov manually, every day</>,
+    after:  <><strong className="text-gray-900">1–2 people</strong> — discovery runs fully automated while you sleep</>,
+  },
+  {
+    icon: SlidersHorizontal, topic: 'Daily Noise',
+    before: <><strong className="text-gray-900">150 solicitations/day</strong> — 90% completely irrelevant</>,
+    after:  <>Only <strong className="text-gray-900">matched, scored &amp; ranked</strong> opportunities reach you</>,
+  },
+  {
+    icon: FileText, topic: 'Proposal Cost',
+    before: <><strong className="text-gray-900">$50,000 per proposal</strong> for a human proposal writer</>,
+    after:  <>AI drafts the full proposal in <strong className="text-gray-900">under 3 minutes</strong></>,
+  },
+  {
+    icon: BellRing, topic: 'Deadlines',
+    before: <>Missed deadlines, wrong NAICS codes, <strong className="text-gray-900">lost bids</strong></>,
+    after:  <>Alerts at <strong className="text-gray-900">7 days / 24 hours / 1 hour</strong> — on every device</>,
+  },
+  {
+    icon: Timer, topic: 'Bid Decision',
+    before: <><strong className="text-gray-900">3 days</strong> of analysis + consultant fees per decision</>,
+    after:  <>Data-backed <strong className="text-gray-900">Go/No-Go answer in 30 seconds</strong></>,
+  },
 ];
 
 const HERO_STATS = [
@@ -413,9 +428,9 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* ── Before / After - full detail ─────────────────────── */}
+      {/* ── Before / After - row-by-row transformation ───────── */}
       <section className="py-14 sm:py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-10">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               The Problem We Solve
@@ -423,43 +438,84 @@ export default function HowItWorks() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               What Changes When You Use Sambid
             </h2>
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+              Five things every contractor will recognize — each pain, and exactly what it becomes.
+            </p>
           </FadeIn>
 
           <FadeIn>
-            <div className="grid md:grid-cols-[1fr_56px_1fr] rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-              <div className="bg-red-50 p-6 sm:p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-                  <span className="text-xs font-bold text-red-500 uppercase tracking-wider">Without Sambid - Today</span>
+            <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-lg shadow-indigo-100/50 bg-white">
+
+              {/* Column headers */}
+              <div className="hidden md:grid md:grid-cols-[1fr_64px_1fr]">
+                <div className="bg-gradient-to-r from-red-500 to-rose-500 px-8 py-4 flex items-center gap-2.5">
+                  <XCircle className="w-5 h-5 text-white/90" />
+                  <span className="text-sm font-bold text-white uppercase tracking-wider">Without Sambid — Today</span>
                 </div>
-                <ul className="space-y-3">
-                  {BEFORE.map((t, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex items-center justify-center bg-white border-y md:border-y-0 md:border-x border-gray-200 py-6 md:py-0">
-                <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <ArrowRight className="w-4 h-4 text-indigo-600" />
+                <div className="bg-white flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-300">
+                    <ArrowRight className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <div className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-4 flex items-center gap-2.5">
+                  <CheckCircle className="w-5 h-5 text-white/90" />
+                  <span className="text-sm font-bold text-white uppercase tracking-wider">With Sambid — Tomorrow</span>
                 </div>
               </div>
-              <div className="bg-green-50 p-6 sm:p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
-                  <span className="text-xs font-bold text-green-600 uppercase tracking-wider">With Sambid - Tomorrow</span>
-                </div>
-                <ul className="space-y-3">
-                  {AFTER.map((t, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+
+              {/* Comparison rows */}
+              <div className="divide-y divide-gray-100">
+                {COMPARE.map((row, i) => {
+                  const Icon = row.icon;
+                  return (
+                    <div key={i} className="grid md:grid-cols-[1fr_64px_1fr] group">
+
+                      {/* Before cell */}
+                      <div className="bg-red-50/50 group-hover:bg-red-50 transition-colors px-6 sm:px-8 py-5 flex items-start gap-3.5">
+                        <div className="md:hidden w-7 h-7 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-0.5">
+                          <XCircle className="w-4 h-4 text-red-500" />
+                        </div>
+                        <XCircle className="hidden md:block w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1">{row.topic}</p>
+                          <p className="text-sm sm:text-[15px] text-gray-600 leading-relaxed">{row.before}</p>
+                        </div>
+                      </div>
+
+                      {/* Center icon */}
+                      <div className="hidden md:flex items-center justify-center bg-white">
+                        <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-colors">
+                          <Icon className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
+                        </div>
+                      </div>
+
+                      {/* After cell */}
+                      <div className="bg-emerald-50/50 group-hover:bg-emerald-50 transition-colors px-6 sm:px-8 py-5 flex items-start gap-3.5 border-t md:border-t-0 border-gray-100">
+                        <div className="md:hidden w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <CheckCircle className="hidden md:block w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">{row.topic}</p>
+                          <p className="text-sm sm:text-[15px] text-gray-600 leading-relaxed">{row.after}</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })}
               </div>
+
+              {/* Summary strip */}
+              <div className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 px-6 sm:px-8 py-5 text-center">
+                <p className="text-sm sm:text-base text-indigo-100 font-medium">
+                  <span className="text-white font-bold">20 people → 2.</span>{' '}
+                  <span className="text-white font-bold">$50,000 → 3 minutes.</span>{' '}
+                  <span className="text-white font-bold">3 days → 30 seconds.</span>{' '}
+                  <span className="text-indigo-300">That's the change.</span>
+                </p>
+              </div>
+
             </div>
           </FadeIn>
         </div>
@@ -467,7 +523,7 @@ export default function HowItWorks() {
 
       {/* ── Stats bar ─────────────────────────────────────────── */}
       <section className="py-12 bg-white border-y border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-gray-400 text-xs uppercase tracking-widest mb-8">
             Federal Market - At a Glance
           </p>
@@ -490,7 +546,7 @@ export default function HowItWorks() {
 
       {/* ── AI Engine ─────────────────────────────────────────── */}
       <section className="py-14 sm:py-20 bg-gradient-to-br from-indigo-50 to-blue-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-8">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               The Intelligence Layer
@@ -519,9 +575,9 @@ export default function HowItWorks() {
       </section>
 
       {/* ── 17 Pain Points ────────────────────────────────────── */}
-      <section className="py-14 sm:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeIn className="text-center mb-10">
+      <section className="py-14 sm:py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeIn className="text-center mb-12">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               17 Problems. 17 Solutions.
             </span>
@@ -533,44 +589,77 @@ export default function HowItWorks() {
             </p>
           </FadeIn>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {PAIN_POINTS.map((pp, idx) => (
               <FadeIn key={pp.num} delay={Math.min(idx * 30, 150)}>
-                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+                <div className="relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:shadow-indigo-100 hover:border-indigo-200 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
+
+                  {/* Giant watermark number */}
+                  <span className="absolute -top-4 right-4 text-[110px] font-black leading-none text-indigo-50 select-none pointer-events-none">
+                    {pp.num}
+                  </span>
 
                   {/* Card header - number + title */}
-                  <div className="flex items-start gap-4 px-5 sm:px-6 pt-5 sm:pt-6 pb-3">
-                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="relative flex items-center gap-4 px-5 sm:px-7 pt-6 pb-4">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-md shadow-indigo-200">
                       {pp.num}
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-gray-900 leading-snug pt-1">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug pr-14">
                       {pp.title}
                     </h3>
                   </div>
 
-                  {/* Pain badge */}
-                  <div className="mx-5 sm:mx-6 mb-4 flex items-start gap-2.5 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
-                    <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                    <p className="text-xs sm:text-sm text-red-700 font-medium leading-relaxed">
-                      {pp.pain}
-                    </p>
+                  {/* Problem | Fix - two panels side by side */}
+                  <div className="relative grid lg:grid-cols-2 gap-4 px-5 sm:px-7 pb-4">
+
+                    <div className="bg-red-50/70 border border-red-100 rounded-xl p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
+                          <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+                        </div>
+                        <span className="text-[11px] font-bold text-red-500 uppercase tracking-widest">The Problem</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {pp.pain}
+                      </p>
+                    </div>
+
+                    <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                        </div>
+                        <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">The Sambid Fix</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {pp.solve}
+                      </p>
+                    </div>
+
                   </div>
 
-                  {/* Solution text */}
-                  <p className="px-5 sm:px-6 mb-4 text-sm text-gray-600 leading-relaxed">
-                    {pp.solve}
-                  </p>
-
-                  {/* Automated workflow flow */}
-                  <div className="mx-5 sm:mx-6 mb-5 sm:mb-6 bg-indigo-50 rounded-xl px-4 py-3.5">
-                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2.5">
-                      Automated Workflow
-                    </p>
-                    <div className="flex flex-wrap items-center gap-1.5">
+                  {/* Automated workflow strip */}
+                  <div className="relative mx-5 sm:mx-7 mb-6 bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl px-4 sm:px-5 py-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Zap className="w-3.5 h-3.5 text-amber-400" />
+                      <p className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest">
+                        Automated Workflow
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
                       {pp.flow.map((item, i) =>
                         item.sep
-                          ? <span key={i} className="text-gray-400 text-xs font-bold shrink-0">{item.sep}</span>
-                          : <FlowChip key={i} kind={item.kind}>{item.label}</FlowChip>
+                          ? <span key={i} className="text-indigo-400 text-sm font-bold shrink-0">{item.sep}</span>
+                          : (
+                            <span key={i} className={`inline-flex text-xs font-semibold px-2.5 py-1 rounded-full border leading-snug ${
+                              item.kind === 'out'  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' :
+                              item.kind === 'eng'  ? 'bg-sky-500/15 text-sky-300 border-sky-500/30' :
+                              item.kind === 'gold' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' :
+                                                     'bg-white/10 text-indigo-100 border-white/15'
+                            }`}>
+                              {item.label}
+                            </span>
+                          )
                       )}
                     </div>
                   </div>
