@@ -91,7 +91,7 @@ function DayPanel({ date, events, onClose }) {
           {events.map((e) => {
             const u = urgencyOf(e);
             return (
-              <div key={e.id} className="p-4 hover:bg-gray-50 transition-colors">
+              <div key={e.id} className={`p-4 transition-colors ${e.locked ? 'bg-indigo-50/40' : 'hover:bg-gray-50'}`}>
                 {/* Urgency + saved badge */}
                 <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${URGENCY[u].badge}`}>
@@ -99,6 +99,11 @@ function DayPanel({ date, events, onClose }) {
                      e.daysLeft === 0 ? 'Due TODAY' :
                      `${e.daysLeft}d left`}
                   </span>
+                  {e.locked && (
+                    <span className="text-[10px] bg-indigo-100 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded-full font-semibold">
+                      🔒 Locked
+                    </span>
+                  )}
                   {e.isSaved && (
                     <span className="text-[10px] bg-indigo-100 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
                       <Bookmark className="w-2.5 h-2.5" /> {e.savedStatus || 'Saved'}
@@ -114,7 +119,7 @@ function DayPanel({ date, events, onClose }) {
                 </div>
 
                 {/* Title */}
-                <p className="text-sm font-semibold text-gray-900 leading-snug mb-1 line-clamp-2">
+                <p className={`text-sm font-semibold leading-snug mb-1 line-clamp-2 ${e.locked ? 'text-gray-400' : 'text-gray-900'}`}>
                   {e.title}
                 </p>
 
@@ -135,12 +140,21 @@ function DayPanel({ date, events, onClose }) {
                   )}
                 </div>
 
-                <Link
-                  to={`/opportunity/${e.id}`}
-                  className="mt-2 inline-flex items-center gap-1 text-xs text-indigo-600 font-medium hover:underline"
-                >
-                  View details →
-                </Link>
+                {e.locked ? (
+                  <Link
+                    to="/pricing"
+                    className="mt-2 inline-flex items-center gap-1 text-xs text-white bg-indigo-600 hover:bg-indigo-700 font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    🔒 Unlock before the deadline →
+                  </Link>
+                ) : (
+                  <Link
+                    to={`/opportunity/${e.id}`}
+                    className="mt-2 inline-flex items-center gap-1 text-xs text-indigo-600 font-medium hover:underline"
+                  >
+                    View details →
+                  </Link>
+                )}
               </div>
             );
           })}
@@ -285,6 +299,27 @@ export default function DeadlineCalendar() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* ── Locked deadlines banner (trial/free) — real matched contracts
+             expiring behind the paywall. Professional, factual, urgent. ── */}
+        {stats?.lockedCount > 0 && (
+          <div className="mb-6 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl shadow-md p-5 sm:p-6 text-white flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex-1">
+              <p className="font-bold text-base sm:text-lg">
+                🔒 {stats.lockedCount} locked deadline{stats.lockedCount !== 1 ? 's' : ''} on your calendar this month
+                {stats.lockedValue > 0 && <> · worth {fmtVal(stats.lockedValue)}</>}
+              </p>
+              <p className="text-sm text-white/85 mt-1">
+                These are real contracts matched to your NAICS codes. When their deadlines pass,
+                they're gone — and another company wins them. Upgrade to see every one before it expires.
+              </p>
+            </div>
+            <Link to="/pricing"
+              className="shrink-0 self-start sm:self-center px-5 py-2.5 bg-white text-indigo-700 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-colors">
+              Unlock My Deadlines →
+            </Link>
           </div>
         )}
 

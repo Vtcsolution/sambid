@@ -342,6 +342,44 @@ export const getCalendarEvents = async (req, res) => {
       }
     });
 
+    // ── Locked deadlines (trial/free upsell) ────────────────────────────────
+    // Fill the calendar with the user's REAL matched deadlines beyond their
+    // plan cap — real dates, real values, masked identity. A calendar full of
+    // locked money with dates ticking closer sells harder than an empty one.
+    if (['trial', 'free'].includes(req.user.plan) && req.user.naicsCodes?.length > 0) {
+      try {
+        const feedIds = feedOpps.map(uo => uo.opportunity?._id).filter(Boolean);
+        const lockedOpps = await Opportunity.find({
+          naicsCode: { $in: req.user.naicsCodes },
+          dueDate: { $gte: windowStart, $lte: windowEnd },
+          source: { $ne: 'usaspending' },
+          _id: { $nin: feedIds },
+        }, 'agency dueDate estimatedValue setAside noticeType')
+          .sort({ dueDate: 1 })
+          .limit(20)
+          .lean();
+
+        for (const opp of lockedOpps) {
+          const key = dateKey(opp.dueDate);
+          if (!eventsMap[key]) eventsMap[key] = [];
+          if (eventsMap[key].some(e => e.id === opp._id.toString())) continue;
+          const daysLeft = Math.ceil((new Date(opp.dueDate) - new Date()) / 86400000);
+          eventsMap[key].push({
+            id:             opp._id.toString(),
+            locked:         true,
+            title:          '🔒 Matched contract — locked',
+            agency:         String(opp.agency || 'Federal agency').split('>')[0].trim(),
+            dueDate:        opp.dueDate,
+            estimatedValue: opp.estimatedValue || null,
+            naicsCode:      null,
+            setAside:       opp.setAside || null,
+            daysLeft,
+            urgency:        daysLeft <= 3 ? 'critical' : daysLeft <= 7 ? 'urgent' : daysLeft <= 14 ? 'soon' : 'normal',
+          });
+        }
+      } catch {}
+    }
+
     // Stats for the visible month only
     const monthEvents = Object.entries(eventsMap)
       .filter(([key]) => key >= dateKey(monthStart) && key <= dateKey(monthEnd))
@@ -353,7 +391,9 @@ export const getCalendarEvents = async (req, res) => {
       critical:       monthEvents.filter(e => e.urgency === 'critical' && new Date(e.dueDate) >= now).length,
       urgent:         monthEvents.filter(e => e.urgency === 'urgent'   && new Date(e.dueDate) >= now).length,
       upcoming:       monthEvents.filter(e => new Date(e.dueDate) >= now).length,
-      totalValue:     monthEvents.reduce((s, e) => s + (e.estimatedValue || 0), 0)
+      totalValue:     monthEvents.reduce((s, e) => s + (e.estimatedValue || 0), 0),
+      lockedCount:    monthEvents.filter(e => e.locked).length,
+      lockedValue:    monthEvents.filter(e => e.locked).reduce((s, e) => s + (e.estimatedValue || 0), 0),
     };
 
     res.json({ success: true, data: { events: eventsMap, stats, month: monthParam } });
