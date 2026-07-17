@@ -55,15 +55,15 @@ const FEATURES = [
     color: 'indigo',
     slug: 'contract-opportunities',
     title: 'Opportunity Discovery',
-    tagline: 'Find every contract that matches your business - automatically',
+    tagline: 'Find every contract that matches your business, automatically',
     description:
       'Sambid scans SAM.gov, USASpending.gov, and FPDS every day and delivers only the opportunities that match your NAICS codes, certifications, and agency preferences. No more manual searching.',
     points: [
       'Live SAM.gov data refreshed every morning',
-      'NAICS code matching - up to 5 codes on any plan',
+      'NAICS code matching: up to 5 codes on any plan',
       'Set-aside filtering: 8a, WOSB, HUBZone, SDVOSB, SDB',
       'Agency, value range, and keyword filters',
-      'Match score - see how closely each contract fits your profile',
+      'Match score shows how closely each contract fits your profile',
     ],
     badge: 'Core Feature',
   },
@@ -73,13 +73,13 @@ const FEATURES = [
     title: 'Smart Alerts',
     tagline: 'Know the moment a relevant contract is posted',
     description:
-      'Create keyword and criteria-based alert rules. The moment a matching contract appears on SAM.gov, Sambid notifies you - so you always respond before the competition even knows it exists.',
+      'Create keyword and criteria-based alert rules. The moment a matching contract appears on SAM.gov, Sambid notifies you, so you always respond before the competition even knows it exists.',
     points: [
       'Keyword and phrase-based alert triggers',
       'Filter alerts by agency, set-aside, and value range',
-      'Daily digest email - morning summary of new matches',
+      'Daily digest email: morning summary of new matches',
       'Real-time email alerts on Pro and Enterprise plans',
-      'Deadline reminders - 7 days, 3 days, and 1 day before',
+      'Deadline reminders at 7 days, 3 days, and 1 day before',
     ],
     badge: 'Core Feature',
   },
@@ -105,11 +105,11 @@ const FEATURES = [
     title: 'AI Win Predictions',
     tagline: 'Know your win probability before you invest time bidding',
     description:
-      'Our AI analyzes historical award data, competition level, agency patterns, and your company profile to give you a win probability score on every opportunity - so you bid smarter.',
+      'Our AI analyzes historical award data, competition level, agency patterns, and your company profile to give you a win probability score on every opportunity, so you bid smarter.',
     points: [
       'AI win probability score (0–100%) per contract',
       'Go/No-Go decision support with reasoning',
-      'Competition level analysis - low, medium, high',
+      'Competition level analysis: low, medium, high',
       'Agency preference patterns from historical awards',
       'Bid/no-bid recommendation with key factors',
     ],
@@ -127,7 +127,7 @@ const FEATURES = [
       'RFP requirement and evaluation criteria extraction',
       'Technical volume and management approach drafts',
       'Executive summary generator',
-      'Compliance matrix builder - maps requirements to your response',
+      'Compliance matrix builder that maps requirements to your response',
     ],
     badge: 'AI Powered',
   },
@@ -137,13 +137,13 @@ const FEATURES = [
     title: 'RFP Analyzer',
     tagline: 'Understand every requirement before you commit',
     description:
-      'Paste in any RFP and Sambid extracts the key requirements, evaluation criteria, deadlines, and compliance checklist - in seconds. Know exactly what the agency wants before writing a word.',
+      'Paste in any RFP and Sambid extracts the key requirements, evaluation criteria, deadlines, and compliance checklist in seconds. Know exactly what the agency wants before writing a word.',
     points: [
       'Instant requirement extraction from any RFP',
       'Evaluation criteria breakdown by weight',
       'Key dates and submission requirements',
-      'Compliance checklist - track what you\'ve addressed',
-      'Red flag detection - unusual clauses or requirements',
+      'Compliance checklist to track what you\'ve addressed',
+      'Red flag detection for unusual clauses or requirements',
     ],
     badge: 'AI Powered',
   },
@@ -185,7 +185,7 @@ const FEATURES = [
     title: 'Market Research',
     tagline: 'Understand the federal market before you enter it',
     description:
-      'Deep market intelligence on any NAICS code, agency, or contract type. See spending trends, competition levels, and the best agencies to target - before you invest in a new market.',
+      'Deep market intelligence on any NAICS code, agency, or contract type. See spending trends, competition levels, and the best agencies to target before you invest in a new market.',
     points: [
       'Agency spending trends by NAICS code',
       'Contract vehicle usage and award patterns',
@@ -219,7 +219,7 @@ const FEATURES = [
     description:
       'A visual Kanban-style pipeline for every bid you are pursuing. Move opportunities through stages, add notes, track team assignments, and never lose sight of where each bid stands.',
     points: [
-      'Kanban board - Discovery, Qualifying, Bidding, Submitted, Won/Lost',
+      'Kanban board with Discovery, Qualifying, Bidding, Submitted, Won/Lost stages',
       'Add notes and documents to each opportunity',
       'Team assignment and collaboration',
       'Pipeline value and win-rate tracking',
@@ -267,7 +267,7 @@ export default function Features() {
     <div className="bg-white overflow-hidden">
       <style>{ANIM_CSS}</style>
       <SEOHead
-        title="Sambid Features - Full Federal Contracting Platform"
+        title="Sambid Features: Full Federal Contracting Platform"
         description="Explore all Sambid features: AI opportunity matching, proposal writer, win predictions, deadline calendar, teaming finder, past performance intelligence, and more."
         keywords="federal contracting software features, SAM.gov automation, AI proposal writer, federal contract alerts, teaming finder, past performance, bid pipeline, AI government proposal generator, federal bid analysis tool, government contract risk assessment, RFP analyzer software, sources sought generator, federal capability statement builder, go no-go decision tool, federal contract competitive analysis, SAM.gov opportunity matching software"
         canonical="https://sambid.co/features"
@@ -286,7 +286,7 @@ export default function Features() {
               Every Feature You Need to Win Federal Contracts
             </h1>
             <p className="text-base sm:text-xl text-indigo-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-              From first discovery to signed award - Sambid covers the entire federal contracting lifecycle.
+              From first discovery to signed award, Sambid covers the entire federal contracting lifecycle.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
@@ -315,7 +315,7 @@ export default function Features() {
               { value: '12',    label: 'Platform features' },
               { value: '3',     label: 'AI-powered tools' },
               { value: '1',     label: 'Unified dashboard' },
-              { value: 'Free',  label: 'Trial - no card needed' },
+              { value: 'Free',  label: 'Trial, no card needed' },
             ].map((s, i) => (
               <div key={i}>
                 <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1">{s.value}</div>
@@ -403,7 +403,7 @@ export default function Features() {
             All Features. One Platform. Free to Try.
           </h2>
           <p className="text-base sm:text-xl text-indigo-100 mb-7 max-w-2xl mx-auto">
-            Start your free trial and explore every feature - no credit card, no commitment.
+            Start your free trial and explore every feature, no credit card, no commitment.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

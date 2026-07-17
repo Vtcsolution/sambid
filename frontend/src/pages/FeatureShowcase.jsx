@@ -70,7 +70,7 @@ export default function FeatureShowcase() {
   const featureJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: `${feature.title} - Sambid`,
+    name: `${feature.title} | Sambid`,
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     description: feature.subtitle,
@@ -81,8 +81,8 @@ export default function FeatureShowcase() {
   return (
     <div className="bg-white overflow-hidden">
       <SEOHead
-        title={`${feature.title} - Sambid`}
-        description={`${feature.subtitle} Try Sambid free - AI-powered federal contract discovery for small businesses.`}
+        title={`${feature.title} | Sambid`}
+        description={`${feature.subtitle} Try Sambid free. AI-powered federal contract discovery for small businesses.`}
         keywords={FEATURE_KEYWORDS[slug] || `${feature.title.toLowerCase()}, federal contracting software, SAM.gov tools, government contract platform`}
         canonical={`https://sambid.co/features/${slug}`}
         jsonLd={featureJsonLd}

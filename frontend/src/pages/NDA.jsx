@@ -59,7 +59,7 @@ export default function NDA() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Non-Disclosure Agreement - Sambid"
+        title="Non-Disclosure Agreement | Sambid"
         description="Sambid's standard NDA terms for enterprise clients, partners, and prospective customers evaluating our federal contract intelligence platform."
         keywords="Sambid NDA, non-disclosure agreement, federal contracting platform NDA, enterprise confidentiality agreement, government contracting software NDA"
         canonical="https://sambid.co/nda"

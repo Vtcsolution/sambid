@@ -75,7 +75,7 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <SEOHead
-        title="Terms of Service - Sambid"
+        title="Terms of Service | Sambid"
         description="Read Sambid's Terms of Service. Understand your rights and obligations when using our federal contract opportunity notification platform."
         keywords="Sambid terms of service, federal contracting software terms, SAM.gov platform user agreement, government contracting tool terms"
         canonical="https://sambid.co/terms"
