@@ -1,14 +1,16 @@
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 
-const signAdminToken = (id) =>
-  jwt.sign({ id, type: 'admin' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+// "Remember me" keeps the admin signed in for 30 days; otherwise the token
+// lasts one working day and the frontend also ends the session on browser close.
+const signAdminToken = (id, rememberMe = false) =>
+  jwt.sign({ id, type: 'admin' }, process.env.JWT_SECRET, { expiresIn: rememberMe ? '30d' : '1d' });
 
 // @desc    Admin login
 // @route   POST /api/admin-auth/login
 export const adminLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     if (!email || !password)
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
 
@@ -25,7 +27,7 @@ export const adminLogin = async (req, res) => {
     admin.lastLoginIP = req.ip || req.connection?.remoteAddress || '';
     await admin.save();
 
-    const token = signAdminToken(admin._id);
+    const token = signAdminToken(admin._id, !!rememberMe);
 
     console.log(`🔐 Admin login: ${admin.email} (${admin.role})`);
 

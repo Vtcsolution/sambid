@@ -29,6 +29,8 @@ adminApi.interceptors.response.use(
       localStorage.removeItem('adminName');
       localStorage.removeItem('adminEmail');
       localStorage.removeItem('adminRole');
+      localStorage.removeItem('adminPermissions');
+      localStorage.removeItem('adminRemember');
       redirectTo('/admin/login');
     }
     return Promise.reject(err);

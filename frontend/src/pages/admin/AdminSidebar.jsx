@@ -122,7 +122,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
   })).filter(group => group.items.length > 0);
 
   const handleLogout = () => {
-    ['adminToken', 'adminName', 'adminEmail', 'adminRole'].forEach(k => localStorage.removeItem(k));
+    ['adminToken', 'adminName', 'adminEmail', 'adminRole', 'adminPermissions', 'adminRemember'].forEach(k => localStorage.removeItem(k));
+    sessionStorage.removeItem('adminSessionLive');
     navigate('/admin/login');
   };
 

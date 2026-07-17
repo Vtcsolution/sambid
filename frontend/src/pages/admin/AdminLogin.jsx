@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { adminAuthAPI } from '../../services/adminApi';
@@ -6,17 +6,23 @@ import SambidLogo from '../../components/SambidLogo';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [form,    setForm]    = useState({ email: '', password: '' });
-  const [showPw,  setShowPw]  = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
+  const [form,     setForm]     = useState({ email: '', password: '' });
+  const [remember, setRemember] = useState(true);
+  const [showPw,   setShowPw]   = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
+
+  // Already signed in? Straight to the dashboard — no repeated logins.
+  useEffect(() => {
+    if (localStorage.getItem('adminToken')) navigate('/admin/dashboard', { replace: true });
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const res = await adminAuthAPI.login(form);
+      const res = await adminAuthAPI.login({ ...form, rememberMe: remember });
       const { token, admin } = res.data;
 
       localStorage.setItem('adminToken',       token);
@@ -24,6 +30,11 @@ export default function AdminLogin() {
       localStorage.setItem('adminEmail',       admin.email);
       localStorage.setItem('adminRole',        admin.role);
       localStorage.setItem('adminPermissions', JSON.stringify(admin.permissions || {}));
+      // Remember-me: 'true' keeps the session across browser restarts (30-day
+      // token). Without it, AdminRoute ends the session when the browser is
+      // reopened (the sessionStorage marker below disappears on close).
+      localStorage.setItem('adminRemember', remember ? 'true' : 'false');
+      sessionStorage.setItem('adminSessionLive', '1');
 
       console.log(`✅ Admin logged in: ${admin.email} (${admin.role})`);
       navigate('/admin/dashboard');
@@ -85,6 +96,16 @@ export default function AdminLogin() {
                 </button>
               </div>
             </div>
+
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={e => setRemember(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <span className="text-sm text-gray-600">Remember me — stay signed in for 30 days</span>
+            </label>
 
             {error && (
               <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
