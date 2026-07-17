@@ -17,7 +17,7 @@ const EMAIL_TYPES = [
   { id: 'campaign',   label: 'Win Campaign',       emoji: '🎯', desc: 'Better BD with less manual work' },
   { id: 'cost',       label: 'Cost Saving',        emoji: '💰', desc: '$29/mo vs $1,500+/mo competitors' },
   { id: 'time',       label: 'Time Saving',        emoji: '⏱️', desc: 'Save 8+ hrs/week on SAM.gov monitoring' },
-  { id: 'trial',      label: 'Free Trial',         emoji: '🎁', desc: '7-day Pro trial, no credit card' },
+  { id: 'trial',      label: 'Free Trial',         emoji: '🎁', desc: '3-day Pro trial, no credit card' },
   { id: 'pricing',    label: 'Pricing & Plans',    emoji: '📋', desc: 'Starter $29, Pro $79, Enterprise $499' },
   { id: 'success',    label: 'Success Stories',    emoji: '✅', desc: '40% more wins, +$180K avg revenue' },
   { id: 'followup',   label: 'Follow Up',          emoji: '🔁', desc: 'Gentle nudge after no reply' },

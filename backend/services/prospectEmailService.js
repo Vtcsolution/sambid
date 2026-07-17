@@ -210,11 +210,11 @@ export const EMAIL_TEMPLATES = {
     id: 'freetrial',
     name: 'Free Trial Offer',
     category: 'Conversion',
-    subject: '{{companyName}}: 7 days of federal contract intelligence, on us',
-    preview: 'No credit card. No commitment. Full Pro access for 7 days.',
+    subject: '{{companyName}}: 3 days of federal contract intelligence, on us',
+    preview: 'No credit card. No commitment. Full Pro access for 3 days.',
     buildHtml: (v) => wrap(`
-      ${h2(`${v.company} — your free 7-day Pro trial is reserved.`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we'd like to offer <strong>${v.company}</strong> a full ${highlight('7-day Pro trial')} of ${PLATFORM_NAME} — no credit card required.`)}
+      ${h2(`${v.company} — your free 3-day Pro trial is reserved.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we'd like to offer <strong>${v.company}</strong> a full ${highlight('3-day Pro trial')} of ${PLATFORM_NAME} — no credit card required.`)}
       ${p(`During your trial you'll have complete access to:`)}
       ${ul([
         `Unlimited AI-matched opportunity alerts for your NAICS codes`,
@@ -227,7 +227,7 @@ export const EMAIL_TEMPLATES = {
       ${divider()}
       <div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:16px;margin-bottom:24px;">
         <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:#854d0e;">
-          ⏰ <strong>This offer is available for the next 7 days.</strong> After that, trial access reverts to the free tier (5 alerts/month).
+          ⏰ <strong>This offer is available for the next 3 days.</strong> After that, trial access reverts to the free tier (5 alerts/month).
         </p>
       </div>
       ${cta(`Claim My Free 14-Day Pro Trial`, `${PLATFORM_URL}/trial?utm_source=outreach&utm_campaign=freetrial`)}
@@ -267,7 +267,7 @@ export const EMAIL_TEMPLATES = {
         `).join('')}
       </table>
       ${cta(`Start Free — Upgrade Anytime`, `${PLATFORM_URL}/pricing?utm_source=outreach&utm_campaign=pricing`)}
-      ${p(`All plans come with a <strong>7-day free trial</strong>. Cancel anytime.`)}
+      ${p(`All plans come with a <strong>3-day free trial</strong>. Cancel anytime.`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
   },
@@ -484,8 +484,8 @@ const TYPE_CONTEXT = {
   campaign:   'Explain how Sambid helps federal contractors run a better business development campaign — identify more opportunities, track competitors, and win more contracts with less manual work.',
   cost:       "Focus entirely on cost savings. Sambid starts at $29/mo vs competitors at $800–2,500/mo. Show the math on annual savings and what they could reinvest in BD or operations.",
   time:       'Focus entirely on time savings. Contractors spend 8+ hours per week monitoring SAM.gov manually. Sambid automates this completely with instant matching alerts.',
-  trial:      'Offer a free 7-day Pro trial of Sambid — no credit card required, full access to all features, easy cancellation. Create urgency with a 7-day window.',
-  pricing:    'Present Sambid pricing: Starter $29/mo ($278/yr), Pro $79/mo ($758/yr), Enterprise $499/mo ($4,788/yr — save 20%). All include 7-day free trial.',
+  trial:      'Offer a free 3-day Pro trial of Sambid — no credit card required, full access to all features, easy cancellation. Create urgency with a 3-day window.',
+  pricing:    'Present Sambid pricing: Starter $29/mo ($278/yr), Pro $79/mo ($758/yr), Enterprise $499/mo ($4,788/yr — save 20%). All include 3-day free trial.',
   success:    'Share success metrics: contractors on Sambid identify 40% more relevant opportunities per month, save 8 hours/week, and report an average of $180K in additional annual contract revenue.',
   followup:   "Write a gentle follow-up to someone who didn't respond to a previous Sambid email. Be brief (3 short paragraphs), remind them of the opportunity, and offer a 15-minute no-pitch demo.",
 };
@@ -517,7 +517,7 @@ const STATIC_TEMPLATES = {
   }),
   features: (v) => ({
     subject: `5 features that help ${v.company} win more federal contracts`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nFederal contracting is competitive — and manually monitoring SAM.gov takes hours every week. Sambid automates that work so your team can focus on winning.\n\nHere's what Sambid does for contractors like ${v.company}:\n\n1. AI Opportunity Matching — finds solicitations matched to your exact NAICS codes and past performance, not just keywords.\n2. Real-time SAM.gov Alerts — instant email and in-app notifications the moment a matching opportunity posts.\n3. Competitor Intelligence — see which companies are winning in your space and at what price.\n4. Teaming Partner Finder — connect with contractors who have complementary certifications for set-aside opportunities.\n5. Proposal Workspace — track your active bid pipeline with deadlines and documents in one place.\n\nStart a free 7-day trial at ${PLATFORM_URL} — no credit card required.\n\nBest regards,\nThe Sambid Team`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nFederal contracting is competitive — and manually monitoring SAM.gov takes hours every week. Sambid automates that work so your team can focus on winning.\n\nHere's what Sambid does for contractors like ${v.company}:\n\n1. AI Opportunity Matching — finds solicitations matched to your exact NAICS codes and past performance, not just keywords.\n2. Real-time SAM.gov Alerts — instant email and in-app notifications the moment a matching opportunity posts.\n3. Competitor Intelligence — see which companies are winning in your space and at what price.\n4. Teaming Partner Finder — connect with contractors who have complementary certifications for set-aside opportunities.\n5. Proposal Workspace — track your active bid pipeline with deadlines and documents in one place.\n\nStart a free 3-day trial at ${PLATFORM_URL} — no credit card required.\n\nBest regards,\nThe Sambid Team`,
   }),
   competitor: (v) => ({
     subject: `${v.company}: a smarter alternative to GovWin IQ`,
@@ -533,15 +533,15 @@ const STATIC_TEMPLATES = {
   }),
   time: (v) => ({
     subject: `${v.company}: get back 8 hours a week on federal contracting`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nFor most federal contractors, monitoring SAM.gov manually takes 6–10 hours per week. That's time your team could spend on proposals, client relationships, or certifications.\n\nSambid automates the entire monitoring process for ${v.company}. Instead of manually searching SAM.gov every day, you get an instant alert the moment a matching solicitation posts — based on your specific NAICS codes and past performance history.\n\nOne of our users put it well: "Before Sambid, our BD team spent 8 hours a week just monitoring SAM.gov. Now we get a morning digest with every matching opportunity — and we've added two new agency relationships in 6 months."\n\nSetup takes under 5 minutes. Start your free 7-day trial at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nFor most federal contractors, monitoring SAM.gov manually takes 6–10 hours per week. That's time your team could spend on proposals, client relationships, or certifications.\n\nSambid automates the entire monitoring process for ${v.company}. Instead of manually searching SAM.gov every day, you get an instant alert the moment a matching solicitation posts — based on your specific NAICS codes and past performance history.\n\nOne of our users put it well: "Before Sambid, our BD team spent 8 hours a week just monitoring SAM.gov. Now we get a morning digest with every matching opportunity — and we've added two new agency relationships in 6 months."\n\nSetup takes under 5 minutes. Start your free 3-day trial at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
   }),
   trial: (v) => ({
-    subject: `${v.company}: your free 7-day Sambid Pro trial`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI'd like to offer ${v.company} a free 7-day Pro trial of Sambid — no credit card required, no commitment, and full access to every feature.\n\nDuring your trial you'll have:\n- Unlimited AI-matched contract alerts for your NAICS codes\n- Real-time monitoring across SAM.gov, USASpending.gov, and FPDS\n- Full competitor intelligence dashboard\n- Teaming partner finder\n- Proposal pipeline workspace\n- Dedicated onboarding support\n\nThis offer is available for the next 7 days. After that, trial access reverts to the free tier (5 alerts/month).\n\nClaim your free trial at ${PLATFORM_URL} — setup takes under 5 minutes.\n\nAny questions? Reply to this email and we'll respond within a few hours.\n\nBest regards,\nThe Sambid Team`,
+    subject: `${v.company}: your free 3-day Sambid Pro trial`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI'd like to offer ${v.company} a free 3-day Pro trial of Sambid — no credit card required, no commitment, and full access to every feature.\n\nDuring your trial you'll have:\n- Unlimited AI-matched contract alerts for your NAICS codes\n- Real-time monitoring across SAM.gov, USASpending.gov, and FPDS\n- Full competitor intelligence dashboard\n- Teaming partner finder\n- Proposal pipeline workspace\n- Dedicated onboarding support\n\nThis offer is available for the next 3 days. After that, trial access reverts to the free tier (5 alerts/month).\n\nClaim your free trial at ${PLATFORM_URL} — setup takes under 5 minutes.\n\nAny questions? Reply to this email and we'll respond within a few hours.\n\nBest regards,\nThe Sambid Team`,
   }),
   pricing: (v) => ({
     subject: `Sambid pricing for ${v.company} — starting at $29/month`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI wanted to share Sambid's pricing — because we hear from contractors that the biggest surprise is how affordable it is compared to alternatives.\n\nStarter — $29/month\n25 AI-matched alerts/month, SAM.gov monitoring, basic competitor view, email support.\n\nPro — $79/month (most popular)\nUnlimited alerts, real-time SAM.gov + FPDS + USASpending monitoring, full competitor intelligence, teaming partner finder, proposal pipeline, priority support.\n\nEnterprise — $499/month\nEverything in Pro plus multi-user team access, API data export, custom NAICS watchlists, and a dedicated account manager.\n\nAll plans include a 7-day free trial. No credit card required to start. Cancel anytime — no annual contracts.\n\nFor comparison, GovWin IQ starts at $800/month and Deltek at $1,500+.\n\nSee all plans and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI wanted to share Sambid's pricing — because we hear from contractors that the biggest surprise is how affordable it is compared to alternatives.\n\nStarter — $29/month\n25 AI-matched alerts/month, SAM.gov monitoring, basic competitor view, email support.\n\nPro — $79/month (most popular)\nUnlimited alerts, real-time SAM.gov + FPDS + USASpending monitoring, full competitor intelligence, teaming partner finder, proposal pipeline, priority support.\n\nEnterprise — $499/month\nEverything in Pro plus multi-user team access, API data export, custom NAICS watchlists, and a dedicated account manager.\n\nAll plans include a 3-day free trial. No credit card required to start. Cancel anytime — no annual contracts.\n\nFor comparison, GovWin IQ starts at $800/month and Deltek at $1,500+.\n\nSee all plans and start free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
   }),
   success: (v) => ({
     subject: `How contractors like ${v.company} win 40% more contracts with Sambid`,

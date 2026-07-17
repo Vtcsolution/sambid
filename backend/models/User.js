@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema({
   },
   trialEndDate: {
     type: Date,
-    default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    default: () => new Date(+new Date() + 3 * 24 * 60 * 60 * 1000) // 3-day trial
   },
   isTrialActive: {
     type: Boolean,

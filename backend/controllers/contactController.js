@@ -54,7 +54,7 @@ PLANS & PRICING (LIVE FROM DATABASE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${planDetails}
 
-Trial Plan: 7 days free, 2 daily matches — no credit card required.
+Trial Plan: 3 days free, 3 daily matches — no credit card required.
 
 Payment methods accepted: Stripe (credit/debit card) and PayPal.
 - Starter & Pro: Pay online via Stripe or PayPal.

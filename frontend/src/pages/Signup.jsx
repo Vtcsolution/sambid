@@ -276,7 +276,7 @@ export default function Signup({ setIsAuthenticated, setUser }) {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 py-10 sm:py-12 px-4 sm:px-6 lg:px-8">
       <SEOHead
         title="Sign Up Free - Start Your Federal Contract Trial"
-        description="Create your free Sambid account and start receiving AI-matched federal contract opportunities from SAM.gov in minutes. 7-day free trial, no credit card required."
+        description="Create your free Sambid account and start receiving AI-matched federal contract opportunities from SAM.gov in minutes. 3-day free trial, no credit card required."
         keywords="sign up federal contracting tool, create account SAM.gov alerts, free federal contract notifications, register Sambid"
         canonical="https://sambid.co/signup"
       />
