@@ -42,6 +42,7 @@ export const checkUpcomingDeadlineAlerts = async () => {
     const users = await User.find({
       emailAlertsEnabled: { $ne: false },
       plan: { $nin: ['expired'] },
+      isDeleted: { $ne: true }, // trashed users get nothing
     }).lean();
 
     let sent = 0;
@@ -94,6 +95,7 @@ export const check1DayDeadlineAlerts = async () => {
     const users = await User.find({
       emailAlertsEnabled: { $ne: false },
       plan: { $nin: ['expired'] },
+      isDeleted: { $ne: true }, // trashed users get nothing
     }).lean();
 
     let sent = 0;
@@ -158,6 +160,7 @@ export const checkFinalHourDeadlineAlerts = async () => {
     const users = await User.find({
       emailAlertsEnabled: { $ne: false },
       plan: { $nin: ['expired'] },
+      isDeleted: { $ne: true }, // trashed users get nothing
     }).lean();
 
     let sent = 0;

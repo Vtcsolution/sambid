@@ -84,7 +84,8 @@ const processTrialReminders = async () => {
   const users = await User.find({
     plan: 'trial',
     isTrialActive: true,
-    trialEndDate: { $exists: true }
+    trialEndDate: { $exists: true },
+    isDeleted: { $ne: true },
   });
 
   const today = new Date().toDateString();
@@ -129,7 +130,8 @@ const processRealTimeAlerts = async () => {
   const users = await User.find({
     plan: { $in: ['enterprise', 'pro'] },
     emailAlertsEnabled: true,
-    alertFrequency: 'realtime'
+    alertFrequency: 'realtime',
+    isDeleted: { $ne: true },
   });
   
   for (const user of users) {
@@ -166,7 +168,8 @@ const processDailyDigests = async () => {
   const users = await User.find({
     plan: { $in: ['starter', 'pro', 'enterprise'] },
     emailAlertsEnabled: true,
-    alertFrequency: 'daily'
+    alertFrequency: 'daily',
+    isDeleted: { $ne: true },
   });
   
   for (const user of users) {
@@ -207,7 +210,8 @@ const processWeeklyDigests = async () => {
   const users = await User.find({
     plan: 'free',
     emailAlertsEnabled: true,
-    alertFrequency: 'weekly'
+    alertFrequency: 'weekly',
+    isDeleted: { $ne: true },
   });
   
   for (const user of users) {
@@ -306,7 +310,7 @@ export const startEmailScheduler = () => {
   cron.schedule('0 6 * * 1', async () => {
     console.log('\n📊 [SCHEDULER] Sending weekly market research to Enterprise users...');
     try {
-      const enterpriseUsers = await User.find({ plan: 'enterprise', emailAlertsEnabled: true });
+      const enterpriseUsers = await User.find({ plan: 'enterprise', emailAlertsEnabled: true, isDeleted: { $ne: true } });
       for (const user of enterpriseUsers) {
         try {
           const report = await generateMarketResearchReport({ naicsCodes: user.naicsCodes, businessName: user.businessName });

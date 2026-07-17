@@ -132,7 +132,8 @@ export const runMasterFetch = async ({ force = false } = {}) => {
   try {
     const users = await User.find({
       naicsCodes: { $exists: true, $not: { $size: 0 } },
-      plan: { $nin: ['expired'] }
+      plan: { $nin: ['expired'] },
+      isDeleted: { $ne: true }, // trashed users get no feed, no emails
     });
 
     const uniqueNaics = [...new Set(users.flatMap(u => u.naicsCodes || []))];
@@ -413,7 +414,8 @@ export const runUserDistribution = async () => {
   try {
     const users = await User.find({
       naicsCodes: { $exists: true, $not: { $size: 0 } },
-      plan: { $nin: ['expired'] }
+      plan: { $nin: ['expired'] },
+      isDeleted: { $ne: true }, // trashed users get no feed, no emails
     });
 
     console.log(`👥 ${users.length} active users to process`);
@@ -580,6 +582,7 @@ export const sendFirstMatchesNow = async (userDoc) => {
 
     const user = await User.findById(userDoc._id || userDoc);
     if (!user) return;
+    if (user.isDeleted) return;                          // trashed users get nothing
     if (!user.naicsCodes?.length) return;                // nothing to match yet
 
     // Always refresh their feed on a NAICS change (this replaced the direct
