@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Shield, Twitter, Linkedin, Facebook, Youtube, Instagram, Music2, ChevronDown, MapPin, Mail, Clock } from 'lucide-react';
+import { Twitter, Linkedin, Facebook, Youtube, Instagram, Music2, ChevronDown, Mail } from 'lucide-react';
 import api from '../services/api';
 
 const sections = [
@@ -43,9 +43,7 @@ const sections = [
 ];
 
 const contactItems = [
-  { icon: MapPin, text: 'Arlington, VA 22203, USA' },
-  { icon: Mail,   text: 'support@sambid.co' },
-  { icon: Clock,  text: 'Mon – Fri: 9 AM – 6 PM EST' },
+  { icon: Mail, text: 'support@sambid.co' },
 ];
 
 // Default texts — used until (or unless) the admin sets custom ones in
@@ -179,7 +177,7 @@ export default function Footer() {
         </div>
 
         {/* ── Contact bar ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 py-6 sm:py-8 border-t border-b border-white/10 mb-8">
+        <div className="flex justify-center py-6 sm:py-8 border-t border-b border-white/10 mb-8">
           {contactItems.map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-center gap-3 text-gray-400">
               <div className="w-8 h-8 bg-indigo-600/20 rounded-lg flex items-center justify-center shrink-0">
