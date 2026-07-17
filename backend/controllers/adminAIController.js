@@ -298,6 +298,22 @@ Be specific with numbers.`
 
 // ── Segment Users Lookup ──────────────────────────────────────────────────────
 // @route  GET /api/admin-ai/segment-users?segment=trial
+
+// Users who started a purchase (a pending invoice exists) but never paid.
+// Returns a map of userId -> their most recent pending invoice, so campaign
+// templates can reference the exact plan and amount they abandoned.
+async function getPendingInvoicesByUser() {
+  const pending = await Invoice.find({ status: 'pending' })
+    .sort({ createdAt: -1 })
+    .select('user plan amount billingCycle createdAt')
+    .lean();
+  const byUser = new Map();
+  for (const inv of pending) {
+    if (!byUser.has(String(inv.user))) byUser.set(String(inv.user), inv);
+  }
+  return byUser;
+}
+
 export const getSegmentUsers = async (req, res) => {
   try {
     const { segment } = req.query;
@@ -312,12 +328,26 @@ export const getSegmentUsers = async (req, res) => {
       at_risk:    { plan: { $in: ['starter', 'pro', 'enterprise'] }, lastMatchReset: { $lt: new Date(Date.now() - 14 * 86400000) } },
       no_naics:   { naicsCodes: { $size: 0 } },
     };
-    const filter = segmentFilters[segment] || {};
+
+    // Pending-invoice data is attached to users in EVERY segment — a trial
+    // user with an abandoned checkout should get "your $239 starter invoice
+    // is waiting" even when selected from the Trial segment, not only from
+    // the dedicated Pending Payment segment.
+    const pendingByUser = await getPendingInvoicesByUser();
+    let filter;
+    if (segment === 'pending_payment') {
+      filter = { _id: { $in: [...pendingByUser.keys()] } };
+    } else {
+      filter = segmentFilters[segment] || {};
+    }
+
     const users = await User.find(filter)
       .select('name email plan isTrialActive trialEndDate lastMatchReset naicsCodes createdAt businessName planExpiresAt')
       .lean();
 
-    const mapped = users.map(u => ({
+    const mapped = users.map(u => {
+      const pendingInv = pendingByUser?.get(String(u._id)) || null;
+      return {
       _id:            u._id,
       name:           u.name || u.email?.split('@')[0] || 'User',
       email:          u.email,
@@ -331,7 +361,13 @@ export const getSegmentUsers = async (req, res) => {
       daysSinceActive: daysSince(u.lastMatchReset),
       naicsCount:     (u.naicsCodes || []).length,
       joinedAt:       u.createdAt,
-    }));
+      // pending-payment context (null unless in that segment)
+      pendingPlan:    pendingInv?.plan || null,
+      pendingAmount:  pendingInv?.amount ?? null,
+      pendingCycle:   pendingInv?.billingCycle || null,
+      pendingDays:    pendingInv ? daysSince(pendingInv.createdAt) : null,
+      };
+    });
 
     res.json({ success: true, data: { users: mapped, count: mapped.length, segment } });
   } catch (err) {
@@ -343,7 +379,7 @@ export const getSegmentUsers = async (req, res) => {
 // @route  POST /api/admin-ai/send-campaign
 export const sendCampaign = async (req, res) => {
   try {
-    const { segment, subject, body, fromName, targetUserId } = req.body;
+    const { segment, subject, body, fromName, targetUserId, fromAlias } = req.body;
     if (!segment || !subject || !body)
       return res.status(400).json({ success: false, message: 'segment, subject, and body are required.' });
 
@@ -369,7 +405,14 @@ export const sendCampaign = async (req, res) => {
         at_risk:    { plan: { $in: ['starter', 'pro', 'enterprise'] }, lastMatchReset: { $lt: new Date(Date.now() - 14 * 86400000) } },
         no_naics:   { naicsCodes: { $size: 0 } },
       };
-      const filter = { ...(segmentFilters[segment] || {}), emailAlertsEnabled: { $ne: false } };
+      let baseFilter;
+      if (segment === 'pending_payment') {
+        const pendingByUser = await getPendingInvoicesByUser();
+        baseFilter = { _id: { $in: [...pendingByUser.keys()] } };
+      } else {
+        baseFilter = segmentFilters[segment] || {};
+      }
+      const filter = { ...baseFilter, emailAlertsEnabled: { $ne: false } };
       users = await User.find(filter).select('name email');
       if (users.length === 0)
         return res.status(400).json({ success: false, message: 'No users found for this segment.' });
@@ -413,7 +456,7 @@ export const sendCampaign = async (req, res) => {
       const recipients = [];
       for (const user of users) {
         try {
-          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid');
+          await sendBroadcastEmailToSegment(user, subject, body, fromName || 'Sambid', fromAlias);
           sent++;
           recipients.push({ name: user.name || '', email: user.email, delivered: true });
           await new Promise(r => setTimeout(r, 200));

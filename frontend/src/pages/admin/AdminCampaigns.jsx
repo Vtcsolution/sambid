@@ -4,6 +4,7 @@ import {
   Mail, Send, Loader2, CheckCircle, Users, AlertCircle, Sparkles,
   ChevronDown, Search, X, Eye, EyeOff, User, RefreshCw, Target,
   Clock, BadgeCheck, Zap, TrendingUp, History, ChevronLeft, ChevronRight,
+  CreditCard,
 } from 'lucide-react';
 import { adminAIAPI, adminPanelAPI } from '../../services/adminApi';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -19,6 +20,7 @@ const SEGMENTS = [
   { value: 'paid',       label: 'All Paid',              desc: 'Starter + Pro + Enterprise',      color: 'green',  icon: BadgeCheck },
   { value: 'at_risk',    label: 'At-Risk Users',         desc: 'Paid, inactive 14+ days',         color: 'red',    icon: TrendingUp },
   { value: 'no_naics',   label: 'No NAICS (Incomplete)', desc: 'Users who never set NAICS codes', color: 'orange', icon: AlertCircle },
+  { value: 'pending_payment', label: 'Pending Payment',  desc: 'Started checkout, never paid',    color: 'red',    icon: CreditCard },
 ];
 
 const colorMap = {
@@ -62,8 +64,26 @@ const SEGMENT_TEMPLATES = {
                { label: 'Quick Check-in',        type: 'checkin'   }],
   no_naics:   [{ label: 'Complete Profile',      type: 'default'   },
                { label: 'Getting Started Guide', type: 'guide'     }],
+  pending_payment: [{ label: 'Complete Your Purchase', type: 'default'      },
+               { label: 'Confirm Your Payment',   type: 'confirm'      },
+               { label: 'Payment Help',          type: 'payment_help' },
+               { label: 'Discount Nudge',        type: 'offer'        }],
   all:        [{ label: 'Platform Update',       type: 'platform'  },
                { label: 'Monthly Newsletter',    type: 'newsletter'}],
+};
+
+// ── Live plan pricing ──────────────────────────────────────────────────────────
+// Loaded from the Plans database on mount (adminPanelAPI.getPlans) so template
+// prices always match the real pricing page — never hardcoded. These are the
+// fallbacks only used until the fetch completes.
+const PLAN_PRICES = {
+  starter:    { monthly: 49,  yearly: 470  },
+  pro:        { monthly: 99,  yearly: 950  },
+  enterprise: { monthly: 499, yearly: 4788 },
+};
+const price = (plan, cycle = 'monthly') => {
+  const v = PLAN_PRICES[plan]?.[cycle];
+  return v != null ? `$${v}` : '$—';
 };
 
 // ── Core template builder - segment + type aware ──────────────────────────────
@@ -95,7 +115,7 @@ Here's what's available to you right now:
 
 Your trial ends ${urgency}. Upgrade to Pro to keep all of this permanently.
 
-→ Upgrade to Pro - $79/month: ${PLATFORM_URL}/pricing
+→ Upgrade to Pro - ${price("pro")}/month: ${PLATFORM_URL}/pricing
 
 Best regards,
 The Sambid Team`,
@@ -136,7 +156,7 @@ Without upgrading, you'll lose access to:
 • Real-time RFP deadline alerts and bid tracking
 • Go/No-Go bid decision scoring
 
-Upgrade to Pro for just **$79/month** and never miss another federal contract opportunity.
+Upgrade to Pro for just **${price("pro")}/month** and never miss another federal contract opportunity.
 
 → Keep your access - upgrade now: ${PLATFORM_URL}/pricing
 
@@ -205,7 +225,7 @@ Pro subscribers get:
 • Priority email support
 • Unlimited saved opportunities
 
-**Upgrade to Pro for just $79/month** and start winning more federal contracts today.
+**Upgrade to Pro for just ${price("pro")}/month** and start winning more federal contracts today.
 
 → Upgrade to Pro: ${PLATFORM_URL}/pricing
 
@@ -231,7 +251,7 @@ Log in to see the updates on your dashboard:
 
 → Access your Starter dashboard: ${PLATFORM_URL}/dashboard
 
-**Want even more?** As a Starter subscriber, you can upgrade to Pro for just $79/month and unlock full AI proposal generation, RFP analysis, and 3,000 matches/month.
+**Want even more?** As a Starter subscriber, you can upgrade to Pro for just ${price("pro")}/month and unlock full AI proposal generation, RFP analysis, and 3,000 matches/month.
 
 → Upgrade to Pro: ${PLATFORM_URL}/pricing
 
@@ -275,7 +295,7 @@ Thank you for being a Sambid Starter subscriber. We wanted to let you know about
 • **Teaming finder** - discover subcontracting partners
 • **Monthly market intelligence** reports for your NAICS codes
 
-Upgrade to Pro for just **$79/month** and use code **LOYAL15** for 15% off.
+Upgrade to Pro for just **${price("pro")}/month** and use code **LOYAL15** for 15% off.
 
 → Upgrade to Pro today: ${PLATFORM_URL}/pricing
 
@@ -343,7 +363,7 @@ What Enterprise adds on top of your current Pro plan:
 • **Custom SAM.gov alerts** - filtered by agency, value, or set-aside type
 • **Priority phone support** - skip the queue
 
-Enterprise is available from **$499/month** (or **$4,788/year** - save 20%).
+Enterprise is available from **${price("enterprise")}/month** (or **${price("enterprise","yearly")}/year** - save 20%).
 
 → Talk to us about Enterprise: ${PLATFORM_URL}/pricing
 
@@ -629,6 +649,124 @@ The Sambid Team`,
     };
   }
 
+  // ── PENDING PAYMENT ─────────────────────────────────────────────────────────
+  // User started checkout (a pending invoice exists) but never completed it.
+  // Templates read the exact abandoned plan + amount from the user record.
+  if (segment === 'pending_payment') {
+    const pPlan   = user?.pendingPlan ? user.pendingPlan.charAt(0).toUpperCase() + user.pendingPlan.slice(1) : 'your selected';
+    const pAmount = user?.pendingAmount != null ? `$${user.pendingAmount}` : 'the invoice amount';
+    const pCycle  = user?.pendingCycle === 'yearly' ? 'per year' : 'per month';
+    const pDays   = user?.pendingDays ?? null;
+    const ago     = pDays === 0 ? 'today' : pDays === 1 ? 'yesterday' : pDays ? `${pDays} days ago` : 'recently';
+
+    // What their chosen plan actually gives them — used across the templates
+    // so every email sells the PLAN they picked, not a generic feature list.
+    const planKey = (user?.pendingPlan || 'starter').toLowerCase();
+    const planPitch = {
+      starter: `**What your Starter plan (${price('starter')}/month) starts doing for you the moment it's active:**
+• Every morning: fresh federal contract matches for YOUR NAICS codes - found overnight, scored, and ranked
+• Deadline alerts at 7 days / 24 hours / 1 hour - a missed deadline never costs you a contract again
+• Saved opportunities and a live bid calendar for your whole pipeline
+• AI summaries - 50-page solicitations turned into 30-second reads`,
+      pro: `**What your Pro plan (${price('pro')}/month) starts doing for you the moment it's active:**
+• 3,000 contract matches per month - found overnight, scored, and ranked for YOUR business
+• Full AI Proposal Builder - complete, compliant drafts in 3 minutes instead of $5,000-$50,000 per writer
+• RFP Analyzer - 400-page documents turned into a green/yellow/red compliance checklist
+• Go/No-Go scoring + who-won-before intelligence - know your real chances BEFORE you spend hours bidding
+• Deadline alerts at 7 days / 24 hours / 1 hour on every saved opportunity`,
+      enterprise: `**What your Enterprise plan (${price('enterprise')}/month) starts doing for you the moment it's active:**
+• Unlimited matching, custom-tuned to your exact market
+• Full AI suite - proposals, RFP analysis, risk assessment, capability statements
+• Market intelligence - agency spending trends, competition density, recompete radar
+• Teaming finder across 140,000+ registered federal vendors
+• Priority support and team workspace with role-based access`,
+    }[planKey] || '';
+
+    if (type === 'confirm') return {
+      subject: `${firstName}, your payment is pending - your matched contracts are waiting`,
+      body: `Hi ${firstName},
+
+Your **${pPlan} plan** payment of **${pAmount}** (${pCycle}) is still showing as **pending** - which means your account is still running with trial limits.
+
+Here's what that actually costs you: roughly **1,500 new federal solicitations are posted every single day**. Right now, Sambid is finding the ones that match your business - but your account can only show you a small fraction of them. The rest expire quietly, and someone else bids on them.
+
+${planPitch}
+
+Your plan is reserved. It just needs one confirmation:
+
+→ Confirm your payment: ${PLATFORM_URL}/billing
+
+If you already paid, reply with your payment reference and we'll verify it right away.
+
+Best regards,
+The Sambid Team`,
+    };
+
+    if (type === 'payment_help') return {
+      subject: `${firstName}, something blocked your payment - don't let it cost you contracts`,
+      body: `Hi ${firstName},
+
+You started upgrading to the **${pPlan} plan** (${pAmount} ${pCycle}) ${ago} - but the payment didn't complete. We wanted to check in, because every day this stays unresolved, matched opportunities in your market are expiring unseen.
+
+If something got in the way, it's usually one of these - all fixable in minutes:
+• **Card declined?** We also accept PayPal and bank transfer
+• **Not sure the plan is right?** Reply and we'll match the plan to how you actually bid
+• **Technical issue?** Tell us what happened and we'll fix it fast
+
+${planPitch}
+
+Your invoice is still open - one click finishes it:
+
+→ Complete your payment: ${PLATFORM_URL}/billing
+
+A real person reads every reply to this email.
+
+Best regards,
+The Sambid Team`,
+    };
+
+    if (type === 'offer') return {
+      subject: `${firstName}, finish your ${pPlan} upgrade today - 10% back + your matches are piling up`,
+      body: `Hi ${firstName},
+
+Since you started your **${pPlan} plan** purchase ${ago}, Sambid has kept finding contracts matched to your business - they're sitting in your feed right now, and some of their deadlines are already counting down.
+
+Every day on trial limits is a day your competitors see opportunities you don't.
+
+${planPitch}
+
+To make it easy to finish today: complete your purchase and reply with code **FINISH10** - we'll credit **10% of your first payment** back to your account.
+
+→ Finish your upgrade now (${pAmount} ${pCycle}): ${PLATFORM_URL}/billing
+
+This credit is only valid while your current invoice is open.
+
+Best regards,
+The Sambid Team`,
+    };
+
+    // default → complete your purchase
+    return {
+      subject: `${firstName}, contracts matched to you are expiring while your plan sits unpaid`,
+      body: `Hi ${firstName},
+
+You picked the **${pPlan} plan** ${ago} (${pAmount} ${pCycle}) - great choice. But the payment was never completed, so your account is still limited... and here's what that means in practice:
+
+The government posts roughly **1,500 new solicitations every day**. Sambid keeps matching them against your NAICS codes around the clock - but on trial limits, you only ever see a fraction. The matches you're NOT seeing don't wait. Their deadlines pass, and other companies win them unopposed.
+
+${planPitch}
+
+Everything is ready - your plan is reserved, your matches are already being found. One click activates it all:
+
+→ Complete your purchase: ${PLATFORM_URL}/billing
+
+Changed your mind about which plan fits? Just reply - we'll help you pick the right one, no pressure.
+
+Best regards,
+The Sambid Team`,
+    };
+  }
+
   // ── ALL USERS ──────────────────────────────────────────────────────────────
   if (segment === 'all') {
     if (type === 'newsletter') return {
@@ -840,6 +978,7 @@ export default function AdminCampaigns() {
   const [subject,       setSubject]       = useState('');
   const [body,          setBody]          = useState('');
   const [fromName,      setFromName]      = useState('Sambid');
+  const [fromAlias,     setFromAlias]     = useState('main'); // main | noreply | support | billing
   const [sending,       setSending]       = useState(false);
   const [confirmDlg,    setConfirmDlg]    = useState(null);
   const [result,        setResult]        = useState(null);
@@ -854,6 +993,24 @@ export default function AdminCampaigns() {
   const [historyTotal,  setHistoryTotal]  = useState(0);
   const [historyLoading,setHistoryLoading]= useState(false);
   const [expandedLog,   setExpandedLog]   = useState(null);
+
+  // Load real plan prices from the Plans database so templates never show a
+  // stale hardcoded amount — updates the module-level PLAN_PRICES in place.
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await adminPanelAPI.getPlans();
+        const plans = r.data?.data || r.data?.plans || r.data || [];
+        for (const p of plans) {
+          const key = (p.name || p.planId || '').toLowerCase();
+          if (PLAN_PRICES[key]) {
+            if (p.priceMonthly != null) PLAN_PRICES[key].monthly = p.priceMonthly;
+            if (p.priceYearly  != null) PLAN_PRICES[key].yearly  = p.priceYearly;
+          }
+        }
+      } catch { /* fallbacks stay */ }
+    })();
+  }, []);
 
   // Load campaign history
   const loadHistory = useCallback(async (page = 1) => {
@@ -913,10 +1070,14 @@ export default function AdminCampaigns() {
 
   useEffect(() => { loadSegmentUsers(segment); }, [segment, loadSegmentUsers]);
 
-  // When user is selected → auto-populate template
+  // When user is selected → auto-populate template.
+  // A user with an abandoned checkout gets the pending-payment email (with
+  // their exact plan + amount) no matter which segment they were found in —
+  // completing that purchase beats any generic segment message.
   const handleUserSelect = (user) => {
     setSelectedUser(user);
-    const tpl = buildSmartTemplate(segment, user);
+    if (user.pendingPlan) setFromAlias('billing');
+    const tpl = buildSmartTemplate(user.pendingPlan ? 'pending_payment' : segment, user);
     setSubject(tpl.subject);
     setBody(tpl.body);
   };
@@ -925,13 +1086,15 @@ export default function AdminCampaigns() {
   const handleSegmentChange = (seg) => {
     setSegment(seg);
     setSelectedUser(null);
+    // billing conversations should come from the billing address by default
+    setFromAlias(seg === 'pending_payment' ? 'billing' : 'main');
     const tpl = buildSmartTemplate(seg, null);
     setSubject(tpl.subject);
     setBody(tpl.body);
   };
 
   const applySmartTemplate = () => {
-    const tpl = buildSmartTemplate(segment, selectedUser);
+    const tpl = buildSmartTemplate(selectedUser?.pendingPlan ? 'pending_payment' : segment, selectedUser);
     setSubject(tpl.subject);
     setBody(tpl.body);
   };
@@ -942,11 +1105,14 @@ export default function AdminCampaigns() {
     try {
       const seg = SEGMENTS.find(s => s.value === segment);
       const userCtx = selectedUser
-        ? `Specific user: ${selectedUser.name}, Plan: ${selectedUser.plan}${selectedUser.trialDaysLeft !== null ? `, Trial days left: ${selectedUser.trialDaysLeft}` : ''}${selectedUser.daysSinceActive > 0 ? `, Days inactive: ${selectedUser.daysSinceActive}` : ''}`
+        ? `Specific user: ${selectedUser.name}, Plan: ${selectedUser.plan}${selectedUser.trialDaysLeft !== null ? `, Trial days left: ${selectedUser.trialDaysLeft}` : ''}${selectedUser.daysSinceActive > 0 ? `, Days inactive: ${selectedUser.daysSinceActive}` : ''}${selectedUser.pendingPlan ? `, ABANDONED CHECKOUT: started buying the ${selectedUser.pendingPlan} plan ($${selectedUser.pendingAmount} ${selectedUser.pendingCycle || 'monthly'}) ${selectedUser.pendingDays === 0 ? 'today' : `${selectedUser.pendingDays} days ago`} but never completed payment` : ''}`
+        : '';
+      const pendingGoal = segment === 'pending_payment'
+        ? ` GOAL: convince the user to complete their pending payment. Be warm and helpful, never pushy — acknowledge they started the purchase, remove friction (offer help with payment issues, alternative payment methods, answer questions), remind them concretely what unlocks when they pay, and point the CTA to ${PLATFORM_URL}/billing.`
         : '';
       const res = await adminAIAPI.generateContent({
         type: 'email_body',
-        context: `Professional re-engagement/marketing email for ${seg?.label} users of Sambid (federal contracting intelligence SaaS). ${userCtx}. Platform URL: ${PLATFORM_URL}. Include subject line labeled "Subject:", greeting "Hi [First Name],", 2-3 body paragraphs, bullet list of features/benefits, a CTA line starting with → pointing to ${PLATFORM_URL}/pricing or /dashboard, and sign-off. Plain text with **bold** for emphasis.`,
+        context: `Professional re-engagement/marketing email for ${seg?.label} users of Sambid (federal contracting intelligence SaaS). ${userCtx}.${pendingGoal} Platform URL: ${PLATFORM_URL}. Include subject line labeled "Subject:", greeting "Hi [First Name],", 2-3 body paragraphs, bullet list of features/benefits, a CTA line starting with → pointing to ${segment === 'pending_payment' ? `${PLATFORM_URL}/billing` : `${PLATFORM_URL}/pricing or /dashboard`}, and sign-off. Plain text with **bold** for emphasis.`,
       });
       const content = res.data.data.content;
       const subjectMatch = content.match(/Subject:\s*(.+)/i);
@@ -983,7 +1149,7 @@ export default function AdminCampaigns() {
     setConfirmDlg(null);
     setSending(true); setError(''); setResult(null);
     try {
-      const payload = { segment, subject, body, fromName };
+      const payload = { segment, subject, body, fromName, fromAlias };
       if (dlg?.target) payload.targetUserId = dlg.target._id;
       const res = await adminAIAPI.sendCampaign(payload);
       if (!res.data.success) {
@@ -1091,12 +1257,32 @@ export default function AdminCampaigns() {
             </div>
           </div>
 
-          {/* From Name */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
-            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">From Name</label>
-            <input value={fromName} onChange={e => setFromName(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white" />
-            <p className="text-xs text-gray-400 mt-1.5">Sender email is auto-configured from platform settings.</p>
+          {/* From Name + Send From address */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">From Name</label>
+              <input value={fromName} onChange={e => setFromName(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white" />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Send From</label>
+              <select
+                value={fromAlias}
+                onChange={e => setFromAlias(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white text-gray-900"
+              >
+                <option value="main">zia@sambid.co — personal outreach, upgrades, win-backs</option>
+                <option value="noreply">noreply@sambid.co — newsletters, platform updates</option>
+                <option value="support">support@sambid.co — help, onboarding, check-ins</option>
+                <option value="billing">billing@sambid.co — payments, invoices, renewals</option>
+              </select>
+              <p className="text-xs text-gray-400 mt-1.5">
+                {fromAlias === 'main'    && 'Personal touch — best for upgrade offers, win-backs, and 1-to-1 messages users may reply to.'}
+                {fromAlias === 'noreply' && 'One-way broadcasts — newsletters and announcements where replies aren\'t expected.'}
+                {fromAlias === 'support' && 'Helpful tone — onboarding guides, profile completion, "how can we help" check-ins.'}
+                {fromAlias === 'billing' && 'Money matters — pending payments, invoices, renewal reminders. Auto-selected for the Pending Payment segment.'}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -1135,6 +1321,7 @@ export default function AdminCampaigns() {
                       <p className="text-xs text-indigo-600 truncate">{selectedUser.email} · <span className="capitalize">{selectedUser.plan}</span>
                         {selectedUser.trialDaysLeft !== null && <span className="text-amber-600"> · {selectedUser.trialDaysLeft}d trial left</span>}
                         {selectedUser.daysSinceActive > 0 && <span className="text-gray-500"> · {selectedUser.daysSinceActive}d inactive</span>}
+                        {selectedUser.pendingPlan && <span className="text-red-600 font-semibold"> · pending ${selectedUser.pendingAmount} {selectedUser.pendingPlan}</span>}
                       </p>
                     </div>
                     <button type="button" onClick={() => setSelectedUser(null)} className="text-indigo-300 hover:text-indigo-500 shrink-0">
@@ -1168,9 +1355,9 @@ export default function AdminCampaigns() {
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
-              {(SEGMENT_TEMPLATES[segment] || SEGMENT_TEMPLATES['all']).map(t => (
+              {(SEGMENT_TEMPLATES[selectedUser?.pendingPlan ? 'pending_payment' : segment] || SEGMENT_TEMPLATES['all']).map(t => (
                 <button key={t.label} type="button"
-                  onClick={() => { const tpl = buildSmartTemplate(segment, selectedUser, t.type); setSubject(tpl.subject); setBody(tpl.body); }}
+                  onClick={() => { const tpl = buildSmartTemplate(selectedUser?.pendingPlan ? 'pending_payment' : segment, selectedUser, t.type); setSubject(tpl.subject); setBody(tpl.body); }}
                   className="px-3 py-1.5 text-xs font-medium border border-gray-200 rounded-lg hover:border-indigo-400 hover:text-indigo-600 transition-colors text-gray-700">
                   {t.label}
                 </button>

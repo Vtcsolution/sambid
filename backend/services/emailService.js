@@ -950,9 +950,22 @@ function formatCampaignBody(rawBody, primaryColor = '#4f46e5') {
 }
 
 /**
- * Send a campaign email to a single user (used by admin campaign system)
+ * Send a campaign email to a single user (used by admin campaign system).
+ * fromAlias picks the visible From address (main/noreply/support/billing) —
+ * same alias scheme as prospect outreach; SMTP always authenticates as the
+ * real mailbox, only the displayed address changes.
  */
-export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid') => {
+const resolveCampaignFromAddress = (fromAlias) => {
+  const map = {
+    noreply: process.env.EMAIL_NOREPLY,
+    support: process.env.EMAIL_SUPPORT,
+    billing: process.env.EMAIL_BILLING,
+    main:    process.env.SMTP_USER || process.env.EMAIL_USER,
+  };
+  return map[fromAlias] || process.env.SMTP_USER || process.env.EMAIL_USER;
+};
+
+export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromName = 'Sambid', fromAlias = 'main') => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   const year = new Date().getFullYear();
   const formattedBody = formatCampaignBody(rawBody);
@@ -1013,7 +1026,7 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
 </html>`;
 
   await transporter.sendMail({
-    from:    FROM.custom(fromName),
+    from:    `"${fromName}" <${resolveCampaignFromAddress(fromAlias)}>`,
     to:      user.email,
     subject,
     html,
