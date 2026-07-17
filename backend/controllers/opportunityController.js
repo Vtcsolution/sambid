@@ -565,10 +565,11 @@ export const getOpportunities = async (req, res) => {
           description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
         }).sort({ postedDate: -1 }).limit(15).lean();
 
+        const maskPotential = ['trial', 'free'].includes(req.user.plan);
         potentialMatches = sectorOpps.map(opp => {
           const { score } = calculateMatchScore(opp, req.user);
           const ds = deadlineStatus(opp.dueDate);
-          return {
+          const full = {
             ...opp,
             isPotentialMatch: true,
             aiMatchScore: Math.min(score, 45),
@@ -576,6 +577,32 @@ export const getOpportunities = async (req, res) => {
             ...ds,
             status: 'active',
             canApply: true,
+          };
+          if (!maskPotential) return full;
+          // Trial/free: these bonus sector matches are a paywall bypass if shown
+          // in full (title + agency chain + NAICS + SAM.gov link = findable on
+          // SAM.gov for free). Mask everything searchable; keep the hunger data.
+          return {
+            _id:              full._id,
+            isPotentialMatch: true,
+            locked:           true,
+            title:            '🔒 Potential match — details locked',
+            agency:           String(full.agency || 'Federal agency').split('>')[0].trim(),
+            naicsCode:        null,
+            solicitationNumber: null,
+            noticeId:         null,
+            description:      null,
+            resourceLinks:    [],
+            pointOfContacts:  [],
+            estimatedValue:   full.estimatedValue || null,
+            setAside:         full.setAside || null,
+            noticeType:       full.noticeType || null,
+            dueDate:          full.dueDate,
+            aiMatchScore:     full.aiMatchScore,
+            potentialMatchReason: 'An opportunity in your industry sector — the contracting officer may have entered a different NAICS code. Upgrade to see the full details.',
+            ...ds,
+            status:  'active',
+            canApply: false,
           };
         });
       } catch {}
