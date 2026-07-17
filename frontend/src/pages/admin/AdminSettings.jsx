@@ -84,6 +84,9 @@ const DEFAULTS = {
   general: {
     siteName: 'Sambid', siteUrl: 'https://sambid.co',
     supportEmail: 'support@sambid.co', trackBaseUrl: '',
+    footerDescription: '', footerTagline: '',
+    footerYoutube: '', footerInstagram: '', footerLinkedin: '',
+    footerTwitter: '', footerFacebook: '', footerTiktok: '',
   },
   email: {
     smtpHost: 'smtp.hostinger.com', smtpPort: '465', smtpSecure: 'true',
@@ -211,6 +214,29 @@ export default function AdminSettings() {
           <TextInput label="Support Email" value={g('general').supportEmail || ''} onChange={v => set('general','supportEmail',v)} placeholder="support@sambid.co" />
           <TextInput label="Track Base URL" value={g('general').trackBaseUrl || ''} onChange={v => set('general','trackBaseUrl',v)}
             placeholder="https://yourdomain.com (for email tracking pixel)" hint="Leave blank to use Site URL. Set to ngrok URL for local testing." />
+        </div>
+      </SectionCard>
+
+      {/* ── 1b. Footer & Social Links ───────────────────────────────────── */}
+      <SectionCard icon={Wifi} color="bg-teal-50 text-teal-700" title="Footer & Social Links">
+        <p className="text-xs text-gray-500 -mt-1">
+          Shown in the website footer. Leave a social link empty to hide its icon. Changes appear on the site immediately after saving — no rebuild needed.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <TextInput label="YouTube URL"   value={g('general').footerYoutube   || ''} onChange={v => set('general','footerYoutube',v)}   placeholder="https://youtube.com/@sambid" />
+          <TextInput label="Instagram URL" value={g('general').footerInstagram || ''} onChange={v => set('general','footerInstagram',v)} placeholder="https://instagram.com/sambid" />
+          <TextInput label="LinkedIn URL"  value={g('general').footerLinkedin  || ''} onChange={v => set('general','footerLinkedin',v)}  placeholder="https://linkedin.com/company/sambid" />
+          <TextInput label="X / Twitter URL" value={g('general').footerTwitter || ''} onChange={v => set('general','footerTwitter',v)}   placeholder="https://x.com/sambid" />
+          <TextInput label="Facebook URL"  value={g('general').footerFacebook  || ''} onChange={v => set('general','footerFacebook',v)}  placeholder="https://facebook.com/sambid" />
+          <TextInput label="TikTok URL"    value={g('general').footerTiktok    || ''} onChange={v => set('general','footerTiktok',v)}    placeholder="https://tiktok.com/@sambid" />
+        </div>
+        <div className="border-t border-gray-100 pt-4 grid grid-cols-1 gap-4">
+          <TextInput label="Footer Description" value={g('general').footerDescription || ''} onChange={v => set('general','footerDescription',v)}
+            placeholder="AI-powered federal contract discovery platform. Helping small businesses find, track, and win government opportunities."
+            hint="The paragraph under the Sambid logo in the footer. Leave empty to keep the default text." />
+          <TextInput label="Footer Tagline" value={g('general').footerTagline || ''} onChange={v => set('general','footerTagline',v)}
+            placeholder='"Never miss a federal contract again."'
+            hint="The short quote line under the description. Leave empty to keep the default." />
         </div>
       </SectionCard>
 

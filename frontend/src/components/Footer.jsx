@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { Shield, Twitter, Linkedin, Facebook, ChevronDown, MapPin, Mail, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Shield, Twitter, Linkedin, Facebook, Youtube, Instagram, Music2, ChevronDown, MapPin, Mail, Clock } from 'lucide-react';
+import api from '../services/api';
 
 const sections = [
   {
@@ -47,15 +48,39 @@ const contactItems = [
   { icon: Clock,  text: 'Mon – Fri: 9 AM – 6 PM EST' },
 ];
 
-const socials = [
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Twitter,  href: '#', label: 'Twitter' },
-  { icon: Facebook, href: '#', label: 'Facebook' },
+// Default texts — used until (or unless) the admin sets custom ones in
+// Admin → Settings → "Footer & Social Links".
+const DEFAULT_DESCRIPTION = 'AI-powered federal contract discovery platform. Helping small businesses find, track, and win government opportunities.';
+const DEFAULT_TAGLINE = '"Never miss a federal contract again."';
+
+// Order + icon for each admin-managed social link (only shown when a URL is set)
+const SOCIAL_DEFS = [
+  { key: 'footerYoutube',   icon: Youtube,   label: 'YouTube'   },
+  { key: 'footerInstagram', icon: Instagram, label: 'Instagram' },
+  { key: 'footerLinkedin',  icon: Linkedin,  label: 'LinkedIn'  },
+  { key: 'footerTwitter',   icon: Twitter,   label: 'X / Twitter' },
+  { key: 'footerFacebook',  icon: Facebook,  label: 'Facebook'  },
+  { key: 'footerTiktok',    icon: Music2,    label: 'TikTok'    },
 ];
 
 export default function Footer() {
   const [openSection, setOpenSection] = useState(null);
+  const [footerData, setFooterData] = useState({});
   const toggle = key => setOpenSection(prev => prev === key ? null : key);
+
+  // Load admin-managed footer content (social links, description, tagline)
+  useEffect(() => {
+    api.get('/footer')
+      .then(r => { if (r.data?.success) setFooterData(r.data.data || {}); })
+      .catch(() => {}); // fall back to defaults silently
+  }, []);
+
+  const socials = SOCIAL_DEFS
+    .filter(s => footerData[s.key] && String(footerData[s.key]).trim() !== '')
+    .map(s => ({ icon: s.icon, href: footerData[s.key], label: s.label }));
+
+  const description = footerData.footerDescription?.trim() || DEFAULT_DESCRIPTION;
+  const tagline     = footerData.footerTagline?.trim()     || DEFAULT_TAGLINE;
 
   return (
     <footer className="bg-gradient-to-br from-slate-900 to-slate-950 text-white">
@@ -74,25 +99,30 @@ export default function Footer() {
             </Link>
 
             <p className="text-gray-400 text-sm leading-relaxed mb-5 max-w-xs">
-              AI-powered federal contract discovery platform. Helping small businesses find, track, and win government opportunities.
+              {description}
             </p>
 
             <p className="text-indigo-300 text-sm font-medium italic border-l-2 border-indigo-500 pl-3 mb-5">
-              "Never miss a federal contract again."
+              {tagline}
             </p>
 
-            <div className="flex gap-3">
-              {socials.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-9 h-9 bg-white/10 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors duration-200"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+            {socials.length > 0 && (
+              <div className="flex gap-3">
+                {socials.map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="w-9 h-9 bg-white/10 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors duration-200"
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Nav sections - desktop */}
