@@ -1,7 +1,7 @@
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Zap, AlertCircle, CheckCircle,
+  ArrowRight, Zap, CheckCircle,
   TrendingUp, Shield, Target, Award,
   XCircle, Users, SlidersHorizontal, FileText, BellRing, Timer,
 } from 'lucide-react';
@@ -34,12 +34,16 @@ function FadeIn({ children, delay = 0, className = '' }) {
   );
 }
 
-function FlowChip({ kind, children }) {
-  const cls =
-    kind === 'out'  ? 'bg-green-100 text-green-700 border-green-200' :
-    kind === 'eng'  ? 'bg-slate-800 text-sky-300 border-slate-700' :
-    kind === 'gold' ? 'bg-amber-100 text-amber-700 border-amber-200' :
-                     'bg-white text-indigo-700 border-indigo-200';
+function FlowChip({ kind, light, children }) {
+  const cls = light
+    ? (kind === 'out'  ? 'bg-indigo-600 text-white border-indigo-600' :
+       kind === 'eng'  ? 'bg-indigo-600 text-white border-indigo-600' :
+       kind === 'gold' ? 'bg-indigo-100 text-indigo-800 border-indigo-200' :
+                        'bg-white text-indigo-700 border-indigo-200')
+    : (kind === 'out'  ? 'bg-white text-indigo-900 border-white' :
+       kind === 'eng'  ? 'bg-indigo-600 text-white border-indigo-500' :
+       kind === 'gold' ? 'bg-indigo-500/25 text-indigo-50 border-indigo-400/40' :
+                        'bg-white/10 text-indigo-100 border-white/15');
   return (
     <span className={`inline-flex text-xs font-semibold px-2.5 py-1 rounded-full border ${cls} leading-snug`}>
       {children}
@@ -389,12 +393,12 @@ export default function HowItWorks() {
                 {/* Before → After compact */}
                 <div className="rounded-xl border border-white/10 overflow-hidden text-xs">
                   <div className="flex">
-                    <div className="flex-1 bg-red-500/10 border-r border-white/10 px-3 py-2.5">
-                      <p className="text-red-300 font-bold uppercase tracking-wider text-[10px] mb-1">Before</p>
+                    <div className="flex-1 border-r border-white/10 px-3 py-2.5">
+                      <p className="text-indigo-300/70 font-bold uppercase tracking-wider text-[10px] mb-1">Before</p>
                       <p className="text-white/70">20-person team · $50K proposals · missed deadlines</p>
                     </div>
-                    <div className="flex-1 bg-green-500/10 px-3 py-2.5">
-                      <p className="text-green-300 font-bold uppercase tracking-wider text-[10px] mb-1">After</p>
+                    <div className="flex-1 px-3 py-2.5">
+                      <p className="text-indigo-300 font-bold uppercase tracking-wider text-[10px] mb-1">After</p>
                       <p className="text-white/70">1–2 people · AI drafts · 30-sec decisions</p>
                     </div>
                   </div>
@@ -405,15 +409,15 @@ export default function HowItWorks() {
                   <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2">AI Engine</p>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {[
-                      { t: 'SAM.gov', c: 'bg-indigo-500/20 text-indigo-200' },
+                      { t: 'SAM.gov', c: 'bg-white/10 text-indigo-200' },
                       { t: '+', c: 'text-white/40 font-bold' },
-                      { t: 'Company Profile', c: 'bg-indigo-500/20 text-indigo-200' },
+                      { t: 'Company Profile', c: 'bg-white/10 text-indigo-200' },
                       { t: '+', c: 'text-white/40 font-bold' },
-                      { t: 'USASpending', c: 'bg-amber-500/20 text-amber-300' },
+                      { t: 'USASpending', c: 'bg-indigo-500/25 text-indigo-100' },
                       { t: '→', c: 'text-white/40 font-bold' },
-                      { t: 'Sambid AI', c: 'bg-slate-700 text-sky-300' },
+                      { t: 'Sambid AI', c: 'bg-indigo-600 text-white' },
                       { t: '→', c: 'text-white/40 font-bold' },
-                      { t: 'Your Output', c: 'bg-green-500/20 text-green-300' },
+                      { t: 'Your Output', c: 'bg-white text-indigo-900' },
                     ].map((item, i) =>
                       item.c.includes('font-bold') && !item.c.includes('bg-')
                         ? <span key={i} className={`text-xs ${item.c}`}>{item.t}</span>
@@ -430,7 +434,7 @@ export default function HowItWorks() {
 
       {/* ── Before / After - row-by-row transformation ───────── */}
       <section className="py-14 sm:py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-10">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               The Problem We Solve
@@ -444,22 +448,22 @@ export default function HowItWorks() {
           </FadeIn>
 
           <FadeIn>
-            <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-lg shadow-indigo-100/50 bg-white">
+            <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-sm bg-white/60 backdrop-blur-sm">
 
               {/* Column headers */}
-              <div className="hidden md:grid md:grid-cols-[1fr_64px_1fr]">
-                <div className="bg-gradient-to-r from-red-500 to-rose-500 px-8 py-4 flex items-center gap-2.5">
-                  <XCircle className="w-5 h-5 text-white/90" />
-                  <span className="text-sm font-bold text-white uppercase tracking-wider">Without Sambid — Today</span>
+              <div className="hidden md:grid md:grid-cols-[1fr_64px_1fr] border-b border-gray-100">
+                <div className="px-8 py-4 flex items-center gap-2.5">
+                  <XCircle className="w-5 h-5 text-gray-400" />
+                  <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">Without Sambid — Today</span>
                 </div>
-                <div className="bg-white flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-300">
+                <div className="flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200">
                     <ArrowRight className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <div className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-4 flex items-center gap-2.5">
-                  <CheckCircle className="w-5 h-5 text-white/90" />
-                  <span className="text-sm font-bold text-white uppercase tracking-wider">With Sambid — Tomorrow</span>
+                <div className="px-8 py-4 flex items-center gap-2.5">
+                  <CheckCircle className="w-5 h-5 text-indigo-600" />
+                  <span className="text-sm font-bold text-indigo-700 uppercase tracking-wider">With Sambid — Tomorrow</span>
                 </div>
               </div>
 
@@ -468,36 +472,36 @@ export default function HowItWorks() {
                 {COMPARE.map((row, i) => {
                   const Icon = row.icon;
                   return (
-                    <div key={i} className="grid md:grid-cols-[1fr_64px_1fr] group">
+                    <div key={i} className="grid md:grid-cols-[1fr_64px_1fr] group hover:bg-indigo-50/30 transition-colors">
 
                       {/* Before cell */}
-                      <div className="bg-red-50/50 group-hover:bg-red-50 transition-colors px-6 sm:px-8 py-5 flex items-start gap-3.5">
-                        <div className="md:hidden w-7 h-7 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-0.5">
-                          <XCircle className="w-4 h-4 text-red-500" />
+                      <div className="px-6 sm:px-8 py-5 flex items-start gap-3.5">
+                        <div className="md:hidden w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
+                          <XCircle className="w-4 h-4 text-gray-400" />
                         </div>
-                        <XCircle className="hidden md:block w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                        <XCircle className="hidden md:block w-5 h-5 text-gray-300 shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1">{row.topic}</p>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{row.topic}</p>
                           <p className="text-sm sm:text-[15px] text-gray-600 leading-relaxed">{row.before}</p>
                         </div>
                       </div>
 
                       {/* Center icon */}
-                      <div className="hidden md:flex items-center justify-center bg-white">
+                      <div className="hidden md:flex items-center justify-center">
                         <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-colors">
                           <Icon className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
                         </div>
                       </div>
 
                       {/* After cell */}
-                      <div className="bg-emerald-50/50 group-hover:bg-emerald-50 transition-colors px-6 sm:px-8 py-5 flex items-start gap-3.5 border-t md:border-t-0 border-gray-100">
-                        <div className="md:hidden w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
-                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                      <div className="px-6 sm:px-8 py-5 flex items-start gap-3.5 border-t md:border-t-0 border-gray-100">
+                        <div className="md:hidden w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
+                          <CheckCircle className="w-4 h-4 text-indigo-600" />
                         </div>
-                        <CheckCircle className="hidden md:block w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                        <CheckCircle className="hidden md:block w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">{row.topic}</p>
-                          <p className="text-sm sm:text-[15px] text-gray-600 leading-relaxed">{row.after}</p>
+                          <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{row.topic}</p>
+                          <p className="text-sm sm:text-[15px] text-gray-700 leading-relaxed">{row.after}</p>
                         </div>
                       </div>
 
@@ -507,12 +511,12 @@ export default function HowItWorks() {
               </div>
 
               {/* Summary strip */}
-              <div className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 px-6 sm:px-8 py-5 text-center">
+              <div className="bg-indigo-600 px-6 sm:px-8 py-5 text-center">
                 <p className="text-sm sm:text-base text-indigo-100 font-medium">
                   <span className="text-white font-bold">20 people → 2.</span>{' '}
                   <span className="text-white font-bold">$50,000 → 3 minutes.</span>{' '}
                   <span className="text-white font-bold">3 days → 30 seconds.</span>{' '}
-                  <span className="text-indigo-300">That's the change.</span>
+                  <span className="text-indigo-200">That's the change.</span>
                 </p>
               </div>
 
@@ -523,7 +527,7 @@ export default function HowItWorks() {
 
       {/* ── Stats bar ─────────────────────────────────────────── */}
       <section className="py-12 bg-white border-y border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-gray-400 text-xs uppercase tracking-widest mb-8">
             Federal Market - At a Glance
           </p>
@@ -545,8 +549,8 @@ export default function HowItWorks() {
       </section>
 
       {/* ── AI Engine ─────────────────────────────────────────── */}
-      <section className="py-14 sm:py-20 bg-gradient-to-br from-indigo-50 to-blue-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-14 sm:py-20 bg-white">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-8">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               The Intelligence Layer
@@ -560,13 +564,13 @@ export default function HowItWorks() {
           </FadeIn>
 
           <FadeIn>
-            <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6 sm:p-8">
+            <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6 sm:p-8">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">How the AI Engine Works</p>
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 {AI_ENGINE.map((item, i) =>
                   item.sep
                     ? <span key={i} className="text-gray-400 text-sm font-bold shrink-0">{item.sep}</span>
-                    : <FlowChip key={i} kind={item.kind}>{item.label}</FlowChip>
+                    : <FlowChip key={i} kind={item.kind} light>{item.label}</FlowChip>
                 )}
               </div>
             </div>
@@ -575,9 +579,9 @@ export default function HowItWorks() {
       </section>
 
       {/* ── 17 Pain Points ────────────────────────────────────── */}
-      <section className="py-14 sm:py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeIn className="text-center mb-12">
+      <section className="py-14 sm:py-20 bg-white">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeIn className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
               17 Problems. 17 Solutions.
             </span>
@@ -589,84 +593,62 @@ export default function HowItWorks() {
             </p>
           </FadeIn>
 
-          <div className="space-y-6">
-            {PAIN_POINTS.map((pp, idx) => (
-              <FadeIn key={pp.num} delay={Math.min(idx * 30, 150)}>
-                <div className="relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:shadow-indigo-100 hover:border-indigo-200 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
-
-                  {/* Giant watermark number */}
-                  <span className="absolute -top-4 right-4 text-[110px] font-black leading-none text-indigo-50 select-none pointer-events-none">
-                    {pp.num}
-                  </span>
-
-                  {/* Card header - number + title */}
-                  <div className="relative flex items-center gap-4 px-5 sm:px-7 pt-6 pb-4">
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white text-sm font-bold flex items-center justify-center shrink-0 shadow-md shadow-indigo-200">
-                      {pp.num}
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug pr-14">
-                      {pp.title}
-                    </h3>
-                  </div>
-
-                  {/* Problem | Fix - two panels side by side */}
-                  <div className="relative grid lg:grid-cols-2 gap-4 px-5 sm:px-7 pb-4">
-
-                    <div className="bg-red-50/70 border border-red-100 rounded-xl p-4 sm:p-5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
-                          <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+          <div className="space-y-14 sm:space-y-20">
+            {PAIN_POINTS.map((pp, idx) => {
+              const reversed = idx % 2 !== 0;
+              const bg = idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+              return (
+                <FadeIn key={pp.num} delay={Math.min(idx * 20, 150)}>
+                  <div
+                    className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center rounded-3xl p-6 sm:p-10 ${bg} ${
+                      idx % 2 !== 0 ? 'border border-gray-100' : ''
+                    } ${reversed ? 'lg:grid-flow-col-dense' : ''}`}
+                  >
+                    {/* Workflow visual block */}
+                    <div className={`order-2 lg:order-none ${reversed ? 'lg:col-start-2' : ''}`}>
+                      <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8">
+                        <div className="flex items-center gap-1.5 mb-4">
+                          <Zap className="w-3.5 h-3.5 text-indigo-500" />
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            Automated Workflow
+                          </p>
                         </div>
-                        <span className="text-[11px] font-bold text-red-500 uppercase tracking-widest">The Problem</span>
-                      </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        {pp.pain}
-                      </p>
-                    </div>
-
-                    <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-4 sm:p-5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                        <div className="flex flex-wrap items-center gap-2">
+                          {pp.flow.map((item, i) =>
+                            item.sep
+                              ? <span key={i} className="text-gray-300 text-sm font-bold shrink-0">{item.sep}</span>
+                              : <FlowChip key={i} kind={item.kind} light>{item.label}</FlowChip>
+                          )}
                         </div>
-                        <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">The Sambid Fix</span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        {pp.solve}
+                    </div>
+
+                    {/* Text block */}
+                    <div className={`order-1 lg:order-none ${reversed ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
+                          {pp.num}
+                        </span>
+                        <span className="text-indigo-600 text-sm font-semibold uppercase tracking-wide">
+                          Pain Point {idx + 1} of 17
+                        </span>
+                      </div>
+
+                      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 leading-snug">
+                        {pp.title}
+                      </h3>
+
+                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
+                        <strong className="text-gray-900">The problem:</strong> {pp.pain}
+                      </p>
+                      <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                        <strong className="text-indigo-700">The Sambid fix:</strong> {pp.solve}
                       </p>
                     </div>
-
                   </div>
-
-                  {/* Automated workflow strip */}
-                  <div className="relative mx-5 sm:mx-7 mb-6 bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl px-4 sm:px-5 py-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Zap className="w-3.5 h-3.5 text-amber-400" />
-                      <p className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest">
-                        Automated Workflow
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {pp.flow.map((item, i) =>
-                        item.sep
-                          ? <span key={i} className="text-indigo-400 text-sm font-bold shrink-0">{item.sep}</span>
-                          : (
-                            <span key={i} className={`inline-flex text-xs font-semibold px-2.5 py-1 rounded-full border leading-snug ${
-                              item.kind === 'out'  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' :
-                              item.kind === 'eng'  ? 'bg-sky-500/15 text-sky-300 border-sky-500/30' :
-                              item.kind === 'gold' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' :
-                                                     'bg-white/10 text-indigo-100 border-white/15'
-                            }`}>
-                              {item.label}
-                            </span>
-                          )
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              );
+            })}
           </div>
         </div>
       </section>

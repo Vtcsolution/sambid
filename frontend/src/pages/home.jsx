@@ -317,7 +317,7 @@ export default function Home() {
               </div>
 
               <p className="mt-5 text-indigo-300 text-xs sm:text-sm">
-                3-day free trial · 15 contract matches included · No credit card required
+                3-day free trial · 9 contract matches included · No credit card required
               </p>
             </div>
 
@@ -561,7 +561,7 @@ export default function Home() {
             Start Finding Federal Contracts Today
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-indigo-100 mb-7 sm:mb-8">
-            3-day free trial. 15 real contract matches from SAM.gov. No credit card needed.
+            3-day free trial. 9 real contract matches from SAM.gov. No credit card needed.
           </p>
           <Link
             to={ctaTo}
