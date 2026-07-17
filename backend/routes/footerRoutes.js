@@ -15,6 +15,14 @@ const FOOTER_KEYS = [
   'footerTwitter',
   'footerFacebook',
   'footerTiktok',
+  // visibility controls — 'false' hides without losing the saved URL
+  'footerSocialsEnabled',
+  'footerYoutubeEnabled',
+  'footerInstagramEnabled',
+  'footerLinkedinEnabled',
+  'footerTwitterEnabled',
+  'footerFacebookEnabled',
+  'footerTiktokEnabled',
 ];
 
 // GET /api/footer  (public, no auth)

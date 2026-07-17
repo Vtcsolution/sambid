@@ -87,6 +87,9 @@ const DEFAULTS = {
     footerDescription: '', footerTagline: '',
     footerYoutube: '', footerInstagram: '', footerLinkedin: '',
     footerTwitter: '', footerFacebook: '', footerTiktok: '',
+    footerSocialsEnabled: 'true',
+    footerYoutubeEnabled: 'true', footerInstagramEnabled: 'true', footerLinkedinEnabled: 'true',
+    footerTwitterEnabled: 'true', footerFacebookEnabled: 'true', footerTiktokEnabled: 'true',
   },
   email: {
     smtpHost: 'smtp.hostinger.com', smtpPort: '465', smtpSecure: 'true',
@@ -220,15 +223,56 @@ export default function AdminSettings() {
       {/* ── 1b. Footer & Social Links ───────────────────────────────────── */}
       <SectionCard icon={Wifi} color="bg-teal-50 text-teal-700" title="Footer & Social Links">
         <p className="text-xs text-gray-500 -mt-1">
-          Shown in the website footer. Leave a social link empty to hide its icon. Changes appear on the site immediately after saving — no rebuild needed.
+          Shown in the website footer. Use the switches to show/hide icons without losing the saved URL. Changes appear on the site immediately after saving — no rebuild needed.
         </p>
-        <div className="grid grid-cols-2 gap-4">
-          <TextInput label="YouTube URL"   value={g('general').footerYoutube   || ''} onChange={v => set('general','footerYoutube',v)}   placeholder="https://youtube.com/@sambid" />
-          <TextInput label="Instagram URL" value={g('general').footerInstagram || ''} onChange={v => set('general','footerInstagram',v)} placeholder="https://instagram.com/sambid" />
-          <TextInput label="LinkedIn URL"  value={g('general').footerLinkedin  || ''} onChange={v => set('general','footerLinkedin',v)}  placeholder="https://linkedin.com/company/sambid" />
-          <TextInput label="X / Twitter URL" value={g('general').footerTwitter || ''} onChange={v => set('general','footerTwitter',v)}   placeholder="https://x.com/sambid" />
-          <TextInput label="Facebook URL"  value={g('general').footerFacebook  || ''} onChange={v => set('general','footerFacebook',v)}  placeholder="https://facebook.com/sambid" />
-          <TextInput label="TikTok URL"    value={g('general').footerTiktok    || ''} onChange={v => set('general','footerTiktok',v)}    placeholder="https://tiktok.com/@sambid" />
+
+        {/* master switch: hide the whole social icons row */}
+        <div className="flex items-center justify-between p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+          <div>
+            <p className="font-medium text-gray-900 text-sm">Show social icons in footer</p>
+            <p className="text-xs text-gray-500 mt-0.5">Master switch — turn off to hide ALL social icons from the site, whatever is set below.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => set('general','footerSocialsEnabled', g('general').footerSocialsEnabled === 'false' ? 'true' : 'false')}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0 ${g('general').footerSocialsEnabled !== 'false' ? 'bg-teal-600' : 'bg-gray-300'}`}
+            aria-label="Toggle footer social icons"
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${g('general').footerSocialsEnabled !== 'false' ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </div>
+
+        <div className={`grid grid-cols-2 gap-4 ${g('general').footerSocialsEnabled === 'false' ? 'opacity-40 pointer-events-none' : ''}`}>
+          {[
+            { key: 'footerYoutube',   enKey: 'footerYoutubeEnabled',   label: 'YouTube URL',     ph: 'https://youtube.com/@sambid' },
+            { key: 'footerInstagram', enKey: 'footerInstagramEnabled', label: 'Instagram URL',   ph: 'https://instagram.com/sambid' },
+            { key: 'footerLinkedin',  enKey: 'footerLinkedinEnabled',  label: 'LinkedIn URL',    ph: 'https://linkedin.com/company/sambid' },
+            { key: 'footerTwitter',   enKey: 'footerTwitterEnabled',   label: 'X / Twitter URL', ph: 'https://x.com/sambid' },
+            { key: 'footerFacebook',  enKey: 'footerFacebookEnabled',  label: 'Facebook URL',    ph: 'https://facebook.com/sambid' },
+            { key: 'footerTiktok',    enKey: 'footerTiktokEnabled',    label: 'TikTok URL',      ph: 'https://tiktok.com/@sambid' },
+          ].map(({ key, enKey, label, ph }) => {
+            const enabled = g('general')[enKey] !== 'false';
+            return (
+              <div key={key} className={enabled ? '' : 'opacity-50'}>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-gray-600">
+                    {label}
+                    {!enabled && <span className="ml-2 text-[10px] bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full font-medium">Hidden</span>}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => set('general', enKey, enabled ? 'false' : 'true')}
+                    title={enabled ? 'Hide this icon on the site' : 'Show this icon on the site'}
+                    className={`relative inline-flex h-4.5 w-8 h-[18px] items-center rounded-full transition-colors shrink-0 ${enabled ? 'bg-teal-600' : 'bg-gray-300'}`}
+                  >
+                    <span className={`inline-block h-3 w-3 transform rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                  </button>
+                </div>
+                <input type="text" value={g('general')[key] || ''} onChange={e => set('general', key, e.target.value)} placeholder={ph}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-300 outline-none" />
+              </div>
+            );
+          })}
         </div>
         <div className="border-t border-gray-100 pt-4 grid grid-cols-1 gap-4">
           <TextInput label="Footer Description" value={g('general').footerDescription || ''} onChange={v => set('general','footerDescription',v)}

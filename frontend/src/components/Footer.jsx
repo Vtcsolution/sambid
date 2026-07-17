@@ -53,14 +53,15 @@ const contactItems = [
 const DEFAULT_DESCRIPTION = 'AI-powered federal contract discovery platform. Helping small businesses find, track, and win government opportunities.';
 const DEFAULT_TAGLINE = '"Never miss a federal contract again."';
 
-// Order + icon for each admin-managed social link (only shown when a URL is set)
+// Order + icon for each admin-managed social link. An icon shows only when
+// its URL is set AND its toggle (and the master toggle) is on in the admin panel.
 const SOCIAL_DEFS = [
-  { key: 'footerYoutube',   icon: Youtube,   label: 'YouTube'   },
-  { key: 'footerInstagram', icon: Instagram, label: 'Instagram' },
-  { key: 'footerLinkedin',  icon: Linkedin,  label: 'LinkedIn'  },
-  { key: 'footerTwitter',   icon: Twitter,   label: 'X / Twitter' },
-  { key: 'footerFacebook',  icon: Facebook,  label: 'Facebook'  },
-  { key: 'footerTiktok',    icon: Music2,    label: 'TikTok'    },
+  { key: 'footerYoutube',   enKey: 'footerYoutubeEnabled',   icon: Youtube,   label: 'YouTube'   },
+  { key: 'footerInstagram', enKey: 'footerInstagramEnabled', icon: Instagram, label: 'Instagram' },
+  { key: 'footerLinkedin',  enKey: 'footerLinkedinEnabled',  icon: Linkedin,  label: 'LinkedIn'  },
+  { key: 'footerTwitter',   enKey: 'footerTwitterEnabled',   icon: Twitter,   label: 'X / Twitter' },
+  { key: 'footerFacebook',  enKey: 'footerFacebookEnabled',  icon: Facebook,  label: 'Facebook'  },
+  { key: 'footerTiktok',    enKey: 'footerTiktokEnabled',    icon: Music2,    label: 'TikTok'    },
 ];
 
 export default function Footer() {
@@ -75,8 +76,9 @@ export default function Footer() {
       .catch(() => {}); // fall back to defaults silently
   }, []);
 
-  const socials = SOCIAL_DEFS
-    .filter(s => footerData[s.key] && String(footerData[s.key]).trim() !== '')
+  const socialsHidden = footerData.footerSocialsEnabled === 'false'; // admin master switch
+  const socials = socialsHidden ? [] : SOCIAL_DEFS
+    .filter(s => footerData[s.key] && String(footerData[s.key]).trim() !== '' && footerData[s.enKey] !== 'false')
     .map(s => ({ icon: s.icon, href: footerData[s.key], label: s.label }));
 
   const description = footerData.footerDescription?.trim() || DEFAULT_DESCRIPTION;
