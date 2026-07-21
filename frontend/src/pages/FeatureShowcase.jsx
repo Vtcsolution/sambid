@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, Play, ArrowRight, ChevronLeft, Loader2, Sparkles, Zap } from 'lucide-react';
 import api from '../services/api';
 import SEOHead from '../components/SEOHead';
+import ZoomableImage from '../components/ZoomableImage';
+import { getVideoEmbed } from '../utils/videoEmbed';
 
 // Per-feature keyword targeting - long-tail search intent for each tool
 const FEATURE_KEYWORDS = {
@@ -54,16 +56,6 @@ export default function FeatureShowcase() {
       </div>
     </div>
   );
-
-  const getVideoEmbed = (url) => {
-    if (!url) return null;
-    const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
-    const vmMatch = url.match(/vimeo\.com\/(\d+)/);
-    if (vmMatch) return `https://player.vimeo.com/video/${vmMatch[1]}`;
-    if (url.endsWith('.mp4') || url.endsWith('.webm')) return 'direct';
-    return url;
-  };
 
   const embedUrl = getVideoEmbed(feature.videoUrl);
 
@@ -132,7 +124,7 @@ export default function FeatureShowcase() {
                     <source src={feature.videoUrl} type="video/mp4" />
                   </video>
                 ) : feature.thumbnailUrl ? (
-                  <img src={feature.thumbnailUrl} alt={feature.title} className="w-full h-full object-cover" />
+                  <ZoomableImage src={feature.thumbnailUrl} alt={feature.title} />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-center p-8">
@@ -183,7 +175,7 @@ export default function FeatureShowcase() {
                           if (ve === 'direct') return <video controls className="w-full h-full" preload="metadata"><source src={step.videoUrl} type="video/mp4" /></video>;
                           return null;
                         })() : step.imageUrl ? (
-                          <img src={step.imageUrl} alt={step.title} className="w-full h-full object-cover" />
+                          <ZoomableImage src={step.imageUrl} alt={step.title} />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <div className="text-center p-8">

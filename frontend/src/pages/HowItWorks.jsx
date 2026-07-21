@@ -1,12 +1,31 @@
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import {
-  ArrowRight, Zap, CheckCircle,
+  ArrowRight, Zap, Play,
   TrendingUp, Shield, Target, Award,
-  XCircle, Users, SlidersHorizontal, FileText, BellRing, Timer,
+  Users, SlidersHorizontal, FileText, BellRing, Timer,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import SEOHead from '../components/SEOHead';
+import ZoomableImage from '../components/ZoomableImage';
+import { getVideoEmbed } from '../utils/videoEmbed';
+
+const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
+
+// lucide-react icon lookup for admin-picked icon names on compare items
+const ICON_MAP = { Users, SlidersHorizontal, FileText, BellRing, Timer, Shield, Target, Award, TrendingUp, Zap };
+
+function useHowItWorksContent() {
+  const [content, setContent] = useState(null);
+  useEffect(() => {
+    fetch(`${API}/api/how-it-works`)
+      .then(r => r.json())
+      .then(d => { if (d.success && d.data) setContent(d.data); })
+      .catch(() => {});
+  }, []);
+  return content;
+}
 
 const ANIM_CSS = `
 @keyframes _fadeUp {
@@ -95,6 +114,13 @@ const AI_ENGINE = [
   { label: 'Company-Specific Output', kind: 'out' },
 ];
 
+// Each point can optionally carry a `video` (YouTube/Vimeo/direct .mp4 URL)
+// and/or a `videoThumbnail` (poster image shown before/instead of the video).
+// When present it renders above the "Automated Workflow" chip strip; when
+// absent (as now, for all 17), nothing extra shows and the page looks exactly
+// as it does today. Example once a clip is ready:
+//   video: 'https://youtube.com/watch?v=XXXXXXXXXXX',
+//   videoThumbnail: 'https://.../point-01-thumb.jpg',
 const PAIN_POINTS = [
   {
     num: '01',
@@ -300,6 +326,43 @@ const PAIN_POINTS = [
 
 export default function HowItWorks() {
   const { isAuthenticated } = useAuth();
+  const cms = useHowItWorksContent();
+
+  // Every section falls back to the hardcoded defaults above until an admin
+  // seeds/edits the page — the live site never breaks or shows blank content.
+  const hero = {
+    badge: cms?.hero?.badge || 'Intelligence Brief: Expert Edition',
+    titleLine1: cms?.hero?.titleLine1 || 'Federal BD Intelligence.',
+    titleLine2: cms?.hero?.titleLine2 || 'Automated.',
+    subtitle: cms?.hero?.subtitle || 'Sambid replaces a 20-person BD team with 17 automated workflows: daily contract discovery, AI-drafted proposals, deadline alerts, and Go/No-Go decisions. One platform, one person, maximum wins.',
+  };
+  const compareMeta = {
+    tag: cms?.compareSection?.tag || 'The Problem We Solve',
+    title: cms?.compareSection?.title || 'What Changes When You Use Sambid',
+    subtitle: cms?.compareSection?.subtitle || 'Five things every contractor will recognize — each pain, and exactly what it becomes.',
+    summaryLine: cms?.compareSection?.summaryLine || "20 people → 2. $50,000 → 3 minutes. 3 days → 30 seconds. That's the change.",
+  };
+  const compareItems = (cms?.compareSection?.items?.length ? cms.compareSection.items : COMPARE).map(item => ({
+    ...item,
+    icon: typeof item.icon === 'string' ? (ICON_MAP[item.icon] || Zap) : item.icon,
+  }));
+  const aiEngineMeta = {
+    tag: cms?.aiEngineSection?.tag || 'The Intelligence Layer',
+    title: cms?.aiEngineSection?.title || 'One AI Engine Powers All 17 Workflows',
+    subtitle: cms?.aiEngineSection?.subtitle || 'Every feature draws from the same intelligence layer. The output is never generic. It knows your registrations, certifications, capabilities, and past contracts before it writes a single word.',
+  };
+  const aiEngineFlow = cms?.aiEngineSection?.flow?.length ? cms.aiEngineSection.flow : AI_ENGINE;
+  const painPointsMeta = {
+    tag: cms?.painPointsSection?.tag || '17 Problems. 17 Solutions.',
+    title: cms?.painPointsSection?.title || 'What Is Costing You Contracts',
+    subtitle: cms?.painPointsSection?.subtitle || 'Every pain point a federal contractor faces, and exactly how Sambid eliminates it, with the full automated workflow shown.',
+  };
+  const painPoints = cms?.painPoints?.length ? cms.painPoints : PAIN_POINTS;
+  const closing = {
+    title: cms?.closing?.title || 'The Bottom Line for Expert Contractors',
+    text: cms?.closing?.text || "Every contract you lost in the last 12 months had a reason. A solicitation your team never saw. A deadline missed by hours. A proposal that read like a template. An incumbent you didn't know existed. None of those are failures of capability. They are failures of intelligence. Your competitors aren't smarter. They just had better information, faster. Sambid is that information.",
+  };
+
   const ctaHref  = isAuthenticated ? '/dashboard' : '/signup';
   const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial';
 
@@ -322,23 +385,23 @@ export default function HowItWorks() {
             {/* Left - text */}
             <div className="hw-fade">
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm mb-6">
-                <Zap className="w-4 h-4 mr-2 text-yellow-400 shrink-0" />
+                <Zap className="w-4 h-4 mr-2 text-indigo-300 shrink-0" />
                 <span className="text-xs sm:text-sm font-medium">
-                  Intelligence Brief: Expert Edition
+                  {hero.badge}
                 </span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-5 sm:mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
-                  Federal BD Intelligence.
+                  {hero.titleLine1}
                 </span>
                 <span className="block text-2xl sm:text-4xl md:text-5xl mt-2 text-indigo-200 font-semibold">
-                  Automated.
+                  {hero.titleLine2}
                 </span>
               </h1>
 
               <p className="text-base sm:text-xl text-indigo-100 mb-7 sm:mb-8 leading-relaxed max-w-lg">
-                Sambid replaces a 20-person BD team with 17 automated workflows: daily contract discovery, AI-drafted proposals, deadline alerts, and Go/No-Go decisions. One platform, one person, maximum wins.
+                {hero.subtitle}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -433,93 +496,54 @@ export default function HowItWorks() {
       </section>
 
       {/* ── Before / After - row-by-row transformation ───────── */}
-      <section className="py-14 sm:py-20 bg-gray-50">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeIn className="text-center mb-10">
-            <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
-              The Problem We Solve
+          <FadeIn className="text-center mb-10 sm:mb-14">
+            <span className="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
+              {compareMeta.tag}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              What Changes When You Use Sambid
+              {compareMeta.title}
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-              Five things every contractor will recognize — each pain, and exactly what it becomes.
+            <p className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto">
+              {compareMeta.subtitle}
             </p>
           </FadeIn>
 
-          <FadeIn>
-            <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-sm bg-white/60 backdrop-blur-sm">
+          <div className="max-w-4xl mx-auto space-y-3">
+            {compareItems.map((row, i) => {
+              const Icon = row.icon;
+              return (
+                <FadeIn key={i} delay={i * 60}>
+                  <div className="group flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 rounded-2xl border border-indigo-100/70 bg-transparent hover:bg-indigo-50/40 transition-colors px-5 sm:px-7 py-5">
 
-              {/* Column headers */}
-              <div className="hidden md:grid md:grid-cols-[1fr_64px_1fr] border-b border-gray-100">
-                <div className="px-8 py-4 flex items-center gap-2.5">
-                  <XCircle className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">Without Sambid — Today</span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200">
-                    <ArrowRight className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <div className="px-8 py-4 flex items-center gap-2.5">
-                  <CheckCircle className="w-5 h-5 text-indigo-600" />
-                  <span className="text-sm font-bold text-indigo-700 uppercase tracking-wider">With Sambid — Tomorrow</span>
-                </div>
-              </div>
-
-              {/* Comparison rows */}
-              <div className="divide-y divide-gray-100">
-                {COMPARE.map((row, i) => {
-                  const Icon = row.icon;
-                  return (
-                    <div key={i} className="grid md:grid-cols-[1fr_64px_1fr] group hover:bg-indigo-50/30 transition-colors">
-
-                      {/* Before cell */}
-                      <div className="px-6 sm:px-8 py-5 flex items-start gap-3.5">
-                        <div className="md:hidden w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                          <XCircle className="w-4 h-4 text-gray-400" />
-                        </div>
-                        <XCircle className="hidden md:block w-5 h-5 text-gray-300 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{row.topic}</p>
-                          <p className="text-sm sm:text-[15px] text-gray-600 leading-relaxed">{row.before}</p>
-                        </div>
+                    {/* Icon + topic */}
+                    <div className="flex items-center gap-3 sm:w-44 shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+                        <Icon className="w-5 h-5 text-indigo-600" />
                       </div>
-
-                      {/* Center icon */}
-                      <div className="hidden md:flex items-center justify-center">
-                        <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-colors">
-                          <Icon className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
-                        </div>
-                      </div>
-
-                      {/* After cell */}
-                      <div className="px-6 sm:px-8 py-5 flex items-start gap-3.5 border-t md:border-t-0 border-gray-100">
-                        <div className="md:hidden w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
-                          <CheckCircle className="w-4 h-4 text-indigo-600" />
-                        </div>
-                        <CheckCircle className="hidden md:block w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{row.topic}</p>
-                          <p className="text-sm sm:text-[15px] text-gray-700 leading-relaxed">{row.after}</p>
-                        </div>
-                      </div>
-
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{row.topic}</p>
                     </div>
-                  );
-                })}
-              </div>
 
-              {/* Summary strip */}
-              <div className="bg-indigo-600 px-6 sm:px-8 py-5 text-center">
-                <p className="text-sm sm:text-base text-indigo-100 font-medium">
-                  <span className="text-white font-bold">20 people → 2.</span>{' '}
-                  <span className="text-white font-bold">$50,000 → 3 minutes.</span>{' '}
-                  <span className="text-white font-bold">3 days → 30 seconds.</span>{' '}
-                  <span className="text-indigo-200">That's the change.</span>
-                </p>
-              </div>
+                    {/* Before → After */}
+                    <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                      <p className="text-sm sm:text-[15px] text-gray-400 leading-relaxed flex-1">{row.before}</p>
+                      <ArrowRight className="hidden sm:block w-4 h-4 text-indigo-300 shrink-0" />
+                      <p className="text-sm sm:text-[15px] text-gray-800 leading-relaxed flex-1 font-medium">{row.after}</p>
+                    </div>
 
+                  </div>
+                </FadeIn>
+              );
+            })}
+          </div>
+
+          {/* Summary strip */}
+          <FadeIn delay={compareItems.length * 60}>
+            <div className="max-w-4xl mx-auto mt-6 rounded-2xl border border-indigo-100 bg-indigo-50/50 px-6 sm:px-8 py-5 text-center">
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <span className="text-indigo-700 font-bold">{compareMeta.summaryLine}</span>
+              </p>
             </div>
           </FadeIn>
         </div>
@@ -553,21 +577,21 @@ export default function HowItWorks() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-8">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
-              The Intelligence Layer
+              {aiEngineMeta.tag}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-              One AI Engine Powers All 17 Workflows
+              {aiEngineMeta.title}
             </h2>
             <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-              Every feature draws from the same intelligence layer. The output is never generic. It knows your registrations, certifications, capabilities, and past contracts before it writes a single word.
+              {aiEngineMeta.subtitle}
             </p>
           </FadeIn>
 
           <FadeIn>
-            <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6 sm:p-8">
+            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/30 p-6 sm:p-8">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">How the AI Engine Works</p>
               <div className="flex flex-wrap items-center justify-center gap-2">
-                {AI_ENGINE.map((item, i) =>
+                {aiEngineFlow.map((item, i) =>
                   item.sep
                     ? <span key={i} className="text-gray-400 text-sm font-bold shrink-0">{item.sep}</span>
                     : <FlowChip key={i} kind={item.kind} light>{item.label}</FlowChip>
@@ -583,30 +607,65 @@ export default function HowItWorks() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-12 sm:mb-16">
             <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wide mb-3">
-              17 Problems. 17 Solutions.
+              {painPointsMeta.tag}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              What Is Costing You Contracts
+              {painPointsMeta.title}
             </h2>
             <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-              Every pain point a federal contractor faces, and exactly how Sambid eliminates it, with the full automated workflow shown.
+              {painPointsMeta.subtitle}
             </p>
           </FadeIn>
 
-          <div className="space-y-14 sm:space-y-20">
-            {PAIN_POINTS.map((pp, idx) => {
+          <div className="space-y-6 sm:space-y-8">
+            {painPoints.map((pp, idx) => {
               const reversed = idx % 2 !== 0;
-              const bg = idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
               return (
                 <FadeIn key={pp.num} delay={Math.min(idx * 20, 150)}>
                   <div
-                    className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center rounded-3xl p-6 sm:p-10 ${bg} ${
-                      idx % 2 !== 0 ? 'border border-gray-100' : ''
-                    } ${reversed ? 'lg:grid-flow-col-dense' : ''}`}
+                    className={`grid lg:grid-cols-2 gap-8 lg:gap-16 items-center rounded-3xl border border-indigo-100/70 p-6 sm:p-10 ${
+                      reversed ? 'lg:grid-flow-col-dense' : ''
+                    }`}
                   >
                     {/* Workflow visual block */}
                     <div className={`order-2 lg:order-none ${reversed ? 'lg:col-start-2' : ''}`}>
-                      <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8">
+                      <div className="rounded-2xl overflow-hidden border border-indigo-100 bg-indigo-50/30 shadow-lg mb-4"
+                        style={{ aspectRatio: '16/9' }}>
+                        {(() => {
+                          const embed = getVideoEmbed(pp.video);
+                          if (embed && embed !== 'direct') {
+                            return (
+                              <iframe src={embed} className="w-full h-full" frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen title={pp.title} />
+                            );
+                          }
+                          if (embed === 'direct') {
+                            return (
+                              <video controls className="w-full h-full" preload="metadata" poster={pp.videoThumbnail}>
+                                <source src={pp.video} type="video/mp4" />
+                              </video>
+                            );
+                          }
+                          if (pp.videoThumbnail) {
+                            return <ZoomableImage src={pp.videoThumbnail} alt={pp.title} />;
+                          }
+                          // no video/thumbnail set yet — visible placeholder so it's
+                          // obvious this slot exists and is waiting for point N's clip
+                          return (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <div className="text-center p-8">
+                                <div className="w-14 h-14 rounded-full bg-indigo-600/90 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                  <Play className="w-6 h-6 text-white ml-0.5" />
+                                </div>
+                                <p className="text-indigo-700 text-sm font-semibold">Video coming soon</p>
+                                <p className="text-indigo-400 text-xs mt-1">Point {idx + 1} of 17</p>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      <div className="rounded-2xl border border-indigo-100 bg-indigo-50/30 p-6 sm:p-8">
                         <div className="flex items-center gap-1.5 mb-4">
                           <Zap className="w-3.5 h-3.5 text-indigo-500" />
                           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
@@ -658,10 +717,10 @@ export default function HowItWorks() {
         <div className="absolute inset-0 bg-black opacity-10" />
         <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-            The Bottom Line for Expert Contractors
+            {closing.title}
           </h2>
           <p className="text-base sm:text-lg text-indigo-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Every contract you lost in the last 12 months had a reason. A solicitation your team never saw. A deadline missed by hours. A proposal that read like a template. An incumbent you didn&apos;t know existed. None of those are failures of capability. They are failures of intelligence. Your competitors aren&apos;t smarter. They just had better information, faster. Sambid is that information.
+            {closing.text}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link

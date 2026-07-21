@@ -99,6 +99,7 @@ const AdminCompanyWorkspaces   = lazy(() => import('./pages/admin/AdminCompanyWo
 const AdminManagedService      = lazy(() => import('./pages/admin/AdminManagedService'));
 const AdminManagedProjects     = lazy(() => import('./pages/admin/AdminManagedProjects'));
 const AdminFeatureShowcase     = lazy(() => import('./pages/admin/AdminFeatureShowcase'));
+const AdminHowItWorks          = lazy(() => import('./pages/admin/AdminHowItWorks'));
 const ManagedServicePage       = lazy(() => import('./pages/company/ManagedService'));
 const FeatureShowcase          = lazy(() => import('./pages/FeatureShowcase'));
 
@@ -246,6 +247,7 @@ function App() {
             <Route path="managed-service"      element={<AdminManagedService />} />
             <Route path="managed-projects"     element={<AdminManagedProjects />} />
             <Route path="feature-showcase"     element={<AdminFeatureShowcase />} />
+            <Route path="how-it-works"         element={<AdminHowItWorks />} />
           </Route>
         </Routes>
       </Suspense>

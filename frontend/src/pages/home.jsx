@@ -11,6 +11,7 @@ import {
   Calendar, Trophy, Play, Bell
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
+import ZoomableImage from '../components/ZoomableImage';
 
 const HOME_JSON_LD = [
   {
@@ -119,7 +120,7 @@ function VideoBlock({ videoSrc, posterSrc, title }) {
           <source src={videoSrc} type="video/mp4" />
         </video>
       ) : posterSrc ? (
-        <img src={posterSrc} alt={title} className="w-full h-full object-cover" />
+        <ZoomableImage src={posterSrc} alt={title} />
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div

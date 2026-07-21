@@ -73,7 +73,7 @@ function FeatureEditor({ feature, onSave, onCancel }) {
         : await api('/admin', 'POST', f);
       if (res.success) onSave(res.data);
       else alert(res.message || 'Failed');
-    } catch (e) { alert('Error saving'); }
+    } catch { alert('Error saving'); }
     setSaving(false);
   };
 
@@ -115,13 +115,10 @@ function FeatureEditor({ feature, onSave, onCancel }) {
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Hero Video (YouTube link OR upload MP4) - optional, overrides thumbnail</label>
-        <div className="flex gap-2">
-          <input value={f.videoUrl} onChange={e => set('videoUrl', e.target.value)} placeholder="https://youtube.com/watch?v=... or upload →" className="flex-1 text-sm border rounded-lg px-3 py-2" />
-          <UploadBtn label="Upload Video" accept="video/mp4,video/webm,video/quicktime" onUploaded={url => set('videoUrl', url)} />
-        </div>
+        <label className="text-xs font-medium text-gray-500 mb-1 block">Hero Video (YouTube link) - optional, overrides thumbnail</label>
+        <input value={f.videoUrl} onChange={e => set('videoUrl', e.target.value)} placeholder="https://youtube.com/watch?v=..." className="w-full text-sm border rounded-lg px-3 py-2" />
         {f.videoUrl && (
-          <p className="text-xs text-green-600 mt-1 truncate">Current: {f.videoUrl.split('/').pop()}</p>
+          <p className="text-xs text-green-600 mt-1 truncate">Current: {f.videoUrl}</p>
         )}
       </div>
 
@@ -166,11 +163,8 @@ function FeatureEditor({ feature, onSave, onCancel }) {
                 <input placeholder="Description" value={step.description} onChange={e => { const s = [...f.steps]; s[i] = { ...s[i], description: e.target.value }; set('steps', s); }} className="w-full text-sm border rounded-lg px-3 py-1.5" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <div className="flex gap-1">
-                      <input placeholder="Video URL or upload →" value={step.videoUrl || ''} onChange={e => { const s = [...f.steps]; s[i] = { ...s[i], videoUrl: e.target.value }; set('steps', s); }} className="flex-1 text-xs border rounded-lg px-2 py-1.5" />
-                      <UploadBtn label="Video" accept="video/mp4,video/webm" onUploaded={url => { const s = [...f.steps]; s[i] = { ...s[i], videoUrl: url }; set('steps', s); }} />
-                    </div>
-                    {step.videoUrl && <p className="text-[10px] text-green-600 mt-0.5 truncate">{step.videoUrl.split('/').pop()}</p>}
+                    <input placeholder="YouTube link" value={step.videoUrl || ''} onChange={e => { const s = [...f.steps]; s[i] = { ...s[i], videoUrl: e.target.value }; set('steps', s); }} className="w-full text-xs border rounded-lg px-2 py-1.5" />
+                    {step.videoUrl && <p className="text-[10px] text-green-600 mt-0.5 truncate">{step.videoUrl}</p>}
                   </div>
                   <div>
                     <div className="flex gap-1">
