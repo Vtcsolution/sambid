@@ -661,12 +661,33 @@ export const generateEmailWithAI = async (templateType, prospectData = {}) => {
 
 // ── Build HTML from plain text body ──────────────────────────────────────────
 
+const BULLET_RE = /^[•\-*]\s+(.+)/;
+
+const escapeBold = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+// A block renders as a real <ul> when every non-empty line in it is a bullet
+// line — otherwise it's a normal paragraph. Keeps "- " lines from a
+// generated email (AI or static template) from showing as literal dashes.
+const renderBlock = (block) => {
+  const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+  const allBullets = lines.length > 0 && lines.every(l => BULLET_RE.test(l));
+
+  if (allBullets) {
+    const items = lines
+      .map(l => `<li style="margin:0 0 8px;line-height:1.6;font-size:15px;color:#374151;">${escapeBold(BULLET_RE.exec(l)[1])}</li>`)
+      .join('');
+    return `<ul style="margin:0 0 16px;padding-left:20px;">${items}</ul>`;
+  }
+
+  return `<p style="margin:0 0 16px;line-height:1.7;font-size:15px;color:#374151;">${escapeBold(block).replace(/\n/g, '<br>')}</p>`;
+};
+
 export const buildCustomEmailHtml = (bodyText, trackingId = null) => {
   const paragraphs = bodyText
     .split(/\n\n+/)
     .map(para => para.trim())
     .filter(Boolean)
-    .map(para => `<p style="margin:0 0 16px;line-height:1.7;font-size:15px;color:#374151;">${para.replace(/\n/g, '<br>')}</p>`)
+    .map(renderBlock)
     .join('');
 
   const destUrl  = `${PLATFORM_URL}?utm_source=outreach&utm_medium=email`;
