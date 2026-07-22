@@ -102,6 +102,9 @@ const AdminFeatureShowcase     = lazy(() => import('./pages/admin/AdminFeatureSh
 const AdminHowItWorks          = lazy(() => import('./pages/admin/AdminHowItWorks'));
 const ManagedServicePage       = lazy(() => import('./pages/company/ManagedService'));
 const FeatureShowcase          = lazy(() => import('./pages/FeatureShowcase'));
+const AdminProblems            = lazy(() => import('./pages/admin/AdminProblems'));
+const Problems                 = lazy(() => import('./pages/Problems'));
+const ProblemDetail            = lazy(() => import('./pages/ProblemDetail'));
 
 const Features          = lazy(() => import('./pages/Features'));
 const FAQ               = lazy(() => import('./pages/FAQ'));
@@ -248,6 +251,7 @@ function App() {
             <Route path="managed-projects"     element={<AdminManagedProjects />} />
             <Route path="feature-showcase"     element={<AdminFeatureShowcase />} />
             <Route path="how-it-works"         element={<AdminHowItWorks />} />
+            <Route path="problems"             element={<AdminProblems />} />
           </Route>
         </Routes>
       </Suspense>
@@ -307,6 +311,8 @@ function App() {
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/features" element={<Features />} />
             <Route path="/features/:slug" element={<FeatureShowcase />} />
+            <Route path="/problems" element={<Problems />} />
+            <Route path="/problems/:slug" element={<ProblemDetail />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/annual-plan-request" element={<AnnualPlanRequest />} />

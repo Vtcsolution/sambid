@@ -72,6 +72,7 @@ const ALL_NAV = [
       { path: '/admin/managed-projects',   label: 'Subcontracting',      icon: Package,     roles: ['super_admin','admin'] },
       { path: '/admin/feature-showcase',   label: 'Feature Pages',       icon: Sparkles,    roles: ['super_admin','admin'] },
       { path: '/admin/how-it-works',       label: 'How It Works Page',   icon: Layers,      roles: ['super_admin','admin'] },
+      { path: '/admin/problems',           label: 'Problems Pages',      icon: Lightbulb,   roles: ['super_admin','admin'] },
       { path: '/admin/media-manager',      label: 'Page Media',          icon: Layers,      roles: ['super_admin','admin'] },
       { path: '/admin/support-management', label: 'Support Team',        icon: Heart,       roles: ['super_admin','admin'] },
       { path: '/admin/admin-management',   label: 'Admin Accounts',      icon: ShieldCheck, roles: ['super_admin'] },

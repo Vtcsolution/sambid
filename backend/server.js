@@ -38,6 +38,7 @@ import partnerRoutes           from './routes/partnerRoutes.js';
 import mediaRoutes                  from './routes/mediaRoutes.js';
 import featureShowcaseRoutes        from './routes/featureShowcaseRoutes.js';
 import howItWorksRoutes             from './routes/howItWorksRoutes.js';
+import problemShowcaseRoutes        from './routes/problemShowcaseRoutes.js';
 import footerRoutes                 from './routes/footerRoutes.js';
 import companyRoutes                from './routes/companyRoutes.js';
 import adminCompanyWorkspaceRoutes  from './routes/adminCompanyWorkspaceRoutes.js';
@@ -208,6 +209,7 @@ app.use('/api/credits',            apiLimiter, creditTopupRoutes);
 app.use('/api/media',              mediaRoutes);   // public GET, admin POST/DELETE
 app.use('/api/features',           featureShowcaseRoutes); // public + admin CMS
 app.use('/api/how-it-works',       howItWorksRoutes); // public + admin CMS
+app.use('/api/problems',           problemShowcaseRoutes); // public + admin CMS
 app.use('/api/footer',             footerRoutes); // public — footer social links & text
 app.use('/api/company',            apiLimiter, companyRoutes);
 app.use('/api/admin/company-workspaces', apiLimiter, adminCompanyWorkspaceRoutes);
