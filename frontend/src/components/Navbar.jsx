@@ -7,10 +7,10 @@ import {
 import UserNotificationDropdown from './UserNotificationDropdown';
 import SambidLogo from './SambidLogo';
 
-// Curated top 7 shown in the nav dropdown. The other feature pages (Risk
-// Assessment, Bid Pipeline, Past Performance, etc.) still exist and are
-// still live/linked from Features.jsx and search, just not front-and-center
-// in this menu.
+// Curated top 6 shown in the nav dropdown. The other feature pages (Risk
+// Assessment, Bid Pipeline, Past Performance, Managed Bidding, etc.) still
+// exist and are still live/linked from Features.jsx and search, just not
+// front-and-center in this menu.
 const featureDemoLinks = [
   { path: '/features/contract-opportunities', label: 'Contract Opportunities', desc: 'Auto-matched SAM.gov contracts' },
   { path: '/features/bid-analysis',           label: 'AI Bid Analysis',        desc: 'BID/NO-BID with real data' },
@@ -18,7 +18,6 @@ const featureDemoLinks = [
   { path: '/features/ai-summarize',           label: 'AI Summarize',           desc: 'Full contract intelligence' },
   { path: '/features/proposal-builder',       label: 'AI Proposal Builder',    desc: '7-section proposal writer' },
   { path: '/features/deadline-calendar',      label: 'Deadline Calendar',      desc: 'Never miss a due date' },
-  { path: '/features/managed-service',        label: 'Managed Bidding',        desc: 'We bid for you - pay on win' },
 ];
 
 export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, user, onMenuClick }) {
