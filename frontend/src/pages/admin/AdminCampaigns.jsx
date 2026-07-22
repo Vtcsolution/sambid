@@ -1360,7 +1360,7 @@ export default function AdminCampaigns() {
                   subject={subject}
                   body={body}
                   fromName={fromName}
-                  userName={selectedUser?.name || 'John Smith'}
+                  userName={selectedUser?.name || ''}
                 />
               : <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-3">
