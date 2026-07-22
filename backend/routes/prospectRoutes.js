@@ -25,6 +25,7 @@ import {
   generateProspectEmail,
   sendProspectEmails,
   getProspectEmailHistory,
+  getAllProspectEmailHistory,
   quickAddProspect,
 } from '../controllers/prospectController.js';
 
@@ -64,5 +65,6 @@ router.get('/email/preview/:templateId',    requirePermission('campaigns'), prev
 router.post('/email/generate',              requirePermission('campaigns'), generateProspectEmail);
 router.post('/email/send',                  requirePermission('campaigns'), sendProspectEmails);
 router.get('/:id/email-history',            requirePermission('campaigns'), getProspectEmailHistory);
+router.get('/email/history-all',            requirePermission('campaigns'), getAllProspectEmailHistory);
 
 export default router;

@@ -407,3 +407,61 @@ export const getProspectEmailHistory = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// ── Admin: all prospect outreach emails ever sent, across every company ──────
+// Flattens each prospect's emailHistory[] into one row per send, newest
+// first, with overall Total/Delivered/Opened/Failed/Rate stats — the
+// Prospect Outreach equivalent of the campaign Send History panel.
+export const getAllProspectEmailHistory = async (req, res) => {
+  try {
+    const page  = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 25);
+
+    const pipeline = [
+      { $match: { 'emailHistory.0': { $exists: true } } },
+      { $unwind: '$emailHistory' },
+      { $sort: { 'emailHistory.sentAt': -1 } },
+      {
+        $project: {
+          _id:          0,
+          prospectId:   '$_id',
+          companyName:  1,
+          email:        '$primaryEmail',
+          templateId:   '$emailHistory.templateId',
+          templateName: '$emailHistory.templateName',
+          subject:      '$emailHistory.subject',
+          sentAt:       '$emailHistory.sentAt',
+          sentBy:       '$emailHistory.sentBy',
+          trackingId:   '$emailHistory.trackingId',
+          openedAt:     '$emailHistory.openedAt',
+          openCount:    '$emailHistory.openCount',
+        },
+      },
+    ];
+
+    const [rows, totalAgg, openedAgg] = await Promise.all([
+      Prospect.aggregate([...pipeline, { $skip: (page - 1) * limit }, { $limit: limit }]),
+      Prospect.aggregate([...pipeline, { $count: 'total' }]),
+      Prospect.aggregate([...pipeline, { $match: { openedAt: { $ne: null } } }, { $count: 'total' }]),
+    ]);
+
+    const total  = totalAgg[0]?.total || 0;
+    const opened = openedAgg[0]?.total || 0;
+
+    res.json({
+      success: true,
+      data: rows,
+      stats: {
+        total,
+        delivered: total, // SMTP-accepted == "delivered" (same semantics as campaign history)
+        opened,
+        failed: 0,
+        rate: total > 0 ? Math.round((opened / total) * 100) : 0,
+      },
+      page,
+      pages: Math.max(1, Math.ceil(total / limit)),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

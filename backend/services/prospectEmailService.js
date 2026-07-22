@@ -613,6 +613,7 @@ RULES:
 - Personalize using the company name and their contracting background — if they have real contract wins (contracts won / award amount above), open by congratulating them on that specific track record, don't skip straight to the pitch
 - Be specific, direct, and human — not corporate-speak, and never sound like a mass blast
 - Use 4-5 short one-line bullet points (starting with "- ") for the concrete benefits section — not a wall of paragraphs
+- Bold the 1-2 most important phrases or numbers per paragraph using **double asterisks** (e.g. **$4.2M**, **1,000 daily matches**) — every email must have at least 3 bolded phrases total, this is required, not optional
 - THE GOAL OF EVERY EMAIL IS THE SAME: get them to create a free account and explore the platform themselves with their own real NAICS codes and contract data. Never ask them to "buy," "upgrade," or "purchase a plan" in the email itself — the free account is the entire ask. They discover the value, and the case for a paid plan, once they're actually inside using it, not from the email.
 - End with ONE soft, low-pressure call to action pointing to ${PLATFORM_URL} that frames it as free to explore, no credit card required — not "Sign up now!" or anything pushy
 - Sign off as:\nZia\nFounder, Sambid\nsambid.co\n(not "Best regards, The Sambid Team")

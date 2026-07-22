@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { adminProspectAPI, adminAIAPI } from '../../services/adminApi';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
+import ProspectEmailHistoryPanel from '../../components/admin/ProspectEmailHistoryPanel';
 
 const EMAIL_TYPES = [
   { id: 'intro',      label: 'Platform Intro',   emoji: '👋', desc: 'Introduce Sambid for the first time' },
@@ -47,6 +48,9 @@ export default function AdminProspectOutreach() {
       </div>
     );
   }
+
+  // Compose vs full send-history view
+  const [pageView, setPageView] = useState('compose'); // 'compose' | 'history'
 
   // DB prospect list (left panel)
   const [prospects, setProspects]     = useState([]);
@@ -244,6 +248,23 @@ export default function AdminProspectOutreach() {
 
   const currentType = EMAIL_TYPES.find(t => t.id === activeType);
 
+  if (pageView === 'history') {
+    return (
+      <div className="p-4 sm:p-6 max-w-[1100px] mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <History className="w-6 h-6 text-indigo-600" /> Email Outreach — Send History
+          </h1>
+          <button onClick={() => setPageView('compose')}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-indigo-600 border border-gray-200 rounded-lg">
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to Compose
+          </button>
+        </div>
+        <ProspectEmailHistoryPanel />
+      </div>
+    );
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="flex h-full min-h-0" style={{ height: 'calc(100vh - 64px)' }}>
@@ -262,10 +283,16 @@ export default function AdminProspectOutreach() {
                 {loadingList ? 'Loading…' : `${prospects.length} companies with email`}
               </p>
             </div>
-            <button onClick={() => navigate('/admin/prospects')}
-              className="flex items-center gap-1 text-xs text-gray-400 hover:text-indigo-600 transition-colors">
-              <ArrowLeft className="w-3 h-3" /> All Prospects
-            </button>
+            <div className="flex flex-col items-end gap-1.5">
+              <button onClick={() => navigate('/admin/prospects')}
+                className="flex items-center gap-1 text-xs text-gray-400 hover:text-indigo-600 transition-colors">
+                <ArrowLeft className="w-3 h-3" /> All Prospects
+              </button>
+              <button onClick={() => setPageView('history')}
+                className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors">
+                <History className="w-3 h-3" /> Send History
+              </button>
+            </div>
           </div>
 
           {/* Search */}
