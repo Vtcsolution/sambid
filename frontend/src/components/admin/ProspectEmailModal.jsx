@@ -1,10 +1,11 @@
 // frontend/src/components/admin/ProspectEmailModal.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   X, Mail, Send, Loader2, CheckCircle, AlertCircle,
-  Sparkles, RefreshCw, History, ChevronLeft, Users, Clock,
+  Sparkles, RefreshCw, History, ChevronLeft, Users, Clock, Eye,
 } from 'lucide-react';
 import { adminProspectAPI } from '../../services/adminApi';
+import EmailPreview from './EmailPreview';
 
 // ── Email type toggles ────────────────────────────────────────────────────────
 const EMAIL_TYPES = [
@@ -124,7 +125,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden">
 
         {/* ── Header ── */}
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-t-2xl shrink-0">
@@ -222,7 +223,8 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+            <div className="flex-1 overflow-y-auto p-5 grid lg:grid-cols-[1fr_360px] gap-5 items-start">
+            <div className="space-y-5">
 
               {/* Type toggles */}
               <div>
@@ -349,6 +351,29 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* ── Live preview ── */}
+            <div className="hidden lg:block sticky top-0">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye className="w-4 h-4 text-indigo-500" />
+                <h3 className="font-semibold text-gray-900 text-sm">Live Preview</h3>
+                <span className="ml-auto text-xs text-gray-400">How recipients see it</span>
+              </div>
+              {subject || bodyText
+                ? <EmailPreview
+                    subject={subject}
+                    body={bodyText}
+                    fromName="Sambid"
+                    userName={emailableProspects[0]?.contactPersonName || emailableProspects[0]?.companyName || 'there'}
+                    signOff={'Zia\nFounder, Sambid\nsambid.co'}
+                  />
+                : <div className="flex flex-col items-center justify-center py-16 text-center bg-gray-50 rounded-xl border border-gray-100">
+                    <Mail className="w-8 h-8 text-gray-300 mb-2" />
+                    <p className="text-xs text-gray-400 px-6">Select an email type to see the preview here</p>
+                  </div>
+              }
+            </div>
             </div>
 
             {/* ── Footer ── */}

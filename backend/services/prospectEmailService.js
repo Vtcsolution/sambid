@@ -480,7 +480,7 @@ export const sendBulkProspectEmails = async (prospects, templateId, sentBy = 'ad
 // ── AI Email Generation ───────────────────────────────────────────────────────
 
 const TYPE_CONTEXT = {
-  intro:      'Write a warm introductory email presenting Sambid as the ideal tool for this federal contractor. Explain clearly what Sambid does and why it matters for their business.',
+  intro:      'Write a warm, personal outreach email to a proven federal contractor who has already won real contracts. Open by congratulating them on their contract win history (use their actual win count/dollar amount if given — this is the hook, not filler). Then pivot to ONE specific, surprising pain point: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly, real dollars lost to a data-entry error, not a capability gap. Then present Sambid as the fix for proven contractors who want to win more without scaling their BD team at the same rate as their pipeline. Use exactly 4-5 short bullet points (one line each, benefit-focused, not a feature list) covering: automated SAM.gov monitoring that catches miscoded listings, past performance auto-matched into new proposals, AI-drafted compliant proposals, incumbent/competitor intel before committing budget, and a fast data-backed Go/No-Go decision. End asking if it is worth a look, free to test, no credit card.',
   features:   "Highlight Sambid's 5 key features: AI-powered NAICS opportunity matching, real-time SAM.gov alerts, competitor intelligence dashboard, teaming partner finder, and proposal workspace.",
   // getters → evaluated on access with LIVE DB prices, not baked at import
   get competitor() { return `Compare Sambid to GovWin IQ and Deltek. Emphasize Sambid costs ${price('starter')}–${price('pro')}/mo vs competitors at $800–2,500/mo, setup is 5 minutes vs 2–4 weeks, and AI matching is more accurate.`; },
@@ -514,10 +514,16 @@ const fmtAmount = (n) => {
 // ── Static fallback templates (used when no AI key is available) ──────────────
 
 const STATIC_TEMPLATES = {
-  intro: (v) => ({
-    subject: `Discover federal contracts matched to ${v.company}`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI wanted to reach out because ${v.company} has an active federal contracting track record${v.state ? ` in ${v.state}` : ''}. We built Sambid specifically for companies like yours — to make sure you never miss a relevant contract opportunity.\n\nSambid is an AI-powered federal contract intelligence platform. It monitors SAM.gov, USASpending.gov, and FPDS in real-time and alerts you the moment a matching solicitation is posted based on your NAICS codes and past award history.\n\nKey capabilities: real-time SAM.gov alerts, AI-powered opportunity matching, competitor intelligence dashboard, and a teaming partner finder for set-aside contracts.\n\nNo credit card required. Setup takes under 5 minutes. Explore Sambid free at ${PLATFORM_URL}\n\nBest regards,\nThe Sambid Team`,
-  }),
+  intro: (v) => {
+    const hasWins = Number(v.contracts) > 0;
+    const congrats = hasWins
+      ? `Congrats on ${v.company}'s ${v.contracts} contract win${v.contracts > 1 ? 's' : ''}${v.amount && v.amount !== 'unknown amount' ? ` worth ${v.amount}` : ''} — that track record already puts you ahead of most bidders.`
+      : `Congrats on ${v.company}'s track record in federal contracting${v.state ? ` in ${v.state}` : ''} — that already puts you ahead of most bidders.`;
+    return {
+      subject: `The $4B gap even proven contractors miss`,
+      bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${congrats}\n\nOne thing that catches even experienced contractors: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly — regardless of how strong your team is. Real dollars lost to a data-entry error, not a capability gap.\n\nWe built Sambid to help proven contractors like ${v.company} win more, without scaling your BD team at the same rate as your pipeline:\n\n- Every SAM.gov listing monitored automatically, including the miscoded ones others miss\n- Your past performance auto-matched into every new proposal instantly\n- AI drafts a full compliant proposal in minutes — bid on more without more headcount\n- Know the incumbent's renewal history before committing budget to a bid\n- A data-backed Go/No-Go answer in 30 seconds, so more of what you chase is winnable\n\nWorth 10 minutes to see if it fits how you're scaling? Free to test, no credit card needed: ${PLATFORM_URL}\n\nZia\nFounder, Sambid\nsambid.co`,
+    };
+  },
   features: (v) => ({
     subject: `5 features that help ${v.company} win more federal contracts`,
     bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nFederal contracting is competitive — and manually monitoring SAM.gov takes hours every week. Sambid automates that work so your team can focus on winning.\n\nHere's what Sambid does for contractors like ${v.company}:\n\n1. AI Opportunity Matching — finds solicitations matched to your exact NAICS codes and past performance, not just keywords.\n2. Real-time SAM.gov Alerts — instant email and in-app notifications the moment a matching opportunity posts.\n3. Competitor Intelligence — see which companies are winning in your space and at what price.\n4. Teaming Partner Finder — connect with contractors who have complementary certifications for set-aside opportunities.\n5. Proposal Workspace — track your active bid pipeline with deadlines and documents in one place.\n\nStart a free 3-day trial at ${PLATFORM_URL} — no credit card required.\n\nBest regards,\nThe Sambid Team`,
@@ -591,10 +597,12 @@ INSTRUCTIONS: ${typeCtx}
 
 RULES:
 - Under 250 words total
-- Personalize using the company name and their contracting background
-- Be specific, direct, and human — not corporate-speak
-- End with ONE clear call to action pointing to ${PLATFORM_URL}
-- Plain text paragraphs only (no markdown, no HTML, no bullet points with * or -)
+- Personalize using the company name and their contracting background — if they have real contract wins (contracts won / award amount above), open by congratulating them on that specific track record, don't skip straight to the pitch
+- Be specific, direct, and human — not corporate-speak, and never sound like a mass blast
+- Use 4-5 short one-line bullet points (starting with "- ") for the concrete benefits section — not a wall of paragraphs
+- End with ONE soft, low-pressure call to action pointing to ${PLATFORM_URL} — offer it as free to test, no credit card, not "Sign up now!"
+- Sign off as:\nZia\nFounder, Sambid\nsambid.co\n(not "Best regards, The Sambid Team")
+- Plain text with basic markdown bullets ("- ") only — no HTML
 - Separate paragraphs with a blank line
 
 Return ONLY this JSON (no markdown wrapper, no extra text):
