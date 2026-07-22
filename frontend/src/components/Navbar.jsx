@@ -7,17 +7,18 @@ import {
 import UserNotificationDropdown from './UserNotificationDropdown';
 import SambidLogo from './SambidLogo';
 
+// Curated top 7 shown in the nav dropdown. The other feature pages (Risk
+// Assessment, Bid Pipeline, Past Performance, etc.) still exist and are
+// still live/linked from Features.jsx and search, just not front-and-center
+// in this menu.
 const featureDemoLinks = [
   { path: '/features/contract-opportunities', label: 'Contract Opportunities', desc: 'Auto-matched SAM.gov contracts' },
-  { path: '/features/ai-summarize',           label: 'AI Summarize',           desc: 'Full contract intelligence' },
   { path: '/features/bid-analysis',           label: 'AI Bid Analysis',        desc: 'BID/NO-BID with real data' },
-  { path: '/features/proposal-builder',       label: 'AI Proposal Builder',    desc: '7-section proposal writer' },
   { path: '/features/go-no-go',              label: 'Go/No-Go Decision',      desc: '10-factor scoring matrix' },
-  { path: '/features/competitive-analysis',   label: 'Competitive Analysis',   desc: 'Real competitor intelligence' },
-  { path: '/features/risk-assessment',        label: 'Risk Assessment',        desc: '7-category risk matrix' },
-  { path: '/features/managed-service',        label: 'Managed Bidding',        desc: 'We bid for you - pay on win' },
+  { path: '/features/ai-summarize',           label: 'AI Summarize',           desc: 'Full contract intelligence' },
+  { path: '/features/proposal-builder',       label: 'AI Proposal Builder',    desc: '7-section proposal writer' },
   { path: '/features/deadline-calendar',      label: 'Deadline Calendar',      desc: 'Never miss a due date' },
-  { path: '/features/bid-pipeline',           label: 'Bid Pipeline',           desc: 'Track bids through stages' },
+  { path: '/features/managed-service',        label: 'Managed Bidding',        desc: 'We bid for you - pay on win' },
 ];
 
 export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, user, onMenuClick }) {
@@ -132,7 +133,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
                   {/* Features dropdown */}
                   <div className="relative" ref={featuresRef}>
                     <button
-                      onClick={() => { setIsFeaturesOpen(o => !o); setIsPlatformOpen(false); }}
+                      onClick={() => setIsFeaturesOpen(o => !o)}
                       className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isFeaturesOpen || location.pathname.startsWith('/features')
                           ? 'text-indigo-600 bg-indigo-50'
@@ -156,13 +157,6 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
                               </div>
                             </Link>
                           ))}
-                        </div>
-                        <div className="border-t border-gray-100 mt-3 pt-3 flex items-center justify-between">
-                          <Link to="/features" onClick={() => setIsFeaturesOpen(false)}
-                            className="text-sm text-indigo-600 font-semibold hover:underline">
-                            View All Features →
-                          </Link>
-                          <span className="text-xs text-gray-400">18 features available</span>
                         </div>
                       </div>
                     )}
@@ -330,17 +324,13 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive('/features') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50'}`}>
                     <Zap className="w-4 h-4 shrink-0 text-indigo-500" /> All Features
                   </Link>
-                  {featureDemoLinks.slice(0, 5).map(l => (
+                  {featureDemoLinks.map(l => (
                     <Link key={l.path} to={l.path} onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
                       <Zap className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                       {l.label}
                     </Link>
                   ))}
-                  <Link to="/features" onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-xs text-indigo-600 font-semibold hover:underline">
-                    View all 18 features →
-                  </Link>
 
                   {/* How It Works */}
                   <Link
