@@ -72,11 +72,10 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
   const showPublicNav = !isAuthenticated || !isDashboardRoute;
 
   const topLinks = [
-    { path: '/',         label: 'Home',     icon: Home },
-    { path: '/problems', label: 'Problems', icon: Zap },
-    { path: '/pricing',  label: 'Pricing',  icon: DollarSign },
-    { path: '/about',    label: 'About',    icon: Info },
-    { path: '/contact',  label: 'Contact',  icon: Phone },
+    { path: '/',        label: 'Home',    icon: Home },
+    { path: '/pricing', label: 'Pricing', icon: DollarSign },
+    { path: '/about',   label: 'About',   icon: Info },
+    { path: '/contact', label: 'Contact', icon: Phone },
   ];
 
   return (
