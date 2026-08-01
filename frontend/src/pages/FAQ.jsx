@@ -38,21 +38,27 @@ function FadeIn({ children, delay = 0, className = '' }) {
 function AccordionItem({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border rounded-xl overflow-hidden transition-all ${open ? 'border-indigo-300 shadow-sm' : 'border-gray-200'}`}>
+    <div className={`border rounded-xl overflow-hidden transition-colors duration-300 ${open ? 'border-indigo-300 shadow-sm' : 'border-gray-200'}`}>
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-start justify-between px-5 py-4 text-left bg-white hover:bg-gray-50 transition-colors gap-4"
       >
         <span className="font-semibold text-gray-900 text-sm sm:text-base">{q}</span>
         <ChevronDown
-          className={`w-5 h-5 text-gray-400 shrink-0 mt-0.5 transition-transform duration-200 ${open ? 'rotate-180 text-indigo-500' : ''}`}
+          className={`w-5 h-5 text-gray-400 shrink-0 mt-0.5 transition-transform duration-300 ${open ? 'rotate-180 text-indigo-500' : ''}`}
         />
       </button>
-      {open && (
-        <div className="px-5 pb-5 bg-white border-t border-gray-100">
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed pt-3">{a}</p>
+      {/* Grid-rows trick: animates height smoothly without knowing the
+          content's height in advance, and without the abrupt pop-in that a
+          conditionally-mounted {open && ...} block causes (no DOM node to
+          transition = no animation, just an instant snap). */}
+      <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+        <div className="overflow-hidden">
+          <div className="px-5 pb-5 bg-white border-t border-gray-100">
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed pt-3">{a}</p>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -258,7 +264,7 @@ export default function FAQ() {
 
       {/* ── Category filter ── */}
       <section className="border-b border-gray-100 bg-gray-50 py-5 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide flex-nowrap">
             <button
               onClick={() => setActiveCategory(null)}
@@ -293,7 +299,7 @@ export default function FAQ() {
 
       {/* ── FAQ content ── */}
       <section className="py-14 sm:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-12 sm:space-y-16">
             {displayed.map((cat, cidx) => {
               const c = COLOR_MAP[cat.color];
