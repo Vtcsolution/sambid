@@ -46,6 +46,8 @@ import managedServiceRoutes         from './routes/managedServiceRoutes.js';
 import adminManagedServiceRoutes    from './routes/adminManagedServiceRoutes.js';
 import adminManagedProjectRoutes   from './routes/managedProjectRoutes.js';
 import chatbotRoutes               from './routes/chatbotRoutes.js';
+import apiKeyRoutes                from './routes/apiKeyRoutes.js';
+import publicApiRoutes             from './routes/publicApiRoutes.js';
 import { reconcileReferralCommissions } from './controllers/referralController.js';
 import { startScheduler } from './services/schedulerService.js';
 import { startProjectScheduler } from './services/projectSchedulerService.js';
@@ -216,6 +218,8 @@ app.use('/api/admin/company-workspaces', apiLimiter, adminCompanyWorkspaceRoutes
 app.use('/api/managed-service',          apiLimiter, managedServiceRoutes);
 app.use('/api/admin/managed-service',    apiLimiter, adminManagedServiceRoutes);
 app.use('/api/admin/managed-projects',   apiLimiter, adminManagedProjectRoutes);
+app.use('/api/apikey',             apiLimiter, apiKeyRoutes); // dashboard (JWT): manage your own key
+app.use('/api/v1',                 apiLimiter, publicApiRoutes); // external (X-API-Key): the actual public API
 
 // 404 handler
 app.use((req, res) => {

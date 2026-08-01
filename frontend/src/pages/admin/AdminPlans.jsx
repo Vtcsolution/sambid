@@ -51,6 +51,7 @@ function EditModal({ plan, onClose, onSaved }) {
       aiProposals:           plan.limits?.aiProposals           ?? false,
       prioritySupport:       plan.limits?.prioritySupport       ?? false,
       apiAccess:             plan.limits?.apiAccess             ?? false,
+      apiDailyLimit:         plan.limits?.apiDailyLimit          ?? 0,
     },
   });
   const [saving, setSaving] = useState(false);
@@ -320,6 +321,15 @@ function EditModal({ plan, onClose, onSaved }) {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">API Daily Limit (-1 = unlimited, 0 = no access)</label>
+                <input
+                  type="number" min="-1"
+                  value={form.limits.apiDailyLimit}
+                  onChange={setLimit('apiDailyLimit')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
             </div>
             <div className="flex flex-wrap gap-4">
               {[
@@ -363,7 +373,7 @@ function CreateModal({ onClose, onSaved }) {
     name: '', displayName: '', description: '',
     priceMonthly: 0, priceYearly: 0, order: 0,
     features: [],
-    limits: { maxSavedOpportunities: 10, maxAlerts: 5, aiProposals: false, prioritySupport: false, apiAccess: false },
+    limits: { maxSavedOpportunities: 10, maxAlerts: 5, aiProposals: false, prioritySupport: false, apiAccess: false, apiDailyLimit: 0 },
   };
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
@@ -506,6 +516,11 @@ function CreateModal({ onClose, onSaved }) {
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Max Alerts (-1 = unlimited)</label>
                 <input type="number" min="-1" value={form.limits.maxAlerts} onChange={setLimit('maxAlerts')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">API Daily Limit (-1 = unlimited, 0 = no access)</label>
+                <input type="number" min="-1" value={form.limits.apiDailyLimit} onChange={setLimit('apiDailyLimit')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500" />
               </div>
             </div>

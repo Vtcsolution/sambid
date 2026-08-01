@@ -32,7 +32,9 @@ const planSchema = new mongoose.Schema({
     maxAlerts: { type: Number, default: 5 },
     aiProposals: { type: Boolean, default: false },
     prioritySupport: { type: Boolean, default: false },
-    apiAccess: { type: Boolean, default: false }
+    apiAccess: { type: Boolean, default: false },
+    // Daily request cap for the public API (/api/v1/*). -1 = unlimited.
+    apiDailyLimit: { type: Number, default: 0 }
   },
   aiCreditsPerMonth: {
     type: Number,
@@ -86,7 +88,8 @@ const defaultPlans = [
       maxAlerts: 5,
       aiProposals: false,
       prioritySupport: false,
-      apiAccess: false
+      apiAccess: false,
+      apiDailyLimit: 0
     },
     order: 1
   },
@@ -113,7 +116,8 @@ const defaultPlans = [
       maxAlerts: 50,
       aiProposals: false,
       prioritySupport: true,
-      apiAccess: false
+      apiAccess: false,
+      apiDailyLimit: 0
     },
     order: 2
   },
@@ -140,7 +144,8 @@ const defaultPlans = [
       maxAlerts: -1,
       aiProposals: true,
       prioritySupport: true,
-      apiAccess: true
+      apiAccess: true,
+      apiDailyLimit: 25
     },
     order: 3
   },
@@ -169,7 +174,8 @@ const defaultPlans = [
       maxAlerts: -1,
       aiProposals: true,
       prioritySupport: true,
-      apiAccess: true
+      apiAccess: true,
+      apiDailyLimit: -1
     },
     order: 4
   }
@@ -211,6 +217,14 @@ export const initializePlans = async () => {
         }
         if (!exists.dailyLimit && def.dailyLimit) {
           updates.dailyLimit = def.dailyLimit;
+        }
+        // apiAccess/apiDailyLimit are feature-tier definitions (like `features`),
+        // not admin-customisable pricing — always keep them in sync with defaults.
+        if (exists.limits?.apiAccess !== def.limits.apiAccess) {
+          updates['limits.apiAccess'] = def.limits.apiAccess;
+        }
+        if (exists.limits?.apiDailyLimit !== def.limits.apiDailyLimit) {
+          updates['limits.apiDailyLimit'] = def.limits.apiDailyLimit;
         }
         await Plan.updateOne({ name: def.name }, { $set: updates });
       }

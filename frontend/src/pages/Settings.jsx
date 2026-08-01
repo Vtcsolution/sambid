@@ -7,7 +7,7 @@ import {
   Eye, EyeOff, Zap, Clock, Calendar, Save, ChevronRight, Palette,
   ShieldCheck, QrCode, Key, Copy, Download, Trash2
 } from 'lucide-react';
-import { authAPI, opportunityAPI, paymentAPI } from '../services/api';
+import { authAPI, opportunityAPI, paymentAPI, apiKeyAPI } from '../services/api';
 import HowItWorks from '../components/HowItWorks';
 import { searchNAICS, NAICS_CODES, getFamily } from '../data/naicsCodes';
 import PushNotificationToggle from '../components/PushNotificationToggle';
@@ -21,6 +21,7 @@ const TABS = [
   { id: 'security',      label: 'Security',      icon: Shield },
   { id: 'appearance',    label: 'Appearance',    icon: Palette },
   { id: 'plan',          label: 'Plan',          icon: Crown },
+  { id: 'api',           label: 'API Access',    icon: Key },
 ];
 
 const BUSINESS_TYPES = [
@@ -1263,6 +1264,8 @@ export default function Settings() {
               </div>
             )}
 
+            {activeTab === 'api' && <ApiAccessSection />}
+
           </div>
         </div>
       </div>
@@ -1338,6 +1341,201 @@ function CancelSubscriptionSection({ plan, onCancelled }) {
             Keep My Plan
           </button>
         </div>
+      )}
+    </div>
+  );
+}
+
+function ApiAccessSection() {
+  const [status,   setStatus]   = useState(null);   // { hasAccess, hasKey, keyPrefix, createdAt, dailyLimit, usedToday, plan }
+  const [loading,  setLoading]  = useState(true);
+  const [busy,     setBusy]     = useState(false);
+  const [revealedKey, setRevealedKey] = useState(''); // only ever set right after generate/regenerate
+  const [copied,   setCopied]   = useState(false);
+  const [confirmRegen, setConfirmRegen] = useState(false);
+  const [confirmRevoke, setConfirmRevoke] = useState(false);
+  const [error,    setError]    = useState('');
+
+  const load = async () => {
+    try {
+      const res = await apiKeyAPI.getStatus();
+      setStatus(res.data.data);
+    } catch (e) {
+      setError(e.response?.data?.message || 'Failed to load API status.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleGenerate = async (regenerate = false) => {
+    setBusy(true);
+    setError('');
+    try {
+      const res = await (regenerate ? apiKeyAPI.regenerate() : apiKeyAPI.generate());
+      setRevealedKey(res.data.data.apiKey);
+      setConfirmRegen(false);
+      await load();
+    } catch (e) {
+      setError(e.response?.data?.message || 'Failed to generate API key.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleRevoke = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      await apiKeyAPI.revoke();
+      setRevealedKey('');
+      setConfirmRevoke(false);
+      await load();
+    } catch (e) {
+      setError(e.response?.data?.message || 'Failed to revoke API key.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const copyKey = () => {
+    navigator.clipboard.writeText(revealedKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm p-6 flex items-center justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-6">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">API Access</h2>
+      <p className="text-sm text-gray-500 mb-5">Pull your matched opportunities directly into your own systems.</p>
+
+      {error && (
+        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 mb-4">
+          <AlertCircle className="w-4 h-4 shrink-0" />{error}
+        </div>
+      )}
+
+      {!status?.hasAccess ? (
+        <div className="flex flex-col items-center justify-center text-center py-10 px-4 border border-dashed border-gray-200 rounded-xl">
+          <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-3">
+            <Key className="w-6 h-6 text-indigo-400" />
+          </div>
+          <p className="font-semibold text-gray-900 mb-1">API access is a Pro & Enterprise feature</p>
+          <p className="text-sm text-gray-500 max-w-sm mb-4">
+            Upgrade to fetch your matched opportunities programmatically, with a daily request allowance based on your plan.
+          </p>
+          <Link to="/pricing" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+            Upgrade to Pro <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      ) : (
+        <>
+          {/* Usage summary */}
+          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl mb-5">
+            <div>
+              <p className="text-sm text-gray-500 mb-0.5">Daily requests used</p>
+              <p className="text-xl font-bold text-indigo-700">
+                {status.usedToday} <span className="text-sm font-medium text-gray-400">/ {status.dailyLimit === -1 ? 'Unlimited' : status.dailyLimit}</span>
+              </p>
+            </div>
+            <Key className="w-10 h-10 text-indigo-300" />
+          </div>
+
+          {/* One-time reveal of a freshly generated key */}
+          {revealedKey && (
+            <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <p className="text-sm font-semibold text-amber-800 mb-2">Copy this key now — you won't be able to see it again</p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-mono break-all">{revealedKey}</code>
+                <button onClick={copyKey} className="shrink-0 flex items-center gap-1.5 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!status.hasKey ? (
+            <button
+              onClick={() => handleGenerate(false)}
+              disabled={busy}
+              className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-3 rounded-xl transition-colors mb-4"
+            >
+              {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
+              Generate API Key
+            </button>
+          ) : (
+            <>
+              <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-4">
+                <div>
+                  <p className="text-xs text-gray-500 mb-0.5">Active key</p>
+                  <code className="text-sm font-mono text-gray-700">{status.keyPrefix}</code>
+                  {status.createdAt && (
+                    <p className="text-xs text-gray-400 mt-0.5">Created {new Date(status.createdAt).toLocaleDateString()}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-2 mb-4">
+                {!confirmRegen ? (
+                  <button onClick={() => setConfirmRegen(true)} className="flex-1 text-xs font-semibold text-indigo-600 border border-indigo-200 hover:bg-indigo-50 py-2.5 rounded-lg transition-colors">
+                    Regenerate Key
+                  </button>
+                ) : (
+                  <>
+                    <button onClick={() => handleGenerate(true)} disabled={busy} className="flex-1 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 py-2.5 rounded-lg transition-colors">
+                      {busy ? 'Regenerating…' : 'Confirm Regenerate'}
+                    </button>
+                    <button onClick={() => setConfirmRegen(false)} className="flex-1 text-xs font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 py-2.5 rounded-lg transition-colors">
+                      Cancel
+                    </button>
+                  </>
+                )}
+
+                {!confirmRevoke ? (
+                  <button onClick={() => setConfirmRevoke(true)} className="flex-1 text-xs font-semibold text-red-600 border border-red-200 hover:bg-red-50 py-2.5 rounded-lg transition-colors">
+                    Revoke Key
+                  </button>
+                ) : (
+                  <>
+                    <button onClick={handleRevoke} disabled={busy} className="flex-1 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 py-2.5 rounded-lg transition-colors">
+                      {busy ? 'Revoking…' : 'Confirm Revoke'}
+                    </button>
+                    <button onClick={() => setConfirmRevoke(false)} className="flex-1 text-xs font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 py-2.5 rounded-lg transition-colors">
+                      Cancel
+                    </button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Docs */}
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Quick Start</p>
+            <p className="text-xs text-gray-500 mb-2">Send your key in the <code className="bg-gray-100 px-1 py-0.5 rounded">X-API-Key</code> header:</p>
+            <pre className="text-xs bg-gray-900 text-gray-100 rounded-lg p-3 overflow-x-auto mb-2">
+{(() => {
+  const base = import.meta.env.VITE_API_URL || 'https://sambid.co/api';
+  const origin = base.endsWith('/api') ? base.slice(0, -4) : base;
+  return `curl -H "X-API-Key: YOUR_KEY" \\\n  "${origin}/api/v1/opportunities"`;
+})()}
+            </pre>
+            <p className="text-xs text-gray-400">
+              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities</code> — paginated list (page, limit params, max 50/page) ·{' '}
+              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities/:id</code> — single opportunity
+            </p>
+          </div>
+        </>
       )}
     </div>
   );

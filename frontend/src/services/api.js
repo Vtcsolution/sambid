@@ -281,6 +281,15 @@ export const pastPerformanceAPI = {
   exportBatch:  (ids)      => api.post('/past-performance/export/batch', { ids }),
 };
 
+// Public API key management (Pro/Enterprise) — the key itself is used OUTSIDE
+// this app (X-API-Key header against /api/v1/*), this just manages it.
+export const apiKeyAPI = {
+  getStatus:   ()  => api.get('/apikey'),
+  generate:    ()  => api.post('/apikey/generate'),
+  regenerate:  ()  => api.post('/apikey/regenerate'),
+  revoke:      ()  => api.delete('/apikey'),
+};
+
 // Coupon validation (public — no auth required, uses base axios without interceptors)
 export const validateCoupon = (code) =>
   api.post('/referral/validate-coupon', { code });

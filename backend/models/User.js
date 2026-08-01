@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
   },
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
+  // Public API access (/api/v1/*) — Pro/Enterprise only, see Plan.limits.apiAccess.
+  // Only the SHA-256 hash is stored; the plain key is shown to the user once,
+  // at generation time, and never again.
+  apiKeyHash: { type: String, default: null, select: false },
+  apiKeyPrefix: { type: String, default: null },      // e.g. "sambid_live_a1b2c3d4" — safe to display
+  apiKeyCreatedAt: { type: Date, default: null },
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -267,31 +273,5 @@ userSchema.methods.getDaysLeft = function() {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 };
 
-userSchema.methods.getRemainingRequests = async function() {
-  const dailyLimit = this.plan === 'pro' ? 1000 : this.plan === 'starter' ? 100 : 10;
-  
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  let usage = await UsageTracking.findOne({
-    user: this._id,
-    date: { $gte: today }
-  });
-  
-  if (!usage) {
-    usage = await UsageTracking.create({
-      user: this._id,
-      date: today,
-      remainingRequests: dailyLimit
-    });
-  }
-  
-  return {
-    used: usage.apiRequests,
-    remaining: dailyLimit - usage.apiRequests,
-    total: dailyLimit,
-    resetAt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
-  };
-};
 const User = mongoose.model('User', userSchema);
 export default User;
