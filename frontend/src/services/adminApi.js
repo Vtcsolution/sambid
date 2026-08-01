@@ -108,6 +108,8 @@ export const adminPanelAPI = {
   // Public API keys issued to customers (Settings > API Access on the user side)
   getApiKeys:            ()     => adminApi.get('/admin/api-keys'),
   revokeApiKey:          (userId) => adminApi.delete(`/admin/api-keys/${userId}`),
+  // Website traffic analytics
+  getTrafficAnalytics:   (range) => adminApi.get('/admin/analytics/traffic', { params: { range } }),
 
   // SAM Company Directory
   getCompanies:          (p)    => adminApi.get('/admin/companies',                       { params: p }),

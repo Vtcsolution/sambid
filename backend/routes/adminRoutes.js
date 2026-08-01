@@ -70,6 +70,7 @@ import {
 } from '../controllers/adminCreditController.js';
 import { getAIKeyStatus } from '../controllers/adminAIKeysController.js';
 import { listApiKeys, revokeUserApiKey } from '../controllers/adminApiKeyController.js';
+import { getTrafficAnalytics } from '../controllers/adminAnalyticsController.js';
 
 const router = express.Router();
 
@@ -149,6 +150,9 @@ router.get('/ai-keys/status',        getAIKeyStatus);
 // Public API Keys (customer-issued, /api/v1 access)
 router.get('/api-keys',              listApiKeys);
 router.delete('/api-keys/:userId',   revokeUserApiKey);
+
+// Website traffic analytics
+router.get('/analytics/traffic',     getTrafficAnalytics);
 
 // AI Credit Usage
 router.get('/credits/logs',                 getCreditUsageLogs);

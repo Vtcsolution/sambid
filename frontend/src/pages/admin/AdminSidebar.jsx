@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, CreditCard, Settings, LogOut, Bell,
   Shield, ShieldCheck, FileText, Mail, MessageSquare, Sparkles, BarChart3,
-  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins, Key
+  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins, Key, Globe
 } from 'lucide-react';
 import { exportSamBidReport } from '../../utils/exportUtils';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
@@ -15,6 +15,7 @@ const ALL_NAV = [
     section: 'Overview',
     items: [
       { path: '/admin/dashboard',         label: 'Dashboard',         icon: LayoutDashboard, roles: ['super_admin','admin','support'] },
+      { path: '/admin/traffic',           label: 'Website Traffic',   icon: Globe,           roles: ['super_admin','admin'] },
       { path: '/admin/platform-health',   label: 'Platform Health',   icon: Activity,        roles: ['super_admin','admin'] },
     ],
   },

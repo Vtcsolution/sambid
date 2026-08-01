@@ -68,6 +68,7 @@ const AdminDashboard        = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminPlanRequests     = lazy(() => import('./pages/admin/PlanRequests'));
 const AdminPlans            = lazy(() => import('./pages/admin/AdminPlans'));
 const AdminApiKeys          = lazy(() => import('./pages/admin/AdminApiKeys'));
+const AdminTrafficAnalytics = lazy(() => import('./pages/admin/AdminTrafficAnalytics'));
 const AdminNotifications    = lazy(() => import('./pages/admin/AdminNotifications'));
 const AdminSettings         = lazy(() => import('./pages/admin/AdminSettings'));
 const AdminInvoices         = lazy(() => import('./pages/admin/AdminInvoices'));
@@ -118,6 +119,7 @@ const WorkspaceLogin    = lazy(() => import('./pages/WorkspaceLogin'));
 
 // Eagerly loaded - truly tiny, always visible
 import ScrollToTop from './components/ScrollToTop';
+import PageTracker from './components/PageTracker';
 import Footer from './components/Footer';
 import WorkspaceRoute from './components/WorkspaceRoute';
 const ChatBot = lazy(() => import('./components/ChatBot'));
@@ -218,6 +220,7 @@ function App() {
             <Route path="plan-requests"     element={<AdminPlanRequests />} />
             <Route path="plans"             element={<AdminPlans />} />
             <Route path="api-keys"          element={<AdminApiKeys />} />
+            <Route path="traffic"           element={<AdminTrafficAnalytics />} />
             <Route path="payments"          element={<AdminPayments />} />
             <Route path="notifications"     element={<AdminNotifications />} />
             <Route path="settings"          element={<AdminSettings />} />
@@ -295,6 +298,7 @@ function App() {
       {/* Main content area - add margin ONLY when sidebar is visible */}
       {/* AI support chatbot - shown on all non-admin pages */}
       <ScrollToTop />
+      <PageTracker path={currentPath} />
       <SupportChatbot />
       <CookieConsent />
 
