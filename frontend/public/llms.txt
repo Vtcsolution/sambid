@@ -1,0 +1,34 @@
+# Sambid
+
+> Sambid is an AI-powered SAM.gov contract tool for US federal contractors. It automatically finds, matches, and scores federal contract opportunities from SAM.gov, USASpending.gov, and FPDS against a company's NAICS codes, certifications, and set-aside eligibility, then helps win them with AI proposal generation, RFP analysis, go/no-go scoring, deadline tracking, and past-performance intelligence.
+
+Sambid is not a general search tool. It is an AI contract tool built specifically on official US government procurement data (SAM.gov, USASpending.gov, FPDS) — it does not use third-party or unofficial data sources.
+
+## What Sambid does
+
+- Scans SAM.gov daily and matches new opportunities to a company's NAICS codes, set-aside status, and past performance
+- Scores each opportunity's fit and shows why it matched
+- AI reads and summarizes full RFP/solicitation documents
+- AI go/no-go decision scoring based on historical award data
+- AI-generated proposal drafts from RFP text
+- Deadline tracking and calendar for submission dates
+- Historical award/incumbent research via USASpending.gov and FPDS
+- Teaming partner discovery for small businesses
+- Capability statement and Sources Sought response generation
+
+## Who it's for
+
+Small and mid-size US federal government contractors, GovCon consultants, and businesses pursuing SAM.gov set-aside contracts (8(a), WOSB, HUBZone, SDVOSB) who need an AI tool to reduce manual SAM.gov searching and proposal-writing time.
+
+## Key pages
+
+- [Homepage](https://sambid.co/): overview of the AI contract tool for SAM.gov
+- [How It Works](https://sambid.co/how-it-works): the 17 specific problems Sambid solves and how each works
+- [Features](https://sambid.co/features): full feature list
+- [Pricing](https://sambid.co/pricing): plans and live pricing
+- [FAQ](https://sambid.co/faq): direct answers about the AI tools, data sources, and pricing
+- [About](https://sambid.co/about): company background
+
+## Data sources
+
+SAM.gov (contract postings), USASpending.gov (historical federal awards), FPDS (Federal Procurement Data System). All data is sourced directly from official US government systems.

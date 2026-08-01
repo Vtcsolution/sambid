@@ -68,6 +68,18 @@ const CATEGORIES = [
         a: 'Sambid is an AI-powered federal contract discovery platform. It connects to SAM.gov, USASpending.gov, and FPDS, and automatically finds, filters, and delivers federal contract opportunities matched to your business profile. Think of it as your automated federal business development team.',
       },
       {
+        q: 'Is there an AI tool for SAM.gov?',
+        a: 'Yes. Sambid is an AI-powered SAM.gov contract tool that automatically scans SAM.gov every day, matches new opportunities to your NAICS codes and certifications, scores each one for fit, and can draft a full AI-generated proposal from the RFP text. It works directly on top of SAM.gov data, so you never have to search the raw site manually.',
+      },
+      {
+        q: 'What is the best AI contract tool for government contracting?',
+        a: 'The best AI contract tool for government contracting is one that combines real SAM.gov data with AI throughout the entire bid lifecycle, not just search. Sambid does that: AI-matched opportunity discovery, AI RFP analysis, AI go/no-go scoring, and AI proposal generation, all built on official SAM.gov, USASpending.gov, and FPDS data.',
+      },
+      {
+        q: 'Does Sambid use AI to find and analyze SAM.gov contracts?',
+        a: 'Yes. Sambid\'s AI reads every new SAM.gov posting, extracts the NAICS code, set-aside type, agency, and deadline, and scores how well it matches your company profile. For contracts you\'re interested in, the same AI can analyze the full RFP, assess risk, and generate a proposal draft.',
+      },
+      {
         q: 'How is Sambid different from just searching SAM.gov manually?',
         a: 'SAM.gov is a raw database. You search it manually, wade through thousands of irrelevant listings, and repeat every day. Sambid does that work automatically: it scans every morning, filters to your NAICS codes and preferences, and delivers only the contracts you can actually win. Plus AI proposal tools, deadline tracking, teaming finder, and past performance intelligence, none of which SAM.gov offers.',
       },
@@ -218,9 +230,9 @@ export default function FAQ() {
     <div className="bg-white overflow-hidden">
       <style>{ANIM_CSS}</style>
       <SEOHead
-        title="FAQ | Sambid Federal Contract Platform"
-        description="Frequently asked questions about Sambid: federal contract discovery, SAM.gov automation, AI proposal tools, pricing, and account setup."
-        keywords="Sambid FAQ, federal contracting software questions, SAM.gov platform help, federal contract alerts FAQ, how does Sambid work, federal contract software comparison, SAM.gov automation tool questions"
+        title="FAQ | AI Contract Tool for SAM.gov | Sambid"
+        description="Answers about Sambid, the AI-powered SAM.gov contract tool: how the AI finds and analyzes federal contracts, RFP tools, pricing, and account setup."
+        keywords="Sambid FAQ, AI contract tool, SAM.gov AI tool, AI tool for SAM.gov, AI government contract tool, federal contracting software questions, SAM.gov platform help, federal contract alerts FAQ, how does Sambid work, federal contract software comparison, SAM.gov automation tool questions"
         canonical="https://sambid.co/faq"
         jsonLd={FAQ_JSON_LD}
       />

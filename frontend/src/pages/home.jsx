@@ -272,9 +272,9 @@ export default function Home() {
     <div className="overflow-hidden">
       <style>{ANIM_CSS}</style>
       <SEOHead
-        title="Federal Contract Opportunity Alerts & SAM.gov Notifications"
-        description="Sambid delivers daily federal contract opportunities from SAM.gov, USASpending.gov & FPDS straight to your inbox. AI-matched alerts for small businesses. Start free, no credit card needed."
-        keywords="federal contract opportunities, SAM.gov alerts, government contracting software, federal procurement notifications, FPDS contract search, small business federal contracts, USASpending opportunities, federal RFP alerts, government contract finder, federal bid alerts, SAM.gov notification tool, AI federal contract matching, GovCon software, federal contracting platform for small business, win government contracts, federal contract bidding software, government RFP alerts, SAM.gov opportunity tracker, federal procurement software, contract opportunity finder"
+        title="AI Contract Tool for SAM.gov | Federal Contract Alerts"
+        description="Sambid is an AI contract tool for SAM.gov that delivers daily federal contract opportunities from SAM.gov, USASpending.gov & FPDS straight to your inbox. AI-matched alerts for small businesses. Start free, no credit card needed."
+        keywords="AI contract tool, SAM.gov AI tool, AI tool for SAM.gov, SAM.gov AI, AI government contract tool, samgov ai contract tool, federal contract opportunities, SAM.gov alerts, government contracting software, federal procurement notifications, FPDS contract search, small business federal contracts, USASpending opportunities, federal RFP alerts, government contract finder, federal bid alerts, SAM.gov notification tool, AI federal contract matching, GovCon software, federal contracting platform for small business, win government contracts, federal contract bidding software, government RFP alerts, SAM.gov opportunity tracker, federal procurement software, contract opportunity finder"
         canonical="https://sambid.co/"
         jsonLd={HOME_JSON_LD}
       />
@@ -289,7 +289,7 @@ export default function Home() {
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm mb-6">
                 <Zap className="w-4 h-4 mr-2 text-yellow-400 shrink-0" />
                 <span className="text-xs sm:text-sm font-medium">
-                  SAM.gov Contracts · Matched to Your NAICS Codes
+                  The AI Contract Tool for SAM.gov · Matched to Your NAICS Codes
                 </span>
               </div>
 
@@ -298,7 +298,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base sm:text-xl text-indigo-100 mb-7 sm:mb-8 leading-relaxed max-w-lg">
-                Sambid scans SAM.gov daily and delivers matching federal contract opportunities straight to your dashboard, filtered by your NAICS codes, set-asides, and agency preferences.
+                Sambid is an AI-powered SAM.gov contract tool that scans daily and delivers matching federal contract opportunities straight to your dashboard, filtered by your NAICS codes, set-asides, and agency preferences.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
