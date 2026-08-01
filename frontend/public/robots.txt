@@ -13,6 +13,10 @@ Allow: /privacy
 Allow: /faq
 Allow: /features
 Allow: /features/
+Allow: /security
+Allow: /dpa
+Allow: /nda
+Allow: /status
 
 # Block all private dashboard, user tools, and API routes
 Disallow: /dashboard

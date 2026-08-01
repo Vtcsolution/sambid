@@ -163,6 +163,25 @@ export default function Pricing() {
   // Sort plans by order
   const sortedPlans = [...plans].sort((a, b) => a.order - b.order);
 
+  // Real, live pricing from the DB — never hardcoded (Product/Offer schema
+  // lets Google show plan prices directly in search results).
+  const pricingJsonLd = sortedPlans.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Sambid Federal Contract Alerts',
+    description: 'AI-powered federal contract opportunity discovery and alert platform for US government contractors.',
+    brand: { '@type': 'Brand', name: 'Sambid' },
+    offers: sortedPlans.map(p => ({
+      '@type': 'Offer',
+      name: p.displayName,
+      price: String(p.priceMonthly),
+      priceCurrency: 'USD',
+      description: p.description,
+      url: 'https://sambid.co/pricing',
+      availability: 'https://schema.org/InStock',
+    })),
+  } : null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16">
       <SEOHead
@@ -170,6 +189,7 @@ export default function Pricing() {
         description="Choose the right Sambid plan for your business. Start with a 5-day free trial — no credit card required. Starter, Pro, and Enterprise plans with AI-matched federal contract opportunities, deadline alerts, and proposal tools."
         keywords="federal contracting software pricing, SAM.gov alert subscription, government contracting tool cost, federal opportunity tracker price, small business contracting plan, federal contract software cost, GovCon software pricing, best federal contracting tool price, SAM.gov alert service cost, government bid software plans, affordable federal contracting software"
         canonical="https://sambid.co/pricing"
+        jsonLd={pricingJsonLd}
       />
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}

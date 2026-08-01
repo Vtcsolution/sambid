@@ -5,6 +5,7 @@ import api from '../services/api';
 import SEOHead from '../components/SEOHead';
 import ZoomableImage from '../components/ZoomableImage';
 import { getVideoEmbed } from '../utils/videoEmbed';
+import { usePlans } from '../hooks/usePlans';
 
 // Per-feature keyword targeting - long-tail search intent for each tool
 const FEATURE_KEYWORDS = {
@@ -33,6 +34,8 @@ export default function FeatureShowcase() {
   const [feature, setFeature] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { getMonthly } = usePlans();
+  const starterPrice = getMonthly('starter');
 
   useEffect(() => {
     setLoading(true);
@@ -66,8 +69,7 @@ export default function FeatureShowcase() {
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     description: feature.subtitle,
-    offers: { '@type': 'Offer', price: '49', priceCurrency: 'USD' },
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '127' },
+    ...(starterPrice != null && { offers: { '@type': 'Offer', price: String(starterPrice), priceCurrency: 'USD' } }),
   };
 
   return (

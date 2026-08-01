@@ -52,11 +52,6 @@ const HOME_JSON_LD = [
       highPrice: '499',
       offerCount: '4',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '120',
-    },
   },
   {
     '@context': 'https://schema.org',
