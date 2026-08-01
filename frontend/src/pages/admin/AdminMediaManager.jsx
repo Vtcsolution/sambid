@@ -31,6 +31,12 @@ const FEATURE_SLOTS = [
   { key: 'feature_12', label: 'Feature 12 - Contract Vehicles' },
 ].map(s => ({ ...s, types: ['image'] }));
 
+// New uploads return a full Cloudinary URL already; anything uploaded before
+// the Cloudinary migration still has an old relative "/uploads/..." path.
+function resolveMediaUrl(url) {
+  return url?.startsWith('http') ? url : `${API}${url}`;
+}
+
 function formatSize(bytes) {
   if (!bytes) return '';
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
@@ -123,7 +129,7 @@ function SlotCard({ slot, page, media, onRefresh }) {
                 <div className="flex items-center gap-1.5 shrink-0">
                   {existing && (
                     <button
-                      onClick={() => setPreview({ url: `${API}${existing.url}`, type })}
+                      onClick={() => setPreview({ url: resolveMediaUrl(existing.url), type })}
                       className="p-1.5 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
                       title="Preview"
                     >

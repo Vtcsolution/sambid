@@ -7,6 +7,7 @@ const pageMediaSchema = new mongoose.Schema({
   filename:     { type: String, required: true },
   originalName: { type: String, required: true },
   url:          { type: String, required: true },
+  publicId:     { type: String, default: null }, // Cloudinary public_id, needed to delete/replace the asset
   size:         { type: Number, default: 0 },
 }, { timestamps: true });
 

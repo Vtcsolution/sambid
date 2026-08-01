@@ -1,13 +1,8 @@
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { flexAdmin } from '../middleware/flexAdminMiddleware.js';
 import { mediaUpload } from '../middleware/mediaUpload.js';
+import { uploadBufferToCloudinary, deleteFromCloudinary } from '../utils/cloudinaryUpload.js';
 import PageMedia from '../models/PageMedia.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
 
 const router = express.Router();
 
@@ -41,37 +36,41 @@ router.post('/upload', flexAdmin, mediaUpload.single('file'), async (req, res) =
 
   const { page, slot } = req.body;
   if (!page || !slot) {
-    fs.unlinkSync(req.file.path);
     return res.status(400).json({ success: false, message: 'page and slot are required.' });
   }
   if (!BASE_SLOTS[page]?.includes(slot)) {
-    fs.unlinkSync(req.file.path);
     return res.status(400).json({ success: false, message: 'Invalid page or slot.' });
   }
 
   const type = req.file.mimetype.startsWith('video/') ? 'video' : 'image';
-  const url  = `/uploads/${type === 'video' ? 'videos' : 'images'}/${req.file.filename}`;
 
   try {
-    // Delete old file from disk if replacing
+    const result = await uploadBufferToCloudinary(req.file.buffer, {
+      folder: `sambid/page-media/${page}`,
+      resourceType: type,
+    });
+
+    // Delete the old Cloudinary asset if replacing
     const existing = await PageMedia.findOne({ page, slot, type });
-    if (existing) {
-      const uploadsBase = path.resolve(__dirname, '..', 'uploads');
-      const oldPath = path.resolve(__dirname, '..', existing.url);
-      if (oldPath.startsWith(uploadsBase) && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    if (existing?.publicId) {
+      await deleteFromCloudinary(existing.publicId, type);
     }
 
     const record = await PageMedia.findOneAndUpdate(
       { page, slot, type },
-      { filename: req.file.filename, originalName: req.file.originalname, url, size: req.file.size },
+      {
+        filename: result.public_id,
+        originalName: req.file.originalname,
+        url: result.secure_url,
+        publicId: result.public_id,
+        size: req.file.size,
+      },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
     res.json({ success: true, media: record });
   } catch (err) {
-    // Clean up on DB error
-    if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ success: false, message: `Upload failed: ${err.message}` });
   }
 });
 
@@ -81,9 +80,9 @@ router.delete('/:id', flexAdmin, async (req, res) => {
     const record = await PageMedia.findById(req.params.id);
     if (!record) return res.status(404).json({ success: false, message: 'Media not found.' });
 
-    const uploadsBase2 = path.resolve(__dirname, '..', 'uploads');
-    const filePath = path.resolve(__dirname, '..', record.url);
-    if (filePath.startsWith(uploadsBase2) && fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (record.publicId) {
+      await deleteFromCloudinary(record.publicId, record.type);
+    }
     await record.deleteOne();
 
     res.json({ success: true, message: 'Deleted.' });

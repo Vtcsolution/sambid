@@ -5,6 +5,11 @@ import { useAuth } from '../hooks/useAuth';
 import { usePlans } from '../hooks/usePlans';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
+
+// Cloudinary uploads return a full URL already; anything uploaded before the
+// Cloudinary migration still has an old relative "/uploads/..." path.
+const resolveMediaUrl = (url) => url?.startsWith('http') ? url : `${API}${url}`;
+
 import {
   ArrowRight, Search, Brain, TrendingUp, Shield, Clock,
   CheckCircle, Star, Users, Award, Zap, Target, FileText, BarChart2,
@@ -266,7 +271,7 @@ export default function Home() {
   const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial';
   const pageMedia = usePageMedia('home');
 
-  const heroImage = pageMedia?.hero?.image?.url ? `${API}${pageMedia.hero.image.url}` : null;
+  const heroImage = pageMedia?.hero?.image?.url ? resolveMediaUrl(pageMedia.hero.image.url) : null;
 
   return (
     <div className="overflow-hidden">
@@ -396,8 +401,8 @@ export default function Home() {
                       {(() => {
                         const slotKey = `phase_${phase.phase}`;
                         const slotMedia = pageMedia[slotKey] || {};
-                        const vSrc = slotMedia.video?.url ? `${API}${slotMedia.video.url}` : '';
-                        const pSrc = slotMedia.image?.url ? `${API}${slotMedia.image.url}` : '';
+                        const vSrc = slotMedia.video?.url ? resolveMediaUrl(slotMedia.video.url) : '';
+                        const pSrc = slotMedia.image?.url ? resolveMediaUrl(slotMedia.image.url) : '';
                         return (
                           <VideoBlock
                             videoSrc={vSrc}

@@ -6,6 +6,10 @@ import SEOHead from '../components/SEOHead';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
+// Cloudinary uploads return a full URL already; anything uploaded before the
+// Cloudinary migration still has an old relative "/uploads/..." path.
+const resolveMediaUrl = (url) => url?.startsWith('http') ? url : `${API}${url}`;
+
 function usePageMedia(page) {
   const [media, setMedia] = useState({});
   useEffect(() => {
@@ -342,7 +346,7 @@ export default function Features() {
                     <div className={`${reversed ? 'lg:col-start-2' : ''}`}>
                       {(() => {
                         const slotKey = `feature_${String(idx + 1).padStart(2, '0')}`;
-                        const imgUrl  = pageMedia[slotKey]?.image?.url ? `${API}${pageMedia[slotKey].image.url}` : null;
+                        const imgUrl  = pageMedia[slotKey]?.image?.url ? resolveMediaUrl(pageMedia[slotKey].image.url) : null;
                         return imgUrl ? (
                           <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-md">
                             <img src={imgUrl} alt={feat.title} className="w-full h-auto block" />
