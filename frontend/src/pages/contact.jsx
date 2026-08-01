@@ -133,10 +133,11 @@ export default function Contact() {
   const [searchParams] = useSearchParams();
   const isLoggedIn = !!(localStorage.getItem('authToken') || sessionStorage.getItem('authToken'));
 
-  // Arriving from Pricing carries which plan/billing cycle they clicked
-  // "Contact Us" on, e.g. /contact?plan=enterprise&billing=monthly
-  const urlPlan    = searchParams.get('plan');    // 'enterprise' | 'pro'
-  const urlBilling = searchParams.get('billing'); // 'monthly' | 'yearly'
+  // Arriving from Pricing carries which plan they clicked "Contact Us" on,
+  // e.g. /contact?plan=enterprise - billing cycle isn't used for display
+  // (no prices are shown on this page at all, see planCards below), but is
+  // still readable via searchParams.get('billing') if ever needed later.
+  const urlPlan = searchParams.get('plan'); // 'enterprise' | 'pro'
   const initialPlanInterest = urlPlan === 'pro' ? 'pro' : urlPlan === 'custom' ? 'custom' : 'enterprise';
 
   const [existingInquiry, setExistingInquiry] = useState(null);
@@ -183,20 +184,17 @@ export default function Contact() {
       .finally(() => setCheckingInquiry(false));
   }, []);
 
-  // Which billing cycle they were looking at on Pricing when they clicked
-  // "Contact Us" - defaults to monthly if they arrived here directly
-  // (e.g. typed the URL, or a generic "Contact" nav link).
-  const billing = urlBilling === 'yearly' ? 'yearly' : 'monthly';
-
-  // Build the plan cards shown on this page from live data. Pro only shows
-  // up here if they arrived via the Yearly "Contact Us" flow on Pricing -
-  // Pro monthly is still purchased directly on the Pricing page.
+  // This page exists specifically so a real person talks to the lead before
+  // they see a number and bounce - so no price is ever shown here, on any
+  // card, for any billing cycle. That's the whole point of routing them
+  // here instead of self-serve checkout. Only "Custom Pricing" / "Contact
+  // Us" language, on every plan, every time.
   const planCards = [
     enterprisePlan && {
       value: 'enterprise',
       name: enterprisePlan.displayName,
-      price: billing === 'yearly' ? `$${enterprisePlan.priceYearly.toLocaleString()}` : `$${enterprisePlan.priceMonthly}`,
-      period: billing === 'yearly' ? '/yr' : '/mo',
+      price: 'Custom',
+      period: 'pricing',
       badge: 'Most Popular',
       badgeColor: 'bg-indigo-600',
       features: (enterprisePlan.features || []).filter(f => f.included).map(f => f.name),
@@ -204,8 +202,8 @@ export default function Contact() {
     urlPlan === 'pro' && proPlan && {
       value: 'pro',
       name: `${proPlan.displayName} (Annual)`,
-      price: `$${proPlan.priceYearly.toLocaleString()}`,
-      period: '/yr',
+      price: 'Custom',
+      period: 'pricing',
       badge: 'Requested Plan',
       badgeColor: 'bg-indigo-600',
       features: (proPlan.features || []).filter(f => f.included).map(f => f.name),
@@ -213,16 +211,13 @@ export default function Contact() {
     CUSTOM_PLAN_CARD,
   ].filter(Boolean);
 
-  // Single, unambiguous price per option - matches whatever billing cycle
-  // they actually arrived with, instead of cramming both mo/yr into one line.
+  // No dollar figures in the dropdown either - same reasoning as the cards.
   const planLabel = (value) => {
     if (value === 'enterprise' && enterprisePlan) {
-      return billing === 'yearly'
-        ? `${enterprisePlan.displayName}: $${enterprisePlan.priceYearly.toLocaleString()}/yr (billed annually)`
-        : `${enterprisePlan.displayName}: $${enterprisePlan.priceMonthly}/mo`;
+      return `${enterprisePlan.displayName}: Custom pricing`;
     }
     if (value === 'pro' && proPlan) {
-      return `${proPlan.displayName}: $${proPlan.priceYearly.toLocaleString()}/yr (billed annually)`;
+      return `${proPlan.displayName} (Annual): Custom pricing`;
     }
     return 'Custom / Enterprise Plus: Custom pricing';
   };
@@ -303,7 +298,7 @@ export default function Contact() {
         <div className="max-w-2xl mx-auto text-center mb-7 sm:mb-10">
           {!plansLoading && enterprisePlan && (
             <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
-              {enterprisePlan.displayName} Plans: ${enterprisePlan.priceMonthly}/mo (or ${enterprisePlan.priceYearly.toLocaleString()}/yr, save 20%)
+              Custom {enterprisePlan.displayName} Pricing, Tailored to Your Team
             </span>
           )}
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
