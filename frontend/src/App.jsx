@@ -51,6 +51,7 @@ const TermsOfService     = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy      = lazy(() => import('./pages/PrivacyPolicy'));
 const DPA                = lazy(() => import('./pages/DPA'));
 const SecurityPolicy     = lazy(() => import('./pages/SecurityPolicy'));
+const Status             = lazy(() => import('./pages/Status'));
 const NDA                = lazy(() => import('./pages/NDA'));
 const Billing            = lazy(() => import('./pages/Billing'));
 const ProposalBuilder    = lazy(() => import('./pages/ProposalBuilder'));
@@ -345,6 +346,7 @@ function App() {
             <Route path="/privacy"              element={<PrivacyPolicy />} />
             <Route path="/dpa"                  element={<DPA />} />
             <Route path="/security"             element={<SecurityPolicy />} />
+            <Route path="/status"               element={<Status />} />
             <Route path="/nda"                  element={<NDA />} />
             <Route path="/payment/payoneer/return" element={<PayoneerReturn />} />
             <Route path="/suggestions"          element={<Suggestions />} />

@@ -77,7 +77,8 @@ const processDeadlineReminders = async () => {
   }
 };
 
-// Process trial reminders — sends an upgrade nudge EVERY day of the 3-day trial
+// Process trial reminders — sends an upgrade nudge EVERY day of the trial
+// (length is whatever User.trialEndDate says, currently 5 days — see getTrialDaysLeft())
 const processTrialReminders = async () => {
   console.log('📧 Processing trial reminders...');
 

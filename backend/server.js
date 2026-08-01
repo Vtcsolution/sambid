@@ -48,6 +48,7 @@ import adminManagedProjectRoutes   from './routes/managedProjectRoutes.js';
 import chatbotRoutes               from './routes/chatbotRoutes.js';
 import apiKeyRoutes                from './routes/apiKeyRoutes.js';
 import publicApiRoutes             from './routes/publicApiRoutes.js';
+import { getStatus }               from './controllers/statusController.js';
 import { reconcileReferralCommissions } from './controllers/referralController.js';
 import { startScheduler } from './services/schedulerService.js';
 import { startProjectScheduler } from './services/projectSchedulerService.js';
@@ -180,6 +181,7 @@ app.use('/uploads', (req, res, next) => {
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.get("/",       (req, res) => res.json({ success: true, message: "Sambid API is running." }));
 app.get("/health", (req, res) => res.json({ success: true, status: "healthy", timestamp: new Date().toISOString() }));
+app.get("/api/status", getStatus); // public system status page's data source
 
 // API Routes - NOTE: Order matters
 app.use("/api/auth", authRoutes);          // login limiter applied per-route inside authRoutes

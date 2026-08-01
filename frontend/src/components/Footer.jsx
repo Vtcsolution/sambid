@@ -198,6 +198,7 @@ export default function Footer() {
             <Link to="/terms"    className="hover:text-indigo-300 transition-colors">Terms of Service</Link>
             <Link to="/dpa"      className="hover:text-indigo-300 transition-colors">DPA</Link>
             <Link to="/security" className="hover:text-indigo-300 transition-colors">Security</Link>
+            <Link to="/status"   className="hover:text-indigo-300 transition-colors">Status</Link>
             <Link to="/nda"      className="hover:text-indigo-300 transition-colors">NDA</Link>
             <Link to="/faq"      className="hover:text-indigo-300 transition-colors">FAQ</Link>
             <Link to="/contact"  className="hover:text-indigo-300 transition-colors">Support</Link>
