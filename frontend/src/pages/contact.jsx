@@ -290,9 +290,9 @@ export default function Contact() {
         keywords="contact Sambid, federal contracting support, SAM.gov alert help, government contracting software support, Sambid customer service"
         canonical="https://sambid.co/contact"
       />
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-7 sm:mb-10">
+      <div className="max-w-[1440px] mx-auto">
+        {/* Header - narrower than the page for readable line length */}
+        <div className="max-w-2xl mx-auto text-center mb-7 sm:mb-10">
           {!plansLoading && enterprisePlan && (
             <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
               {enterprisePlan.displayName} Plans: ${enterprisePlan.priceMonthly}/mo (or ${enterprisePlan.priceYearly.toLocaleString()}/yr, save 20%)
@@ -360,8 +360,10 @@ export default function Contact() {
         </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-5 sm:p-8 space-y-5">
+        {/* Form - kept narrower than the page so input fields stay a
+            comfortable width, even though the plan cards above use the
+            full page width */}
+        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-5 sm:p-8 space-y-5">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Contact Us</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -66,11 +66,11 @@ const defaultPlans = [
   {
     name: 'free',
     displayName: 'Free Trial',
-    description: '3-day free trial — no credit card required',
+    description: '5-day free trial — no credit card required',
     priceMonthly: 0,
     priceYearly: 0,
     features: [
-      { name: '3-day free trial (no credit card)',   included: true  },
+      { name: '5-day free trial (no credit card)',   included: true  },
       { name: 'Up to 3 new opportunities per day',   included: true  },
       { name: 'SAM.gov contract search',             included: true  },
       { name: 'Email notifications',                 included: true  },
