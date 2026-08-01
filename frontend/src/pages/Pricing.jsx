@@ -111,17 +111,30 @@ export default function Pricing() {
     return (base * (1 - couponResult.discountPercent / 100)).toFixed(2);
   };
 
+  // Enterprise is always custom-quoted (both billing cycles). Pro is
+  // custom-quoted only on yearly (Starter yearly still self-serves via the
+  // Annual Plan Request form). Both route to Contact Sales instead of any
+  // self-serve checkout/request flow.
+  const isContactOnly = (plan) =>
+    plan.name === 'enterprise' || (plan.name === 'pro' && billingCycle === 'yearly');
+
   const handleUpgrade = (plan) => {
     if (plan.name === 'free') {
       navigate('/signup');
       return;
     }
+
+    if (isContactOnly(plan)) {
+      navigate(`/contact?plan=${plan.name}&billing=${billingCycle}`);
+      return;
+    }
+
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
 
-    // All yearly paid plans → Annual Plan Request form (manual activation)
+    // Remaining yearly paid plans (Starter) → Annual Plan Request form
     if (billingCycle === 'yearly') {
       navigate(`/annual-plan-request?plan=${plan.name}`);
       return;
@@ -299,36 +312,44 @@ export default function Pricing() {
                 <p className="text-gray-500 text-sm mt-1">{plan.description}</p>
 
                 <div className="mt-4">
-                  <div className="flex items-end gap-1 flex-wrap">
-                    {getDiscountedPrice(plan) ? (
-                      <>
-                        <span className="text-2xl font-bold text-gray-400 line-through">{getPrice(plan)}</span>
-                        <span className="text-4xl font-bold text-green-600">${getDiscountedPrice(plan)}</span>
-                      </>
-                    ) : (
-                      <span className="text-4xl font-bold text-gray-900">{getPrice(plan)}</span>
-                    )}
-                    {plan.name !== 'free' && (
-                      <span className="text-gray-500 mb-1">{getPeriodText(plan)}</span>
-                    )}
-                  </div>
-                  {couponResult && plan.name !== 'free' && (
-                    <p className="text-xs text-green-600 font-semibold mt-1">
-                      {couponResult.discountPercent}% off with coupon
-                    </p>
-                  )}
-                  {!couponResult && getMonthlyEquivalent(plan) && (
-                    <p className="text-xs text-green-600 font-semibold mt-1">
-                      {getMonthlyEquivalent(plan)} · Save {YEARLY_SAVINGS_PCT}%
-                    </p>
-                  )}
-                  {billingCycle === 'monthly' && plan.name !== 'free' && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      or ${plan.priceYearly.toLocaleString()}/yr (save {YEARLY_SAVINGS_PCT}%)
-                    </p>
+                  {isContactOnly(plan) ? (
+                    <div className="flex items-end gap-1 flex-wrap">
+                      <span className="text-3xl font-bold text-gray-900">Contact Us</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-end gap-1 flex-wrap">
+                        {getDiscountedPrice(plan) ? (
+                          <>
+                            <span className="text-2xl font-bold text-gray-400 line-through">{getPrice(plan)}</span>
+                            <span className="text-4xl font-bold text-green-600">${getDiscountedPrice(plan)}</span>
+                          </>
+                        ) : (
+                          <span className="text-4xl font-bold text-gray-900">{getPrice(plan)}</span>
+                        )}
+                        {plan.name !== 'free' && (
+                          <span className="text-gray-500 mb-1">{getPeriodText(plan)}</span>
+                        )}
+                      </div>
+                      {couponResult && plan.name !== 'free' && (
+                        <p className="text-xs text-green-600 font-semibold mt-1">
+                          {couponResult.discountPercent}% off with coupon
+                        </p>
+                      )}
+                      {!couponResult && getMonthlyEquivalent(plan) && (
+                        <p className="text-xs text-green-600 font-semibold mt-1">
+                          {getMonthlyEquivalent(plan)} · Save {YEARLY_SAVINGS_PCT}%
+                        </p>
+                      )}
+                      {billingCycle === 'monthly' && plan.name !== 'free' && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          or ${plan.priceYearly.toLocaleString()}/yr (save {YEARLY_SAVINGS_PCT}%)
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
-                
+
                 {userPlan === plan.name ? (
                   <div className="w-full mt-6 px-4 py-2.5 rounded-lg font-medium text-center bg-green-100 text-green-700">
                     Current Plan
@@ -341,11 +362,13 @@ export default function Pricing() {
                     >
                       {plan.name === 'free'
                         ? 'Start Free Trial'
-                        : billingCycle === 'yearly'
-                          ? `Request ${plan.displayName} Annual`
-                          : `Upgrade to ${plan.displayName}`}
+                        : isContactOnly(plan)
+                          ? 'Contact Us'
+                          : billingCycle === 'yearly'
+                            ? `Request ${plan.displayName} Annual`
+                            : `Upgrade to ${plan.displayName}`}
                     </button>
-                    {billingCycle === 'yearly' && plan.name !== 'free' && (
+                    {billingCycle === 'yearly' && plan.name !== 'free' && !isContactOnly(plan) && (
                       <p className="text-xs text-center text-gray-400 mt-2">
                         Reviewed &amp; activated within 1 business day
                       </p>
@@ -353,7 +376,7 @@ export default function Pricing() {
                   </>
                 )}
               </div>
-              
+
               <div className="border-t border-gray-100 p-6">
                 <p className="text-sm font-semibold text-gray-900 mb-3">What's included:</p>
                 <ul className="space-y-2">

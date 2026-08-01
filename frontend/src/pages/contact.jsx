@@ -1,60 +1,37 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Building2, Mail, Phone, Users, MessageSquare,
   CheckCircle, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-import { contactAPI } from '../services/api';
+import { contactAPI, paymentAPI } from '../services/api';
 
 const EMPLOYEE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+'];
 
-// Only $499+ plans - Starter/Pro are purchased directly on the Pricing page
-const PLAN_OPTIONS = [
-  { value: 'enterprise', label: 'Enterprise: $499/mo (or $4,788/yr)' },
-  { value: 'custom',     label: 'Custom / Enterprise Plus: Custom pricing' },
-];
-
-const PREMIUM_PLANS = [
-  {
-    value: 'enterprise',
-    name:  'Enterprise',
-    price: '$499',
-    period: '/mo',
-    badge: 'Most Popular',
-    badgeColor: 'bg-indigo-600',
-    ring: 'ring-2 ring-indigo-500',
-    features: [
-      '10,000 daily contract matches',
-      'Dedicated account manager',
-      'AI proposal generation',
-      'Full API access',
-      '24/7 priority support',
-      'Custom integrations',
-      'Unlimited saved opportunities',
-      'Advanced competitive analysis',
-    ],
-  },
-  {
-    value: 'custom',
-    name:  'Custom / Enterprise Plus',
-    price: 'Custom',
-    period: 'pricing',
-    badge: 'For Large Teams',
-    badgeColor: 'bg-purple-600',
-    ring: 'ring-2 ring-purple-400',
-    features: [
-      'Unlimited contract matches',
-      'Multiple user seats',
-      'White-label options',
-      'Custom NAICS & agency filters',
-      'Dedicated engineering support',
-      'SLA guarantee',
-      'On-premise / private cloud',
-      'Custom data exports & integrations',
-    ],
-  },
-];
+// "Custom / Enterprise Plus" isn't a real DB plan - it's inherently
+// beyond the fixed tiers (white-label, on-prem, etc.), so it has no live
+// price to fetch and stays hand-authored. The real Enterprise (and Pro,
+// when arriving from the Yearly toggle) card below is built from live
+// Plan data instead of a hardcoded price/feature list.
+const CUSTOM_PLAN_CARD = {
+  value: 'custom',
+  name:  'Custom / Enterprise Plus',
+  price: 'Custom',
+  period: 'pricing',
+  badge: 'For Large Teams',
+  badgeColor: 'bg-purple-600',
+  features: [
+    'Unlimited contract matches',
+    'Multiple user seats',
+    'White-label options',
+    'Custom NAICS & agency filters',
+    'Dedicated engineering support',
+    'SLA guarantee',
+    'On-premise / private cloud',
+    'Custom data exports & integrations',
+  ],
+};
 
 const STATUS_CONFIG = {
   new:         { label: 'Received',    color: 'bg-blue-100 text-blue-700 border-blue-200',   icon: Clock,         desc: 'Your inquiry is in the queue. We\'ll be in touch shortly.' },
@@ -153,11 +130,33 @@ function InquiryStatusCard({ inquiry, onNewInquiry }) {
 
 export default function Contact() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isLoggedIn = !!(localStorage.getItem('authToken') || sessionStorage.getItem('authToken'));
+
+  // Arriving from Pricing carries which plan/billing cycle they clicked
+  // "Contact Us" on, e.g. /contact?plan=enterprise&billing=monthly
+  const urlPlan    = searchParams.get('plan');    // 'enterprise' | 'pro'
+  const urlBilling = searchParams.get('billing'); // 'monthly' | 'yearly'
+  const initialPlanInterest = urlPlan === 'pro' ? 'pro' : urlPlan === 'custom' ? 'custom' : 'enterprise';
 
   const [existingInquiry, setExistingInquiry] = useState(null);
   const [checkingInquiry, setCheckingInquiry] = useState(isLoggedIn);
   const [forceNew, setForceNew] = useState(false);
+
+  // Live plan pricing/features - same source as the Pricing page, never
+  // hardcoded, so this page can never drift out of sync with real prices.
+  const [plans, setPlans] = useState([]);
+  const [plansLoading, setPlansLoading] = useState(true);
+
+  useEffect(() => {
+    paymentAPI.getPlans()
+      .then(res => { if (res.data.success) setPlans(res.data.data); })
+      .catch(() => {})
+      .finally(() => setPlansLoading(false));
+  }, []);
+
+  const enterprisePlan = plans.find(p => p.name === 'enterprise');
+  const proPlan        = plans.find(p => p.name === 'pro');
 
   const [form, setForm] = useState({
     name:        localStorage.getItem('userName') || '',
@@ -165,7 +164,7 @@ export default function Contact() {
     company:     '',
     phone:       '',
     employees:   '',
-    planInterest:'enterprise',
+    planInterest: initialPlanInterest,
     message:     '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -183,6 +182,42 @@ export default function Contact() {
       .catch(() => {})
       .finally(() => setCheckingInquiry(false));
   }, []);
+
+  // Build the plan cards shown on this page from live data. Pro only shows
+  // up here if they arrived via the Yearly "Contact Us" flow on Pricing -
+  // Pro monthly is still purchased directly on the Pricing page.
+  const planCards = [
+    enterprisePlan && {
+      value: 'enterprise',
+      name: enterprisePlan.displayName,
+      price: `$${enterprisePlan.priceMonthly}`,
+      period: '/mo',
+      yearlyPrice: enterprisePlan.priceYearly,
+      badge: 'Most Popular',
+      badgeColor: 'bg-indigo-600',
+      features: (enterprisePlan.features || []).filter(f => f.included).map(f => f.name),
+    },
+    urlPlan === 'pro' && proPlan && {
+      value: 'pro',
+      name: `${proPlan.displayName} (Annual)`,
+      price: `$${proPlan.priceYearly.toLocaleString()}`,
+      period: '/yr',
+      badge: 'Requested Plan',
+      badgeColor: 'bg-indigo-600',
+      features: (proPlan.features || []).filter(f => f.included).map(f => f.name),
+    },
+    CUSTOM_PLAN_CARD,
+  ].filter(Boolean);
+
+  const planLabel = (value) => {
+    if (value === 'enterprise' && enterprisePlan) {
+      return `${enterprisePlan.displayName}: $${enterprisePlan.priceMonthly}/mo (or $${enterprisePlan.priceYearly.toLocaleString()}/yr)`;
+    }
+    if (value === 'pro' && proPlan) {
+      return `${proPlan.displayName} Annual: $${proPlan.priceYearly.toLocaleString()}/yr`;
+    }
+    return 'Custom / Enterprise Plus: Custom pricing';
+  };
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -232,7 +267,7 @@ export default function Contact() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Received!</h2>
           <p className="text-gray-600 mb-2">
-            Thank you! We have received your <strong>{form.planInterest === 'custom' ? 'Custom Enterprise' : 'Enterprise ($499/mo · $4,788/yr)'}</strong> plan request.
+            Thank you! We have received your <strong>{planLabel(form.planInterest)}</strong> plan request.
             Our team will contact you within <strong>1 business day</strong> to activate your plan.
           </p>
           <p className="text-sm text-gray-400 mb-6">A confirmation email has been sent to <strong>{form.email}</strong>.</p>
@@ -258,21 +293,32 @@ export default function Contact() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-7 sm:mb-10">
-          <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
-            Enterprise Plans: $499/mo (or $4,788/yr, save 20%)
-          </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">Request an Enterprise Plan</h1>
+          {!plansLoading && enterprisePlan && (
+            <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
+              {enterprisePlan.displayName} Plans: ${enterprisePlan.priceMonthly}/mo (or ${enterprisePlan.priceYearly.toLocaleString()}/yr, save 20%)
+            </span>
+          )}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            {urlPlan === 'pro' ? 'Request Pro (Annual Billing)' : 'Request an Enterprise Plan'}
+          </h1>
           <p className="text-gray-600 text-sm sm:text-base md:text-lg">
             Fill in your details below. Our team reviews every request and activates your plan within <strong>1 business day</strong>.
           </p>
-          <p className="text-xs sm:text-sm text-gray-400 mt-2">
-            Looking for Starter or Pro? <Link to="/pricing" className="text-indigo-600 hover:underline">Purchase directly on the Pricing page →</Link>
-          </p>
+          {urlPlan !== 'pro' && (
+            <p className="text-xs sm:text-sm text-gray-400 mt-2">
+              Looking for Starter or Pro (monthly)? <Link to="/pricing" className="text-indigo-600 hover:underline">Purchase directly on the Pricing page →</Link>
+            </p>
+          )}
         </div>
 
-        {/* Two premium plan cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {PREMIUM_PLANS.map(plan => (
+        {/* Premium plan cards - live pricing/features from the DB */}
+        {plansLoading ? (
+          <div className="flex justify-center mb-8 py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+          </div>
+        ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {planCards.map(plan => (
             <button
               key={plan.value}
               type="button"
@@ -312,6 +358,7 @@ export default function Contact() {
             </button>
           ))}
         </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-5 sm:p-8 space-y-5">
@@ -386,7 +433,7 @@ export default function Contact() {
                 name="planInterest" value={form.planInterest} onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
               >
-                {PLAN_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                {planCards.map(p => <option key={p.value} value={p.value}>{planLabel(p.value)}</option>)}
               </select>
             </div>
           </div>
