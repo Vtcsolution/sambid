@@ -98,7 +98,7 @@ export default function PrivacyPolicy() {
         keywords="Sambid privacy policy, federal contracting software data protection, SAM.gov platform privacy, GDPR compliance government contracting tool"
         canonical="https://sambid.co/privacy"
       />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">

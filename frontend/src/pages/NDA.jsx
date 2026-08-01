@@ -64,7 +64,7 @@ export default function NDA() {
         keywords="Sambid NDA, non-disclosure agreement, federal contracting platform NDA, enterprise confidentiality agreement, government contracting software NDA"
         canonical="https://sambid.co/nda"
       />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">

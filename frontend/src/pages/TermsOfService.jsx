@@ -80,7 +80,7 @@ export default function TermsOfService() {
         keywords="Sambid terms of service, federal contracting software terms, SAM.gov platform user agreement, government contracting tool terms"
         canonical="https://sambid.co/terms"
       />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">

@@ -94,7 +94,7 @@ export default function DPA() {
         keywords="Sambid DPA, data processing agreement, GDPR compliance, federal contracting software data processing, enterprise data protection"
         canonical="https://sambid.co/dpa"
       />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">

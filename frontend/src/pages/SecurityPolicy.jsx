@@ -111,7 +111,7 @@ export default function SecurityPolicy() {
         keywords="Sambid security, federal contracting platform security, SaaS data security, GDPR security compliance, government contract software security"
         canonical="https://sambid.co/security"
       />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">

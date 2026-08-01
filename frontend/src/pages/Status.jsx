@@ -51,7 +51,7 @@ export default function Status() {
         description="Live status of Sambid's website, database, and SAM.gov data sync."
         canonical="https://sambid.co/status"
       />
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
         <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Sambid
         </Link>
