@@ -864,11 +864,13 @@ export const getOpportunityById = async (req, res) => {
     const isActive = opportunity.dueDate && new Date(opportunity.dueDate) > new Date();
 
     // ── Trial/free paywall ────────────────────────────────────────────────
-    // All opportunity data is public on SAM.gov — the product is the matching,
-    // documents, and direct links. For trial/free users we strip exactly the
-    // fields that would let someone find the notice on SAM.gov for free
-    // (solicitation number, notice ID, resource links, contacts). Opportunities
-    // that aren't even in their matched feed are fully locked.
+    // Opportunities that aren't in a limited-plan user's matched feed are
+    // fully locked (teaser only) — the daily NAICS-match quota (3/day) and,
+    // for trial, the 5-day window are the actual paywall. Any opportunity
+    // that IS in their feed shows completely, same as a paid plan — full
+    // documents, contacts, solicitation number, and SAM.gov link, nothing
+    // hidden. AI tools (Deep AI Analysis, Risk Assessment, Ask AI) are
+    // gated separately by the AI credit system, not by this endpoint.
     const isLimitedPlan = ['trial', 'free'].includes(req.user?.plan);
     if (isLimitedPlan) {
       const inFeed = await UserOpportunity.exists({ user: req.user._id, opportunity: opportunity._id });
@@ -893,15 +895,9 @@ export const getOpportunityById = async (req, res) => {
         });
       }
 
-      // in their feed: full read access, but the SAM.gov escape hatches are
-      // removed — no solicitation number, notice ID, documents, or contacts.
-      delete obj.solicitationNumber;
-      delete obj.noticeId;
-      obj.resourceLinks   = [];
-      obj.pointOfContacts = [];
+      // in their feed: full read access, nothing stripped.
       return res.json({
         success: true,
-        restricted: true, // frontend shows upgrade prompts on the locked sections
         data: {
           ...obj,
           aiMatchScore:  score,

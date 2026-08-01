@@ -5,7 +5,7 @@
 // ── Monthly credit allocation per plan ────────────────────────────────────────
 // Each AI call = 15 credits, so allocations reflect realistic usage
 export const PLAN_AI_CREDITS = {
-  trial:        50,    // ~3 AI calls to try
+  trial:         0,    // no AI access — opportunity data is unrestricted, AI tools are Pro+
   free:          0,    // no AI access
   starter:     300,    // ~20 AI calls/month
   pro:        1000,    // ~66 AI calls/month

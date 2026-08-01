@@ -201,7 +201,7 @@ export default function About() {
             See What Contracts You're Missing
           </h2>
           <p className="text-base sm:text-lg text-indigo-100 mb-7">
-            Start your free 3-day trial. Get 15 real SAM.gov matches for your NAICS codes today.
+            Start your free 5-day trial. Get 15 real SAM.gov matches for your NAICS codes today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

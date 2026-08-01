@@ -167,7 +167,7 @@ export default function Pricing() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16">
       <SEOHead
         title="Pricing | Federal Contract Alert Plans"
-        description="Choose the right Sambid plan for your business. Start with a 3-day free trial — no credit card required. Starter, Pro, and Enterprise plans with AI-matched federal contract opportunities, deadline alerts, and proposal tools."
+        description="Choose the right Sambid plan for your business. Start with a 5-day free trial — no credit card required. Starter, Pro, and Enterprise plans with AI-matched federal contract opportunities, deadline alerts, and proposal tools."
         keywords="federal contracting software pricing, SAM.gov alert subscription, government contracting tool cost, federal opportunity tracker price, small business contracting plan, federal contract software cost, GovCon software pricing, best federal contracting tool price, SAM.gov alert service cost, government bid software plans, affordable federal contracting software"
         canonical="https://sambid.co/pricing"
       />
@@ -272,7 +272,7 @@ export default function Pricing() {
                   <h3 className="text-xl font-bold text-gray-900">{plan.displayName}</h3>
                   {plan.name === 'free' && (
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                      3-Day Trial
+                      5-Day Trial
                     </span>
                   )}
                 </div>

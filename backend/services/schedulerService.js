@@ -5,7 +5,7 @@
 //  Phase 2 — Distribution:  global Opportunity → per-user UserOpportunity (every hour + midnight)
 //
 // Plan limits applied during distribution:
-//  trial        : 3 opps/day,       source window = last 7 days (7-day trial)
+//  trial        : 3 opps/day,       source window = last 7 days (account itself expires after 5 days — see User.trialEndDate)
 //  free         : 3 opps/day,       source window = last 7 days
 //  starter      : 500 opps/month,   source window = last 14 days
 //  pro          : 3000 opps/month,  source window = last 60 days

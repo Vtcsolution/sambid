@@ -461,7 +461,7 @@ export default function Opportunities() {
               {userProfile.plan === 'trial' ? (
                 <>
                   <p className="text-yellow-800 font-medium">Trial match limit reached</p>
-                  <p className="text-yellow-700 text-sm">You've used all 15 matches included in your 3-day trial. Upgrade to keep discovering federal contracts.</p>
+                  <p className="text-yellow-700 text-sm">You've used all 15 matches included in your 5-day trial. Upgrade to keep discovering federal contracts.</p>
                 </>
               ) : (
                 <>

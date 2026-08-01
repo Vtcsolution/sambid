@@ -750,8 +750,9 @@ export default function OpportunityDetail() {
 
           {/* ── SAM.gov Direct Access ───────────────────────────────────── */}
           {accessRestricted ? (
-            /* Trial/free: the SAM.gov escape hatches (solicitation number, direct
-               link, documents, contacts) are stripped server-side — sell the upgrade */
+            /* Not currently sent by the backend — trial and free both get full,
+               unrestricted opportunity data. Kept as a defensive fallback in
+               case a future plan tier needs field-level restriction again. */
             <div className="mt-6 pt-4 border-t border-gray-100">
               <div className="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-xl p-5 text-center">
                 <div className="w-11 h-11 mx-auto mb-3 bg-indigo-100 rounded-xl flex items-center justify-center">
