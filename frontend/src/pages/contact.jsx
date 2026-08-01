@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Building2, Mail, Phone, Users, MessageSquare,
-  CheckCircle, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
+  CheckCircle, Check, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 import { contactAPI, paymentAPI } from '../services/api';
@@ -183,6 +183,11 @@ export default function Contact() {
       .finally(() => setCheckingInquiry(false));
   }, []);
 
+  // Which billing cycle they were looking at on Pricing when they clicked
+  // "Contact Us" - defaults to monthly if they arrived here directly
+  // (e.g. typed the URL, or a generic "Contact" nav link).
+  const billing = urlBilling === 'yearly' ? 'yearly' : 'monthly';
+
   // Build the plan cards shown on this page from live data. Pro only shows
   // up here if they arrived via the Yearly "Contact Us" flow on Pricing -
   // Pro monthly is still purchased directly on the Pricing page.
@@ -190,9 +195,8 @@ export default function Contact() {
     enterprisePlan && {
       value: 'enterprise',
       name: enterprisePlan.displayName,
-      price: `$${enterprisePlan.priceMonthly}`,
-      period: '/mo',
-      yearlyPrice: enterprisePlan.priceYearly,
+      price: billing === 'yearly' ? `$${enterprisePlan.priceYearly.toLocaleString()}` : `$${enterprisePlan.priceMonthly}`,
+      period: billing === 'yearly' ? '/yr' : '/mo',
       badge: 'Most Popular',
       badgeColor: 'bg-indigo-600',
       features: (enterprisePlan.features || []).filter(f => f.included).map(f => f.name),
@@ -209,12 +213,16 @@ export default function Contact() {
     CUSTOM_PLAN_CARD,
   ].filter(Boolean);
 
+  // Single, unambiguous price per option - matches whatever billing cycle
+  // they actually arrived with, instead of cramming both mo/yr into one line.
   const planLabel = (value) => {
     if (value === 'enterprise' && enterprisePlan) {
-      return `${enterprisePlan.displayName}: $${enterprisePlan.priceMonthly}/mo (or $${enterprisePlan.priceYearly.toLocaleString()}/yr)`;
+      return billing === 'yearly'
+        ? `${enterprisePlan.displayName}: $${enterprisePlan.priceYearly.toLocaleString()}/yr (billed annually)`
+        : `${enterprisePlan.displayName}: $${enterprisePlan.priceMonthly}/mo`;
     }
     if (value === 'pro' && proPlan) {
-      return `${proPlan.displayName} Annual: $${proPlan.priceYearly.toLocaleString()}/yr`;
+      return `${proPlan.displayName}: $${proPlan.priceYearly.toLocaleString()}/yr (billed annually)`;
     }
     return 'Custom / Enterprise Plus: Custom pricing';
   };
@@ -329,24 +337,20 @@ export default function Contact() {
                   : 'border-gray-200 hover:border-indigo-300'
               }`}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <span className={`inline-block text-xs font-bold text-white px-2 py-0.5 rounded-full mb-1 ${plan.badgeColor}`}>
-                    {plan.badge}
-                  </span>
-                  <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
-                  <p className="text-2xl font-bold text-indigo-600">
-                    {plan.price}<span className="text-sm font-normal text-gray-500">{plan.period}</span>
-                  </p>
-                </div>
-                <div className={`w-5 h-5 rounded-full border-2 mt-1 flex items-center justify-center shrink-0 ${
-                  form.planInterest === plan.value ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300'
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <span className={`inline-block text-xs font-bold text-white px-2 py-0.5 rounded-full ${plan.badgeColor}`}>
+                  {plan.badge}
+                </span>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                  form.planInterest === plan.value ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300 bg-white'
                 }`}>
-                  {form.planInterest === plan.value && (
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  )}
+                  {form.planInterest === plan.value && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
                 </div>
               </div>
+              <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
+              <p className="text-2xl font-bold text-indigo-600 mb-3">
+                {plan.price}<span className="text-sm font-normal text-gray-500">{plan.period}</span>
+              </p>
               <ul className="space-y-1.5">
                 {plan.features.map(f => (
                   <li key={f} className="flex items-center gap-2 text-xs text-gray-600">
