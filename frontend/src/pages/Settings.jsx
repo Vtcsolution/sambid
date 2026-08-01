@@ -1,6 +1,7 @@
 // frontend/src/pages/Settings.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   User, Briefcase, Bell, Shield, Crown, Moon, Sun,
   Search, X, Check, Loader2, CheckCircle, AlertCircle,
@@ -1356,6 +1357,12 @@ function ApiAccessSection() {
   const [confirmRevoke, setConfirmRevoke] = useState(false);
   const [error,    setError]    = useState('');
 
+  // ── Test panel: fires a REAL request at /api/v1/opportunities using
+  // whatever key is pasted in, exactly like an external caller would ──────────
+  const [testKey,     setTestKey]     = useState('');
+  const [testLoading,  setTestLoading]  = useState(false);
+  const [testResult,   setTestResult]   = useState(null); // { ok, status, body, rateLimit }
+
   const load = async () => {
     try {
       const res = await apiKeyAPI.getStatus();
@@ -1375,6 +1382,8 @@ function ApiAccessSection() {
     try {
       const res = await (regenerate ? apiKeyAPI.regenerate() : apiKeyAPI.generate());
       setRevealedKey(res.data.data.apiKey);
+      setTestKey(res.data.data.apiKey); // pre-fill the test panel so they can try it immediately
+      setTestResult(null);
       setConfirmRegen(false);
       await load();
     } catch (e) {
@@ -1403,6 +1412,38 @@ function ApiAccessSection() {
     navigator.clipboard.writeText(revealedKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const runTest = async () => {
+    if (!testKey.trim()) return;
+    setTestLoading(true);
+    setTestResult(null);
+    const base = import.meta.env.VITE_API_URL || 'https://sambid.co/api';
+    const origin = base.endsWith('/api') ? base.slice(0, -4) : base;
+    try {
+      const res = await axios.get(`${origin}/api/v1/opportunities`, {
+        params: { limit: 3 },
+        headers: { 'X-API-Key': testKey.trim() },
+      });
+      setTestResult({
+        ok: true,
+        status: res.status,
+        body: res.data,
+        rateLimit: {
+          limit:     res.headers['x-ratelimit-limit'],
+          remaining: res.headers['x-ratelimit-remaining'],
+        },
+      });
+      await load(); // usage counter just moved — refresh it
+    } catch (e) {
+      setTestResult({
+        ok: false,
+        status: e.response?.status,
+        body: e.response?.data || { message: e.message },
+      });
+    } finally {
+      setTestLoading(false);
+    }
   };
 
   if (loading) {
@@ -1518,6 +1559,52 @@ function ApiAccessSection() {
               </div>
             </>
           )}
+
+          {/* Test panel — fires a real request, exactly like an outside caller would */}
+          <div className="border-t border-gray-100 pt-4 mb-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Test Your Key</p>
+            <p className="text-xs text-gray-500 mb-2">
+              Paste your key and send a real request to <code className="bg-gray-100 px-1 py-0.5 rounded">/api/v1/opportunities</code> to confirm it works.
+            </p>
+            <div className="flex gap-2 mb-3">
+              <input
+                type="text"
+                value={testKey}
+                onChange={e => setTestKey(e.target.value)}
+                placeholder="sambid_live_..."
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                onClick={runTest}
+                disabled={testLoading || !testKey.trim()}
+                className="shrink-0 flex items-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-xs font-semibold rounded-lg transition-colors"
+              >
+                {testLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                {testLoading ? 'Sending…' : 'Send Test Request'}
+              </button>
+            </div>
+
+            {testResult && (
+              <div className={`rounded-xl border p-3 ${testResult.ok ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  {testResult.ok
+                    ? <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
+                    : <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />}
+                  <span className={`text-xs font-semibold ${testResult.ok ? 'text-green-700' : 'text-red-700'}`}>
+                    {testResult.ok ? `Success — HTTP ${testResult.status}` : `Failed — HTTP ${testResult.status || 'network error'}`}
+                  </span>
+                  {testResult.rateLimit?.limit && (
+                    <span className="text-xs text-gray-500 ml-auto">
+                      {testResult.rateLimit.remaining} / {testResult.rateLimit.limit} left today
+                    </span>
+                  )}
+                </div>
+                <pre className="text-xs bg-white border border-gray-100 rounded-lg p-2.5 overflow-x-auto max-h-56">
+{JSON.stringify(testResult.body, null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
 
           {/* Docs */}
           <div className="border-t border-gray-100 pt-4">
