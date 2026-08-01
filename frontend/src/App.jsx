@@ -66,6 +66,7 @@ const AdminLogin            = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard        = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminPlanRequests     = lazy(() => import('./pages/admin/PlanRequests'));
 const AdminPlans            = lazy(() => import('./pages/admin/AdminPlans'));
+const AdminApiKeys          = lazy(() => import('./pages/admin/AdminApiKeys'));
 const AdminNotifications    = lazy(() => import('./pages/admin/AdminNotifications'));
 const AdminSettings         = lazy(() => import('./pages/admin/AdminSettings'));
 const AdminInvoices         = lazy(() => import('./pages/admin/AdminInvoices'));
@@ -215,6 +216,7 @@ function App() {
             <Route path="dashboard"         element={<AdminDashboard />} />
             <Route path="plan-requests"     element={<AdminPlanRequests />} />
             <Route path="plans"             element={<AdminPlans />} />
+            <Route path="api-keys"          element={<AdminApiKeys />} />
             <Route path="payments"          element={<AdminPayments />} />
             <Route path="notifications"     element={<AdminNotifications />} />
             <Route path="settings"          element={<AdminSettings />} />

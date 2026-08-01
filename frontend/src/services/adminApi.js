@@ -105,6 +105,9 @@ export const adminPanelAPI = {
   updatePlan:            (id,d) => adminApi.put(`/admin/plans/${id}`, d),
   deletePlan:            (id)   => adminApi.delete(`/admin/plans/${id}`),
   togglePlanStatus:      (id)   => adminApi.patch(`/admin/plans/${id}/toggle`),
+  // Public API keys issued to customers (Settings > API Access on the user side)
+  getApiKeys:            ()     => adminApi.get('/admin/api-keys'),
+  revokeApiKey:          (userId) => adminApi.delete(`/admin/api-keys/${userId}`),
 
   // SAM Company Directory
   getCompanies:          (p)    => adminApi.get('/admin/companies',                       { params: p }),

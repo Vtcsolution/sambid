@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, CreditCard, Settings, LogOut, Bell,
   Shield, ShieldCheck, FileText, Mail, MessageSquare, Sparkles, BarChart3,
-  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins
+  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins, Key
 } from 'lucide-react';
 import { exportSamBidReport } from '../../utils/exportUtils';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
@@ -35,6 +35,7 @@ const ALL_NAV = [
     items: [
       { path: '/admin/users',             label: 'All Users',         icon: Users,        roles: ['super_admin','admin'], permission: 'users' },
       { path: '/admin/plans',             label: 'Plan Pricing',      icon: DollarSign,   roles: ['super_admin','admin'], permission: 'payments' },
+      { path: '/admin/api-keys',          label: 'API Keys',          icon: Key,          roles: ['super_admin','admin'], permission: 'payments' },
       { path: '/admin/plan-requests',     label: 'Plan Requests',     icon: Layers,       roles: ['super_admin','admin'], permission: 'payments' },
       { path: '/admin/annual-requests',   label: 'Annual Requests',   icon: UserCheck,    roles: ['super_admin','admin','support'] },
       { path: '/admin/credit-requests',   label: 'Credit Requests',   icon: Zap,          roles: ['super_admin','admin'], permission: 'payments' },

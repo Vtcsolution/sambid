@@ -69,6 +69,7 @@ import {
   resetUserCredits, addBonusCredits,
 } from '../controllers/adminCreditController.js';
 import { getAIKeyStatus } from '../controllers/adminAIKeysController.js';
+import { listApiKeys, revokeUserApiKey } from '../controllers/adminApiKeyController.js';
 
 const router = express.Router();
 
@@ -144,6 +145,10 @@ router.post('/companies/clear',             clearAllCompanies);
 
 // AI Keys & Provider Status
 router.get('/ai-keys/status',        getAIKeyStatus);
+
+// Public API Keys (customer-issued, /api/v1 access)
+router.get('/api-keys',              listApiKeys);
+router.delete('/api-keys/:userId',   revokeUserApiKey);
 
 // AI Credit Usage
 router.get('/credits/logs',                 getCreditUsageLogs);
