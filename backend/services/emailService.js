@@ -519,6 +519,53 @@ export const sendRealTimeAlert = async (user, opportunity) => {
 };
 
 /**
+ * Send a real teaming request notification (Teaming Partner Finder, Enterprise).
+ * Gives the recipient the requester's real contact info so they can just
+ * reply and start the actual conversation.
+ */
+export const sendTeamingRequestEmail = async (toUser, fromUser, { naicsCode = '', message = '' } = {}) => {
+  const fromName = fromUser.businessName || fromUser.name;
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, #db2777, #be185d); border-radius: 12px; color: white;">
+        <h2 style="margin: 0;">🤝 New Teaming Request</h2>
+      </div>
+
+      <div style="padding: 30px; background: white; border-radius: 12px; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <p style="color: #1f2937; font-size: 15px;">
+          <strong>${fromName}</strong> found your company on Sambid's Teaming Partner Finder${naicsCode ? ` (matched on NAICS ${naicsCode})` : ''} and wants to team up on a federal contract.
+        </p>
+
+        ${message ? `
+        <div style="background: #fdf2f8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 3px solid #db2777;">
+          <p style="margin: 0; color: #831843; font-style: italic;">"${message}"</p>
+        </div>` : ''}
+
+        <table style="width: 100%; margin: 20px 0;">
+          <tr><td style="padding: 6px 0;"><strong>Company:</strong></td><td>${fromName}</td></tr>
+          <tr><td style="padding: 6px 0;"><strong>Contact:</strong></td><td>${fromUser.name}</td></tr>
+          <tr><td style="padding: 6px 0;"><strong>Email:</strong></td><td><a href="mailto:${fromUser.email}">${fromUser.email}</a></td></tr>
+        </table>
+
+        <p style="color: #6b7280; font-size: 13px;">
+          Reply directly to this email, or reach out to ${fromUser.email.split('@')[0]} at the address above, to start the conversation.
+        </p>
+      </div>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: FROM.noreply(),
+    replyTo: fromUser.email,
+    to: toUser.email,
+    subject: `🤝 ${fromName} wants to team up on a federal contract`,
+    html: emailHtml,
+  });
+
+  console.log(`📧 Teaming request email sent to ${toUser.email} from ${fromUser.email}`);
+};
+
+/**
  * Send enterprise inquiry confirmation to user
  */
 export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, planInterest }) => {

@@ -19,6 +19,8 @@ export default function TeamingFinder() {
   const [loading,      setLoading]      = useState(false);
   const [searched,     setSearched]     = useState(false);
   const [requested,    setRequested]    = useState({});
+  const [requesting,   setRequesting]   = useState({});
+  const [requestError, setRequestError] = useState({});
 
   const toggleCert = (c) => setCertFilters(f => f.includes(c) ? f.filter(x => x !== c) : [...f, c]);
 
@@ -39,8 +41,17 @@ export default function TeamingFinder() {
     }
   };
 
-  const handleRequest = (userId) => {
-    setRequested(r => ({ ...r, [userId]: true }));
+  const handleRequest = async (userId) => {
+    setRequesting(r => ({ ...r, [userId]: true }));
+    setRequestError(e => ({ ...e, [userId]: '' }));
+    try {
+      await api.post(`/auth/teaming-partners/${userId}/request`, { naicsCode: naicsFilter });
+      setRequested(r => ({ ...r, [userId]: true }));
+    } catch (err) {
+      setRequestError(e => ({ ...e, [userId]: err.response?.data?.message || 'Failed to send request.' }));
+    } finally {
+      setRequesting(r => ({ ...r, [userId]: false }));
+    }
   };
 
   if (planLoading) return (
@@ -175,10 +186,17 @@ export default function TeamingFinder() {
                       <Award className="w-3.5 h-3.5" /> Teaming request sent!
                     </div>
                   ) : (
-                    <button onClick={() => handleRequest(partner._id)}
-                      className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition border border-pink-200">
-                      <Mail className="w-3.5 h-3.5" /> Send Teaming Request
-                    </button>
+                    <>
+                      <button onClick={() => handleRequest(partner._id)} disabled={requesting[partner._id]}
+                        className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 transition border border-pink-200 disabled:opacity-60">
+                        {requesting[partner._id]
+                          ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Sending...</>
+                          : <><Mail className="w-3.5 h-3.5" /> Send Teaming Request</>}
+                      </button>
+                      {requestError[partner._id] && (
+                        <p className="text-xs text-red-600 mt-1.5">{requestError[partner._id]}</p>
+                      )}
+                    </>
                   )}
                 </div>
               ))}

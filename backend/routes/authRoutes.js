@@ -54,15 +54,84 @@ router.get('/teaming-partners', protect, async (req, res) => {
       return res.status(403).json({ success: false, message: 'Enterprise plan required.' });
     }
     const { naics, certifications } = req.query;
+    const User = (await import('../models/User.js')).default;
+    const UserCertification = (await import('../models/UserCertification.js')).default;
+
     const query = { _id: { $ne: req.user._id }, plan: { $in: ['starter', 'pro', 'enterprise'] } };
     if (naics) query.naicsCodes = { $in: naics.split(',').map(n => n.trim()) };
 
-    const users = await (await import('../models/User.js')).default
+    // Certifications live in a separate collection, not on User - narrow the
+    // candidate pool to users holding at least one of the requested (active)
+    // cert types before running the main query.
+    if (certifications) {
+      const types = certifications.split(',').map(c => c.trim()).filter(Boolean);
+      const matchingUserIds = await UserCertification.distinct('user', {
+        type: { $in: types },
+        expiryDate: { $gt: new Date() },
+      });
+      query._id = { ...query._id, $in: matchingUserIds };
+    }
+
+    const users = await User
       .find(query)
       .select('name businessName businessType naicsCodes')
-      .limit(30);
+      .limit(30)
+      .lean();
 
-    res.json({ success: true, data: users });
+    // Attach each user's real active certifications for display
+    const certs = await UserCertification.find({
+      user: { $in: users.map(u => u._id) },
+      expiryDate: { $gt: new Date() },
+    }).select('user type');
+    const certsByUser = {};
+    certs.forEach(c => {
+      const key = String(c.user);
+      (certsByUser[key] ||= []).push(c.type);
+    });
+    const data = users.map(u => ({ ...u, certifications: certsByUser[String(u._id)] || [] }));
+
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Send a real teaming request — creates a record, emails the recipient, and
+// notifies them in-app. Previously this button only faked success client-side.
+router.post('/teaming-partners/:userId/request', protect, async (req, res) => {
+  try {
+    if (req.user.plan !== 'enterprise') {
+      return res.status(403).json({ success: false, message: 'Enterprise plan required.' });
+    }
+    const { userId } = req.params;
+    const { naicsCode = '', message = '' } = req.body;
+    if (userId === String(req.user._id)) {
+      return res.status(400).json({ success: false, message: 'You cannot send a teaming request to yourself.' });
+    }
+
+    const User = (await import('../models/User.js')).default;
+    const toUser = await User.findById(userId);
+    if (!toUser) return res.status(404).json({ success: false, message: 'That company was not found.' });
+
+    const TeamingRequest = (await import('../models/TeamingRequest.js')).default;
+    const request = await TeamingRequest.create({ from: req.user._id, to: userId, naicsCode, message });
+
+    const { createUserNotification } = await import('../services/notificationService.js');
+    const fromLabel = req.user.businessName || req.user.name;
+    await createUserNotification(
+      userId,
+      'teaming_request',
+      `${fromLabel} wants to team up`,
+      `Sent via Teaming Partner Finder${naicsCode ? ` — matched on NAICS ${naicsCode}` : ''}.`,
+      '/teaming-finder'
+    );
+
+    const { sendTeamingRequestEmail } = await import('../services/emailService.js');
+    sendTeamingRequestEmail(toUser, req.user, { naicsCode, message }).catch(e =>
+      console.error('sendTeamingRequestEmail failed:', e.message)
+    );
+
+    res.json({ success: true, message: 'Teaming request sent.', data: request });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
