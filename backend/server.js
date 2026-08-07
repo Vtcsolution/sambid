@@ -33,6 +33,7 @@ import adminSuggestionRoutes  from './routes/adminSuggestionRoutes.js';
 import prospectRoutes          from './routes/prospectRoutes.js';
 import trackingRoutes          from './routes/trackingRoutes.js';
 import pastPerformanceRoutes   from './routes/pastPerformanceRoutes.js';
+import contractVehicleRoutes   from './routes/contractVehicleRoutes.js';
 import supportRoutes           from './routes/supportRoutes.js';
 import partnerRoutes           from './routes/partnerRoutes.js';
 import mediaRoutes                  from './routes/mediaRoutes.js';
@@ -209,6 +210,7 @@ app.use('/api/admin/suggestions',  apiLimiter, adminSuggestionRoutes);
 app.use('/api/admin/prospects',    apiLimiter, prospectRoutes);
 app.use('/api/track',              trackingRoutes); // public — no auth, no rate limit
 app.use('/api/past-performance',   apiLimiter, pastPerformanceRoutes);
+app.use('/api/contract-vehicles',  apiLimiter, contractVehicleRoutes);
 app.use('/api/credits',            apiLimiter, creditTopupRoutes);
 app.use('/api/media',              mediaRoutes);   // public GET, admin POST/DELETE
 app.use('/api/features',           featureShowcaseRoutes); // public + admin CMS

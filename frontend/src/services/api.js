@@ -290,6 +290,13 @@ export const apiKeyAPI = {
   revoke:      ()  => api.delete('/apikey'),
 };
 
+// Contract Vehicles (GWAC/IDIQ/BPA/GSA Schedule tracker with real eligibility matching)
+export const contractVehicleAPI = {
+  getAll: ()       => api.get('/contract-vehicles'),
+  create: (data)   => api.post('/contract-vehicles', data),
+  remove: (id)     => api.delete(`/contract-vehicles/${id}`),
+};
+
 // Coupon validation (public — no auth required, uses base axios without interceptors)
 export const validateCoupon = (code) =>
   api.post('/referral/validate-coupon', { code });
