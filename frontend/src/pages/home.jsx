@@ -285,20 +285,24 @@ export default function Home() {
             alt=""
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/45 to-slate-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/70 to-slate-950/90" />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 text-center">
           <h1
-            className="hero-fade text-4xl sm:text-6xl md:text-7xl font-extrabold mb-6 sm:mb-8 leading-[1.1] tracking-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif" }}
+            className="hero-fade text-4xl sm:text-6xl md:text-7xl mb-6 sm:mb-8 leading-[1.1] tracking-tight"
+            style={{
+              fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif",
+              fontWeight: 600,
+              textShadow: '0 2px 20px rgba(0,0,0,.6)',
+            }}
           >
             Federal Contracts,<br />Found For You
           </h1>
 
           <p
             className="hero-fade text-base sm:text-xl md:text-2xl text-slate-200 mb-9 sm:mb-10 leading-relaxed max-w-2xl mx-auto"
-            style={{ animationDelay: '0.1s' }}
+            style={{ animationDelay: '0.1s', textShadow: '0 1px 12px rgba(0,0,0,.6)' }}
           >
             Automate your entire SAM.gov process,<br className="hidden sm:block" />
             from contract discovery to proposal submission.
