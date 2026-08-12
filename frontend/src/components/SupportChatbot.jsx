@@ -6,6 +6,12 @@ import notificationSound from '../assets/sounds/admin_notification.mp3';
 
 const WELCOME = "Hi! I'm Sambid's AI support assistant 👋\n\nI can help you with:\n• Plan features & pricing\n• How contract matching works\n• Account & billing questions\n• Federal contracting basics\n\nWhat can I help you with today?";
 
+// Shown once per browser session, a few seconds after the page loads, so the
+// widget doesn't sit as a silent icon nobody notices — a real, dismissible
+// nudge instead. Never opens the chat by itself, only offers to.
+const TEASER_DELAY_MS = 4000;
+const TEASER_SESSION_KEY = 'sambid_chat_teaser_shown';
+
 function Message({ msg }) {
   const isBot = msg.role === 'assistant';
   return (
@@ -37,9 +43,24 @@ export default function SupportChatbot() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: WELCOME },
   ]);
+  const [showTeaser, setShowTeaser] = useState(false);
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
   const audioRef   = useRef(null);
+
+  // Auto-pop the "Have a question?" bubble once per session, before the chat
+  // is ever opened — dismissible, and never fires again once the visitor has
+  // either opened the chat or closed the bubble.
+  useEffect(() => {
+    if (sessionStorage.getItem(TEASER_SESSION_KEY)) return;
+    const t = setTimeout(() => setShowTeaser(true), TEASER_DELAY_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  const dismissTeaser = () => {
+    setShowTeaser(false);
+    sessionStorage.setItem(TEASER_SESSION_KEY, '1');
+  };
 
   // Init AI reply sound
   useEffect(() => {
@@ -73,6 +94,7 @@ export default function SupportChatbot() {
     setOpen(true);
     setMinimized(false);
     setUnread(0);
+    dismissTeaser();
   };
 
   const handleClose = () => {
@@ -216,6 +238,32 @@ export default function SupportChatbot() {
             </>
           )}
         </div>
+      )}
+
+      {/* Auto-popped teaser bubble — dismissible, opens the chat on click */}
+      {!open && showTeaser && (
+        <button
+          onClick={handleOpen}
+          className="group relative flex items-center gap-3 bg-gray-900 hover:bg-gray-800 text-white pl-3 pr-9 py-2.5 rounded-full shadow-2xl transition-all duration-200 animate-[teaserIn_320ms_ease-out] max-w-[280px] sm:max-w-xs text-left"
+        >
+          <style>{`@keyframes teaserIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }`}</style>
+          <span className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
+            <Bot className="w-5 h-5 text-white" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-sm font-semibold leading-tight">Have a question? Ask away! 👋</span>
+            <span className="block text-xs text-gray-400 mt-0.5">Sambid AI · Usually instant</span>
+          </span>
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={(e) => { e.stopPropagation(); dismissTeaser(); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); dismissTeaser(); } }}
+            className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition"
+          >
+            <X className="w-3.5 h-3.5" />
+          </span>
+        </button>
       )}
 
       {/* Floating button */}
