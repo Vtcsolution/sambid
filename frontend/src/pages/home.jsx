@@ -290,8 +290,8 @@ export default function Home() {
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 text-center">
           <h1
-            className="hero-fade text-4xl sm:text-6xl md:text-7xl font-bold mb-6 sm:mb-8 leading-[1.1] tracking-tight"
-            style={{ fontFamily: "'Times New Roman', Times, serif" }}
+            className="hero-fade text-4xl sm:text-6xl md:text-7xl font-extrabold mb-6 sm:mb-8 leading-[1.1] tracking-tight"
+            style={{ fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif" }}
           >
             Federal Contracts,<br />Found For You
           </h1>
