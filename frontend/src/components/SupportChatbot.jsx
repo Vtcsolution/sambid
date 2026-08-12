@@ -244,15 +244,17 @@ export default function SupportChatbot() {
       {!open && showTeaser && (
         <button
           onClick={handleOpen}
-          className="group relative flex items-center gap-3 bg-gray-900 hover:bg-gray-800 text-white pl-3 pr-9 py-2.5 rounded-full shadow-2xl transition-all duration-200 animate-[teaserIn_320ms_ease-out] max-w-[280px] sm:max-w-xs text-left"
+          className="group relative flex items-center gap-3 bg-gradient-to-r from-indigo-700 to-purple-700 hover:from-indigo-600 hover:to-purple-600 text-white pl-3 pr-9 py-2.5 rounded-full shadow-2xl transition-all duration-200 animate-[teaserIn_320ms_ease-out] max-w-[280px] sm:max-w-xs text-left"
         >
           <style>{`@keyframes teaserIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }`}</style>
-          <span className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
-            <Bot className="w-5 h-5 text-white" />
-          </span>
+          <img
+            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80"
+            alt=""
+            className="w-9 h-9 rounded-full object-cover shrink-0 border-2 border-white/30"
+          />
           <span className="min-w-0">
             <span className="block text-sm font-semibold leading-tight">Have a question? Ask away! 👋</span>
-            <span className="block text-xs text-gray-400 mt-0.5">Sambid AI · Usually instant</span>
+            <span className="block text-xs text-indigo-100 mt-0.5">Sambid AI · Usually instant</span>
           </span>
           <span
             role="button"
