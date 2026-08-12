@@ -11,7 +11,7 @@ const resolveMediaUrl = (url) => url?.startsWith('http') ? url : `${API}${url}`;
 
 import {
   ArrowRight, Search, Brain, TrendingUp, Shield, Clock,
-  CheckCircle, Star, Users, Award, Zap, Target, FileText, BarChart2,
+  CheckCircle, Star, Users, Award, Target, FileText,
   Calendar, Trophy, Play, Bell
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
@@ -264,8 +264,6 @@ export default function Home() {
   const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial';
   const pageMedia = usePageMedia('home');
 
-  const heroImage = pageMedia?.hero?.image?.url ? resolveMediaUrl(pageMedia.hero.image.url) : null;
-
   return (
     <div className="overflow-hidden">
       <style>{ANIM_CSS}</style>
@@ -289,15 +287,11 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 md:pt-32 pb-4 text-center">
-          <div className="hero-fade inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm mb-7 sm:mb-8 border border-white/10">
-            <Zap className="w-4 h-4 mr-2 text-yellow-400 shrink-0" />
-            <span className="text-xs sm:text-sm font-medium">
-              The AI Contract Tool for SAM.gov · Matched to Your NAICS Codes
-            </span>
-          </div>
-
-          <h1 className="hero-fade text-4xl sm:text-6xl md:text-7xl font-extrabold mb-6 sm:mb-8 leading-[1.05] tracking-tight">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 text-center">
+          <h1
+            className="hero-fade text-4xl sm:text-6xl md:text-7xl font-bold mb-6 sm:mb-8 leading-[1.1] tracking-tight"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
             Federal Contracts,<br />Found For You
           </h1>
 
@@ -305,44 +299,17 @@ export default function Home() {
             className="hero-fade text-base sm:text-xl md:text-2xl text-slate-200 mb-9 sm:mb-10 leading-relaxed max-w-2xl mx-auto"
             style={{ animationDelay: '0.1s' }}
           >
-            Sambid is an AI-powered SAM.gov contract tool that scans daily and delivers matching federal contract opportunities straight to your dashboard, filtered by your NAICS codes, set-asides, and agency preferences.
+            Automate your entire SAM.gov process,<br className="hidden sm:block" />
+            from contract discovery to proposal submission.
           </p>
 
-          <div className="hero-fade flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center" style={{ animationDelay: '0.2s' }}>
+          <div className="hero-fade" style={{ animationDelay: '0.2s' }}>
             <Link
               to={ctaTo}
-              className="inline-flex items-center justify-center px-7 sm:px-9 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-base sm:text-lg transition-all duration-200 hover:scale-105 shadow-lg shadow-indigo-900/50"
+              className="inline-flex items-center justify-center px-8 sm:px-10 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-base sm:text-lg transition-all duration-200 hover:scale-105 shadow-lg shadow-indigo-900/50"
             >
               {ctaLabel}
-              <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
-            <Link
-              to="/how-it-works"
-              className="inline-flex items-center justify-center px-7 sm:px-9 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl font-bold text-base sm:text-lg transition-all duration-200 border border-white/20"
-            >
-              See How It Works
-            </Link>
-          </div>
-
-          <p className="mt-5 sm:mt-6 text-slate-300 text-xs sm:text-sm">
-            5-day free trial · 15 contract matches included · No credit card required
-          </p>
-        </div>
-
-        {/* Dashboard screenshot (uploaded via admin) */}
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-16 sm:pb-24">
-          <div className="hero-fade relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style={{ animationDelay: '0.3s' }}>
-            {heroImage ? (
-              <img src={heroImage} alt="Sambid federal contract dashboard" className="w-full h-auto block" />
-            ) : (
-              <div className="w-full flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl" style={{ aspectRatio: '16/9' }}>
-                <div className="text-center p-8">
-                  <BarChart2 className="w-16 h-16 text-indigo-300 mx-auto mb-4" />
-                  <p className="text-white/70 font-medium">Dashboard Preview</p>
-                  <p className="text-white/40 text-sm mt-1">Upload via Admin → Page Media</p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </section>
