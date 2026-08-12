@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import heroCapitolImg from '../assets/images/image.png';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
@@ -280,7 +281,7 @@ export default function Home() {
         {/* Full-bleed background photo with a dark gradient for text contrast */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1577942948749-a3dbb5c6db0a?ixlib=rb-4.0.3&q=80&w=2400"
+            src={heroCapitolImg}
             alt=""
             className="w-full h-full object-cover"
           />
