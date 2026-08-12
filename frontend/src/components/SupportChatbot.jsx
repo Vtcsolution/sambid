@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, X, Send, Loader2, Bot, User, MinusCircle } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, User, MinusCircle } from 'lucide-react';
 import { contactAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
 
 const WELCOME = "Hi! I'm Sambid's AI support assistant 👋\n\nI can help you with:\n• Plan features & pricing\n• How contract matching works\n• Account & billing questions\n• Federal contracting basics\n\nWhat can I help you with today?";
+
+// Same avatar everywhere the assistant appears — teaser bubble, header, and
+// message bubbles — so it reads as one consistent identity, not three.
+const AVATAR_URL = 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80';
 
 // Shown once per browser session, a few seconds after the page loads, so the
 // widget doesn't sit as a silent icon nobody notices — a real, dismissible
@@ -16,11 +20,11 @@ function Message({ msg }) {
   const isBot = msg.role === 'assistant';
   return (
     <div className={`flex gap-2.5 ${isBot ? '' : 'flex-row-reverse'}`}>
-      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-        isBot ? 'bg-indigo-600' : 'bg-gray-200'
+      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 overflow-hidden ${
+        isBot ? '' : 'bg-gray-200'
       }`}>
         {isBot
-          ? <Bot className="w-4 h-4 text-white" />
+          ? <img src={AVATAR_URL} alt="" className="w-full h-full object-cover" />
           : <User className="w-4 h-4 text-gray-600" />}
       </div>
       <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
@@ -158,8 +162,8 @@ export default function SupportChatbot() {
         } w-80 sm:w-96`}>
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 bg-indigo-600 rounded-t-2xl">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-white/30 shrink-0">
+              <img src={AVATAR_URL} alt="" className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-white text-sm">Sambid Support</p>
@@ -181,8 +185,8 @@ export default function SupportChatbot() {
 
                 {loading && (
                   <div className="flex gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
-                      <Bot className="w-4 h-4 text-white" />
+                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
+                      <img src={AVATAR_URL} alt="" className="w-full h-full object-cover" />
                     </div>
                     <div className="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -248,7 +252,7 @@ export default function SupportChatbot() {
         >
           <style>{`@keyframes teaserIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }`}</style>
           <img
-            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80"
+            src={AVATAR_URL}
             alt=""
             className="w-9 h-9 rounded-full object-cover shrink-0 border-2 border-white/30"
           />
