@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import heroCapitolImg from '../assets/images/image.png';
+import heroCapitolImg from '../assets/images/hero-capitol.jpg';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
