@@ -280,7 +280,7 @@ export default function Home() {
         {/* Full-bleed background photo with a dark gradient for text contrast */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&q=80&w=2400"
+            src="https://images.unsplash.com/photo-1577942948749-a3dbb5c6db0a?ixlib=rb-4.0.3&q=80&w=2400"
             alt=""
             className="w-full h-full object-cover"
           />
