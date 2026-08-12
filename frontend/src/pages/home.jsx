@@ -284,13 +284,13 @@ export default function Home() {
             alt=""
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/45 to-slate-950/90" />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 text-center">
           <h1
             className="hero-fade text-4xl sm:text-6xl md:text-7xl font-bold mb-6 sm:mb-8 leading-[1.1] tracking-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            style={{ fontFamily: "'Times New Roman', Times, serif" }}
           >
             Federal Contracts,<br />Found For You
           </h1>
