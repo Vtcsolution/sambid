@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { usePlans } from '../hooks/usePlans';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
@@ -261,7 +260,6 @@ const PHASES = [
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
-  const { getMonthly } = usePlans();
   const ctaTo    = isAuthenticated ? '/dashboard' : '/signup';
   const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial';
   const pageMedia = usePageMedia('home');
@@ -442,60 +440,6 @@ export default function Home() {
                 </FadeIn>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Pricing overview ── */}
-      <section className="py-16 sm:py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600">
-              Start with a free trial. Upgrade when you are ready.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { name: 'Trial',      key: null,         period: '3 days',  matches: '15 matches',  color: 'border-gray-200',   badge: null },
-              { name: 'Starter',    key: 'starter',    period: '/month',  matches: '500/month',   color: 'border-blue-200',   badge: null },
-              { name: 'Pro',        key: 'pro',        period: '/month',  matches: '3,000/month', color: 'border-indigo-400', badge: 'Most Popular' },
-              { name: 'Enterprise', key: 'enterprise', period: '/month',  matches: 'Unlimited',   color: 'border-amber-300',  badge: null },
-            ].map((plan, i) => {
-              const mo = plan.key ? getMonthly(plan.key) : null;
-              const priceDisplay = !plan.key ? 'Free' : mo != null ? `$${mo}` : '…';
-              return (
-                <div key={i} className={`bg-white rounded-2xl border-2 ${plan.color} p-5 relative`}>
-                  {plan.badge && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                      {plan.badge}
-                    </span>
-                  )}
-                  <p className="text-sm font-semibold text-gray-500 mb-1">{plan.name}</p>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {priceDisplay}
-                    <span className="text-sm font-normal text-gray-500">
-                      {!plan.key ? '' : plan.period}
-                    </span>
-                  </p>
-                  <p className="text-sm text-indigo-600 font-medium mt-2">{plan.matches}</p>
-                  <p className="text-xs text-gray-500 mt-1">SAM.gov contract matches</p>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link
-              to="/pricing"
-              className="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700 text-sm sm:text-base"
-            >
-              See full pricing details
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
           </div>
         </div>
       </section>
