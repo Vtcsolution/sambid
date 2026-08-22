@@ -24,15 +24,19 @@ export default function ZoomableImage({ src, alt = '', className = '', container
   return (
     <>
       <div
-        className={`relative w-full h-full cursor-zoom-in group ${containerClassName}`}
+        className={`relative w-full h-full overflow-hidden cursor-zoom-in group ${containerClassName}`}
         onClick={() => setOpen(true)}
         role="button"
         tabIndex={0}
         aria-label={`View full image: ${alt}`}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(true); }}
       >
-        <img src={src} alt={alt} className={`w-full h-full object-contain ${className}`} />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors">
+        <img
+          src={src}
+          alt={alt}
+          className={`w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-105 ${className}`}
+        />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5">
             <Maximize2 className="w-3.5 h-3.5" /> View full image
           </div>
