@@ -4,6 +4,7 @@ import { CheckCircle, Play, ArrowRight, ChevronLeft, Loader2, Sparkles, Zap } fr
 import api from '../services/api';
 import SEOHead from '../components/SEOHead';
 import ZoomableImage from '../components/ZoomableImage';
+import GlowImageCard from '../components/GlowImageCard';
 import { getVideoEmbed } from '../utils/videoEmbed';
 import { usePlans } from '../hooks/usePlans';
 
@@ -169,27 +170,19 @@ export default function FeatureShowcase() {
                   >
                     {/* Visual block - video, image, or placeholder */}
                     <div className={reversed ? 'lg:col-start-2' : ''}>
-                      <div className="relative rounded-2xl overflow-hidden bg-indigo-50 border border-indigo-100 shadow-lg"
-                        style={{ aspectRatio: '16/9' }}>
-                        {step.videoUrl ? (() => {
-                          const ve = getVideoEmbed(step.videoUrl);
-                          if (ve && ve !== 'direct') return <iframe src={ve} className="w-full h-full" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen title={step.title} />;
-                          if (ve === 'direct') return <video controls className="w-full h-full" preload="metadata"><source src={step.videoUrl} type="video/mp4" /></video>;
-                          return null;
-                        })() : step.imageUrl ? (
-                          <ZoomableImage src={step.imageUrl} alt={step.title} />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <div className="text-center p-8">
-                              <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                                <span className="text-white font-bold text-xl">{stepNum}</span>
-                              </div>
-                              <p className="text-indigo-700 text-sm font-medium">{step.title}</p>
-                              <p className="text-indigo-400 text-xs mt-1">Step {idx + 1}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      {(() => {
+                        const ve = step.videoUrl ? getVideoEmbed(step.videoUrl) : null;
+                        return (
+                          <GlowImageCard
+                            embedUrl={ve && ve !== 'direct' ? ve : undefined}
+                            videoSrc={ve === 'direct' ? step.videoUrl : undefined}
+                            src={!step.videoUrl ? step.imageUrl : undefined}
+                            alt={step.title}
+                            title={step.title}
+                            theme={idx % 2 === 0 ? 'indigo' : 'purple'}
+                          />
+                        );
+                      })()}
                     </div>
 
                     {/* Text block */}

@@ -13,10 +13,10 @@ const resolveMediaUrl = (url) => url?.startsWith('http') ? url : `${API}${url}`;
 import {
   ArrowRight, Search, Brain, TrendingUp, Shield, Clock,
   CheckCircle, Star, Users, Award, Target, FileText,
-  Calendar, Trophy, Play, Bell
+  Calendar, Trophy
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-import ZoomableImage from '../components/ZoomableImage';
+import GlowImageCard from '../components/GlowImageCard';
 
 const HOME_JSON_LD = [
   {
@@ -102,46 +102,6 @@ function usePageMedia(page) {
       .catch(() => {});
   }, [page]);
   return media;
-}
-
-function VideoBlock({ videoSrc, posterSrc, title }) {
-  return (
-    <div
-      className="relative rounded-2xl overflow-hidden bg-indigo-50 border border-indigo-100 shadow-lg"
-      style={{ aspectRatio: '16/9' }}
-    >
-      {videoSrc ? (
-        <video
-          className="w-full h-full object-cover"
-          controls
-          poster={posterSrc}
-          preload="none"
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      ) : posterSrc ? (
-        <ZoomableImage src={posterSrc} alt={title} />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(99,102,241,0.06) 1px,transparent 1px),linear-gradient(to right,rgba(99,102,241,0.06) 1px,transparent 1px)',
-              backgroundSize: '32px 32px',
-            }}
-          />
-          <div className="relative z-10 text-center">
-            <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center mx-auto mb-3 hover:bg-indigo-700 transition-colors cursor-pointer shadow-lg">
-              <Play className="w-7 h-7 text-white" style={{ marginLeft: '3px' }} />
-            </div>
-            <p className="text-indigo-700 text-sm font-medium">{title}</p>
-            <p className="text-indigo-400 text-xs mt-1">Video demo</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 }
 
 const PHASES = [
@@ -376,9 +336,12 @@ export default function Home() {
                         const vSrc = slotMedia.video?.url ? resolveMediaUrl(slotMedia.video.url) : '';
                         const pSrc = slotMedia.image?.url ? resolveMediaUrl(slotMedia.image.url) : '';
                         return (
-                          <VideoBlock
+                          <GlowImageCard
                             videoSrc={vSrc}
                             posterSrc={pSrc}
+                            src={pSrc}
+                            alt={phase.headline}
+                            theme={idx % 2 === 0 ? 'indigo' : 'purple'}
                             title={phase.videoTitle}
                           />
                         );
