@@ -11,7 +11,9 @@ const getSamKeys = () =>
   [process.env.SAM_API_KEY, process.env.SAM_API_KEY_2, process.env.SAM_API_KEY_3, process.env.SAM_API_KEY_4]
     .filter(Boolean);
 
-// Makes a GET request, rotating through backup keys on 429
+// Makes a GET request, rotating through backup keys on 429 (quota exhausted)
+// or 401/403 (key invalid/revoked) — a single dead or rate-limited key must
+// never take down the whole fetch when other configured keys still work.
 export const samGetWithRotation = async (buildUrl, axiosOptions = {}) => {
   const keys = getSamKeys();
   let lastErr;
@@ -19,8 +21,9 @@ export const samGetWithRotation = async (buildUrl, axiosOptions = {}) => {
     try {
       return await axios.get(buildUrl(key), { timeout: 30000, ...axiosOptions });
     } catch (err) {
-      if (err.response?.status === 429) {
-        console.warn(`  SAM.gov 429 on key …${key.slice(-8)} — trying next key`);
+      const status = err.response?.status;
+      if (status === 429 || status === 401 || status === 403) {
+        console.warn(`  SAM.gov ${status} on key …${key.slice(-8)} — trying next key`);
         lastErr = err;
         continue;
       }
