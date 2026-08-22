@@ -158,44 +158,65 @@ export default function FeatureShowcase() {
               </p>
             </div>
 
-            <div className="space-y-24 sm:space-y-32">
+            <div className="space-y-20 sm:space-y-28">
               {feature.steps.map((step, idx) => {
                 const stepNum = String(idx + 1).padStart(2, '0');
-                return (
-                  <div key={idx}>
-                    {/* Text block - centered, on top */}
-                    <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
-                      <div className="flex items-center justify-center gap-3 mb-4">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
-                          {stepNum}
-                        </span>
-                        <span className="text-indigo-600 text-sm font-semibold uppercase tracking-wide">
-                          Step {idx + 1}
-                        </span>
-                      </div>
+                const isFirst = idx === 0;
+                const reversed = !isFirst && idx % 2 === 0;
+                const theme = idx % 2 === 0 ? 'indigo' : 'purple';
 
-                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-snug">
+                const ve = step.videoUrl ? getVideoEmbed(step.videoUrl) : null;
+                const media = (
+                  <GlowImageCard
+                    embedUrl={ve && ve !== 'direct' ? ve : undefined}
+                    videoSrc={ve === 'direct' ? step.videoUrl : undefined}
+                    src={!step.videoUrl ? step.imageUrl : undefined}
+                    alt={step.title}
+                    title={step.title}
+                    theme={theme}
+                  />
+                );
+
+                const badge = (
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
+                      {stepNum}
+                    </span>
+                    <span className="text-indigo-600 text-sm font-semibold uppercase tracking-wide">
+                      Step {idx + 1}
+                    </span>
+                  </div>
+                );
+
+                if (isFirst) {
+                  return (
+                    <div key={idx}>
+                      <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
+                        <div className="flex items-center justify-center">{badge}</div>
+                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-snug">
+                          {step.title}
+                        </h3>
+                        <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                      <div>{media}</div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div key={idx} className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${reversed ? 'lg:grid-flow-col-dense' : ''}`}>
+                    <div className={reversed ? 'lg:col-start-2' : ''}>{media}</div>
+                    <div className={reversed ? 'lg:col-start-1 lg:row-start-1' : ''}>
+                      {badge}
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-snug">
                         {step.title}
                       </h3>
                       <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
                         {step.description}
                       </p>
                     </div>
-
-                    {/* Full-width screenshot */}
-                    {(() => {
-                      const ve = step.videoUrl ? getVideoEmbed(step.videoUrl) : null;
-                      return (
-                        <GlowImageCard
-                          embedUrl={ve && ve !== 'direct' ? ve : undefined}
-                          videoSrc={ve === 'direct' ? step.videoUrl : undefined}
-                          src={!step.videoUrl ? step.imageUrl : undefined}
-                          alt={step.title}
-                          title={step.title}
-                          theme={idx % 2 === 0 ? 'indigo' : 'purple'}
-                        />
-                      );
-                    })()}
                   </div>
                 );
               })}

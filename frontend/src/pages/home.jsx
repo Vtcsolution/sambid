@@ -316,63 +316,96 @@ export default function Home() {
             </p>
           </FadeIn>
 
-          <div className="space-y-24 sm:space-y-32">
+          <div className="space-y-20 sm:space-y-28">
             {PHASES.map((phase, idx) => {
               const Icon = phase.icon;
+              const isFirst = idx === 0;
+              const reversed = !isFirst && idx % 2 === 0;
+              const theme = idx % 2 === 0 ? 'indigo' : 'purple';
+
+              const media = (() => {
+                const slotKey = `phase_${phase.phase}`;
+                const slotMedia = pageMedia[slotKey] || {};
+                const vSrc = slotMedia.video?.url ? resolveMediaUrl(slotMedia.video.url) : '';
+                const pSrc = slotMedia.image?.url ? resolveMediaUrl(slotMedia.image.url) : '';
+                return (
+                  <GlowImageCard
+                    videoSrc={vSrc}
+                    posterSrc={pSrc}
+                    src={pSrc}
+                    alt={phase.headline}
+                    theme={theme}
+                    title={phase.videoTitle}
+                  />
+                );
+              })();
+
+              const badge = (
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
+                    {phase.phase}
+                  </span>
+                  <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+                    <Icon className="w-4 h-4 text-indigo-600" />
+                  </div>
+                  <span className="text-indigo-600 text-sm font-semibold uppercase tracking-wide">
+                    {phase.label}
+                  </span>
+                </div>
+              );
+
+              const points = (
+                <ul className="space-y-3">
+                  {phase.points.map((point, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-700 text-sm sm:text-base">
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              );
+
+              if (isFirst) {
+                return (
+                  <FadeIn key={idx} delay={80}>
+                    <div>
+                      <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
+                        <div className="flex items-center justify-center">{badge}</div>
+                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-snug">
+                          {phase.headline}
+                        </h3>
+                        <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                          {phase.description}
+                        </p>
+                      </div>
+                      <div className="mb-10 sm:mb-12">{media}</div>
+                      <ul className="max-w-3xl mx-auto grid sm:grid-cols-2 gap-x-8 gap-y-3">
+                        {phase.points.map((point, i) => (
+                          <li key={i} className="flex items-start gap-3 text-gray-700 text-sm sm:text-base">
+                            <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </FadeIn>
+                );
+              }
+
               return (
                 <FadeIn key={idx} delay={80}>
-                  <div>
-                    {/* Text block - centered, on top */}
-                    <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
-                      <div className="flex items-center justify-center gap-3 mb-4">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
-                          {phase.phase}
-                        </span>
-                        <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                          <Icon className="w-4 h-4 text-indigo-600" />
-                        </div>
-                        <span className="text-indigo-600 text-sm font-semibold uppercase tracking-wide">
-                          {phase.label}
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-snug">
+                  <div className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${reversed ? 'lg:grid-flow-col-dense' : ''}`}>
+                    <div className={reversed ? 'lg:col-start-2' : ''}>{media}</div>
+                    <div className={reversed ? 'lg:col-start-1 lg:row-start-1' : ''}>
+                      {badge}
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-snug">
                         {phase.headline}
                       </h3>
-                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
                         {phase.description}
                       </p>
+                      {points}
                     </div>
-
-                    {/* Full-width screenshot */}
-                    <div className="mb-10 sm:mb-12">
-                      {(() => {
-                        const slotKey = `phase_${phase.phase}`;
-                        const slotMedia = pageMedia[slotKey] || {};
-                        const vSrc = slotMedia.video?.url ? resolveMediaUrl(slotMedia.video.url) : '';
-                        const pSrc = slotMedia.image?.url ? resolveMediaUrl(slotMedia.image.url) : '';
-                        return (
-                          <GlowImageCard
-                            videoSrc={vSrc}
-                            posterSrc={pSrc}
-                            src={pSrc}
-                            alt={phase.headline}
-                            theme={idx % 2 === 0 ? 'indigo' : 'purple'}
-                            title={phase.videoTitle}
-                          />
-                        );
-                      })()}
-                    </div>
-
-                    {/* Points */}
-                    <ul className="max-w-3xl mx-auto grid sm:grid-cols-2 gap-x-8 gap-y-3">
-                      {phase.points.map((point, i) => (
-                        <li key={i} className="flex items-start gap-3 text-gray-700 text-sm sm:text-base">
-                          <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </FadeIn>
               );
