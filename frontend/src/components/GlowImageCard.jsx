@@ -25,9 +25,12 @@ export default function GlowImageCard({ src, alt = '', theme = 'indigo', title, 
   // ugly box instead of letting the page (and the blur glow behind) show
   // through. Video/embed/placeholder cases still need an opaque frame since
   // they have no such margin of their own.
+  // No hardcoded max-width here — sizing is the caller's job: a side-by-side
+  // grid column naturally constrains it small, while a full-width wrapper
+  // (no cap) lets it read as the large, dominant showcase image.
   if (src) {
     return (
-      <div className="relative max-w-2xl mx-auto">
+      <div className="relative">
         <div
           aria-hidden="true"
           className="absolute -inset-6 sm:-inset-8 rounded-[2.5rem] blur-3xl opacity-80 pointer-events-none"

@@ -130,9 +130,7 @@ export default function FeatureShowcase() {
               </video>
             </div>
           ) : feature.thumbnailUrl ? (
-            <div className="max-w-2xl mx-auto">
-              <ZoomableImage src={feature.thumbnailUrl} alt={feature.title} natural />
-            </div>
+            <ZoomableImage src={feature.thumbnailUrl} alt={feature.title} natural />
           ) : (
             <div className="relative max-w-4xl mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 flex items-center justify-center" style={{ aspectRatio: '16/9' }}>
               <div className="text-center p-8">
