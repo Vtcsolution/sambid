@@ -8,6 +8,7 @@ import CampaignLog from '../models/admin/CampaignLog.js';
 import TrackedEmail from '../models/TrackedEmail.js';
 import { openaiChat as chat } from '../services/geminiService.js';
 import { sendBroadcastEmailToSegment } from '../services/emailService.js';
+import { samGetWithRotation } from '../services/samApiService.js';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const daysSince = (date) => date ? Math.floor((Date.now() - new Date(date)) / 86400000) : 999;
@@ -182,6 +183,11 @@ export const getPlatformHealth = async (req, res) => {
     ];
 
     // ── External API health checks (axios — consistent with rest of codebase) ──
+    // Checks the PRIMARY key directly first (so a dead/revoked primary key is
+    // still surfaced here as something to renew), but if that fails, also
+    // checks via the same rotation logic real fetches use — a dead primary
+    // key with a working backup means the pipeline is actually fine, not
+    // "down", so this must not cry wolf once a backup key has taken over.
     const checkSam = async () => {
       try {
         const r = await axios.get(
@@ -191,8 +197,17 @@ export const getPlatformHealth = async (req, res) => {
         return { name: 'SAM.gov API', status: 'ok', code: r.status };
       } catch (e) {
         const code = e.response?.status ?? 'N/A';
-        // 429 = rate limited: API is reachable, just throttled → Warning not Error
-        return { name: 'SAM.gov API', status: code === 429 ? 'warn' : 'error', code };
+        if (code === 429) return { name: 'SAM.gov API', status: 'warn', code }; // reachable, just throttled
+
+        try {
+          const r2 = await samGetWithRotation(
+            key => `https://api.sam.gov/opportunities/v2/search?limit=1&api_key=${key}`,
+            { timeout: 10000 }
+          );
+          return { name: 'SAM.gov API', status: 'warn', code: `primary ${code}, backup key OK (${r2.status})` };
+        } catch (e2) {
+          return { name: 'SAM.gov API', status: 'error', code: e2.response?.status ?? code };
+        }
       }
     };
 
