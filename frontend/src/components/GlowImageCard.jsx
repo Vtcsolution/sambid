@@ -27,14 +27,14 @@ export default function GlowImageCard({ src, alt = '', theme = 'indigo', title, 
   // they have no such margin of their own.
   if (src) {
     return (
-      <div className="relative">
+      <div className="relative max-w-2xl mx-auto">
         <div
           aria-hidden="true"
-          className="absolute -inset-6 sm:-inset-10 rounded-[2.5rem] blur-3xl opacity-80 pointer-events-none"
+          className="absolute -inset-6 sm:-inset-8 rounded-[2.5rem] blur-3xl opacity-80 pointer-events-none"
           style={glow}
         />
-        <div className="relative" style={{ aspectRatio: '16/9' }}>
-          <ZoomableImage src={src} alt={alt} />
+        <div className="relative">
+          <ZoomableImage src={src} alt={alt} natural />
         </div>
       </div>
     );

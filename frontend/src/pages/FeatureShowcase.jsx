@@ -87,61 +87,63 @@ export default function FeatureShowcase() {
       <section className="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 text-white">
         <div className="absolute inset-0 bg-black opacity-20" />
         <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left - text */}
-            <div>
-              <Link to="/features" className="inline-flex items-center gap-1 text-indigo-300 hover:text-white text-sm mb-6 transition-colors">
-                <ChevronLeft className="w-4 h-4" /> All Features
-              </Link>
+          {/* Text - centered, on top */}
+          <div className="max-w-2xl mx-auto text-center mb-12 sm:mb-14">
+            <Link to="/features" className="inline-flex items-center gap-1 text-indigo-300 hover:text-white text-sm mb-6 transition-colors">
+              <ChevronLeft className="w-4 h-4" /> All Features
+            </Link>
+            <div className="flex justify-center">
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm mb-5">
                 <Zap className="w-4 h-4 mr-2 text-yellow-400" />
                 <span className="text-xs sm:text-sm font-medium">SamBid Feature</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent leading-tight">
-                {feature.title}
-              </h1>
-              <p className="text-base sm:text-xl text-indigo-100 mb-8 leading-relaxed max-w-lg">
-                {feature.subtitle}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link to={feature.ctaLink || '/signup'}
-                  className="inline-flex items-center justify-center px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-semibold transition-all hover:scale-105 text-sm sm:text-base">
-                  {feature.ctaText || 'Try It Free'} <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-                <Link to="/pricing"
-                  className="inline-flex items-center justify-center px-6 py-3.5 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-all border border-white/20 text-sm sm:text-base">
-                  View Pricing
-                </Link>
-              </div>
             </div>
-
-            {/* Right - main video or thumbnail */}
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5" style={{ aspectRatio: '16/9' }}>
-                {embedUrl && embedUrl !== 'direct' ? (
-                  <iframe src={embedUrl} className="w-full h-full" frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen title={feature.title} />
-                ) : embedUrl === 'direct' ? (
-                  <video controls className="w-full h-full" preload="metadata">
-                    <source src={feature.videoUrl} type="video/mp4" />
-                  </video>
-                ) : feature.thumbnailUrl ? (
-                  <ZoomableImage src={feature.thumbnailUrl} alt={feature.title} />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="text-center p-8">
-                      <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center mx-auto mb-3">
-                        <Play className="w-7 h-7 text-white ml-1" />
-                      </div>
-                      <p className="text-indigo-300 text-sm font-medium">{feature.title}</p>
-                      <p className="text-indigo-400/60 text-xs mt-1">Video demo</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent leading-tight">
+              {feature.title}
+            </h1>
+            <p className="text-base sm:text-xl text-indigo-100 mb-8 leading-relaxed">
+              {feature.subtitle}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to={feature.ctaLink || '/signup'}
+                className="inline-flex items-center justify-center px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-semibold transition-all hover:scale-105 text-sm sm:text-base">
+                {feature.ctaText || 'Try It Free'} <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+              <Link to="/pricing"
+                className="inline-flex items-center justify-center px-6 py-3.5 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-all border border-white/20 text-sm sm:text-base">
+                View Pricing
+              </Link>
             </div>
           </div>
+
+          {/* Full-width media below */}
+          {embedUrl && embedUrl !== 'direct' ? (
+            <div className="relative max-w-4xl mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5" style={{ aspectRatio: '16/9' }}>
+              <iframe src={embedUrl} className="w-full h-full" frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen title={feature.title} />
+            </div>
+          ) : embedUrl === 'direct' ? (
+            <div className="relative max-w-4xl mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5" style={{ aspectRatio: '16/9' }}>
+              <video controls className="w-full h-full" preload="metadata">
+                <source src={feature.videoUrl} type="video/mp4" />
+              </video>
+            </div>
+          ) : feature.thumbnailUrl ? (
+            <div className="max-w-2xl mx-auto">
+              <ZoomableImage src={feature.thumbnailUrl} alt={feature.title} natural />
+            </div>
+          ) : (
+            <div className="relative max-w-4xl mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 flex items-center justify-center" style={{ aspectRatio: '16/9' }}>
+              <div className="text-center p-8">
+                <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center mx-auto mb-3">
+                  <Play className="w-7 h-7 text-white ml-1" />
+                </div>
+                <p className="text-indigo-300 text-sm font-medium">{feature.title}</p>
+                <p className="text-indigo-400/60 text-xs mt-1">Video demo</p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
