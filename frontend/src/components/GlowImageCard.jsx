@@ -19,6 +19,27 @@ export default function GlowImageCard({ src, alt = '', theme = 'indigo', title, 
       `radial-gradient(50% 50% at 85% 90%, rgba(${c.b},0.5), transparent 70%)`,
   };
 
+  // Image case: these screenshots already have their own glowing rounded
+  // card + transparent margin baked into the PNG, so the wrapper here must
+  // stay transparent — a solid background would fill that margin with an
+  // ugly box instead of letting the page (and the blur glow behind) show
+  // through. Video/embed/placeholder cases still need an opaque frame since
+  // they have no such margin of their own.
+  if (src) {
+    return (
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="absolute -inset-6 sm:-inset-10 rounded-[2.5rem] blur-3xl opacity-80 pointer-events-none"
+          style={glow}
+        />
+        <div className="relative" style={{ aspectRatio: '16/9' }}>
+          <ZoomableImage src={src} alt={alt} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <div
@@ -38,8 +59,6 @@ export default function GlowImageCard({ src, alt = '', theme = 'indigo', title, 
           <video className="w-full h-full object-cover" controls poster={posterSrc} preload="none">
             <source src={videoSrc} type="video/mp4" />
           </video>
-        ) : src ? (
-          <ZoomableImage src={src} alt={alt} />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div
