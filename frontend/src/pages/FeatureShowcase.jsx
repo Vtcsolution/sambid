@@ -158,36 +158,14 @@ export default function FeatureShowcase() {
               </p>
             </div>
 
-            <div className="space-y-20 sm:space-y-28">
+            <div className="space-y-24 sm:space-y-32">
               {feature.steps.map((step, idx) => {
-                const reversed = idx % 2 !== 0;
                 const stepNum = String(idx + 1).padStart(2, '0');
                 return (
-                  <div key={idx}
-                    className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center rounded-3xl p-6 sm:p-10 ${
-                      idx % 2 !== 0 ? 'bg-gray-50 border border-gray-100 shadow-sm' : 'bg-white'
-                    } ${reversed ? 'lg:grid-flow-col-dense' : ''}`}
-                  >
-                    {/* Visual block - video, image, or placeholder */}
-                    <div className={reversed ? 'lg:col-start-2' : ''}>
-                      {(() => {
-                        const ve = step.videoUrl ? getVideoEmbed(step.videoUrl) : null;
-                        return (
-                          <GlowImageCard
-                            embedUrl={ve && ve !== 'direct' ? ve : undefined}
-                            videoSrc={ve === 'direct' ? step.videoUrl : undefined}
-                            src={!step.videoUrl ? step.imageUrl : undefined}
-                            alt={step.title}
-                            title={step.title}
-                            theme={idx % 2 === 0 ? 'indigo' : 'purple'}
-                          />
-                        );
-                      })()}
-                    </div>
-
-                    {/* Text block */}
-                    <div className={reversed ? 'lg:col-start-1 lg:row-start-1' : ''}>
-                      <div className="flex items-center gap-3 mb-4">
+                  <div key={idx}>
+                    {/* Text block - centered, on top */}
+                    <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
+                      <div className="flex items-center justify-center gap-3 mb-4">
                         <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white text-xs font-bold">
                           {stepNum}
                         </span>
@@ -196,13 +174,28 @@ export default function FeatureShowcase() {
                         </span>
                       </div>
 
-                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-snug">
+                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-snug">
                         {step.title}
                       </h3>
-                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
+                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
                         {step.description}
                       </p>
                     </div>
+
+                    {/* Full-width screenshot */}
+                    {(() => {
+                      const ve = step.videoUrl ? getVideoEmbed(step.videoUrl) : null;
+                      return (
+                        <GlowImageCard
+                          embedUrl={ve && ve !== 'direct' ? ve : undefined}
+                          videoSrc={ve === 'direct' ? step.videoUrl : undefined}
+                          src={!step.videoUrl ? step.imageUrl : undefined}
+                          alt={step.title}
+                          title={step.title}
+                          theme={idx % 2 === 0 ? 'indigo' : 'purple'}
+                        />
+                      );
+                    })()}
                   </div>
                 );
               })}
