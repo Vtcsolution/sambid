@@ -7,13 +7,26 @@ const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
 const HOME_SLOTS = [
   { key: 'hero',     label: 'Hero Screenshot',  types: ['image'] },
-  { key: 'phase_01', label: 'Phase 01 - Find Every Opportunity',    types: ['video','image'] },
-  { key: 'phase_02', label: 'Phase 02 - Search & Discover',         types: ['video','image'] },
-  { key: 'phase_03', label: 'Phase 03 - Deadline Calendar',         types: ['video','image'] },
-  { key: 'phase_04', label: 'Phase 04 - AI Predictions',            types: ['video','image'] },
-  { key: 'phase_05', label: 'Phase 05 - Teaming Finder',            types: ['video','image'] },
-  { key: 'phase_06', label: 'Phase 06 - Past Performance',          types: ['video','image'] },
-  { key: 'phase_07', label: 'Phase 07 - AI Proposal Writing',       types: ['video','image'] },
+  { key: 'phase_01', label: 'Phase 01 - Find Every Opportunity',       types: ['video','image'] },
+  { key: 'phase_02', label: 'Phase 02 - Never Miss a Deadline',        types: ['video','image'] },
+  { key: 'phase_03', label: 'Phase 03 - Market Research',              types: ['video','image'] },
+  { key: 'phase_04', label: 'Phase 04 - Track Your Pipeline',          types: ['video','image'] },
+  { key: 'phase_05', label: 'Phase 05 - Smart Alerts',                 types: ['video','image'] },
+  { key: 'phase_06', label: 'Phase 06 - AI Summarize',                 types: ['video','image'] },
+  { key: 'phase_07', label: 'Phase 07 - AI Bid Analysis',              types: ['video','image'] },
+  { key: 'phase_08', label: 'Phase 08 - AI Proposal Writer',           types: ['video','image'] },
+  { key: 'phase_09', label: 'Phase 09 - Go/No-Go Decision',            types: ['video','image'] },
+  { key: 'phase_10', label: 'Phase 10 - Teaming Partner Finder',       types: ['video','image'] },
+  { key: 'phase_11', label: 'Phase 11 - Sources Sought Generator',     types: ['video','image'] },
+  { key: 'phase_12', label: 'Phase 12 - Contract Vehicle Tracker',     types: ['video','image'] },
+  { key: 'phase_13', label: 'Phase 13 - RFP Analyzer',                 types: ['video','image'] },
+  { key: 'phase_14', label: 'Phase 14 - AI Risk Assessment',           types: ['video','image'] },
+  { key: 'phase_15', label: 'Phase 15 - Capability Statement',         types: ['video','image'] },
+  { key: 'phase_16', label: 'Phase 16 - Bid Pipeline',                 types: ['video','image'] },
+  { key: 'phase_17', label: 'Phase 17 - Past Performance Repository',  types: ['video','image'] },
+  { key: 'phase_18', label: 'Phase 18 - Competitive Analysis',         types: ['video','image'] },
+  { key: 'phase_19', label: 'Phase 19 - Company Workspace',            types: ['video','image'] },
+  { key: 'phase_20', label: 'Phase 20 - Managed Service',              types: ['video','image'] },
 ];
 
 const FEATURE_SLOTS = [

@@ -7,7 +7,7 @@ import PageMedia from '../models/PageMedia.js';
 const router = express.Router();
 
 const BASE_SLOTS = {
-  home:     ['hero', 'phase_01','phase_02','phase_03','phase_04','phase_05','phase_06','phase_07'],
+  home:     ['hero', ...Array.from({ length: 20 }, (_, i) => `phase_${String(i+1).padStart(2,'0')}`)],
   features: Array.from({ length: 12 }, (_, i) => `feature_${String(i+1).padStart(2,'0')}`),
 };
 
