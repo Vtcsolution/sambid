@@ -1,7 +1,15 @@
 // backend/server.js
+// MUST be the very first import — every route file below (and their own
+// imports, e.g. config/cloudinary.js) gets fully evaluated before any of
+// THIS file's own code runs, including the old `dotenv.config()` call that
+// used to sit near the bottom of the import list. Any module that reads
+// process.env at its own top level (not inside a function) — like
+// cloudinary.config() in config/cloudinary.js — would capture `undefined`
+// permanently for the life of the process if dotenv loads even one import
+// too late. This side-effect import guarantees .env is loaded first.
+import "dotenv/config";
 import http from 'http';
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -55,8 +63,6 @@ import { startScheduler } from './services/schedulerService.js';
 import { startProjectScheduler } from './services/projectSchedulerService.js';
 import { startEmailScheduler } from './services/emailSchedulerService.js';
 import { loadSettingsFromDB } from './services/settingsService.js';
-
-dotenv.config();
 
 // Connect to DB first, then start schedulers — prevents "buffering timed out" on startup
 connectDB().then(async () => {
