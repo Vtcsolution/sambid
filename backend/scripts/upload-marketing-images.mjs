@@ -7,10 +7,10 @@ import cloudinary from "../config/cloudinary.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = path.join(__dirname, "..", "..", "frontend", "Web_Pages_Frontend", "WEB VISUALS");
 
-// Round 4: additional crops needed to stop repeating the same image across
-// a whole page (contract-opportunities, deadline-calendar, past-award-
-// analysis, sources-sought all need real alternates).
-const FILES = ["8.png", "10.png", "16.png", "17.png", "21.png"];
+// Round 5: the real Go/No-Go results screenshot (14 — previously mislabeled
+// as 13 in earlier notes), a 2nd Deadline Calendar crop (15), and the
+// AI-Credits Proposal Builder crop (24).
+const FILES = ["14.png", "15.png", "24.png"];
 
 const outFile = path.join(__dirname, "marketing-image-urls-v3.json");
 const results = fs.existsSync(outFile) ? JSON.parse(fs.readFileSync(outFile, "utf8")) : {};
