@@ -7,9 +7,10 @@ import PageMedia from "../models/PageMedia.js";
 import FeatureShowcase from "../models/FeatureShowcase.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const urls = JSON.parse(fs.readFileSync(path.join(__dirname, "marketing-image-urls.json"), "utf8"));
+const urlsV2 = JSON.parse(fs.readFileSync(path.join(__dirname, "marketing-image-urls.json"), "utf8"));
+const urlsV3 = JSON.parse(fs.readFileSync(path.join(__dirname, "marketing-image-urls-v3.json"), "utf8"));
 const img = (file) => {
-  const r = urls[file];
+  const r = urlsV3[file] || urlsV2[file];
   if (!r) throw new Error("No uploaded URL for " + file);
   return r;
 };
@@ -37,44 +38,31 @@ async function updateFeature(slug, thumbFile, stepFiles) {
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URI_API);
-  console.log("Connected. Applying home page phase images...");
 
-  // ---- Home page: 7 Phases section ----
-  await upsertPageMedia("home", "phase_01", "17.png"); // Find Every Opportunity
-  await upsertPageMedia("home", "phase_02", "20.png"); // Deep Search / full details
-  await upsertPageMedia("home", "phase_03", "36.png"); // Deadline Calendar
-  await upsertPageMedia("home", "phase_04", "13.png"); // AI Predictions / Win Probability
-  await upsertPageMedia("home", "phase_05", "7.png");  // Teaming Partners
-  await upsertPageMedia("home", "phase_06", "15.png"); // Past Performance Intelligence
-  await upsertPageMedia("home", "phase_07", "9.png");  // AI Proposal Writing
+  console.log("Refining home page phase_02 (better Smart Filters match)...");
+  await upsertPageMedia("home", "phase_02", "11.png");
 
-  console.log("Applying Features.jsx grid images...");
-  // ---- Features.jsx: feature_01..12 grid (skip 10/11/12, no matching screenshot) ----
-  await upsertPageMedia("features", "feature_01", "17.png"); // Opportunity Discovery
-  await upsertPageMedia("features", "feature_02", "4.png");  // Smart Alerts
-  await upsertPageMedia("features", "feature_03", "34.png"); // Deadline Calendar
-  await upsertPageMedia("features", "feature_04", "6.png");  // AI Win Predictions
-  await upsertPageMedia("features", "feature_05", "24.png"); // AI Proposal Writer
-  await upsertPageMedia("features", "feature_06", "30.png"); // RFP Analyzer
-  await upsertPageMedia("features", "feature_07", "27.png"); // Past Performance Intelligence
-  await upsertPageMedia("features", "feature_08", "14.png"); // Teaming Finder
-  await upsertPageMedia("features", "feature_09", "15.png"); // Market Research
+  console.log("Refining Features.jsx grid (feature_01 quality upgrade, feature_06 RFP Analyzer now populated)...");
+  await upsertPageMedia("features", "feature_01", "9.png");
+  await upsertPageMedia("features", "feature_06", "19.png");
 
-  console.log("Applying FeatureShowcase individual pages...");
-  // ---- FeatureShowcase: fixing broken slugs ----
-  await updateFeature("contract-opportunities", "17.png", ["18.png", "3.png", "19.png", "20.png"]);
-  await updateFeature("deadline-calendar", "36.png", ["35.png", "33.png", "5.png"]);
-  await updateFeature("ai-summarize", "28.png", ["28.png", "29.png", "31.png"]);
-  await updateFeature("bid-analysis", "6.png", ["6.png", "13.png", "13.png"]);
-  await updateFeature("go-no-go", "21.png", ["21.png", "22.png", "23.png"]);
-  await updateFeature("proposal-builder", "9.png", ["9.png", "24.png", "26.png"]);
+  console.log("Refreshing contract-opportunities with richer screenshots...");
+  await updateFeature("contract-opportunities", "9.png", ["9.png", "9.png", "11.png", "9.png"]);
 
-  // ---- FeatureShowcase: populating previously-empty slugs with real content ----
-  await updateFeature("rfp-analyzer", "30.png", ["30.png", "29.png", "32.png"]);
-  await updateFeature("sources-sought", "1.png", ["2.png", "10.png", "1.png"]);
-  await updateFeature("teaming-finder", "7.png", ["14.png", "7.png", "14.png"]);
-  await updateFeature("past-award-analysis", "8.png", ["15.png", "27.png", "8.png"]);
-  await updateFeature("matched-opportunities", "4.png", ["4.png", "3.png", "4.png"]);
+  console.log("Refreshing proposal-builder with fuller crops...");
+  await updateFeature("proposal-builder", "25.png", ["25.png", "25.png", "26.png"]);
+
+  console.log("Populating previously-broken ai-summarize...");
+  await updateFeature("ai-summarize", "19.png", ["19.png", "23.png", "20.png"]);
+
+  console.log("Populating previously-broken go-no-go...");
+  await updateFeature("go-no-go", "12.png", ["12.png", "12.png", "13.png"]);
+
+  console.log("Populating previously-broken rfp-analyzer...");
+  await updateFeature("rfp-analyzer", "22.png", ["22.png", "19.png", "20.png"]);
+
+  console.log("Populating previously-EMPTY risk-assessment...");
+  await updateFeature("risk-assessment", "19.png", ["22.png", "19.png", "23.png"]);
 
   console.log("\nAll done.");
   await mongoose.disconnect();
