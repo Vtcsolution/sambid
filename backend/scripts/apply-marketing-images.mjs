@@ -10,59 +10,62 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const urlsV2 = JSON.parse(fs.readFileSync(path.join(__dirname, "marketing-image-urls.json"), "utf8"));
 const urlsV3 = JSON.parse(fs.readFileSync(path.join(__dirname, "marketing-image-urls-v3.json"), "utf8"));
 const img = (file) => {
+  if (!file) return null;
   const r = urlsV3[file] || urlsV2[file];
   if (!r) throw new Error("No uploaded URL for " + file);
   return r;
 };
 
-async function upsertPageMedia(page, slot, file) {
-  const { url, publicId } = img(file);
-  await PageMedia.findOneAndUpdate(
-    { page, slot, type: "image" },
-    { page, slot, type: "image", url, publicId, filename: file, originalName: file, size: 0 },
-    { upsert: true, new: true }
-  );
-  console.log(`  PageMedia ${page}/${slot} -> ${file}`);
-}
-
-async function updateFeature(slug, thumbFile, stepFiles) {
+// Rewrites the WHOLE image set for a feature — thumbnail + every step —
+// instead of layering partial updates on top of the old repeated-image
+// state. `stepFiles` entries may be null: that step is deliberately left
+// with no image (falls back to the existing numbered-circle placeholder)
+// rather than repeating a screenshot that doesn't really depict that step.
+async function setFeatureImages(slug, thumbFile, stepFiles) {
   const feature = await FeatureShowcase.findOne({ slug });
   if (!feature) { console.warn("  !! no FeatureShowcase doc for slug:", slug); return; }
-  feature.thumbnailUrl = img(thumbFile).url;
+  feature.thumbnailUrl = img(thumbFile)?.url || '';
   stepFiles.forEach((file, i) => {
-    if (feature.steps[i] && file) feature.steps[i].imageUrl = img(file).url;
+    if (feature.steps[i]) feature.steps[i].imageUrl = img(file)?.url || '';
   });
   await feature.save();
-  console.log(`  FeatureShowcase ${slug} -> thumb ${thumbFile}, ${stepFiles.length} steps`);
+  const used = new Set([thumbFile, ...stepFiles].filter(Boolean));
+  console.log(`  ${slug} -> thumb ${thumbFile || '(none)'}, steps [${stepFiles.map(f => f || '-').join(', ')}] (${used.size} unique images)`);
 }
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URI_API);
 
-  console.log("Refining home page phase_02 (better Smart Filters match)...");
-  await upsertPageMedia("home", "phase_02", "11.png");
+  console.log("Rewriting every page that had the same image repeated across the whole page...\n");
 
-  console.log("Refining Features.jsx grid (feature_01 quality upgrade, feature_06 RFP Analyzer now populated)...");
-  await upsertPageMedia("features", "feature_01", "9.png");
-  await upsertPageMedia("features", "feature_06", "19.png");
+  // 4 steps: Auto-matched / AI Match Score / Smart Filters / One-click detail
+  await setFeatureImages("contract-opportunities", "9.png", ["8.png", "9.png", "11.png", null]);
 
-  console.log("Refreshing contract-opportunities with richer screenshots...");
-  await updateFeature("contract-opportunities", "9.png", ["9.png", "9.png", "11.png", "9.png"]);
+  // 3 steps: Select opportunity / AI generates 7 sections / Export branded PDF
+  await setFeatureImages("proposal-builder", "25.png", ["25.png", null, "26.png"]);
 
-  console.log("Refreshing proposal-builder with fuller crops...");
-  await updateFeature("proposal-builder", "25.png", ["25.png", "25.png", "26.png"]);
+  // 3 steps: AI fetches real competitors / Scoring matrix / Win probability + bid range
+  await setFeatureImages("bid-analysis", "4.png", ["6.png", "4.png", "13.png"]);
 
-  console.log("Populating previously-broken ai-summarize...");
-  await updateFeature("ai-summarize", "19.png", ["19.png", "23.png", "20.png"]);
+  // 3 steps: Search by NAICS code / See actual winners / Benchmark pricing
+  await setFeatureImages("past-award-analysis", "6.png", ["21.png", "6.png", "21.png"]);
 
-  console.log("Populating previously-broken go-no-go...");
-  await updateFeature("go-no-go", "12.png", ["12.png", "12.png", "13.png"]);
+  // 3 steps: NAICS-based matching / AI match scoring / Choose your frequency
+  await setFeatureImages("matched-opportunities", "2.png", ["2.png", "9.png", null]);
 
-  console.log("Populating previously-broken rfp-analyzer...");
-  await updateFeature("rfp-analyzer", "22.png", ["22.png", "19.png", "20.png"]);
+  // 3 steps: All deadlines in one view / Color-coded urgency / Calendar sync
+  await setFeatureImages("deadline-calendar", "3.png", ["3.png", "16.png", "17.png"]);
 
-  console.log("Populating previously-EMPTY risk-assessment...");
-  await updateFeature("risk-assessment", "19.png", ["22.png", "19.png", "23.png"]);
+  // 3 steps: Select from saved or feed / AI analyzes 4 data sources / 10-factor scoring
+  await setFeatureImages("go-no-go", "12.png", ["12.png", "13.png", "13.png"]);
+
+  // 3 steps: Select or enter opportunity / AI generates 8-section response / Submit early
+  await setFeatureImages("sources-sought", "1.png", ["2.png", "10.png", null]);
+
+  // 3 steps: Search by NAICS & certifications / View partner profiles / Request teaming
+  // Only one real Teaming Finder screenshot exists in this batch — thumb +
+  // step 1 use it, the rest stay on the honest numbered placeholder.
+  await setFeatureImages("teaming-finder", "5.png", ["5.png", null, null]);
 
   console.log("\nAll done.");
   await mongoose.disconnect();

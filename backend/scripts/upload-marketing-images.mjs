@@ -7,10 +7,10 @@ import cloudinary from "../config/cloudinary.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = path.join(__dirname, "..", "..", "frontend", "Web_Pages_Frontend", "WEB VISUALS");
 
-// Round 3: 10 new unique screenshots (round 1's 1-7 already uploaded as
-// web-visual-v2-*, kept as-is). These fill previously-broken/empty pages:
-// Go/No-Go, AI Summarize, RFP Analyzer, Risk Assessment.
-const FILES = ["9.png", "11.png", "12.png", "13.png", "19.png", "20.png", "22.png", "23.png", "25.png", "26.png"];
+// Round 4: additional crops needed to stop repeating the same image across
+// a whole page (contract-opportunities, deadline-calendar, past-award-
+// analysis, sources-sought all need real alternates).
+const FILES = ["8.png", "10.png", "16.png", "17.png", "21.png"];
 
 const outFile = path.join(__dirname, "marketing-image-urls-v3.json");
 const results = fs.existsSync(outFile) ? JSON.parse(fs.readFileSync(outFile, "utf8")) : {};
@@ -30,4 +30,4 @@ for (const file of FILES) {
 }
 
 fs.writeFileSync(outFile, JSON.stringify(results, null, 2));
-console.log("\nDone. Saved", Object.keys(results).length, "URLs to marketing-image-urls-v3.json");
+console.log("\nDone. Saved", Object.keys(results).length, "total URLs to marketing-image-urls-v3.json");
