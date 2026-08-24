@@ -39,7 +39,9 @@ export default function ZoomableImage({ src, alt = '', className = '', container
         <img
           src={src}
           alt={alt}
-          className={`${natural ? 'w-full h-auto block' : 'w-full h-full object-contain'} transition-transform duration-300 ease-out group-hover:scale-105 ${className}`}
+          loading="lazy"
+          decoding="async"
+          className={`${natural ? 'w-full h-auto block' : 'w-full h-full object-contain'} will-change-transform transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 ${className}`}
         />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5">
