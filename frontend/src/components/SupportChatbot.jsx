@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle, X, Send, Loader2, User, MinusCircle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { contactAPI } from '../services/api';
 import notificationSound from '../assets/sounds/admin_notification.mp3';
 
@@ -16,6 +18,22 @@ const AVATAR_URL = 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e
 const TEASER_DELAY_MS = 4000;
 const TEASER_SESSION_KEY = 'sambid_chat_teaser_shown';
 
+// Bot replies come back as markdown (bold, bullets, headings) from the AI.
+// User messages are plain text, rendered as-is with no parsing.
+const markdownComponents = {
+  p:  ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+  ul: ({ children }) => <ul className="mb-2 last:mb-0 pl-4 space-y-1 list-disc marker:text-gray-400">{children}</ul>,
+  ol: ({ children }) => <ol className="mb-2 last:mb-0 pl-4 space-y-1 list-decimal marker:text-gray-400">{children}</ol>,
+  li: ({ children }) => <li className="pl-0.5">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+  em: ({ children }) => <em className="italic">{children}</em>,
+  h1: ({ children }) => <p className="font-semibold text-gray-900 mb-1">{children}</p>,
+  h2: ({ children }) => <p className="font-semibold text-gray-900 mb-1">{children}</p>,
+  h3: ({ children }) => <p className="font-semibold text-gray-900 mb-1">{children}</p>,
+  a:  ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer" className="underline text-indigo-600 hover:text-indigo-700">{children}</a>,
+  code: ({ children }) => <code className="bg-gray-200/70 rounded px-1 py-0.5 text-xs">{children}</code>,
+};
+
 function Message({ msg }) {
   const isBot = msg.role === 'assistant';
   return (
@@ -27,12 +45,14 @@ function Message({ msg }) {
           ? <img src={AVATAR_URL} alt="" className="w-full h-full object-cover" />
           : <User className="w-4 h-4 text-gray-600" />}
       </div>
-      <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+      <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
         isBot
           ? 'bg-gray-100 text-gray-800 rounded-tl-none'
-          : 'bg-indigo-600 text-white rounded-tr-none'
+          : 'bg-indigo-600 text-white rounded-tr-none whitespace-pre-wrap'
       }`}>
-        {msg.content}
+        {isBot
+          ? <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{msg.content}</ReactMarkdown>
+          : msg.content}
       </div>
     </div>
   );
