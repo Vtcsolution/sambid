@@ -7,10 +7,11 @@ import {
 import UserNotificationDropdown from './UserNotificationDropdown';
 import SambidLogo from './SambidLogo';
 
-// Curated top 6 shown in the nav dropdown. The other feature pages (Risk
-// Assessment, Bid Pipeline, Past Performance, Managed Bidding, etc.) still
-// exist and are still live/linked from Features.jsx and search, just not
-// front-and-center in this menu.
+// Curated set shown in the nav dropdown. The rest of the 20 feature pages
+// (Risk Assessment, Bid Pipeline, Past Performance, Capability Statement,
+// etc.) exist and are reachable via the "View All Features" link below —
+// Features.jsx itself is a static display grid with no click-through to
+// individual pages, so this dropdown (plus direct URLs) is the real nav path.
 const featureDemoLinks = [
   { path: '/features/contract-opportunities', label: 'Contract Opportunities', desc: 'Auto-matched SAM.gov contracts' },
   { path: '/features/bid-analysis',           label: 'AI Bid Analysis',        desc: 'BID/NO-BID with real data' },
@@ -18,6 +19,9 @@ const featureDemoLinks = [
   { path: '/features/ai-summarize',           label: 'AI Summarize',           desc: 'Full contract intelligence' },
   { path: '/features/proposal-builder',       label: 'AI Proposal Builder',    desc: '7-section proposal writer' },
   { path: '/features/deadline-calendar',      label: 'Deadline Calendar',      desc: 'Never miss a due date' },
+  { path: '/features/contract-vehicles',      label: 'Contract Vehicle Tracker', desc: 'Never miss an on-ramp window' },
+  { path: '/features/company-workspace',      label: 'Company Workspace',      desc: 'UEI verified, team, documents' },
+  { path: '/features/managed-service',        label: 'Managed Service',        desc: 'We bid for you, no win no fee' },
 ];
 
 export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, user, onMenuClick }) {
@@ -157,6 +161,10 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
                             </Link>
                           ))}
                         </div>
+                        <Link to="/features" onClick={() => setIsFeaturesOpen(false)}
+                          className="block mt-2 pt-3 border-t border-gray-100 text-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
+                          View All Features →
+                        </Link>
                       </div>
                     )}
                   </div>
