@@ -226,6 +226,13 @@ export const contactAPI = {
   activatePlan: (id, data)   => api.post(`/contact/${id}/activate-plan`, data),
 };
 
+// Testimonials — public read only; admin CRUD lives in AdminTestimonials.jsx
+// via direct fetch calls (same pattern as AdminFeatureShowcase.jsx).
+export const testimonialAPI = {
+  getSettings: () => api.get('/testimonials/settings'),
+  getAll:      () => api.get('/testimonials'),
+};
+
 // Dashboard API
 export const dashboardAPI = {
   getStats:        ()      => api.get('/dashboard/stats'),

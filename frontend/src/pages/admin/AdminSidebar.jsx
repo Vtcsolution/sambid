@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, CreditCard, Settings, LogOut, Bell,
   Shield, ShieldCheck, FileText, Mail, MessageSquare, Sparkles, BarChart3,
-  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins, Key, Globe
+  TrendingUp, Activity, Send, Cpu, DollarSign, UserCheck, Heart, Layers, Ticket, Lightbulb, Building2, Zap, Wallet, BookOpen, Trophy, Package, Download, Search, Coins, Key, Globe, Quote
 } from 'lucide-react';
 import { exportSamBidReport } from '../../utils/exportUtils';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
@@ -75,6 +75,7 @@ const ALL_NAV = [
       { path: '/admin/feature-showcase',   label: 'Feature Pages',       icon: Sparkles,    roles: ['super_admin','admin'] },
       { path: '/admin/how-it-works',       label: 'How It Works Page',   icon: Layers,      roles: ['super_admin','admin'] },
       { path: '/admin/problems',           label: 'Problems Pages',      icon: Lightbulb,   roles: ['super_admin','admin'] },
+      { path: '/admin/testimonials',       label: 'Testimonials',        icon: Quote,       roles: ['super_admin','admin'] },
       { path: '/admin/media-manager',      label: 'Page Media',          icon: Layers,      roles: ['super_admin','admin'] },
       { path: '/admin/support-management', label: 'Support Team',        icon: Heart,       roles: ['super_admin','admin'] },
       { path: '/admin/admin-management',   label: 'Admin Accounts',      icon: ShieldCheck, roles: ['super_admin'] },

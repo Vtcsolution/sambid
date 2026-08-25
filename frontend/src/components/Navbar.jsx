@@ -2,10 +2,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import {
   Menu, LogOut, ChevronDown, LayoutDashboard, User, X,
-  Home, Info, DollarSign, Phone, Gift, Zap
+  Home, Info, DollarSign, Phone, Gift, Zap, Quote
 } from 'lucide-react';
 import UserNotificationDropdown from './UserNotificationDropdown';
 import SambidLogo from './SambidLogo';
+import { testimonialAPI } from '../services/api';
 
 // Curated set shown in the nav dropdown. The rest of the 20 feature pages
 // (Risk Assessment, Bid Pipeline, Past Performance, Capability Statement,
@@ -30,8 +31,17 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen]           = useState(false);
   const [isFeaturesOpen, setIsFeaturesOpen]               = useState(false);
+  const [testimonialsEnabled, setTestimonialsEnabled]     = useState(false);
   const dropdownRef  = useRef(null);
   const featuresRef  = useRef(null);
+
+  // Admin-controlled toggle — only show the nav link when the site owner has
+  // turned the Testimonials page on (Admin → Testimonials).
+  useEffect(() => {
+    testimonialAPI.getSettings()
+      .then(res => setTestimonialsEnabled(!!res.data?.data?.isEnabled))
+      .catch(() => setTestimonialsEnabled(false));
+  }, []);
 
   const dashboardRoutes = [
     '/dashboard', '/opportunities', '/opportunity',
@@ -78,6 +88,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
   const topLinks = [
     { path: '/',        label: 'Home',    icon: Home },
     { path: '/pricing', label: 'Pricing', icon: DollarSign },
+    ...(testimonialsEnabled ? [{ path: '/testimonials', label: 'Testimonials', icon: Quote }] : []),
     { path: '/about',   label: 'About',   icon: Info },
     { path: '/contact', label: 'Contact', icon: Phone },
   ];
