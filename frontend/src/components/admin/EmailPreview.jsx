@@ -2,11 +2,13 @@
 // Outreach modal so every admin email tool shows the same "how recipients
 // see it" rendering: logo header, bold text, bullet points.
 //
-// topMatches (AdminCampaigns only): the real "Top 5 Matched Opportunities"
-// data for the currently-selected single-user send — every campaign email
-// auto-appends this block server-side, so showing it here with real data
-// (not a mock) lets the admin actually see what that recipient will get.
-// undefined = feature not applicable here (e.g. Prospect Outreach modal).
+// topMatches: the real "Top 5 Matched Opportunities" data for whoever is
+// currently being previewed — a platform user (AdminCampaigns, matched by
+// NAICS + match score, may be title-locked on trial/free) or a fetched
+// company (Prospect Outreach modal, matched by NAICS only, never locked).
+// Every campaign/outreach email auto-appends this block server-side, so
+// showing it here with real fetched data (not a mock) lets the admin see
+// exactly what that recipient will get. undefined = not fetched yet.
 function MatchCard({ opp }) {
   const due = opp.dueDate
     ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -18,7 +20,9 @@ function MatchCard({ opp }) {
         <p className="text-sm font-bold text-gray-900 leading-snug">
           {opp.locked ? <span className="text-gray-400">🔒 Matched contract — details locked</span> : opp.title}
         </p>
-        <span className="shrink-0 bg-violet-100 text-violet-700 text-[11px] font-bold px-2 py-0.5 rounded-full">{opp.matchScore}%</span>
+        {typeof opp.matchScore === 'number' && (
+          <span className="shrink-0 bg-violet-100 text-violet-700 text-[11px] font-bold px-2 py-0.5 rounded-full">{opp.matchScore}%</span>
+        )}
       </div>
       {!opp.locked && <p className="text-xs text-gray-400 mt-1">🏛️ {opp.agency}</p>}
       {!opp.locked && snippet && (
@@ -93,22 +97,22 @@ export default function EmailPreview({ subject, body, fromName, userName, signOf
             <p className="text-sm text-gray-700 mt-4 whitespace-pre-line">{signOff}</p>
           )}
 
-          {/* Auto-appended per-recipient matched opportunities — every campaign gets this */}
+          {/* Auto-appended matched opportunities — every campaign/outreach email gets this */}
           {matchesLoading && (
-            <p className="text-xs text-gray-400 mt-4">Loading {firstName}'s matched opportunities…</p>
+            <p className="text-xs text-gray-400 mt-4">Loading matched opportunities for {firstName}…</p>
           )}
           {!matchesLoading && Array.isArray(topMatches) && topMatches.length > 0 && (
             <div className="mt-5">
               <p className="text-[11px] font-bold text-violet-700 uppercase tracking-wide mb-1">
-                Your Top {topMatches.length} Matched Opportunities
+                Top {topMatches.length} Matched Opportunities
               </p>
-              <p className="text-xs text-gray-500 mb-2">Auto-added below every campaign — real data for {firstName}</p>
+              <p className="text-xs text-gray-500 mb-2">Auto-added below every send — real data for {firstName}</p>
               {topMatches.map(opp => <MatchCard key={opp.id} opp={opp} />)}
             </div>
           )}
           {!matchesLoading && Array.isArray(topMatches) && topMatches.length === 0 && (
             <p className="text-xs text-gray-400 mt-4 italic">
-              {firstName} has no live matched opportunities right now — the matched-opportunities section won't be added to their email.
+              No live matched opportunities for {firstName} right now — the matched-opportunities section won't be added to this email.
             </p>
           )}
           {segmentMode && (

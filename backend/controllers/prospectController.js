@@ -10,6 +10,7 @@ import {
 import {
   getTemplateList, renderTemplate, sendBulkProspectEmails,
   generateEmailWithAI, sendBulkCustomEmails, EMAIL_TYPE_LIST,
+  getTopMatchesForProspect,
 } from '../services/prospectEmailService.js';
 import CampaignLog from '../models/admin/CampaignLog.js';
 
@@ -392,6 +393,20 @@ export const quickAddProspect = async (req, res) => {
     );
 
     res.json({ success: true, data: prospect, isNew: !prospect.createdAt || Date.now() - prospect.createdAt < 5000 });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Live-preview data for the outreach modal's "Top matched opportunities"
+// block — the exact same query buildProspectMatchesBlock() uses at real
+// send time, so the preview shown to the admin is real, not a mock.
+export const getProspectTopMatches = async (req, res) => {
+  try {
+    const prospect = await Prospect.findById(req.params.id).select('naicsCode').lean();
+    if (!prospect) return res.status(404).json({ success: false, message: 'Not found' });
+    const matches = await getTopMatchesForProspect(prospect, 5);
+    res.json({ success: true, data: matches });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

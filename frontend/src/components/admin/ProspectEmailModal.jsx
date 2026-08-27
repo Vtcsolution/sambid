@@ -1,5 +1,5 @@
 // frontend/src/components/admin/ProspectEmailModal.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   X, Mail, Send, Loader2, CheckCircle, AlertCircle,
   Sparkles, RefreshCw, History, ChevronLeft, Users, Clock, Eye,
@@ -43,8 +43,24 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
   const [history, setHistory]         = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Every outreach email auto-appends this prospect's own NAICS-matched
+  // opportunities — fetch the real ones so the preview shows exactly what
+  // will actually be sent, not a mock.
+  const [topMatches, setTopMatches]       = useState(null);
+  const [matchesLoading, setMatchesLoading] = useState(false);
+
   const emailableProspects = selectedProspects.filter(p => p.primaryEmail);
   const emailCount = emailableProspects.length;
+  const previewProspectId = emailableProspects[0]?._id;
+
+  useEffect(() => {
+    if (!previewProspectId) { setTopMatches(null); return; }
+    setMatchesLoading(true);
+    adminProspectAPI.getTopMatches(previewProspectId)
+      .then(r => setTopMatches(r.data?.data || []))
+      .catch(() => setTopMatches([]))
+      .finally(() => setMatchesLoading(false));
+  }, [previewProspectId]);
 
   // Auto-generate when a type is selected
   const handleTypeSelect = async (type) => {
@@ -367,6 +383,8 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
                     fromName="Sambid"
                     userName={emailableProspects[0]?.contactPersonName || emailableProspects[0]?.companyName || 'there'}
                     signOff={'Zia\nFounder, Sambid\nsambid.co'}
+                    topMatches={topMatches}
+                    matchesLoading={matchesLoading}
                   />
                 : <div className="flex flex-col items-center justify-center py-16 text-center bg-gray-50 rounded-xl border border-gray-100">
                     <Mail className="w-8 h-8 text-gray-300 mb-2" />

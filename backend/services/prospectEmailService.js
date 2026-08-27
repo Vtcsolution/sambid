@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
 import { price, priceNum, pricingLine } from './planPricingService.js';
+import Opportunity from '../models/Opportunity.js';
 // Reuse the one real SMTP transporter (services/emailService.js) instead of a
 // second definition — that copy only read EMAIL_* env vars, never the SMTP_*
 // names the admin Settings > Email/SMTP panel actually writes to, so every
@@ -65,6 +66,79 @@ const h2 = (text) => `<h2 style="margin:0 0 16px;font-size:18px;font-weight:700;
 const ul = (items) => `<ul style="margin:0 0 16px;padding-left:20px;">${items.map(i => `<li style="margin-bottom:8px;line-height:1.6;font-size:15px;color:#374151;">${i}</li>`).join('')}</ul>`;
 const highlight = (text) => `<span style="background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:4px;font-weight:600;">${text}</span>`;
 const divider  = () => `<hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">`;
+
+// ── Real matched opportunities, personalized per prospect's NAICS code ────────
+// Prospects aren't platform users (no UserOpportunity feed), so this queries
+// the live master Opportunity collection directly by NAICS code — exact match
+// first, falling back to the 4-digit NAICS family if that's thin. Shown with
+// full detail (no paywall lock — these recipients have no account yet) as a
+// concrete, honest hook: real live contracts for their exact industry, not a
+// generic pitch. Injected into every outreach email (static template or
+// AI/custom body) right before the footer via sendProspectEmail /
+// sendBulkCustomEmails. Returns '' when nothing matches.
+// Plain-data version, shared with the admin panel's live-preview endpoint
+// (GET /api/prospects/:id/top-matches) so the preview shows this exact query
+// result, not a mock.
+export async function getTopMatchesForProspect(prospect, limit = 5) {
+  const naics = prospect.naicsCode;
+  if (!naics) return [];
+
+  let opps = await Opportunity.find({ naicsCode: naics, dueDate: { $gt: new Date() } })
+    .sort({ dueDate: 1 })
+    .limit(limit)
+    .lean();
+
+  if (opps.length < 3) {
+    const prefix = String(naics).slice(0, 4);
+    opps = await Opportunity.find({ naicsCode: new RegExp(`^${prefix}`), dueDate: { $gt: new Date() } })
+      .sort({ dueDate: 1 })
+      .limit(limit)
+      .lean();
+  }
+
+  return opps.map(opp => ({
+    id: opp._id,
+    title: opp.title || 'Untitled opportunity',
+    agency: String(opp.agency || 'Federal agency').trim(),
+    description: (opp.description || '').replace(/\s+/g, ' ').trim(),
+    naicsCode: opp.naicsCode || '',
+    setAside: opp.setAside || '',
+    dueDate: opp.dueDate || null,
+    locked: false, // prospects have no account/paywall to protect
+  }));
+}
+
+async function buildProspectMatchesBlock(prospect) {
+  const naics = prospect.naicsCode;
+  const opps = await getTopMatchesForProspect(prospect, 5);
+  if (opps.length === 0) return '';
+
+  const cards = opps.map(opp => {
+    const due = opp.dueDate
+      ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : '—';
+    const oppUrl = `${PLATFORM_URL}/opportunity/${opp.id}?utm_source=outreach&utm_medium=email`;
+    const snippet = opp.description.slice(0, 150);
+    return `
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:8px 0;">
+        <p style="margin:0;font-size:15px;font-weight:700;line-height:1.4;"><a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title}</a></p>
+        <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">🏛️ ${opp.agency}</p>
+        ${snippet ? `<p style="margin:8px 0 0;font-size:13px;color:#4b5563;line-height:1.6;">${snippet}${opp.description.length > 150 ? '…' : ''}</p>` : ''}
+        <p style="margin:10px 0 0;font-size:11px;color:#6b7280;">
+          <span style="background:#eef2ff;color:#4338ca;padding:2px 7px;border-radius:5px;font-weight:600;">NAICS ${opp.naicsCode}</span>
+          ${opp.setAside ? `&nbsp; <span style="background:#f0fdf4;color:#15803d;padding:2px 7px;border-radius:5px;font-weight:600;">${opp.setAside}</span>` : ''}
+          &nbsp; Due <strong style="color:#dc2626;">${due}</strong>
+        </p>
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="margin:24px 0 4px;">
+      <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#5b21b6;text-transform:uppercase;letter-spacing:0.4px;">Live Opportunities Matched to NAICS ${naics}</p>
+      <p style="margin:0 0 10px;font-size:13px;color:#6b7280;">Real, currently-open federal contracts — found automatically, no search required.</p>
+      ${cards}
+    </div>`;
+}
 
 // ── 10 Email Templates ────────────────────────────────────────────────────────
 
@@ -424,12 +498,14 @@ export const sendProspectEmail = async (prospect, templateId) => {
   if (!email) return { sent: false, reason: 'no_email' };
 
   const { subject, html, templateName } = renderTemplate(templateId, prospect);
+  const matchesBlock = await buildProspectMatchesBlock(prospect).catch(() => '');
+  const finalHtml = matchesBlock ? html.replace(footer(), matchesBlock + footer()) : html;
 
   await transporter.sendMail({
     from: `"${FROM_NAME}" <${process.env.SMTP_USER || process.env.EMAIL_USER}>`,
     to:   email,
     subject,
-    html,
+    html: finalHtml,
   });
 
   return { sent: true, email, subject, templateName };
@@ -757,12 +833,14 @@ export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templ
       // Generate a unique tracking ID for this individual send
       const trackingId = randomBytes(16).toString('hex');
       const html = buildCustomEmailHtml(personalBody, trackingId);
+      const matchesBlock = await buildProspectMatchesBlock(prospect).catch(() => '');
+      const finalHtml = matchesBlock ? html.replace(footer(), matchesBlock + footer()) : html;
 
       await transporter.sendMail({
         from: `"${FROM_NAME}" <${fromAddress}>`,
         to:   email,
         subject: personalSubject,
-        html,
+        html: finalHtml,
       });
 
       results.sent++;

@@ -187,6 +187,7 @@ export const adminProspectAPI = {
   generateEmail:         (body)     => adminApi.post('/admin/prospects/email/generate', body),
   sendProspectEmails:    (body)     => adminApi.post('/admin/prospects/email/send', body),
   getEmailHistory:       (id)       => adminApi.get(`/admin/prospects/${id}/email-history`),
+  getTopMatches:         (id)       => adminApi.get(`/admin/prospects/${id}/top-matches`),
   getAllEmailHistory:    (params)   => adminApi.get('/admin/prospects/email/history-all', { params }),
 };
 
