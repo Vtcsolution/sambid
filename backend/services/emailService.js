@@ -1037,45 +1037,68 @@ function formatCampaignBody(rawBody, primaryColor = '#4f46e5') {
 }
 
 /**
- * Personalizes a campaign email with the recipient's own top 5 NAICS-matched
- * opportunities (by matchScore), each linking straight to its detail page —
- * every recipient sees different contracts, based on their own profile.
- * Trial/free users get the same title-locked treatment as the welcome email
- * (server-side paywall stays intact, no locked data leaked into the email).
- * Returns '' when the user has no live matches, so the campaign body still
- * reads fine with nothing extra appended.
+ * Fetches a user's own top N NAICS-matched opportunities (by matchScore),
+ * as plain data — shared by the actual campaign send AND the admin panel's
+ * "live preview" (GET /api/admin-ai/user-top-matches/:userId), so what an
+ * admin sees in preview is the exact same query result the real email uses,
+ * not a mock.
  */
-async function buildTopMatchesBlock(user) {
-  if (!user.naicsCodes?.length) return '';
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+export async function getTopMatchesForUser(user, limit = 5) {
+  if (!user.naicsCodes?.length) return [];
   const isLimited = ['trial', 'free'].includes(user.plan);
 
   const feed = await UserOpportunity.find({ user: user._id })
     .sort({ matchScore: -1, fetchedAt: -1 })
-    .limit(5)
+    .limit(limit)
     .populate({ path: 'opportunity', match: { dueDate: { $gt: new Date() } } })
     .lean();
-  const rows = feed.filter(f => f.opportunity);
-  if (rows.length === 0) return '';
 
-  const cards = rows.map(({ opportunity: opp, matchScore }, i) => {
-    const fullAgency = String(opp.agency || 'Federal agency').trim();
+  return feed
+    .filter(f => f.opportunity)
+    .map(({ opportunity: opp, matchScore }) => ({
+      id: opp._id,
+      title: opp.title || 'Untitled opportunity',
+      agency: String(opp.agency || 'Federal agency').trim(),
+      description: (opp.description || '').replace(/\s+/g, ' ').trim(),
+      naicsCode: opp.naicsCode || '',
+      setAside: opp.setAside || '',
+      dueDate: opp.dueDate || null,
+      matchScore: Math.round(matchScore),
+      locked: isLimited,
+    }));
+}
+
+/**
+ * Personalizes a campaign email with the recipient's own top 5 NAICS-matched
+ * opportunities, each linking straight to its detail page — every recipient
+ * sees different contracts, based on their own profile. Trial/free users get
+ * the same title-locked treatment as the welcome email (server-side paywall
+ * stays intact, no locked data leaked into the email). Returns '' when the
+ * user has no live matches, so the campaign body still reads fine with
+ * nothing extra appended.
+ */
+async function buildTopMatchesBlock(user) {
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const matches = await getTopMatchesForUser(user, 5);
+  if (matches.length === 0) return '';
+
+  const cards = matches.map((opp, i) => {
     const due = opp.dueDate
       ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       : '—';
-    const oppUrl = `${frontendUrl}/opportunity/${opp._id}`;
-    const snippet = (opp.description || '').replace(/\s+/g, ' ').trim().slice(0, 150);
-    const titleHtml = isLimited
+    const oppUrl = `${frontendUrl}/opportunity/${opp.id}`;
+    const snippet = opp.description.slice(0, 150);
+    const titleHtml = opp.locked
       ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
-      : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title || 'Untitled opportunity'}</a>`;
+      : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title}</a>`;
     return `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:8px 0;">
         <table width="100%" cellpadding="0" cellspacing="0"><tr>
           <td style="font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;">${titleHtml}</td>
-          <td width="60" valign="top" style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;">${Math.round(matchScore)}%</span></td>
+          <td width="60" valign="top" style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;">${opp.matchScore}%</span></td>
         </tr></table>
-        ${!isLimited ? `<p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">🏛️ ${fullAgency}</p>` : ''}
-        ${!isLimited && snippet ? `<p style="margin:8px 0 0;font-size:13px;color:#4b5563;line-height:1.6;">${snippet}${(opp.description || '').length > 150 ? '…' : ''}</p>` : ''}
+        ${!opp.locked ? `<p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">🏛️ ${opp.agency}</p>` : ''}
+        ${!opp.locked && snippet ? `<p style="margin:8px 0 0;font-size:13px;color:#4b5563;line-height:1.6;">${snippet}${opp.description.length > 150 ? '…' : ''}</p>` : ''}
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;"><tr>
           <td style="font-size:11px;color:#6b7280;">
             ${opp.naicsCode ? `<span style="background:#eef2ff;color:#4338ca;padding:2px 7px;border-radius:5px;font-weight:600;">NAICS ${opp.naicsCode}</span>` : ''}
@@ -1088,7 +1111,7 @@ async function buildTopMatchesBlock(user) {
 
   return `
     <div style="margin:24px 0 4px;">
-      <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#5b21b6;text-transform:uppercase;letter-spacing:0.4px;">Your Top ${rows.length} Matched Opportunities</p>
+      <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#5b21b6;text-transform:uppercase;letter-spacing:0.4px;">Your Top ${matches.length} Matched Opportunities</p>
       <p style="margin:0 0 10px;font-size:13px;color:#6b7280;">Matched to your NAICS codes: ${user.naicsCodes.join(', ')}</p>
       ${cards}
       <div style="text-align:center;margin:16px 0 4px;">

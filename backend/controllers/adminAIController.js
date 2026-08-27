@@ -7,7 +7,7 @@ import AdminNotification from '../models/admin/AdminNotification.js';
 import CampaignLog from '../models/admin/CampaignLog.js';
 import TrackedEmail from '../models/TrackedEmail.js';
 import { openaiChat as chat } from '../services/geminiService.js';
-import { sendBroadcastEmailToSegment } from '../services/emailService.js';
+import { sendBroadcastEmailToSegment, getTopMatchesForUser } from '../services/emailService.js';
 import { samGetWithRotation } from '../services/samApiService.js';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -503,6 +503,22 @@ export const sendCampaign = async (req, res) => {
 
       console.log(`📧 Campaign complete: ${sent}/${users.length} sent, ${errors.length} failed`);
     })().catch(err => console.error('Campaign background error:', err.message));
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// ── Live preview data for a single-user campaign send ────────────────────────
+// Powers the "Top 5 Matched Opportunities" block shown in the admin panel's
+// Live Preview — the exact same query the real campaign email uses, so the
+// preview isn't a mock, it's that recipient's real matched contracts.
+// @route  GET /api/admin-ai/user-top-matches/:userId
+export const getUserTopMatches = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select('name email naicsCodes plan');
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    const matches = await getTopMatchesForUser(user, 5);
+    res.json({ success: true, data: matches });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

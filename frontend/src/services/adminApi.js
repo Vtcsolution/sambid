@@ -141,6 +141,7 @@ export const adminAIAPI = {
   sendCampaign:       (d)    => adminApi.post('/admin-ai/send-campaign', d),
   getSegmentUsers:    (seg)  => adminApi.get('/admin-ai/segment-users', { params: { segment: seg } }),
   getCampaignHistory: (page, segment) => adminApi.get('/admin-ai/campaign-history', { params: { page, limit: 20, ...(segment ? { segment } : {}) } }),
+  getUserTopMatches:  (userId) => adminApi.get(`/admin-ai/user-top-matches/${userId}`),
 };
 
 // ── Support Tickets (admin) ───────────────────────────────────────────────────

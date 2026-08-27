@@ -10,6 +10,7 @@ import {
   sendCampaign,
   getSegmentUsers,
   getCampaignHistory,
+  getUserTopMatches,
 } from '../controllers/adminAIController.js';
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.get('/revenue-forecast',  getRevenueForecast);
 router.post('/send-campaign',    sendCampaign);
 router.get('/segment-users',     getSegmentUsers);
 router.get('/campaign-history',  getCampaignHistory);
+router.get('/user-top-matches/:userId', getUserTopMatches);
 
 export default router;

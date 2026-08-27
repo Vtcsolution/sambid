@@ -926,6 +926,20 @@ export default function AdminCampaigns() {
   const [historyTotal,  setHistoryTotal]  = useState(0);
   const [historyLoading,setHistoryLoading]= useState(false);
   const [expandedLog,   setExpandedLog]   = useState(null);
+  const [topMatches,    setTopMatches]    = useState(null); // null = not fetched, [] = no matches
+  const [matchesLoading,setMatchesLoading]= useState(false);
+
+  // Every campaign email auto-appends the recipient's own top 5 NAICS-matched
+  // opportunities — fetch the real ones for whoever is selected so the Live
+  // Preview shows exactly what that person will actually receive.
+  useEffect(() => {
+    if (sendMode !== 'user' || !selectedUser?._id) { setTopMatches(null); return; }
+    setMatchesLoading(true);
+    adminAIAPI.getUserTopMatches(selectedUser._id)
+      .then(r => setTopMatches(r.data?.data || []))
+      .catch(() => setTopMatches([]))
+      .finally(() => setMatchesLoading(false));
+  }, [sendMode, selectedUser?._id]);
 
   // Load real plan prices from the Plans database so templates never show a
   // stale hardcoded amount — updates the module-level PLAN_PRICES in place.
@@ -1361,6 +1375,9 @@ export default function AdminCampaigns() {
                   body={body}
                   fromName={fromName}
                   userName={selectedUser?.name || ''}
+                  topMatches={sendMode === 'user' ? topMatches : undefined}
+                  matchesLoading={sendMode === 'user' && matchesLoading}
+                  segmentMode={sendMode === 'segment'}
                 />
               : <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-3">
