@@ -490,7 +490,7 @@ export const sendCampaign = async (req, res) => {
       const status = sent === users.length ? 'success' : sent > 0 ? 'partial' : 'failed';
 
       await CampaignLog.findByIdAndUpdate(log._id, {
-        sent, failed: errors.length, recipients, failedEmails: errors, status,
+        sent, failed: errors.length, recipients, failedEmails: errors, errorDetails, status,
       });
 
       await AdminNotification.create({

@@ -1511,8 +1511,10 @@ export default function AdminCampaigns() {
                                 <div className="divide-y divide-gray-50 max-h-48 overflow-y-auto">
                                   {log.recipients.map((r, i) => {
                                     const openInfo = log.openedRecipients?.find(o => o.email === r.email);
+                                    const errInfo = !r.delivered && log.errorDetails?.find(e => e.email === r.email);
                                     return (
-                                    <div key={i} className="flex items-center justify-between px-3 py-2">
+                                    <div key={i} className="px-3 py-2">
+                                    <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-2 min-w-0">
                                         <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center shrink-0">
                                           {(r.name || r.email).charAt(0).toUpperCase()}
@@ -1537,6 +1539,10 @@ export default function AdminCampaigns() {
                                           {r.delivered ? '✓ Sent' : '✗ Failed'}
                                         </span>
                                       </div>
+                                    </div>
+                                    {errInfo && (
+                                      <p className="text-xs text-red-500 mt-1 pl-8 break-words">{errInfo.error}</p>
+                                    )}
                                     </div>
                                     );
                                   })}
