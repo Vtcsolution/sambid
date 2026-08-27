@@ -1059,21 +1059,30 @@ async function buildTopMatchesBlock(user) {
   if (rows.length === 0) return '';
 
   const cards = rows.map(({ opportunity: opp, matchScore }, i) => {
-    const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
+    const fullAgency = String(opp.agency || 'Federal agency').trim();
     const due = opp.dueDate
-      ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       : '—';
     const oppUrl = `${frontendUrl}/opportunity/${opp._id}`;
+    const snippet = (opp.description || '').replace(/\s+/g, ' ').trim().slice(0, 150);
     const titleHtml = isLimited
       ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
       : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title || 'Untitled opportunity'}</a>`;
     return `
-      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin:8px 0;">
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:8px 0;">
         <table width="100%" cellpadding="0" cellspacing="0"><tr>
-          <td style="font-size:14px;font-weight:700;color:#1f2937;">${titleHtml}</td>
-          <td width="60" style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;">${Math.round(matchScore)}%</span></td>
+          <td style="font-size:15px;font-weight:700;color:#1f2937;line-height:1.4;">${titleHtml}</td>
+          <td width="60" valign="top" style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;">${Math.round(matchScore)}%</span></td>
         </tr></table>
-        <p style="margin:4px 0 0;font-size:12px;color:#6b7280;">${topAgency} &nbsp;·&nbsp; Due ${due}</p>
+        ${!isLimited ? `<p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">🏛️ ${fullAgency}</p>` : ''}
+        ${!isLimited && snippet ? `<p style="margin:8px 0 0;font-size:13px;color:#4b5563;line-height:1.6;">${snippet}${(opp.description || '').length > 150 ? '…' : ''}</p>` : ''}
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;"><tr>
+          <td style="font-size:11px;color:#6b7280;">
+            ${opp.naicsCode ? `<span style="background:#eef2ff;color:#4338ca;padding:2px 7px;border-radius:5px;font-weight:600;">NAICS ${opp.naicsCode}</span>` : ''}
+            ${opp.setAside ? `&nbsp; <span style="background:#f0fdf4;color:#15803d;padding:2px 7px;border-radius:5px;font-weight:600;">${opp.setAside}</span>` : ''}
+            &nbsp; Due <strong style="color:#dc2626;">${due}</strong>
+          </td>
+        </tr></table>
       </div>`;
   }).join('');
 
