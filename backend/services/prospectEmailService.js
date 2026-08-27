@@ -1,22 +1,14 @@
 // backend/services/prospectEmailService.js
-import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
 import { price, priceNum, pricingLine } from './planPricingService.js';
-
-let _transporter = null;
-const getTransporter = () => {
-  if (!_transporter) {
-    _transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
-      port: parseInt(process.env.EMAIL_PORT || '465'),
-      secure: parseInt(process.env.EMAIL_PORT || '465') === 465,
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    });
-  }
-  return _transporter;
-};
+// Reuse the one real SMTP transporter (services/emailService.js) instead of a
+// second definition — that copy only read EMAIL_* env vars, never the SMTP_*
+// names the admin Settings > Email/SMTP panel actually writes to, so every
+// prospect/company outreach email silently authenticated with undefined
+// credentials whenever only SMTP_* was set.
+import { transporter } from './emailService.js';
 
 const PLATFORM_URL  = process.env.FRONTEND_URL  || 'https://sambid.co';
 // For tracking pixels/clicks: must be a publicly reachable URL.
@@ -433,8 +425,8 @@ export const sendProspectEmail = async (prospect, templateId) => {
 
   const { subject, html, templateName } = renderTemplate(templateId, prospect);
 
-  await getTransporter().sendMail({
-    from: `"${FROM_NAME}" <${process.env.EMAIL_USER}>`,
+  await transporter.sendMail({
+    from: `"${FROM_NAME}" <${process.env.SMTP_USER || process.env.EMAIL_USER}>`,
     to:   email,
     subject,
     html,
@@ -745,7 +737,7 @@ const resolveFromAddress = (fromAlias) => {
     billing: process.env.EMAIL_BILLING,
     main:    process.env.SMTP_USER || process.env.EMAIL_USER,
   };
-  return map[fromAlias] || process.env.EMAIL_USER;
+  return map[fromAlias] || process.env.SMTP_USER || process.env.EMAIL_USER;
 };
 
 export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templateType, fromAlias }, sentBy = 'admin') => {
@@ -766,7 +758,7 @@ export const sendBulkCustomEmails = async (prospects, { subject, bodyText, templ
       const trackingId = randomBytes(16).toString('hex');
       const html = buildCustomEmailHtml(personalBody, trackingId);
 
-      await getTransporter().sendMail({
+      await transporter.sendMail({
         from: `"${FROM_NAME}" <${fromAddress}>`,
         to:   email,
         subject: personalSubject,

@@ -595,7 +595,7 @@ export const sendFirstMatchesNow = async (userDoc) => {
 
     const feed = await UserOpportunity.find({ user: user._id })
       .sort({ fetchedAt: -1 })
-      .limit(3)
+      .limit(10)
       .populate('opportunity')
       .lean();
     const opps = feed.map(f => f.opportunity).filter(Boolean);

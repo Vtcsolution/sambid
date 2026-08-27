@@ -2104,14 +2104,18 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
   const frontendUrl = process.env.FRONTEND_URL || 'https://sambid.co';
   const isLimited = ['trial', 'free'].includes(user.plan);
 
-  const rows = opps.slice(0, 3).map((opp, i) => {
+  const rows = opps.slice(0, 10).map((opp, i) => {
     const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
     const due = opp.dueDate
       ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       : '—';
+    const oppUrl = `${frontendUrl}/opportunity/${opp._id}`;
+    // Locked rows never link out — the title itself is already hidden, and
+    // the paywall is enforced server-side on the detail page regardless, but
+    // there's no reason to hand a trial/free user a direct deep link either.
     const titleHtml = isLimited
       ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
-      : `${opp.title || 'Untitled opportunity'}`;
+      : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title || 'Untitled opportunity'}</a>`;
     return `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:10px 0;">
         <p style="margin:0 0 6px;font-size:15px;font-weight:bold;color:#1f2937;">${titleHtml}</p>
@@ -2121,6 +2125,7 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
           ${opp.setAside ? `<tr><td style="padding:2px 0;"><strong>Set-Aside</strong></td><td>${opp.setAside}</td></tr>` : ''}
           <tr><td style="padding:2px 0;"><strong>Deadline</strong></td><td style="color:#dc2626;font-weight:bold;">${due}</td></tr>
         </table>
+        ${!isLimited ? `<p style="margin:8px 0 0;"><a href="${oppUrl}" style="font-size:13px;color:#6366f1;font-weight:600;text-decoration:none;">View Opportunity →</a></p>` : ''}
       </div>`;
   }).join('');
 
