@@ -63,6 +63,7 @@ import { reconcileReferralCommissions } from './controllers/referralController.j
 import { startScheduler } from './services/schedulerService.js';
 import { startProjectScheduler } from './services/projectSchedulerService.js';
 import { startEmailScheduler } from './services/emailSchedulerService.js';
+import { startProspectFollowUpScheduler } from './services/prospectFollowUpService.js';
 import { loadSettingsFromDB } from './services/settingsService.js';
 
 // Connect to DB first, then start schedulers — prevents "buffering timed out" on startup
@@ -79,6 +80,7 @@ connectDB().then(async () => {
     startScheduler();
     startProjectScheduler();
     startEmailScheduler();
+    startProspectFollowUpScheduler();
   } else {
     console.log('⏸️  Schedulers DISABLED (development) — production VPS owns the SAM.gov quota.');
     console.log('    Set ENABLE_SCHEDULERS=true in .env to enable locally.');
