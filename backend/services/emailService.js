@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 import User from '../models/User.js';
 import Opportunity from '../models/Opportunity.js';
+import UserOpportunity from '../models/UserOpportunity.js';
 import TrackedEmail from '../models/TrackedEmail.js';
 import { price } from './planPricingService.js';
 
@@ -1036,6 +1037,58 @@ function formatCampaignBody(rawBody, primaryColor = '#4f46e5') {
 }
 
 /**
+ * Personalizes a campaign email with the recipient's own top 5 NAICS-matched
+ * opportunities (by matchScore), each linking straight to its detail page —
+ * every recipient sees different contracts, based on their own profile.
+ * Trial/free users get the same title-locked treatment as the welcome email
+ * (server-side paywall stays intact, no locked data leaked into the email).
+ * Returns '' when the user has no live matches, so the campaign body still
+ * reads fine with nothing extra appended.
+ */
+async function buildTopMatchesBlock(user) {
+  if (!user.naicsCodes?.length) return '';
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const isLimited = ['trial', 'free'].includes(user.plan);
+
+  const feed = await UserOpportunity.find({ user: user._id })
+    .sort({ matchScore: -1, fetchedAt: -1 })
+    .limit(5)
+    .populate({ path: 'opportunity', match: { dueDate: { $gt: new Date() } } })
+    .lean();
+  const rows = feed.filter(f => f.opportunity);
+  if (rows.length === 0) return '';
+
+  const cards = rows.map(({ opportunity: opp, matchScore }, i) => {
+    const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
+    const due = opp.dueDate
+      ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : '—';
+    const oppUrl = `${frontendUrl}/opportunity/${opp._id}`;
+    const titleHtml = isLimited
+      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
+      : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title || 'Untitled opportunity'}</a>`;
+    return `
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin:8px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="font-size:14px;font-weight:700;color:#1f2937;">${titleHtml}</td>
+          <td width="60" style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;">${Math.round(matchScore)}%</span></td>
+        </tr></table>
+        <p style="margin:4px 0 0;font-size:12px;color:#6b7280;">${topAgency} &nbsp;·&nbsp; Due ${due}</p>
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="margin:24px 0 4px;">
+      <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#5b21b6;text-transform:uppercase;letter-spacing:0.4px;">Your Top ${rows.length} Matched Opportunities</p>
+      <p style="margin:0 0 10px;font-size:13px;color:#6b7280;">Matched to your NAICS codes: ${user.naicsCodes.join(', ')}</p>
+      ${cards}
+      <div style="text-align:center;margin:16px 0 4px;">
+        <a href="${frontendUrl}/opportunities" style="color:#6366f1;font-size:13px;font-weight:600;text-decoration:none;">See all your matches →</a>
+      </div>
+    </div>`;
+}
+
+/**
  * Send a campaign email to a single user (used by admin campaign system).
  * fromAlias picks the visible From address (main/noreply/support/billing) —
  * same alias scheme as prospect outreach; SMTP always authenticates as the
@@ -1056,6 +1109,7 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
   const year = new Date().getFullYear();
   const formattedBody = formatCampaignBody(rawBody);
   const firstName = (user.name || '').split(' ')[0] || 'there';
+  const topMatchesBlock = await buildTopMatchesBlock(user).catch(() => '');
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -1082,6 +1136,9 @@ export const sendBroadcastEmailToSegment = async (user, subject, rawBody, fromNa
 
       <!-- Body -->
       <div>${formattedBody}</div>
+
+      <!-- Personalized top 5 NAICS-matched opportunities -->
+      ${topMatchesBlock}
 
       <!-- Divider -->
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:30px 0 22px;">

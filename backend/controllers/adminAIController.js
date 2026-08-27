@@ -403,7 +403,7 @@ export const sendCampaign = async (req, res) => {
 
     if (targetUserId) {
       // Single user send
-      const user = await User.findById(targetUserId).select('name email');
+      const user = await User.findById(targetUserId).select('name email naicsCodes plan');
       if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
       users = [user];
     } else {
@@ -429,13 +429,16 @@ export const sendCampaign = async (req, res) => {
         baseFilter = segmentFilters[segment] || {};
       }
       const filter = { ...baseFilter, emailAlertsEnabled: { $ne: false }, isDeleted: { $ne: true } };
-      users = await User.find(filter).select('name email');
+      users = await User.find(filter).select('name email naicsCodes plan');
       if (users.length === 0)
         return res.status(400).json({ success: false, message: 'No users found for this segment.' });
     }
 
-    // Check SMTP is configured before starting the loop
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    // Check SMTP is configured before starting the loop — SMTP_* is what the
+    // admin Settings > Email/SMTP panel actually saves to; EMAIL_* is the
+    // legacy fallback, so both must be checked or this false-blocks every
+    // campaign whenever only SMTP_* is set.
+    if (!(process.env.SMTP_USER || process.env.EMAIL_USER) || !(process.env.SMTP_PASS || process.env.EMAIL_PASS)) {
       return res.status(500).json({
         success: false,
         message: 'Email (SMTP) is not configured. Go to Admin → Settings → Email/SMTP and save your credentials first.',
