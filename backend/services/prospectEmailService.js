@@ -108,7 +108,7 @@ export async function getTopMatchesForProspect(prospect, limit = 5) {
   }));
 }
 
-async function buildProspectMatchesBlock(prospect) {
+export async function buildProspectMatchesBlock(prospect) {
   const naics = prospect.naicsCode;
   const opps = await getTopMatchesForProspect(prospect, 5);
   if (opps.length === 0) return '';
