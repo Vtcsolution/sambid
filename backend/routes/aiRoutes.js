@@ -6,6 +6,7 @@ import {
   generateCapabilityStatementAI, analyzeRFP, rfpUploadMiddleware,
   goNoGoWorkflow, marketResearch, getIncumbentIntelligence,
   sourcesSought, analyzeAttachment, deepSummarize,
+  generateComplianceMatrix, getComplianceMatrix,
 } from '../controllers/aiController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { requireAICredits } from '../middleware/aiCreditMiddleware.js';
@@ -27,5 +28,7 @@ router.get('/incumbent/:opportunityId',    requireAICredits('incumbent'),       
 router.post('/sources-sought',             requireAICredits('sources_sought'),       sourcesSought);
 router.post('/analyze-attachment',         requireAICredits('analyze_attachment'),   analyzeAttachment);
 router.post('/deep-summarize/:opportunityId', requireAICredits('summarize'),         deepSummarize);
+router.post('/compliance-matrix/:opportunityId', requireAICredits('compliance_matrix'), generateComplianceMatrix);
+router.get('/compliance-matrix/:opportunityId', getComplianceMatrix); // fetch saved — no credit charge
 
 export default router;

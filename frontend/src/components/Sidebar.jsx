@@ -5,7 +5,7 @@ import {
   LayoutDashboard, FileText, Bell, Settings, LogOut, CreditCard,
   Bookmark, TrendingUp, User, HelpCircle, Shield, Kanban,
   CalendarDays, Sparkles, ScanSearch, ThumbsUp, Truck, Users, BarChart3, Gift, Receipt, FileEdit, Lightbulb, Award, Search, Brain,
-  X, ChevronRight, Zap, Building2, FolderOpen, Trophy, ExternalLink
+  X, ChevronRight, Zap, Building2, FolderOpen, Trophy, ExternalLink, ClipboardCheck
 } from 'lucide-react';
 import { opportunityAPI } from '../services/api';
 import SambidLogo from './SambidLogo';
@@ -222,6 +222,7 @@ export default function Sidebar({ isOpen, onClose, user, setIsAuthenticated, set
   const aiItems = [
     { path: '/ai-predictions',       label: 'AI Contract Predictions',    icon: Brain,      color: 'text-purple-600', pro: true,  desc: 'Win probability & bid strategy' },
     { path: '/proposal-builder',     label: 'Write Full Proposal',        icon: FileEdit,   color: 'text-indigo-500', pro: true,  desc: 'AI-generated full proposal' },
+    { path: '/compliance-matrix',    label: 'Compliance Matrix',          icon: ClipboardCheck, color: 'text-cyan-600', pro: true,  desc: 'Every requirement, checked against your proposal' },
     { path: '/past-performance',     label: 'Past Performance Repo',      icon: Award,      color: 'text-amber-500',  pro: true,  desc: 'Store & export SF-330 citations' },
     { path: '/sources-sought',       label: 'Sources Sought Generator',   icon: Search,     color: 'text-purple-500', pro: true,  desc: 'Respond to RFIs before the RFP drops' },
     { path: '/capability-statement', label: 'Write Capability Statement', icon: Sparkles,   color: 'text-violet-500', pro: true,  desc: 'AI-written company profile' },

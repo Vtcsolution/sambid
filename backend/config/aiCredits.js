@@ -35,6 +35,10 @@ export const FEATURE_COSTS = {
   ai_predictions:       15,
   full_proposal:        15,
   go_no_go:             15,
+
+  // Runs a full proposal generation + structured requirement extraction +
+  // an AI compliance review in one call — priced higher to reflect that.
+  compliance_matrix:    30,
 };
 
 // Human-readable label for each feature (used in error messages)
@@ -54,4 +58,5 @@ export const FEATURE_LABELS = {
   full_proposal:        'Full Proposal Generator',
   ai_predictions:       'AI Contract Predictions',
   market_research:      'Market Research Report',
+  compliance_matrix:    'Compliance Matrix',
 };

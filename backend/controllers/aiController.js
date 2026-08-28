@@ -1,6 +1,7 @@
 // backend/controllers/aiController.js
 import Opportunity from '../models/Opportunity.js';
 import User from '../models/User.js';
+import ComplianceMatrix from '../models/ComplianceMatrix.js';
 import {
   summarizeRFP,
   bidNoBidAnalysis,
@@ -10,12 +11,40 @@ import {
   riskAssessment,
   generateCapabilityStatement,
   analyzeRFPDocument,
+  extractStructuredRequirements,
+  mapRequirementsToProposal,
   generateGoNoGoAnalysis,
   generateMarketResearchReport,
   generateSourcesSoughtResponse,
   deepAnalyzeWithDocuments,
 } from '../services/geminiService.js';
 import { buildCompanyProfile } from '../services/companyIntelService.js';
+
+// Same 7 section headers the AI is prompted to produce for a full proposal
+// (mirrors parseSections() in frontend/src/pages/ProposalBuilder.jsx) — used
+// to turn the proposal's markdown into a structured sections[] array for the
+// compliance matrix mapping step.
+const PROPOSAL_SECTION_KEYS = [
+  'COVER LETTER', 'EXECUTIVE SUMMARY', 'TECHNICAL APPROACH', 'MANAGEMENT PLAN',
+  'PAST PERFORMANCE', 'PRICING STRATEGY', 'CONCLUSION',
+];
+
+function parseProposalSections(proposalMarkdown) {
+  const sections = [];
+  let current = null;
+  for (const line of (proposalMarkdown || '').split('\n')) {
+    const upper = line.trim().toUpperCase().replace(/[#*:.-]/g, '').trim();
+    const matchedKey = PROPOSAL_SECTION_KEYS.find(k => upper.startsWith(k));
+    if (matchedKey) {
+      if (current) sections.push(current);
+      current = { title: matchedKey, content: '' };
+    } else if (current) {
+      current.content += (current.content ? '\n' : '') + line;
+    }
+  }
+  if (current) sections.push(current);
+  return sections.filter(s => s.content.trim());
+}
 import multer from 'multer';
 import axios from 'axios';
 import { createRequire } from 'module';
@@ -692,6 +721,100 @@ export const generateFullProposalAI = async (req, res) => {
     const status = error.message?.includes('Pro plan') ? 403 : 500;
     console.error('Proposal generation error:', error.message);
     res.status(status).json({ success: false, message: aiErrorMessage(error) });
+  }
+};
+
+// @desc    AI: Generate a compliance/requirements traceability matrix — pulls
+//          the RFP's requirements and the AI proposal's sections, then checks
+//          which requirement is actually addressed where (and which aren't).
+// @route   POST /api/ai/compliance-matrix/:opportunityId
+export const generateComplianceMatrix = async (req, res) => {
+  try {
+    checkProPlan(req.user);
+
+    const opportunity = await Opportunity.findById(req.params.opportunityId);
+    if (!opportunity) {
+      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+    }
+
+    // Same document-gathering pipeline as Proposal Builder / Go-No-Go
+    const resolvedDesc = await resolveDescription(opportunity);
+    if (resolvedDesc) opportunity.description = resolvedDesc;
+
+    const docResult = await fetchOpportunityDocuments(opportunity.resourceLinks, opportunity._id.toString());
+
+    const [oppContext, intel, companyProfile] = await Promise.all([
+      Promise.resolve(formatOpportunityContext(opportunity)),
+      fetchCompetitiveIntel(opportunity),
+      buildCompanyProfile(req.user),
+    ]);
+
+    const descText = resolvedDesc || (opportunity.description && !opportunity.description.startsWith('https://') ? opportunity.description : '');
+    let docsText = docResult.combinedText || '';
+    if (descText && descText.length > 100) {
+      const descBlock = `${'─'.repeat(60)}\nSAM.GOV FULL DESCRIPTION / SOW\n${'─'.repeat(60)}\n${descText}`;
+      docsText = docsText ? `${descBlock}\n\n${docsText}` : descBlock;
+    }
+
+    if (!docsText || docsText.length < 200) {
+      return res.status(400).json({ success: false, message: 'Not enough solicitation text available for this opportunity to build a compliance matrix — try one with an attached SOW/PWS or a fuller SAM.gov description.' });
+    }
+
+    const compContext = formatCompetitiveContext(intel);
+
+    // Step 1: the same full proposal Proposal Builder generates
+    const proposalMarkdown = await generateFullProposal(
+      opportunity, req.user, oppContext, compContext, companyProfile.profileText, docsText, docResult.fetchedCount,
+    );
+    const sections = parseProposalSections(proposalMarkdown);
+    if (sections.length === 0) {
+      return res.status(500).json({ success: false, message: 'Could not parse the generated proposal into sections — please try again.' });
+    }
+
+    // Step 2: structured requirements extraction from the same solicitation text
+    const requirements = await extractStructuredRequirements(docsText, req.user.naicsCodes?.join(', '));
+
+    // Step 3: map each requirement to a section with an honest coverage verdict
+    const mapping = await mapRequirementsToProposal(requirements, sections);
+
+    const coveredCount = mapping.filter(m => m.status === 'covered').length;
+    const partialCount = mapping.filter(m => m.status === 'partial').length;
+    const overallCoveragePct = requirements.length
+      ? Math.round(((coveredCount + partialCount * 0.5) / requirements.length) * 100)
+      : 0;
+
+    const matrix = await ComplianceMatrix.findOneAndUpdate(
+      { user: req.user._id, opportunity: opportunity._id },
+      { requirements, sections, mapping, overallCoveragePct, docsAnalyzed: docResult.fetchedCount },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.json({
+      success: true,
+      data: {
+        requirements: matrix.requirements,
+        sections: matrix.sections,
+        mapping: matrix.mapping,
+        overallCoveragePct: matrix.overallCoveragePct,
+        docsAnalyzed: matrix.docsAnalyzed,
+      },
+    });
+  } catch (error) {
+    const status = error.message?.includes('Pro plan') ? 403 : 500;
+    console.error('Compliance matrix error:', error.message);
+    res.status(status).json({ success: false, message: aiErrorMessage(error) });
+  }
+};
+
+// @desc    Fetch a previously generated compliance matrix, no AI credits spent
+// @route   GET /api/ai/compliance-matrix/:opportunityId
+export const getComplianceMatrix = async (req, res) => {
+  try {
+    const matrix = await ComplianceMatrix.findOne({ user: req.user._id, opportunity: req.params.opportunityId }).lean();
+    if (!matrix) return res.status(404).json({ success: false, message: 'No compliance matrix generated yet for this opportunity.' });
+    res.json({ success: true, data: matrix });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

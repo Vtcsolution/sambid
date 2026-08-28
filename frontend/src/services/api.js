@@ -205,6 +205,8 @@ export const aiAPI = {
   goNoGo:               (data) => api.post('/ai/go-no-go', data),
   marketResearch:       () => api.post('/ai/market-research'),
   incumbentIntelligence: (opportunityId) => api.get(`/ai/incumbent/${opportunityId}`),
+  complianceMatrix:      (opportunityId) => api.post(`/ai/compliance-matrix/${opportunityId}`),
+  getComplianceMatrix:   (opportunityId) => api.get(`/ai/compliance-matrix/${opportunityId}`),
 };
 
 // Push Notification APIs

@@ -838,6 +838,7 @@ export default function ProposalBuilder() {
                   <li><strong>Company Profile</strong> → your UEI, CAGE, certifications auto-fill the Cover Letter</li>
                   <li>Run <strong>Go/No-Go</strong> first → only build proposals for contracts scored GO</li>
                   <li>Run <strong>RFP Analyzer</strong> first → get the compliance checklist before writing</li>
+                  <li>Run <strong>Compliance Matrix</strong> after → checks every requirement against this proposal, section by section</li>
                 </ul>
               </HowItWorks>
             </div>

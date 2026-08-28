@@ -656,6 +656,78 @@ Any unusual requirements, tight timelines, or incumbent advantages noted.`,
 };
 
 /**
+ * Compliance matrix, step 1: pull the RFP's requirements out as a structured
+ * list (not the free-text markdown analyzeRFPDocument produces) so they can
+ * be mapped against proposal sections one by one.
+ */
+export const extractStructuredRequirements = async (rfpText, companyNaics) => {
+  const raw = await openaiChat(
+    'You are a federal proposal compliance specialist. You extract every SHALL/MUST/WILL requirement from a solicitation into a clean, structured list — the kind used to build a compliance matrix. Return ONLY valid JSON, no markdown fence, no commentary.',
+    `Read this RFP/solicitation text and extract every mandatory and evaluated requirement an offeror must address in their proposal.
+
+COMPANY NAICS: ${companyNaics || 'Not specified'}
+
+RFP TEXT:
+${rfpText.substring(0, 60000)}
+
+Return ONLY this JSON shape:
+{"requirements":[{"text":"specific requirement, quoted or closely paraphrased from the document","mandatory":true,"category":"Technical Approach | Management Plan | Past Performance | Pricing | Certifications | Administrative"}]}
+
+Rules:
+- 8-25 requirements depending on the document's real complexity — don't pad, don't skip real ones
+- "mandatory": true for SHALL/MUST/WILL requirements, false for evaluated-but-not-mandatory factors
+- "category" must be one of the exact 6 values listed above — pick the closest fit
+- Each "text" should be specific enough that someone could check a proposal against it, not a vague paraphrase`,
+    3000
+  );
+  const clean = raw.trim().replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+  const parsed = JSON.parse(clean);
+  if (!Array.isArray(parsed.requirements) || parsed.requirements.length === 0) {
+    throw new Error('AI returned no requirements — the document may be too short or not a real solicitation.');
+  }
+  return parsed.requirements;
+};
+
+/**
+ * Compliance matrix, step 2: given the structured requirements and the
+ * proposal's own sections, map each requirement to whichever section
+ * actually addresses it, with an honest coverage verdict — this is the part
+ * that replaces a human manually cross-referencing the two documents.
+ */
+export const mapRequirementsToProposal = async (requirements, sections) => {
+  const reqList = requirements.map((r, i) => `${i}. [${r.mandatory ? 'MANDATORY' : 'evaluated'}] ${r.text}`).join('\n');
+  const sectionList = sections.map(s => `### ${s.title}\n${s.content.substring(0, 2500)}`).join('\n\n');
+
+  const raw = await openaiChat(
+    'You are a federal proposal compliance reviewer. You honestly check whether each requirement is actually addressed in the proposal text — you do not give credit for a requirement just because related words appear nearby. Return ONLY valid JSON, no markdown fence, no commentary.',
+    `REQUIREMENTS (indexed):
+${reqList}
+
+PROPOSAL SECTIONS:
+${sectionList}
+
+For EVERY requirement above, decide which single proposal section (if any) actually addresses it, and how well.
+
+Return ONLY this JSON shape:
+{"mapping":[{"requirementIndex":0,"sectionTitle":"exact section title from above, or empty string if missing","status":"covered|partial|missing","note":"one short sentence — what's there, or what's missing"}]}
+
+Rules:
+- One entry per requirement, in order, requirementIndex must match the number given
+- "covered" = the section clearly and specifically addresses this requirement
+- "partial" = related content exists but doesn't fully address the specific requirement
+- "missing" = no section meaningfully addresses it — sectionTitle must be "" for missing
+- Be an honest, skeptical reviewer, not a cheerleader — this is the whole point of the check`,
+    4000
+  );
+  const clean = raw.trim().replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+  const parsed = JSON.parse(clean);
+  if (!Array.isArray(parsed.mapping)) {
+    throw new Error('AI returned an invalid compliance mapping.');
+  }
+  return parsed.mapping;
+};
+
+/**
  * Generate professional Capability Statement
  */
 export const generateCapabilityStatement = async ({ businessName, naicsCodes, businessType, certifications, coreCompetencies, pastPerformance, differentiators, targetAgency, contactInfo, companyProfile = '' }) => {

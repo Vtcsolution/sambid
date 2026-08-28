@@ -55,6 +55,7 @@ const Status             = lazy(() => import('./pages/Status'));
 const NDA                = lazy(() => import('./pages/NDA'));
 const Billing            = lazy(() => import('./pages/Billing'));
 const ProposalBuilder    = lazy(() => import('./pages/ProposalBuilder'));
+const ComplianceMatrix   = lazy(() => import('./pages/ComplianceMatrix'));
 const PayoneerReturn     = lazy(() => import('./pages/PayoneerReturn'));
 const Suggestions        = lazy(() => import('./pages/Suggestions'));
 const AnnualPlanRequest  = lazy(() => import('./pages/AnnualPlanRequest'));
@@ -350,6 +351,7 @@ function App() {
             <Route path="/referral"             element={<ReferralPage />} />
             <Route path="/billing"              element={<Billing />} />
             <Route path="/proposal-builder"     element={<WorkspaceRoute><ProposalBuilder /></WorkspaceRoute>} />
+            <Route path="/compliance-matrix"    element={<WorkspaceRoute><ComplianceMatrix /></WorkspaceRoute>} />
             <Route path="/terms"                element={<TermsOfService />} />
             <Route path="/privacy"              element={<PrivacyPolicy />} />
             <Route path="/dpa"                  element={<DPA />} />
