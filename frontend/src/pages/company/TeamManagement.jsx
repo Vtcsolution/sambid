@@ -16,6 +16,7 @@ const ALL_PAGES = [
   { key: 'winning-bids',         label: 'Who Won Contracts' },
   { key: 'referral',             label: 'Earn by Referring' },
   { key: 'proposal-builder',     label: 'Proposal Builder' },
+  { key: 'compliance-matrix',    label: 'Compliance Matrix' },
   { key: 'rfp-analyzer',         label: 'RFP Analyzer' },
   { key: 'go-no-go',             label: 'Go/No-Go' },
   { key: 'teaming-finder',       label: 'Teaming Finder' },

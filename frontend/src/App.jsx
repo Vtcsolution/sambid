@@ -199,7 +199,7 @@ function App() {
     '/saved', '/alerts', '/winning-bids', '/pipeline', '/calendar',
     '/settings', '/profile', '/notifications', '/help', '/onboarding',
     '/capability-statement', '/rfp-analyzer', '/go-no-go',
-    '/teaming-finder', '/contract-vehicles', '/market-research', '/referral', '/billing', '/proposal-builder', '/suggestions', '/past-performance', '/sources-sought', '/ai-predictions',
+    '/teaming-finder', '/contract-vehicles', '/market-research', '/referral', '/billing', '/proposal-builder', '/compliance-matrix', '/suggestions', '/past-performance', '/sources-sought', '/ai-predictions',
     '/company'
   ];
 

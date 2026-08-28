@@ -34,6 +34,7 @@ export const PATH_TO_PAGE_KEY = {
   '/alerts':               'alerts',
   '/winning-bids':         'winning-bids',
   '/proposal-builder':     'proposal-builder',
+  '/compliance-matrix':    'compliance-matrix',
   '/rfp-analyzer':         'rfp-analyzer',
   '/go-no-go':             'go-no-go',
   '/teaming-finder':       'teaming-finder',

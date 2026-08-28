@@ -49,7 +49,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
     '/settings', '/profile', '/notifications', '/help',
     '/pipeline', '/calendar', '/capability-statement', '/rfp-analyzer',
     '/go-no-go', '/teaming-finder', '/contract-vehicles', '/market-research',
-    '/referral', '/billing', '/proposal-builder', '/past-performance',
+    '/referral', '/billing', '/proposal-builder', '/compliance-matrix', '/past-performance',
     '/sources-sought', '/ai-predictions', '/suggestions',
     '/company', '/onboarding',
   ];

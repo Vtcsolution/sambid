@@ -22,6 +22,7 @@ const sections = [
     links: [
       { label: 'AI Predictions',       to: '/ai-predictions' },
       { label: 'Proposal Builder',     to: '/proposal-builder' },
+      { label: 'Compliance Matrix',    to: '/compliance-matrix' },
       { label: 'RFP Analyzer',         to: '/rfp-analyzer' },
       { label: 'Go / No-Go',           to: '/go-no-go' },
       { label: 'Capability Statement', to: '/capability-statement' },
