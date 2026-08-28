@@ -5,6 +5,7 @@ import AdminNotification from '../models/admin/AdminNotification.js';
 import { emitToAdmins, emitToUser } from '../socket.js';
 import { sendSuggestionEmail } from '../services/emailService.js';
 import { createUserNotification } from '../services/notificationService.js';
+import { summarizeFeedback } from '../services/feedbackAIService.js';
 
 const getAllAdminEmails = async () => {
   try {
@@ -49,21 +50,40 @@ export const createSuggestion = async (req, res) => {
       createdAt:        suggestion.createdAt,
     });
 
-    // Admin bell notification
-    AdminNotification.create({
-      title:   `💡 New Suggestion: ${suggestion.suggestionNumber}`,
-      message: `${user.name} (${user.email}) — "${suggestion.title}"`,
-      type:    'suggestion',
-      actionRequired: false,
-      priority: 'medium',
-      actionUrl: '/admin/suggestions',
-      metadata: {
-        suggestionId:     suggestion._id,
-        suggestionNumber: suggestion.suggestionNumber,
-        userId:           user._id,
-        userEmail:        user.email,
-      },
-    }).catch(() => {});
+    // Admin bell notification — AI-summarized into actionable bullet points
+    // when an AI key is configured, plain text otherwise. Run in the
+    // background so a slow AI call never delays the user's response below.
+    (async () => {
+      let message = `${user.name} (${user.email}) — "${suggestion.title}"`;
+      try {
+        const { summary, bullets } = await summarizeFeedback({
+          title: suggestion.title,
+          category: suggestion.category,
+          description: suggestion.description,
+          companyName: suggestion.companyName,
+        });
+        suggestion.aiSummary = { summary, bullets };
+        await suggestion.save();
+        message = `${summary}\n\n${bullets.map(b => `• ${b}`).join('\n')}\n\n— ${user.name} (${user.email})`;
+      } catch (err) {
+        console.warn('Feedback AI summary skipped:', err.message);
+      }
+
+      await AdminNotification.create({
+        title:   `💡 New Suggestion: ${suggestion.suggestionNumber}`,
+        message,
+        type:    'suggestion',
+        actionRequired: false,
+        priority: 'medium',
+        actionUrl: '/admin/suggestions',
+        metadata: {
+          suggestionId:     suggestion._id,
+          suggestionNumber: suggestion.suggestionNumber,
+          userId:           user._id,
+          userEmail:        user.email,
+        },
+      }).catch(() => {});
+    })();
 
     // Email admin + user confirmation
     sendSuggestionEmail(user, suggestion, await getAllAdminEmails()).catch(() => {});

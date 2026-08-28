@@ -124,6 +124,23 @@ function SuggestionRow({ suggestion: initial, onDeleted }) {
             <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line bg-gray-50 dark:bg-gray-700 rounded-lg p-3">{s.description}</p>
           </div>
 
+          {/* AI read — what actually needs to change */}
+          {s.aiSummary?.bullets?.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-wide mb-1">AI Summary</p>
+              <div className="bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 rounded-lg p-3">
+                <p className="text-sm font-medium text-violet-900 dark:text-violet-200 mb-2">{s.aiSummary.summary}</p>
+                <ul className="space-y-1">
+                  {s.aiSummary.bullets.map((b, i) => (
+                    <li key={i} className="text-sm text-violet-800 dark:text-violet-300 flex gap-2">
+                      <span className="text-violet-400 shrink-0">•</span>{b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
           {/* Status + Note */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

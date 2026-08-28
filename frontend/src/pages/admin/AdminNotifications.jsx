@@ -297,7 +297,7 @@ export default function AdminNotifications() {
                           </span>
                         )}
                       </div>
-                      <p className="text-gray-600 text-sm">{notification.message}</p>
+                      <p className="text-gray-600 text-sm whitespace-pre-line">{notification.message}</p>
                       {notification.metadata && (
                         <div className="mt-2 text-xs text-gray-400">
                           {notification.metadata.userEmail && (

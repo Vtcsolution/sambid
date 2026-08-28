@@ -32,6 +32,14 @@ const suggestionSchema = new mongoose.Schema({
 
   adminResponse: adminResponseSchema,
 
+  // AI-generated read of the feedback — what actually needs improving, as
+  // concrete bullet points. Populated async right after submission; absent
+  // when no AI key is configured (admin still sees the raw text as normal).
+  aiSummary: {
+    summary: { type: String, default: '' },
+    bullets: { type: [String], default: [] },
+  },
+
   upvotes: { type: Number, default: 0 },
 }, { timestamps: true });
 
