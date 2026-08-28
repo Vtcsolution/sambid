@@ -6,7 +6,7 @@ import {
   ChevronLeft, ChevronRight, Loader2, X, CheckCircle,
   AlertCircle, Filter, Play, StopCircle, Trash2,
   BarChart3, Star, MapPin, Building2, Database, TrendingUp,
-  ExternalLink, Check, ChevronDown, Send,
+  ExternalLink, Check, ChevronDown, Send, Copy,
 } from 'lucide-react';
 import { adminProspectAPI } from '../../services/adminApi';
 import ProspectEmailModal from '../../components/admin/ProspectEmailModal';
@@ -55,6 +55,18 @@ const fmt  = n => ((n ?? 0)).toLocaleString();
 const fmtM = n => {
   const v = Number(n) || 0;
   return v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`;
+};
+
+// Normalizes to a dialable US format with the +1 country code — e.g.
+// "(505) 844-8066" or "5058440866" -> "+1 (505) 844-8066". Numbers that
+// already carry a leading 1 (11 digits) or don't look like a standard
+// 10-digit US number are handled without corrupting them.
+const fmtPhoneIntl = raw => {
+  const digits = (raw || '').replace(/\D/g, '');
+  if (!digits) return raw || '';
+  const local = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+  if (local.length !== 10) return digits.startsWith('1') ? `+${digits}` : raw;
+  return `+1 (${local.slice(0, 3)}) ${local.slice(3, 6)}-${local.slice(6)}`;
 };
 
 const EMPTY_FILTERS = {
@@ -205,6 +217,7 @@ export default function AdminProspects() {
   const [pagination, setPagination] = useState({ page: 1, limit: 50, total: 0, pages: 0 });
   const [loading, setLoading]       = useState(false);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [copyFeedback, setCopyFeedback] = useState('');
   const [selected, setSelected]     = useState(new Set());
   const [filterOpen, setFilterOpen] = useState(false);
   const [syncState, setSyncState]   = useState(null);
@@ -324,6 +337,30 @@ export default function AdminProspects() {
     } catch (e) { alert('Export failed: ' + e.message); }
   };
 
+  // ── Copy phone/company/award list to clipboard ────────────────────────────────
+  // Copies whatever's selected, or every row on the current page if nothing is
+  // selected — company name, phone (+1 country code), and their award amount,
+  // one per line, tab-separated so it pastes straight into Excel/Sheets columns.
+  const handleCopyList = async () => {
+    const source = selected.size > 0 ? prospects.filter(p => selected.has(p._id)) : prospects;
+    const withPhone = source.filter(p => p.primaryPhone);
+    if (withPhone.length === 0) {
+      alert('No phone numbers to copy in the current list/selection.');
+      return;
+    }
+    const lines = [
+      'Company\tPhone\tAward',
+      ...withPhone.map(p => `${p.companyName}\t${fmtPhoneIntl(p.primaryPhone)}\t${fmtM(p.totalAwardAmount)}`),
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      setCopyFeedback(`Copied ${withPhone.length} compan${withPhone.length !== 1 ? 'ies' : 'y'}`);
+      setTimeout(() => setCopyFeedback(''), 2500);
+    } catch {
+      alert('Could not copy to clipboard — your browser may be blocking clipboard access.');
+    }
+  };
+
   // ── CRM ─────────────────────────────────────────────────────────────────────
   const handleMarkContacted = async (id) => { try { await adminProspectAPI.markContacted(id, { contactedBy: 'Admin' }); loadProspects(currentPage); } catch { /* */ } };
   const handleBulkContacted = async () => {
@@ -422,6 +459,10 @@ export default function AdminProspects() {
               <Send className="w-3.5 h-3.5" /> Email Outreach
             </button>
           )}
+          <button onClick={handleCopyList} title="Copy company, phone (+1), and award for the selected rows — or the whole current page if none are selected"
+            className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium">
+            <Copy className="w-3.5 h-3.5" /> {copyFeedback || 'Copy Phone List'}
+          </button>
           <button onClick={() => { loadStats(); loadProspects(currentPage); }}
             className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium">
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
@@ -581,6 +622,10 @@ export default function AdminProspects() {
           <button onClick={() => navigate('/admin/prospect-outreach')}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 text-white rounded-lg font-medium hover:bg-violet-700">
             <Send className="w-3.5 h-3.5" /> Email Outreach Page
+          </button>
+          <button onClick={handleCopyList}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-indigo-200 text-indigo-700 rounded-lg font-medium hover:bg-indigo-50">
+            <Copy className="w-3.5 h-3.5" /> {copyFeedback || 'Copy Phone List'}
           </button>
           <button onClick={() => setSelected(new Set())} className="ml-auto text-gray-500 hover:text-gray-700">
             <X className="w-4 h-4" />
