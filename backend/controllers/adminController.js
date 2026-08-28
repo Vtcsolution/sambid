@@ -759,6 +759,19 @@ export const unlockUser = async (req, res) => {
       user.planExpiresAt = new Date(Date.now() + days * 86400000);
       changes.push(`Expires: ${user.planExpiresAt.toLocaleDateString()}`);
 
+      // A trial/free account being granted a paid plan here is a complimentary
+      // admin grant, not a real purchase — mark it so the nightly sweep sends
+      // them back to 'trial' (fresh window) when it expires, instead of the
+      // 'free' downgrade a real lapsed subscription gets. An existing paying
+      // customer whose plan an admin adjusts here is untouched — normal
+      // expiry behavior still applies to them.
+      if (['starter', 'pro', 'enterprise'].includes(plan) && ['trial', 'free'].includes(oldPlan)) {
+        user.tempGrantExpiresAt = user.planExpiresAt;
+        changes.push(`Auto-reverts to Trial on ${user.planExpiresAt.toLocaleDateString()}`);
+      } else {
+        user.tempGrantExpiresAt = null;
+      }
+
       // Reset trial flags if needed
       if (plan !== 'trial') {
         user.isTrialActive = false;

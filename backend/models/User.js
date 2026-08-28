@@ -120,6 +120,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  // Set only when an admin grants a paid plan to a trial/free account (not a
+  // real purchase) — the nightly expiry sweep reverts these to `plan: 'trial'`
+  // with a fresh trial window instead of the normal 'free' downgrade a lapsed
+  // real subscription gets. Left null for real purchases/subscriptions.
+  tempGrantExpiresAt: {
+    type: Date,
+    default: null
+  },
   lastTrialReminderSent: {
   type: Date,
   default: null

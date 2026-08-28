@@ -523,22 +523,39 @@ export const startScheduler = () => {
   });
 
   // Daily plan expiry sweep — 01:00 UTC
-  // Downgrades expired trials → free and expired paid plans → free
+  // Downgrades expired trials → free and expired paid plans → free.
+  // Admin-granted complimentary plans (tempGrantExpiresAt set) are handled
+  // first and separately — they revert to 'trial' with a fresh window
+  // instead, since the account was never a real subscription to begin with.
   cron.schedule('0 1 * * *', async () => {
     const now = new Date();
     console.log('\n⏰ PLAN EXPIRY SWEEP starting...');
+
+    const expiredGrants = await User.updateMany(
+      { tempGrantExpiresAt: { $ne: null, $lt: now } },
+      { $set: {
+          plan: 'trial',
+          isTrialActive: true,
+          trialStartDate: now,
+          trialEndDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000),
+          tempGrantExpiresAt: null,
+          planExpiresAt: null,
+        } }
+    );
 
     const expiredTrials = await User.updateMany(
       { plan: 'trial', trialEndDate: { $lt: now }, isTrialActive: true },
       { $set: { plan: 'free', isTrialActive: false } }
     );
 
+    // planExpiresAt is cleared above for admin grants, so this only ever
+    // catches real, still-paid subscriptions that actually lapsed.
     const expiredPaid = await User.updateMany(
       { plan: { $in: ['starter', 'pro', 'enterprise'] }, planExpiresAt: { $lt: now } },
       { $set: { plan: 'free', planExpiresAt: null } }
     );
 
-    console.log(`✅ Expiry sweep: ${expiredTrials.modifiedCount} trials → free, ${expiredPaid.modifiedCount} paid plans → free`);
+    console.log(`✅ Expiry sweep: ${expiredGrants.modifiedCount} admin grants → trial, ${expiredTrials.modifiedCount} trials → free, ${expiredPaid.modifiedCount} paid plans → free`);
   });
 
   // Startup fetch disabled — use Admin → Hybrid Data Pipeline test buttons instead.

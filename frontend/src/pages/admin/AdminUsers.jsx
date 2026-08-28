@@ -202,7 +202,14 @@ function UserDetail({ userId }) {
           {/* Unlock Plan */}
           <div className="bg-green-50 rounded-xl p-4 border border-green-100">
             <p className="text-sm font-bold text-green-800 mb-1">Unlock / Activate Plan</p>
-            <p className="text-xs text-green-600 mb-3">Set plan, duration, and optional bonus credits. User gets notified via email + notification.</p>
+            <p className="text-xs text-green-600 mb-3">
+              Set plan, duration, and optional bonus credits. User gets notified via email + notification.
+              {['trial', 'free'].includes(data.plan) && (
+                <span className="block mt-1 font-medium">
+                  This account is currently {data.plan} — granting a paid plan here is complimentary, not a purchase, so it auto-reverts back to Trial (fresh window) once the days run out.
+                </span>
+              )}
+            </p>
             <div className="flex flex-wrap gap-2">
               <select id={`unlock-plan-${data._id}`} defaultValue={data.plan}
                 className="text-sm border border-green-200 rounded-lg px-2.5 py-1.5 bg-white focus:ring-2 focus:ring-green-400 focus:outline-none">
