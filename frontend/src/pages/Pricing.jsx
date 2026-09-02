@@ -1,30 +1,17 @@
 // frontend/src/pages/Pricing.jsx
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Check, Zap, Shield, Users, CreditCard, X, ArrowRight, Loader2, Tag, CheckCircle } from 'lucide-react';
-import PaymentModal from '../components/PaymentModal';
-import { authAPI, paymentAPI, validateCoupon } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { Check, X, Loader2 } from 'lucide-react';
+import { paymentAPI } from '../services/api';
 import SEOHead from '../components/SEOHead';
-
-// Yearly prices shown on the pricing page (20% off annual total).
-// These match priceYearly in the Plan model - keep in sync.
-const YEARLY_SAVINGS_PCT = 20; // displayed as badge on yearly toggle
 
 export default function Pricing() {
   const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState('monthly');
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
   const [userPlan, setUserPlan] = useState(null);
-  const [couponCode, setCouponCode] = useState('');
-  const [couponInput, setCouponInput] = useState('');
-  const [couponResult, setCouponResult] = useState(null); // { valid, discountPercent, referrerName, message }
-  const [couponLoading, setCouponLoading] = useState(false);
-  const [couponError, setCouponError] = useState('');
 
   // Check authentication on component mount
   useEffect(() => {
@@ -32,11 +19,7 @@ export default function Pricing() {
       const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
       if (token) {
         setIsAuthenticated(true);
-        const userEmail = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
-        const userName = localStorage.getItem('userName');
-        const storedUserPlan = localStorage.getItem('userPlan');
-        setUser({ email: userEmail, name: userName });
-        setUserPlan(storedUserPlan);
+        setUserPlan(localStorage.getItem('userPlan'));
       }
       setLoading(false);
     };
@@ -59,90 +42,18 @@ export default function Pricing() {
     }
   };
 
-  const getPrice = (plan) => {
-    if (plan.name === 'free') return 'Free';
-    if (billingCycle === 'monthly') return `$${plan.priceMonthly}`;
-    return `$${plan.priceYearly.toLocaleString()}`;
-  };
-
-  const getPeriodText = (plan) => {
-    if (!plan || plan.name === 'free') return '';
-    return billingCycle === 'monthly' ? '/month' : '/year';
-  };
-
-  // Monthly equivalent shown under yearly price so users can compare easily
-  const getMonthlyEquivalent = (plan) => {
-    if (plan.name === 'free' || billingCycle === 'monthly') return null;
-    const equiv = (plan.priceYearly / 12).toFixed(0);
-    return `~$${equiv}/mo`;
-  };
-
-  const applyCoupon = async () => {
-    const code = couponInput.trim().toUpperCase();
-    if (!code) return;
-    setCouponLoading(true);
-    setCouponError('');
-    setCouponResult(null);
-    try {
-      const res = await validateCoupon(code);
-      if (res.data.valid) {
-        setCouponResult(res.data);
-        setCouponCode(code);
-      } else {
-        setCouponError('Invalid coupon code.');
-      }
-    } catch (err) {
-      setCouponError(err.response?.data?.message || 'Invalid coupon code.');
-    } finally {
-      setCouponLoading(false);
-    }
-  };
-
-  const removeCoupon = () => {
-    setCouponCode('');
-    setCouponInput('');
-    setCouponResult(null);
-    setCouponError('');
-  };
-
-  const getDiscountedPrice = (plan) => {
-    if (!couponResult || plan.name === 'free') return null;
-    const base = billingCycle === 'monthly' ? plan.priceMonthly : plan.priceYearly;
-    return (base * (1 - couponResult.discountPercent / 100)).toFixed(2);
-  };
-
-  // Enterprise is always custom-quoted (both billing cycles). Pro is
-  // custom-quoted only on yearly (Starter yearly still self-serves via the
-  // Annual Plan Request form). Both route to Contact Sales instead of any
-  // self-serve checkout/request flow.
-  const isContactOnly = (plan) =>
-    plan.name === 'enterprise' || (plan.name === 'pro' && billingCycle === 'yearly');
+  // Every paid tier (Starter/Pro/Enterprise, any billing cycle) is a
+  // custom-quoted, sales-assisted plan now — a real person reviews the
+  // request and activates the account, rather than a number on this page
+  // and a self-serve checkout. Only the free trial stays instant/no-card.
+  const isContactOnly = (plan) => plan.name !== 'free';
 
   const handleUpgrade = (plan) => {
     if (plan.name === 'free') {
       navigate('/signup');
       return;
     }
-
-    if (isContactOnly(plan)) {
-      navigate(`/contact?plan=${plan.name}&billing=${billingCycle}`);
-      return;
-    }
-
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
-
-    // Remaining yearly paid plans (Starter) → Annual Plan Request form
-    if (billingCycle === 'yearly') {
-      navigate(`/annual-plan-request?plan=${plan.name}`);
-      return;
-    }
-
-    // Monthly plans → direct PayPal/Stripe payment
-    setSelectedPlan(plan);
-    setShowPaymentModal(true);
+    navigate(`/contact?plan=${plan.name}&billing=${billingCycle}`);
   };
 
   const getButtonStyle = (plan) => {
@@ -153,16 +64,6 @@ export default function Pricing() {
       return 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg';
     }
     return 'bg-white text-gray-700 border-2 border-gray-200 hover:border-indigo-600 hover:text-indigo-600';
-  };
-
-  const getPlanColor = (planName) => {
-    switch(planName) {
-      case 'free': return 'gray';
-      case 'starter': return 'blue';
-      case 'pro': return 'indigo';
-      case 'enterprise': return 'purple';
-      default: return 'gray';
-    }
   };
 
   if (loading || plans.length === 0) {
@@ -176,42 +77,23 @@ export default function Pricing() {
   // Sort plans by order
   const sortedPlans = [...plans].sort((a, b) => a.order - b.order);
 
-  // Real, live pricing from the DB — never hardcoded (Product/Offer schema
-  // lets Google show plan prices directly in search results).
-  const pricingJsonLd = sortedPlans.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'Sambid Federal Contract Alerts',
-    description: 'AI-powered federal contract opportunity discovery and alert platform for US government contractors.',
-    brand: { '@type': 'Brand', name: 'Sambid' },
-    offers: sortedPlans.map(p => ({
-      '@type': 'Offer',
-      name: p.displayName,
-      price: String(p.priceMonthly),
-      priceCurrency: 'USD',
-      description: p.description,
-      url: 'https://sambid.co/pricing',
-      availability: 'https://schema.org/InStock',
-    })),
-  } : null;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16">
       <SEOHead
         title="Pricing | Federal Contract Alert Plans"
-        description="Choose the right Sambid plan for your business. Start with a 5-day free trial — no credit card required. Starter, Pro, and Enterprise plans with AI-matched federal contract opportunities, deadline alerts, and proposal tools."
+        description="Start free with Sambid's AI-powered federal contract matching — no credit card required. Starter, Pro, and Enterprise plans are custom-quoted for your business; talk to our team to get set up."
         keywords="federal contracting software pricing, SAM.gov alert subscription, government contracting tool cost, federal opportunity tracker price, small business contracting plan, federal contract software cost, GovCon software pricing, best federal contracting tool price, SAM.gov alert service cost, government bid software plans, affordable federal contracting software"
         canonical="https://sambid.co/pricing"
-        jsonLd={pricingJsonLd}
       />
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-            Simple, Transparent Pricing
+            Plans Built Around Your Business
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Choose the plan that fits your business. All plans include access to our federal contract matching engine.
+            Start free, no credit card required. Starter, Pro, and Enterprise are priced to your team's real usage —
+            tell us about your business and we'll get you a plan and a quote within 1 business day.
           </p>
 
           {/* Billing Toggle */}
@@ -235,50 +117,8 @@ export default function Pricing() {
               }`}
             >
               Yearly
-              <span className="ml-1 text-xs text-green-600 font-semibold">Save {YEARLY_SAVINGS_PCT}%</span>
+              <span className="ml-1 text-xs text-green-600 font-semibold">Save 20%</span>
             </button>
-          </div>
-        </div>
-
-        {/* Coupon Code Section */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 w-full max-w-md">
-            {couponResult ? (
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-green-700">
-                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold">{couponResult.discountPercent}% discount applied!</p>
-                    <p className="text-xs text-green-600">{couponResult.message}</p>
-                  </div>
-                </div>
-                <button onClick={removeCoupon} className="text-gray-400 hover:text-gray-600 p-1 rounded">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    value={couponInput}
-                    onChange={e => { setCouponInput(e.target.value.toUpperCase()); setCouponError(''); }}
-                    onKeyDown={e => e.key === 'Enter' && applyCoupon()}
-                    placeholder="Have a coupon code?"
-                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                  />
-                </div>
-                <button
-                  onClick={applyCoupon}
-                  disabled={couponLoading || !couponInput.trim()}
-                  className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-                >
-                  {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Apply'}
-                </button>
-              </div>
-            )}
-            {couponError && <p className="text-xs text-red-500 mt-2">{couponError}</p>}
           </div>
         </div>
 
@@ -299,7 +139,7 @@ export default function Pricing() {
                   </span>
                 </div>
               )}
-              
+
               <div className="p-6">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-xl font-bold text-gray-900">{plan.displayName}</h3>
@@ -312,41 +152,13 @@ export default function Pricing() {
                 <p className="text-gray-500 text-sm mt-1">{plan.description}</p>
 
                 <div className="mt-4">
-                  {isContactOnly(plan) ? (
-                    <div className="flex items-end gap-1 flex-wrap">
-                      <span className="text-3xl font-bold text-gray-900">Contact Us</span>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-end gap-1 flex-wrap">
-                        {getDiscountedPrice(plan) ? (
-                          <>
-                            <span className="text-2xl font-bold text-gray-400 line-through">{getPrice(plan)}</span>
-                            <span className="text-4xl font-bold text-green-600">${getDiscountedPrice(plan)}</span>
-                          </>
-                        ) : (
-                          <span className="text-4xl font-bold text-gray-900">{getPrice(plan)}</span>
-                        )}
-                        {plan.name !== 'free' && (
-                          <span className="text-gray-500 mb-1">{getPeriodText(plan)}</span>
-                        )}
-                      </div>
-                      {couponResult && plan.name !== 'free' && (
-                        <p className="text-xs text-green-600 font-semibold mt-1">
-                          {couponResult.discountPercent}% off with coupon
-                        </p>
-                      )}
-                      {!couponResult && getMonthlyEquivalent(plan) && (
-                        <p className="text-xs text-green-600 font-semibold mt-1">
-                          {getMonthlyEquivalent(plan)} · Save {YEARLY_SAVINGS_PCT}%
-                        </p>
-                      )}
-                      {billingCycle === 'monthly' && plan.name !== 'free' && (
-                        <p className="text-xs text-gray-400 mt-1">
-                          or ${plan.priceYearly.toLocaleString()}/yr (save {YEARLY_SAVINGS_PCT}%)
-                        </p>
-                      )}
-                    </>
+                  <div className="flex items-end gap-1 flex-wrap">
+                    <span className="text-3xl font-bold text-gray-900">
+                      {plan.name === 'free' ? 'Free' : 'Custom Pricing'}
+                    </span>
+                  </div>
+                  {isContactOnly(plan) && (
+                    <p className="text-xs text-gray-400 mt-1.5">Quoted to your team size &amp; usage</p>
                   )}
                 </div>
 
@@ -355,25 +167,12 @@ export default function Pricing() {
                     Current Plan
                   </div>
                 ) : (
-                  <>
-                    <button
-                      onClick={() => handleUpgrade(plan)}
-                      className={`w-full mt-6 px-4 py-2.5 rounded-lg font-medium transition-all ${getButtonStyle(plan)}`}
-                    >
-                      {plan.name === 'free'
-                        ? 'Start Free Trial'
-                        : isContactOnly(plan)
-                          ? 'Contact Us'
-                          : billingCycle === 'yearly'
-                            ? `Request ${plan.displayName} Annual`
-                            : `Upgrade to ${plan.displayName}`}
-                    </button>
-                    {billingCycle === 'yearly' && plan.name !== 'free' && !isContactOnly(plan) && (
-                      <p className="text-xs text-center text-gray-400 mt-2">
-                        Reviewed &amp; activated within 1 business day
-                      </p>
-                    )}
-                  </>
+                  <button
+                    onClick={() => handleUpgrade(plan)}
+                    className={`w-full mt-6 px-4 py-2.5 rounded-lg font-medium transition-all ${getButtonStyle(plan)}`}
+                  >
+                    {plan.name === 'free' ? 'Start Free Trial' : 'Contact Us'}
+                  </button>
                 )}
               </div>
 
@@ -397,7 +196,7 @@ export default function Pricing() {
             </div>
           ))}
         </div>
-        
+
         {/* Trust Badges */}
         <div className="mt-12 sm:mt-16 text-center">
           <p className="text-sm text-gray-500 mb-4">Trusted by federal contractors nationwide</p>
@@ -408,15 +207,6 @@ export default function Pricing() {
           </div>
         </div>
       </div>
-      
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        plan={selectedPlan}
-        billingCycle={billingCycle}
-        couponCode={couponCode}
-        couponDiscount={couponResult?.discountPercent || 0}
-      />
     </div>
   );
 }

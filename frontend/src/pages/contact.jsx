@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Building2, Mail, Phone, Users, MessageSquare,
   CheckCircle, Check, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
@@ -8,6 +8,15 @@ import SEOHead from '../components/SEOHead';
 import { contactAPI, paymentAPI } from '../services/api';
 
 const EMPLOYEE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+'];
+
+// Light qualifying question, folded into the submitted message rather than
+// a new DB field — keeps the existing ContactInquiry/admin-review pipeline
+// completely untouched while still giving the reviewer real context.
+const ACTIVITY_OPTIONS = [
+  { value: 'active',   label: "We're actively bidding on federal contracts" },
+  { value: 'some',     label: "We've won some contracts, want to do more" },
+  { value: 'starting', label: "We're just getting started with federal contracting" },
+];
 
 // "Custom / Enterprise Plus" isn't a real DB plan - it's inherently
 // beyond the fixed tiers (white-label, on-prem, etc.), so it has no live
@@ -134,11 +143,11 @@ export default function Contact() {
   const isLoggedIn = !!(localStorage.getItem('authToken') || sessionStorage.getItem('authToken'));
 
   // Arriving from Pricing carries which plan they clicked "Contact Us" on,
-  // e.g. /contact?plan=enterprise - billing cycle isn't used for display
+  // e.g. /contact?plan=starter - billing cycle isn't used for display
   // (no prices are shown on this page at all, see planCards below), but is
   // still readable via searchParams.get('billing') if ever needed later.
-  const urlPlan = searchParams.get('plan'); // 'enterprise' | 'pro'
-  const initialPlanInterest = urlPlan === 'pro' ? 'pro' : urlPlan === 'custom' ? 'custom' : 'enterprise';
+  const urlPlan = searchParams.get('plan'); // 'starter' | 'pro' | 'enterprise'
+  const initialPlanInterest = ['starter', 'pro', 'custom'].includes(urlPlan) ? urlPlan : 'enterprise';
 
   const [existingInquiry, setExistingInquiry] = useState(null);
   const [checkingInquiry, setCheckingInquiry] = useState(isLoggedIn);
@@ -158,6 +167,7 @@ export default function Contact() {
 
   const enterprisePlan = plans.find(p => p.name === 'enterprise');
   const proPlan        = plans.find(p => p.name === 'pro');
+  const starterPlan    = plans.find(p => p.name === 'starter');
 
   const [form, setForm] = useState({
     name:        localStorage.getItem('userName') || '',
@@ -165,6 +175,7 @@ export default function Contact() {
     company:     '',
     phone:       '',
     employees:   '',
+    activity:    '',
     planInterest: initialPlanInterest,
     message:     '',
   });
@@ -190,35 +201,41 @@ export default function Contact() {
   // here instead of self-serve checkout. Only "Custom Pricing" / "Contact
   // Us" language, on every plan, every time.
   const planCards = [
+    urlPlan === 'starter' && starterPlan && {
+      value: 'starter',
+      name: starterPlan.displayName,
+      price: 'Custom',
+      period: 'pricing',
+      badge: 'Requested Plan',
+      badgeColor: 'bg-indigo-600',
+      features: (starterPlan.features || []).filter(f => f.included).map(f => f.name),
+    },
+    (urlPlan === 'pro' || !urlPlan) && proPlan && {
+      value: 'pro',
+      name: proPlan.displayName,
+      price: 'Custom',
+      period: 'pricing',
+      badge: urlPlan === 'pro' ? 'Requested Plan' : 'Most Popular',
+      badgeColor: 'bg-indigo-600',
+      features: (proPlan.features || []).filter(f => f.included).map(f => f.name),
+    },
     enterprisePlan && {
       value: 'enterprise',
       name: enterprisePlan.displayName,
       price: 'Custom',
       period: 'pricing',
-      badge: 'Most Popular',
+      badge: urlPlan === 'enterprise' || !urlPlan ? 'Requested Plan' : 'Scales With Your Team',
       badgeColor: 'bg-indigo-600',
       features: (enterprisePlan.features || []).filter(f => f.included).map(f => f.name),
-    },
-    urlPlan === 'pro' && proPlan && {
-      value: 'pro',
-      name: `${proPlan.displayName} (Annual)`,
-      price: 'Custom',
-      period: 'pricing',
-      badge: 'Requested Plan',
-      badgeColor: 'bg-indigo-600',
-      features: (proPlan.features || []).filter(f => f.included).map(f => f.name),
     },
     CUSTOM_PLAN_CARD,
   ].filter(Boolean);
 
   // No dollar figures in the dropdown either - same reasoning as the cards.
   const planLabel = (value) => {
-    if (value === 'enterprise' && enterprisePlan) {
-      return `${enterprisePlan.displayName}: Custom pricing`;
-    }
-    if (value === 'pro' && proPlan) {
-      return `${proPlan.displayName} (Annual): Custom pricing`;
-    }
+    if (value === 'starter' && starterPlan) return `${starterPlan.displayName}: Custom pricing`;
+    if (value === 'pro' && proPlan) return `${proPlan.displayName}: Custom pricing`;
+    if (value === 'enterprise' && enterprisePlan) return `${enterprisePlan.displayName}: Custom pricing`;
     return 'Custom / Enterprise Plus: Custom pricing';
   };
 
@@ -237,7 +254,14 @@ export default function Contact() {
     setSubmitting(true);
     setError('');
     try {
-      await contactAPI.submit(form);
+      // Fold the qualifying answer into the message text rather than adding
+      // a new DB field — keeps the existing inquiry/admin-review pipeline
+      // untouched while still giving the reviewer real context up front.
+      const activityLabel = ACTIVITY_OPTIONS.find(o => o.value === form.activity)?.label;
+      const composedMessage = activityLabel
+        ? `Federal contracting activity: ${activityLabel}\n\n${form.message.trim()}`
+        : form.message.trim();
+      await contactAPI.submit({ ...form, message: composedMessage });
       setSubmitted(true);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit. Please try again.');
@@ -296,22 +320,15 @@ export default function Contact() {
       <div className="max-w-[1440px] mx-auto">
         {/* Header - narrower than the page for readable line length */}
         <div className="max-w-2xl mx-auto text-center mb-7 sm:mb-10">
-          {!plansLoading && enterprisePlan && (
-            <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
-              Custom {enterprisePlan.displayName} Pricing, Tailored to Your Team
-            </span>
-          )}
+          <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
+            Custom Pricing, Tailored to Your Team
+          </span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            {urlPlan === 'pro' ? 'Request Pro (Annual Billing)' : 'Request an Enterprise Plan'}
+            Get Your Sambid Quote
           </h1>
           <p className="text-gray-600 text-sm sm:text-base md:text-lg">
-            Fill in your details below. Our team reviews every request and activates your plan within <strong>1 business day</strong>.
+            Tell us a bit about your business below. Our team reviews every request and activates your plan within <strong>1 business day</strong>.
           </p>
-          {urlPlan !== 'pro' && (
-            <p className="text-xs sm:text-sm text-gray-400 mt-2">
-              Looking for Starter or Pro (monthly)? <Link to="/pricing" className="text-indigo-600 hover:underline">Purchase directly on the Pricing page →</Link>
-            </p>
-          )}
         </div>
 
         {/* Premium plan cards - live pricing/features from the DB */}
@@ -412,6 +429,17 @@ export default function Contact() {
                 />
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Which best describes your federal contracting activity?</label>
+            <select
+              name="activity" value={form.activity} onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            >
+              <option value="">Select one</option>
+              {ACTIVITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
