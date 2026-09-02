@@ -1,10 +1,10 @@
 // backend/server.js
-// MUST be the very first import — every route file below (and their own
+// MUST be the very first import - every route file below (and their own
 // imports, e.g. config/cloudinary.js) gets fully evaluated before any of
 // THIS file's own code runs, including the old `dotenv.config()` call that
 // used to sit near the bottom of the import list. Any module that reads
-// process.env at its own top level (not inside a function) — like
-// cloudinary.config() in config/cloudinary.js — would capture `undefined`
+// process.env at its own top level (not inside a function) - like
+// cloudinary.config() in config/cloudinary.js - would capture `undefined`
 // permanently for the life of the process if dotenv loads even one import
 // too late. This side-effect import guarantees .env is loaded first.
 import "dotenv/config";
@@ -66,13 +66,13 @@ import { startEmailScheduler } from './services/emailSchedulerService.js';
 import { startProspectFollowUpScheduler } from './services/prospectFollowUpService.js';
 import { loadSettingsFromDB } from './services/settingsService.js';
 
-// Connect to DB first, then start schedulers — prevents "buffering timed out" on startup
+// Connect to DB first, then start schedulers - prevents "buffering timed out" on startup
 connectDB().then(async () => {
   await ensureInvoiceIndexes(); // self-heal the paypalOrderId index (fixes E11000 on null)
   await loadSettingsFromDB();
 
   // Schedulers run in production only. A local dev server shares the same
-  // database AND the same SAM.gov API keys — if its crons fire too, they burn
+  // database AND the same SAM.gov API keys - if its crons fire too, they burn
   // the production quota and race the VPS (this starved description fetching
   // for days). Set ENABLE_SCHEDULERS=true locally only when deliberately
   // testing scheduler behavior.
@@ -82,17 +82,17 @@ connectDB().then(async () => {
     startEmailScheduler();
     startProspectFollowUpScheduler();
   } else {
-    console.log('⏸️  Schedulers DISABLED (development) — production VPS owns the SAM.gov quota.');
+    console.log('⏸️  Schedulers DISABLED (development) - production VPS owns the SAM.gov quota.');
     console.log('    Set ENABLE_SCHEDULERS=true in .env to enable locally.');
   }
 }).catch(err => {
-  console.error('❌ Startup aborted — DB connection failed:', err.message);
+  console.error('❌ Startup aborted - DB connection failed:', err.message);
   process.exit(1);
 });
 
 const app = express();
 
-// ── Trust proxy — REQUIRED when running behind nginx on VPS ──────────────────
+// ── Trust proxy - REQUIRED when running behind nginx on VPS ──────────────────
 // Without this, rate limiting uses nginx's IP instead of the real client IP,
 // and req.ip / req.protocol are incorrect.
 app.set('trust proxy', 1);
@@ -103,7 +103,7 @@ app.use(helmet({
   contentSecurityPolicy: false,        // CSP handled by nginx; API returns JSON only
 }));
 
-// CORS — allow localhost + configured frontend URL (with and without www)
+// CORS - allow localhost + configured frontend URL (with and without www)
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
@@ -140,7 +140,7 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => isDev,
-  message: { success: false, message: 'Too many requests — please try again in 15 minutes.' },
+  message: { success: false, message: 'Too many requests - please try again in 15 minutes.' },
 });
 
 const loginLimiter = rateLimit({
@@ -149,7 +149,7 @@ const loginLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => isDev,
-  message: { success: false, message: 'Too many login attempts — please wait 15 minutes.' },
+  message: { success: false, message: 'Too many login attempts - please wait 15 minutes.' },
 });
 
 // Sensitive auth limiter: 5 attempts / 15 min (password reset, OTP verification)
@@ -159,7 +159,7 @@ const sensitiveAuthLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: () => isDev,
-  message: { success: false, message: 'Too many attempts — please wait 15 minutes.' },
+  message: { success: false, message: 'Too many attempts - please wait 15 minutes.' },
 });
 
 // ── Body parser (limit request size to prevent DoS) ─────────────────────────
@@ -217,7 +217,7 @@ app.use('/api/admin/tickets',      apiLimiter, adminTicketRoutes);
 app.use('/api/suggestions',        apiLimiter, suggestionRoutes);
 app.use('/api/admin/suggestions',  apiLimiter, adminSuggestionRoutes);
 app.use('/api/admin/prospects',    apiLimiter, prospectRoutes);
-app.use('/api/track',              trackingRoutes); // public — no auth, no rate limit
+app.use('/api/track',              trackingRoutes); // public - no auth, no rate limit
 app.use('/api/past-performance',   apiLimiter, pastPerformanceRoutes);
 app.use('/api/contract-vehicles',  apiLimiter, contractVehicleRoutes);
 app.use('/api/credits',            apiLimiter, creditTopupRoutes);
@@ -226,7 +226,7 @@ app.use('/api/features',           featureShowcaseRoutes); // public + admin CMS
 app.use('/api/how-it-works',       howItWorksRoutes); // public + admin CMS
 app.use('/api/problems',           problemShowcaseRoutes); // public + admin CMS
 app.use('/api/testimonials',       testimonialRoutes); // public + admin CMS, gated by an admin on/off toggle
-app.use('/api/footer',             footerRoutes); // public — footer social links & text
+app.use('/api/footer',             footerRoutes); // public - footer social links & text
 app.use('/api/company',            apiLimiter, companyRoutes);
 app.use('/api/admin/company-workspaces', apiLimiter, adminCompanyWorkspaceRoutes);
 app.use('/api/managed-service',          apiLimiter, managedServiceRoutes);
