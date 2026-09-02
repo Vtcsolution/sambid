@@ -77,7 +77,6 @@ const defaultPlans = [
       { name: '150 AI credits included',                            included: true },
       { name: 'Priority support',                                   included: true },
       { name: 'API access',                                         included: true },
-      { name: 'Then continues on a standard 5-day trial',           included: true },
     ],
     aiCreditsPerMonth: 30,
     opportunitiesPerMonth: 50,

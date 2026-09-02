@@ -98,7 +98,7 @@ export default function Pricing() {
         canonical="https://sambid.co/pricing"
       />
 
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold tracking-wide uppercase mb-5">
@@ -143,7 +143,7 @@ export default function Pricing() {
 
         {/* Pricing Cards - just two: Free (self-serve) and Contact Us (Starter/Pro/Enterprise) */}
         <h2 className="sr-only">Compare Sambid Federal Contracting Plans</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
 
           {/* Free card - the promo pitch */}
           {freePlan && (
@@ -183,11 +183,16 @@ export default function Pricing() {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 )}
+
+                <div className="flex items-center gap-4 mt-4 text-xs text-slate-400">
+                  <span className="inline-flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> No credit card</span>
+                  <span className="inline-flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-amber-500" /> Instant activation</span>
+                </div>
               </div>
 
-              <div className="p-7 sm:p-8 pt-5 border-t border-slate-100 mt-auto">
+              <div className="p-7 sm:p-8 pt-5 border-t border-slate-100">
                 <p className="text-xs font-bold uppercase tracking-wide mb-3.5 text-slate-400">What's included</p>
-                <ul className="space-y-2.5">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
                   {freePlan.features?.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2.5 text-sm">
                       <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-emerald-50">
@@ -262,7 +267,7 @@ export default function Pricing() {
                 <p className="text-xs font-bold uppercase tracking-wide mb-3.5 text-slate-400">
                   What's included in {activePaidPlan.displayName}
                 </p>
-                <ul className="space-y-2.5">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
                   {activePaidPlan.features?.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2.5 text-sm">
                       {feature.included ? (
