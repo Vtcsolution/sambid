@@ -185,10 +185,18 @@ export default function Pricing() {
                     }`} />
                   </div>
 
-                  <h3 className={`text-lg font-bold ${isEnterprise ? 'text-white' : 'text-slate-900'}`}>
-                    {plan.displayName}
-                  </h3>
-                  <p className={`text-sm mt-1 leading-relaxed min-h-[40px] ${isEnterprise ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className={`text-lg font-bold ${isEnterprise ? 'text-white' : 'text-slate-900'}`}>
+                      {plan.displayName}
+                    </h3>
+                    {plan.name === 'free' && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700">
+                        <Sparkles className="w-2.5 h-2.5" />
+                        7 days free
+                      </span>
+                    )}
+                  </div>
+                  <p className={`text-sm mt-1.5 leading-relaxed ${isEnterprise ? 'text-slate-400' : 'text-slate-500'}`}>
                     {plan.description}
                   </p>
 
@@ -196,11 +204,9 @@ export default function Pricing() {
                     <span className={`text-2xl sm:text-[28px] font-bold tabular-nums ${isEnterprise ? 'text-white' : 'text-slate-900'}`}>
                       {plan.name === 'free' ? 'Free' : 'Custom'}
                     </span>
-                    {isContactOnly(plan) && (
-                      <p className={`text-xs mt-1.5 ${isEnterprise ? 'text-slate-400' : 'text-slate-400'}`}>
-                        Quoted to your team size &amp; usage
-                      </p>
-                    )}
+                    <p className={`text-xs mt-1.5 ${isEnterprise ? 'text-slate-400' : 'text-slate-400'}`}>
+                      {isContactOnly(plan) ? 'Quoted to your team size & usage' : 'Then a standard 5-day trial'}
+                    </p>
                   </div>
 
                   {isCurrent ? (
@@ -228,7 +234,7 @@ export default function Pricing() {
                   )}
                 </div>
 
-                <div className={`mt-auto p-6 sm:p-7 pt-5 border-t ${isEnterprise ? 'border-white/10' : 'border-slate-100'}`}>
+                <div className={`p-6 sm:p-7 pt-5 border-t ${isEnterprise ? 'border-white/10' : 'border-slate-100'}`}>
                   <p className={`text-xs font-bold uppercase tracking-wide mb-3.5 ${isEnterprise ? 'text-slate-400' : 'text-slate-400'}`}>
                     What's included
                   </p>
