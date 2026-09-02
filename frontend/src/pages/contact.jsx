@@ -1,46 +1,43 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
-  Building2, Mail, Phone, Users, MessageSquare,
-  CheckCircle, Check, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw
+  Building2, Mail, Phone, Users, MessageSquare, Globe,
+  CheckCircle, Check, Loader2, ArrowRight, Clock, AlertCircle, RefreshCw,
 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 import { contactAPI, paymentAPI } from '../services/api';
 
+const SERIF = { fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif" };
+
 const EMPLOYEE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+'];
 
-// Light qualifying question, folded into the submitted message rather than
-// a new DB field — keeps the existing ContactInquiry/admin-review pipeline
-// completely untouched while still giving the reviewer real context.
+// Qualifying questions, all folded into the submitted message rather than
+// new DB fields — keeps the existing ContactInquiry/admin-review pipeline
+// completely untouched while still giving the reviewer real context up
+// front, before they ever pick up the phone.
 const ACTIVITY_OPTIONS = [
   { value: 'active',   label: "We're actively bidding on federal contracts" },
   { value: 'some',     label: "We've won some contracts, want to do more" },
   { value: 'starting', label: "We're just getting started with federal contracting" },
 ];
+const DECISION_OPTIONS = [
+  { value: 'yes',        label: 'Yes' },
+  { value: 'influence',  label: 'No, but I influence the decision' },
+  { value: 'no',         label: 'No' },
+];
+const REVENUE_OPTIONS = [
+  { value: 'under500k', label: 'Under $500k' },
+  { value: '500k-1m',   label: '$500k - $1M' },
+  { value: '1m-5m',     label: '$1M - $5M' },
+  { value: '5m-25m',    label: '$5M - $25M' },
+  { value: '25mplus',   label: '$25M+' },
+];
+const SOURCE_OPTIONS = ['Google', 'Facebook/Instagram', 'YouTube', 'ChatGPT', 'Claude', 'Referral', 'Other'];
 
 // "Custom / Enterprise Plus" isn't a real DB plan - it's inherently
 // beyond the fixed tiers (white-label, on-prem, etc.), so it has no live
-// price to fetch and stays hand-authored. The real Enterprise (and Pro,
-// when arriving from the Yearly toggle) card below is built from live
-// Plan data instead of a hardcoded price/feature list.
-const CUSTOM_PLAN_CARD = {
-  value: 'custom',
-  name:  'Custom / Enterprise Plus',
-  price: 'Custom',
-  period: 'pricing',
-  badge: 'For Large Teams',
-  badgeColor: 'bg-purple-600',
-  features: [
-    'Unlimited contract matches',
-    'Multiple user seats',
-    'White-label options',
-    'Custom NAICS & agency filters',
-    'Dedicated engineering support',
-    'SLA guarantee',
-    'On-premise / private cloud',
-    'Custom data exports & integrations',
-  ],
-};
+// price to fetch and stays hand-authored.
+const CUSTOM_PLAN_CARD = { value: 'custom', name: 'Custom / Enterprise Plus', badge: 'Large Teams' };
 
 const STATUS_CONFIG = {
   new:         { label: 'Received',    color: 'bg-blue-100 text-blue-700 border-blue-200',   icon: Clock,         desc: 'Your inquiry is in the queue. We\'ll be in touch shortly.' },
@@ -137,6 +134,90 @@ function InquiryStatusCard({ inquiry, onNewInquiry }) {
   );
 }
 
+// ── Left column: editorial content, no form logic ─────────────────────────────
+function CheckItem({ children }) {
+  return (
+    <li className="flex items-start gap-2.5 text-[15px] text-gray-700">
+      <Check className="w-4 h-4 text-indigo-600 mt-1 shrink-0" strokeWidth={3} />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function InfoCard({ title, children }) {
+  return (
+    <div className="border border-gray-200 rounded-xl p-5 bg-white">
+      <p className="font-semibold text-gray-900 mb-1.5">{title}</p>
+      <p className="text-sm text-gray-500 leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
+function PitchColumn() {
+  return (
+    <div className="lg:pr-6">
+      <p className="text-xs text-gray-400 mb-4">
+        <Link to="/" className="hover:text-gray-600">Home</Link> / <span className="text-gray-500">Pricing</span>
+      </p>
+      <p className="text-xs font-bold tracking-widest text-indigo-600 uppercase mb-3">Pricing</p>
+      <h1 style={SERIF} className="text-3xl sm:text-4xl md:text-[2.75rem] font-semibold text-gray-900 leading-[1.15] mb-6">
+        A quote built around how you actually bid.
+      </h1>
+
+      <h2 className="text-base font-bold text-gray-900 mb-2">See Sambid in action</h2>
+      <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5">
+        Talk to our team and see how Sambid helps you find, analyze, and win more federal contracts —
+        with your own data, not a demo account.
+      </p>
+
+      <ul className="space-y-2.5 mb-9">
+        <CheckItem>A personalized walkthrough, not a canned tour</CheckItem>
+        <CheckItem>See real opportunities scored against your own NAICS codes and past performance</CheckItem>
+        <CheckItem>Run a live contract through the Compliance Matrix and proposal builder together</CheckItem>
+        <CheckItem>Leave with a real quote for your seats and plan — not a range to chase down later</CheckItem>
+      </ul>
+
+      <div className="border-t border-gray-100 pt-8 mb-9">
+        <h3 style={SERIF} className="text-2xl font-semibold text-gray-900 mb-1">What the quote is based on</h3>
+        <p className="text-sm text-gray-500 mb-5">Three things, and you can work out roughly where you land before we talk.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <InfoCard title="Seats">
+            How many people need real access — capture, proposal writing, and BD roles all use it differently.
+            Read-only stakeholders aren't charged for.
+          </InfoCard>
+          <InfoCard title="Plan">
+            Starter, Pro, or Enterprise — which AI tools your team needs, from opportunity discovery up to
+            full proposal + compliance automation.
+          </InfoCard>
+          <InfoCard title="Term">
+            Monthly or annual billing. Onboarding and setup are part of getting started, not a line item
+            bolted on afterward.
+          </InfoCard>
+        </div>
+      </div>
+
+      <div className="border-t border-gray-100 pt-8">
+        <h3 style={SERIF} className="text-2xl font-semibold text-gray-900 mb-1">What there is to buy</h3>
+        <p className="text-sm text-gray-500 mb-5">Every feature is real and already live in the product.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <InfoCard title="Find">
+            Opportunity discovery, smart alerts, deadline calendar, contract vehicle tracking, teaming partner finder.
+          </InfoCard>
+          <InfoCard title="Analyze &amp; respond">
+            AI summarize, bid analysis, RFP analyzer, full proposal builder, compliance matrix, Go/No-Go decisions.
+          </InfoCard>
+          <InfoCard title="Manage">
+            Bid pipeline, past performance repository, company workspace, shared document library.
+          </InfoCard>
+          <InfoCard title="Enterprise">
+            Full API access, dedicated account manager, custom integrations, 24/7 priority support.
+          </InfoCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Contact() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -144,8 +225,8 @@ export default function Contact() {
 
   // Arriving from Pricing carries which plan they clicked "Contact Us" on,
   // e.g. /contact?plan=starter - billing cycle isn't used for display
-  // (no prices are shown on this page at all, see planCards below), but is
-  // still readable via searchParams.get('billing') if ever needed later.
+  // (no prices are shown on this page at all), but is still readable via
+  // searchParams.get('billing') if ever needed later.
   const urlPlan = searchParams.get('plan'); // 'starter' | 'pro' | 'enterprise'
   const initialPlanInterest = ['starter', 'pro', 'custom'].includes(urlPlan) ? urlPlan : 'enterprise';
 
@@ -173,9 +254,13 @@ export default function Contact() {
     name:        localStorage.getItem('userName') || '',
     email:       localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail') || '',
     company:     '',
+    website:     '',
     phone:       '',
     employees:   '',
     activity:    '',
+    decision:    '',
+    revenue:     '',
+    source:      '',
     planInterest: initialPlanInterest,
     message:     '',
   });
@@ -197,41 +282,14 @@ export default function Contact() {
 
   // This page exists specifically so a real person talks to the lead before
   // they see a number and bounce - so no price is ever shown here, on any
-  // card, for any billing cycle. That's the whole point of routing them
-  // here instead of self-serve checkout. Only "Custom Pricing" / "Contact
-  // Us" language, on every plan, every time.
+  // card, for any billing cycle.
   const planCards = [
-    urlPlan === 'starter' && starterPlan && {
-      value: 'starter',
-      name: starterPlan.displayName,
-      price: 'Custom',
-      period: 'pricing',
-      badge: 'Requested Plan',
-      badgeColor: 'bg-indigo-600',
-      features: (starterPlan.features || []).filter(f => f.included).map(f => f.name),
-    },
-    (urlPlan === 'pro' || !urlPlan) && proPlan && {
-      value: 'pro',
-      name: proPlan.displayName,
-      price: 'Custom',
-      period: 'pricing',
-      badge: urlPlan === 'pro' ? 'Requested Plan' : 'Most Popular',
-      badgeColor: 'bg-indigo-600',
-      features: (proPlan.features || []).filter(f => f.included).map(f => f.name),
-    },
-    enterprisePlan && {
-      value: 'enterprise',
-      name: enterprisePlan.displayName,
-      price: 'Custom',
-      period: 'pricing',
-      badge: urlPlan === 'enterprise' || !urlPlan ? 'Requested Plan' : 'Scales With Your Team',
-      badgeColor: 'bg-indigo-600',
-      features: (enterprisePlan.features || []).filter(f => f.included).map(f => f.name),
-    },
+    starterPlan    && { value: 'starter',    name: starterPlan.displayName,    badge: urlPlan === 'starter'    ? 'Requested' : null },
+    proPlan        && { value: 'pro',        name: proPlan.displayName,        badge: urlPlan === 'pro' || !urlPlan ? (urlPlan === 'pro' ? 'Requested' : 'Popular') : null },
+    enterprisePlan && { value: 'enterprise', name: enterprisePlan.displayName, badge: urlPlan === 'enterprise' ? 'Requested' : null },
     CUSTOM_PLAN_CARD,
   ].filter(Boolean);
 
-  // No dollar figures in the dropdown either - same reasoning as the cards.
   const planLabel = (value) => {
     if (value === 'starter' && starterPlan) return `${starterPlan.displayName}: Custom pricing`;
     if (value === 'pro' && proPlan) return `${proPlan.displayName}: Custom pricing`;
@@ -254,12 +312,21 @@ export default function Contact() {
     setSubmitting(true);
     setError('');
     try {
-      // Fold the qualifying answer into the message text rather than adding
-      // a new DB field — keeps the existing inquiry/admin-review pipeline
-      // untouched while still giving the reviewer real context up front.
+      // Fold every qualifying answer into the message text rather than
+      // adding new DB fields — keeps the existing inquiry/admin-review
+      // pipeline untouched while giving the reviewer full context up front.
       const activityLabel = ACTIVITY_OPTIONS.find(o => o.value === form.activity)?.label;
-      const composedMessage = activityLabel
-        ? `Federal contracting activity: ${activityLabel}\n\n${form.message.trim()}`
+      const decisionLabel = DECISION_OPTIONS.find(o => o.value === form.decision)?.label;
+      const revenueLabel  = REVENUE_OPTIONS.find(o => o.value === form.revenue)?.label;
+      const qualifyingLines = [
+        activityLabel && `Federal contracting activity: ${activityLabel}`,
+        decisionLabel && `Sole decision-maker: ${decisionLabel}`,
+        revenueLabel  && `Current annual revenue: ${revenueLabel}`,
+        form.website.trim() && `Company website: ${form.website.trim()}`,
+        form.source && `Heard about us via: ${form.source}`,
+      ].filter(Boolean);
+      const composedMessage = qualifyingLines.length
+        ? `${qualifyingLines.join('\n')}\n\n${form.message.trim()}`
         : form.message.trim();
       await contactAPI.submit({ ...form, message: composedMessage });
       setSubmitted(true);
@@ -295,7 +362,7 @@ export default function Contact() {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Received!</h2>
           <p className="text-gray-600 mb-2">
             Thank you! We have received your <strong>{planLabel(form.planInterest)}</strong> plan request.
-            Our team will contact you within <strong>1 business day</strong> to activate your plan.
+            Our team will contact you within <strong>1 business day</strong> with your quote.
           </p>
           <p className="text-sm text-gray-400 mb-6">A confirmation email has been sent to <strong>{form.email}</strong>.</p>
           <button
@@ -310,193 +377,209 @@ export default function Contact() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-10 sm:py-16 px-4">
+    <div className="min-h-screen bg-white py-10 sm:py-16 px-4">
       <SEOHead
-        title="Contact Sambid | Get Help with Federal Contract Alerts"
-        description="Have a question about Sambid's federal contract notification platform? Contact our support team. We help government contractors get set up with SAM.gov alerts, billing, and account issues."
-        keywords="contact Sambid, federal contracting support, SAM.gov alert help, government contracting software support, Sambid customer service"
+        title="Get a Quote | Sambid Federal Contract Platform"
+        description="Talk to our team and get a plan and pricing built around your real seats, modules, and usage — not a fixed tier. See Sambid in action with your own NAICS codes and contracts."
+        keywords="Sambid pricing, federal contracting software quote, GovCon platform demo, custom SAM.gov tool pricing"
         canonical="https://sambid.co/contact"
       />
-      <div className="max-w-[1440px] mx-auto">
-        {/* Header - narrower than the page for readable line length */}
-        <div className="max-w-2xl mx-auto text-center mb-7 sm:mb-10">
-          <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-3">
-            Custom Pricing, Tailored to Your Team
-          </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Get Your Sambid Quote
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg">
-            Tell us a bit about your business below. Our team reviews every request and activates your plan within <strong>1 business day</strong>.
-          </p>
-        </div>
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16">
+        <PitchColumn />
 
-        {/* Premium plan cards - live pricing/features from the DB */}
-        {plansLoading ? (
-          <div className="flex justify-center mb-8 py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
-          </div>
-        ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {planCards.map(plan => (
-            <button
-              key={plan.value}
-              type="button"
-              onClick={() => setForm(f => ({ ...f, planInterest: plan.value }))}
-              className={`text-left bg-white rounded-2xl p-5 border-2 transition-all cursor-pointer ${
-                form.planInterest === plan.value
-                  ? 'border-indigo-500 shadow-lg shadow-indigo-100'
-                  : 'border-gray-200 hover:border-indigo-300'
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <span className={`inline-block text-xs font-bold text-white px-2 py-0.5 rounded-full ${plan.badgeColor}`}>
-                  {plan.badge}
-                </span>
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                  form.planInterest === plan.value ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300 bg-white'
-                }`}>
-                  {form.planInterest === plan.value && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
-                </div>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
-              <p className="text-2xl font-bold text-indigo-600 mb-3">
-                {plan.price}<span className="text-sm font-normal text-gray-500">{plan.period}</span>
-              </p>
-              <ul className="space-y-1.5">
-                {plan.features.map(f => (
-                  <li key={f} className="flex items-center gap-2 text-xs text-gray-600">
-                    <CheckCircle className="w-3.5 h-3.5 text-green-500 shrink-0" />
-                    {f}
-                  </li>
+        {/* Form column — sticky so it stays in view while the pitch scrolls */}
+        <div className="lg:sticky lg:top-6 lg:self-start">
+          <div className="border border-gray-200 rounded-2xl p-5 sm:p-7 bg-gray-50/60">
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Book the call</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              A few questions so the conversation is yours, not a generic tour — we'll come prepared with your answers already in hand.
+            </p>
+
+            {/* Plan chips */}
+            {!plansLoading && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {planCards.map(plan => (
+                  <button
+                    key={plan.value}
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, planInterest: plan.value }))}
+                    className={`px-3.5 py-2 rounded-full text-xs font-semibold border-2 transition-all ${
+                      form.planInterest === plan.value
+                        ? 'border-indigo-600 bg-indigo-600 text-white'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-indigo-300'
+                    }`}
+                  >
+                    {plan.name}
+                    {plan.badge && <span className={form.planInterest === plan.value ? 'text-indigo-200' : 'text-indigo-500'}> · {plan.badge}</span>}
+                  </button>
                 ))}
-              </ul>
-            </button>
-          ))}
-        </div>
-        )}
-
-        {/* Form - kept narrower than the page so input fields stay a
-            comfortable width, even though the plan cards above use the
-            full page width */}
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-5 sm:p-8 space-y-5">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Contact Us</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-              <input
-                type="text" name="name" value={form.name} onChange={handleChange}
-                placeholder="John Smith"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Work Email *</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="email" name="email" value={form.email} onChange={handleChange}
-                  placeholder="john@company.com"
-                  className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  required
-                />
               </div>
-            </div>
-          </div>
+            )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text" name="company" value={form.company} onChange={handleChange}
-                  placeholder="Acme Corp"
-                  className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="tel" name="phone" value={form.phone} onChange={handleChange}
-                  placeholder="+1 (555) 000-0000"
-                  className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Which best describes your federal contracting activity?</label>
-            <select
-              name="activity" value={form.activity} onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-            >
-              <option value="">Select one</option>
-              {ACTIVITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Number of Employees</label>
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Which best describes your federal contracting activity? *
+                </label>
                 <select
-                  name="employees" value={form.employees} onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none bg-white"
+                  name="activity" value={form.activity} onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  required
                 >
-                  <option value="">Select range</option>
-                  {EMPLOYEE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                  <option value="">Select one</option>
+                  {ACTIVITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Plan of Interest</label>
-              <select
-                name="planInterest" value={form.planInterest} onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Are you the sole contract decision-maker? *
+                </label>
+                <select
+                  name="decision" value={form.decision} onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  required
+                >
+                  <option value="">Select one</option>
+                  {DECISION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current annual revenue *</label>
+                <select
+                  name="revenue" value={form.revenue} onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  required
+                >
+                  <option value="">Select one</option>
+                  {REVENUE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full name *</label>
+                  <input
+                    type="text" name="name" value={form.name} onChange={handleChange}
+                    placeholder="John Smith"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Work email *</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="email" name="email" value={form.email} onChange={handleChange}
+                      placeholder="john@company.com"
+                      className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone number *</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="tel" name="phone" value={form.phone} onChange={handleChange}
+                      placeholder="+1 (555) 000-0000"
+                      className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Company website *</label>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="text" name="website" value={form.website} onChange={handleChange}
+                      placeholder="company.com"
+                      className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Company name</label>
+                  <div className="relative">
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="text" name="company" value={form.company} onChange={handleChange}
+                      placeholder="Acme Corp"
+                      className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Number of employees</label>
+                  <div className="relative">
+                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <select
+                      name="employees" value={form.employees} onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none bg-white"
+                    >
+                      <option value="">Select range</option>
+                      {EMPLOYEE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">How did you hear about us? *</label>
+                <select
+                  name="source" value={form.source} onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  required
+                >
+                  <option value="">Select one</option>
+                  {SOURCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about your needs *</label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                  <textarea
+                    name="message" value={form.message} onChange={handleChange}
+                    rows={3}
+                    placeholder="Describe your use case, NAICS codes, contract types you target..."
+                    className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
+              )}
+
+              <button
+                type="submit" disabled={submitting}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-60"
               >
-                {planCards.map(p => <option key={p.value} value={p.value}>{planLabel(p.value)}</option>)}
-              </select>
-            </div>
+                {submitting
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
+                  : <>Request a demo <ArrowRight className="w-4 h-4" /></>}
+              </button>
+
+              <p className="text-xs text-center text-gray-400">
+                We respond within 1 business day. A confirmation email will be sent to you.
+              </p>
+            </form>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about your needs</label>
-            <div className="relative">
-              <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-              <textarea
-                name="message" value={form.message} onChange={handleChange}
-                rows={4}
-                placeholder="Describe your use case, NAICS codes, contract types you target..."
-                className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
-          )}
-
-          <button
-            type="submit" disabled={submitting}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-60"
-          >
-            {submitting
-              ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
-              : <>Submit Inquiry <ArrowRight className="w-4 h-4" /></>}
-          </button>
-
-          <p className="text-xs text-center text-gray-400">
-            We respond within 1 business day. A confirmation email will be sent to you.
-          </p>
-        </form>
+        </div>
       </div>
     </div>
   );
