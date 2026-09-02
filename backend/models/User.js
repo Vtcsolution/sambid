@@ -128,6 +128,15 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  // When set, overrides the plan's normal monthly AI credit allocation with
+  // this exact number (see services/aiCreditService.js) - used for the
+  // automatic new-signup promo (full Enterprise feature access, but capped
+  // at a fixed credit amount instead of Enterprise's real 5000/mo). Cleared
+  // whenever tempGrantExpiresAt reverts the account, same as that field.
+  promoCreditsCap: {
+    type: Number,
+    default: null
+  },
   lastTrialReminderSent: {
   type: Date,
   default: null

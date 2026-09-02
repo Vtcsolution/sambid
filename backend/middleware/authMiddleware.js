@@ -88,29 +88,48 @@ export const enforcePlanExpiry = async (req, res, next) => {
   const now = new Date();
   let changed = false;
 
-  // Trial expired → free
-  if (req.user.plan === 'trial' && now > new Date(req.user.trialEndDate)) {
-    req.user.plan        = 'free';
-    req.user.isTrialActive = false;
+  // Complimentary plan expired (admin grant, or the automatic 7-day
+  // Enterprise signup promo) → fresh trial, not free. Mirrors the nightly
+  // sweep in schedulerService.js so this lazy per-request check can't beat
+  // the cron to the wrong answer if a request lands right after expiry.
+  if (req.user.tempGrantExpiresAt && now > new Date(req.user.tempGrantExpiresAt)) {
+    req.user.plan               = 'trial';
+    req.user.isTrialActive      = true;
+    req.user.trialStartDate     = now;
+    req.user.trialEndDate       = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
+    req.user.tempGrantExpiresAt = null;
+    req.user.planExpiresAt      = null;
+    req.user.promoCreditsCap    = null;
     changed = true;
-  }
+  } else {
+    // Trial expired → free
+    if (req.user.plan === 'trial' && now > new Date(req.user.trialEndDate)) {
+      req.user.plan        = 'free';
+      req.user.isTrialActive = false;
+      changed = true;
+    }
 
-  // Paid plan expired → free
-  if (
-    ['starter', 'pro', 'enterprise'].includes(req.user.plan) &&
-    req.user.planExpiresAt &&
-    now > new Date(req.user.planExpiresAt)
-  ) {
-    req.user.plan        = 'free';
-    req.user.planExpiresAt = null;
-    changed = true;
+    // Paid plan expired → free
+    if (
+      ['starter', 'pro', 'enterprise'].includes(req.user.plan) &&
+      req.user.planExpiresAt &&
+      now > new Date(req.user.planExpiresAt)
+    ) {
+      req.user.plan        = 'free';
+      req.user.planExpiresAt = null;
+      changed = true;
+    }
   }
 
   if (changed) {
     await User.findByIdAndUpdate(req.user._id, {
-      plan:           req.user.plan,
-      isTrialActive:  req.user.isTrialActive ?? false,
-      planExpiresAt:  req.user.planExpiresAt ?? null,
+      plan:               req.user.plan,
+      isTrialActive:       req.user.isTrialActive ?? false,
+      planExpiresAt:       req.user.planExpiresAt ?? null,
+      trialStartDate:      req.user.trialStartDate,
+      trialEndDate:        req.user.trialEndDate,
+      tempGrantExpiresAt:  req.user.tempGrantExpiresAt ?? null,
+      promoCreditsCap:     req.user.promoCreditsCap ?? null,
     });
     console.log(`⏰ Plan auto-expired for ${req.user.email} → ${req.user.plan}`);
   }

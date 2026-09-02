@@ -1122,7 +1122,7 @@ async function buildTopMatchesBlock(user) {
 
 /**
  * Send a campaign email to a single user (used by admin campaign system).
- * fromAlias picks the visible From address (main/noreply/support/billing)  - 
+ * fromAlias picks the visible From address (main/noreply/support/billing),
  * same alias scheme as prospect outreach; SMTP always authenticates as the
  * real mailbox, only the displayed address changes.
  */
@@ -2145,7 +2145,7 @@ const _deadlineFtr = () => `
  * searchable on SAM.gov. Deliberately NO title words, NO full agency chain,
  * NO NAICS code, NO solicitation number: title + agency + NAICS is enough to
  * find the notice on SAM.gov for free, which would let trial users bypass the
- * paywall entirely. Value, set-aside, match strength, and the countdown stay  - 
+ * paywall entirely. Value, set-aside, match strength, and the countdown stay,
  * they sell the opportunity but can't locate it.
  */
 export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {

@@ -524,9 +524,11 @@ export const startScheduler = () => {
 
   // Daily plan expiry sweep — 01:00 UTC
   // Downgrades expired trials → free and expired paid plans → free.
-  // Admin-granted complimentary plans (tempGrantExpiresAt set) are handled
-  // first and separately — they revert to 'trial' with a fresh window
-  // instead, since the account was never a real subscription to begin with.
+  // Complimentary plans (tempGrantExpiresAt set — either an admin grant, or
+  // the automatic 7-day Enterprise signup promo in authController.js
+  // registerUser) are handled first and separately — they revert to
+  // 'trial' with a fresh window instead, since the account was never a
+  // real subscription to begin with.
   cron.schedule('0 1 * * *', async () => {
     const now = new Date();
     console.log('\n⏰ PLAN EXPIRY SWEEP starting...');
@@ -540,6 +542,7 @@ export const startScheduler = () => {
           trialEndDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000),
           tempGrantExpiresAt: null,
           planExpiresAt: null,
+          promoCreditsCap: null,
         } }
     );
 

@@ -92,8 +92,9 @@ export default function Pricing() {
             Plans Built Around Your Business
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Start free, no credit card required. Starter, Pro, and Enterprise are priced to your team's real usage  - 
-            tell us about your business and we'll get you a plan and a quote within 1 business day.
+            Create your account and every feature unlocks automatically, free for 7 days, no credit card required.
+            After that, Starter, Pro, and Enterprise are priced to your team's real usage - tell us about your business
+            and we'll get you a plan and a quote within 1 business day.
           </p>
 
           {/* Billing Toggle */}
@@ -145,7 +146,7 @@ export default function Pricing() {
                   <h3 className="text-xl font-bold text-gray-900">{plan.displayName}</h3>
                   {plan.name === 'free' && (
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                      5-Day Trial
+                      All Features, 7 Days Free
                     </span>
                   )}
                 </div>

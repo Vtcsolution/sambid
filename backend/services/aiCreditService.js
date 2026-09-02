@@ -20,6 +20,13 @@ const getPlanCredits = async (planName) => {
 };
 export const clearPlanCreditsCache = () => { _planCreditsCache = null; _planCreditsCacheAt = 0; };
 
+// A user's promoCreditsCap (set on the auto-granted new-signup promo, see
+// authController.js registerUser) overrides the plan's normal monthly
+// allocation entirely - e.g. plan:'enterprise' normally means 5000/mo, but a
+// promo account is capped at exactly 150 regardless.
+const getEffectivePlanLimit = async (user) =>
+  user.promoCreditsCap != null ? user.promoCreditsCap : await getPlanCredits(user.plan);
+
 const resetIfDue = async (user) => {
   const now = new Date();
   const lastReset = user.lastAIReset ? new Date(user.lastAIReset) : new Date(0);
@@ -39,7 +46,7 @@ const resetIfDue = async (user) => {
 
 export const getAICredits = async (user) => {
   await resetIfDue(user);
-  const planLimit    = await getPlanCredits(user.plan);
+  const planLimit    = await getEffectivePlanLimit(user);
   const used         = user.monthlyAIGenerationsUsed || 0;
   const planRemaining = Math.max(0, planLimit - used);
   const bonus        = user.bonusAICredits || 0;
@@ -64,7 +71,7 @@ export const spendAICredits = async (userId, feature, meta = {}) => {
 
   await resetIfDue(user);
 
-  const planLimit     = await getPlanCredits(user.plan);
+  const planLimit     = await getEffectivePlanLimit(user);
   const used          = user.monthlyAIGenerationsUsed || 0;
   const planRemaining = Math.max(0, planLimit - used);
   const bonus         = user.bonusAICredits || 0;

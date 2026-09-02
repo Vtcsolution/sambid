@@ -412,7 +412,7 @@ const PHASES = [
 export default function Home() {
   const { isAuthenticated } = useAuth();
   const ctaTo    = isAuthenticated ? '/dashboard' : '/signup';
-  const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial';
+  const ctaLabel = isAuthenticated ? 'Go to Dashboard' : 'Unlock Every Feature Free';
   const pageMedia = usePageMedia('home');
 
   return (
@@ -420,7 +420,7 @@ export default function Home() {
       <style>{ANIM_CSS}</style>
       <SEOHead
         title="AI Contract Tool for SAM.gov | Federal Contract Alerts"
-        description="Sambid is an AI-powered GovCon platform for SAM.gov: opportunity capture, bid/no-bid scoring, compliance checklists, AI proposal drafting, teaming partner search, and recompete intelligence, all matched to your NAICS codes. Start free, no credit card needed."
+        description="Sambid is an AI-powered GovCon platform for SAM.gov: opportunity capture, bid/no-bid scoring, compliance checklists, AI proposal drafting, teaming partner search, and recompete intelligence, all matched to your NAICS codes. Every new account unlocks all Enterprise features free for 7 days, no credit card needed."
         keywords="AI contract tool, SAM.gov AI tool, AI tool for SAM.gov, SAM.gov AI, AI government contract tool, samgov ai contract tool, federal contract opportunities, SAM.gov alerts, government contracting software, federal procurement notifications, FPDS contract search, small business federal contracts, USASpending opportunities, federal RFP alerts, government contract finder, federal bid alerts, SAM.gov notification tool, AI federal contract matching, GovCon software, federal contracting platform for small business, win government contracts, federal contract bidding software, government RFP alerts, SAM.gov opportunity tracker, federal procurement software, contract opportunity finder, GovCon platform, government contracting platform, AI capture management, bid no-bid decision tool, compliance checklist generator, compliance matrix builder, AI proposal drafting, AI proposal writer, teaming partner finder, past performance intelligence, recompete tracking, incumbent intelligence, federal market intelligence, government contract pipeline software, contract vehicle tracker, GSA schedule tracker, sources sought response generator, capability statement generator, government contract CRM alternative, AI government contracting software, government contract compliance software, GovCon software for small business"
         canonical="https://sambid.co/"
         jsonLd={HOME_JSON_LD}
@@ -439,6 +439,10 @@ export default function Home() {
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 text-center">
+          <div className="hero-fade inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm mb-6 sm:mb-7 text-xs sm:text-sm font-semibold text-white">
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            Every new account unlocks all Enterprise features free for 7 days
+          </div>
           <h1
             className="hero-fade text-4xl sm:text-6xl md:text-7xl mb-6 sm:mb-8 leading-[1.1] tracking-tight"
             style={{
@@ -666,17 +670,17 @@ export default function Home() {
             Start Finding Federal Contracts Today
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-indigo-100 mb-7 sm:mb-8">
-            5-day free trial. 15 real contract matches from SAM.gov. No credit card needed.
+            Create your account and every feature unlocks automatically, free for 7 days. No credit card needed.
           </p>
           <Link
             to={ctaTo}
             className="inline-flex items-center px-7 sm:px-8 py-3.5 sm:py-4 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-sm sm:text-base"
           >
-            {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
+            {isAuthenticated ? 'Go to Dashboard' : 'Unlock Every Feature Free'}
             <ArrowRight className="ml-2 w-5 h-5" />
           </Link>
           <p className="mt-4 text-indigo-200 text-xs sm:text-sm">
-            No credit card required · Cancel anytime
+            No credit card required · All Enterprise features included for 7 days
           </p>
         </div>
       </section>

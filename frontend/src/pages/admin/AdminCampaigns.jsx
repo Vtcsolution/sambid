@@ -1019,7 +1019,7 @@ export default function AdminCampaigns() {
 
   // When user is selected → auto-populate template.
   // A user with an abandoned checkout gets the pending-payment email (with
-  // their exact plan + amount) no matter which segment they were found in  - 
+  // their exact plan + amount) no matter which segment they were found in,
   // completing that purchase beats any generic segment message.
   const handleUserSelect = (user) => {
     setSelectedUser(user);

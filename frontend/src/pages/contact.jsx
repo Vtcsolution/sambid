@@ -166,7 +166,7 @@ function PitchColumn() {
 
       <h2 className="text-base font-bold text-gray-900 mb-2">See Sambid in action</h2>
       <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5">
-        Talk to our team and see how Sambid helps you find, analyze, and win more federal contracts  - 
+        Talk to our team and see how Sambid helps you find, analyze, and win more federal contracts,
         with your own data, not a demo account.
       </p>
 

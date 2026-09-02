@@ -84,6 +84,15 @@ export const registerUser = async (req, res) => {
       }
     }
 
+    // Every new signup gets full Enterprise-level feature access for 7 days,
+    // capped at 150 AI credits (not Enterprise's real 5000/mo - this is a
+    // promo, not a free ride on the expensive plan), so they can actually
+    // try every AI tool before deciding on a plan. tempGrantExpiresAt reuses
+    // the same nightly sweep (schedulerService.js) that already reverts
+    // admin-granted complimentary plans back to 'trial' with a fresh window,
+    // rather than the 'free' downgrade a real lapsed subscription gets.
+    const promoExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
     // Create user
     const user = await User.create({
       name,
@@ -94,6 +103,11 @@ export const registerUser = async (req, res) => {
       businessType: businessType || 'other',
       referredBy: referredByUser?._id || null,
       supportReferredBy: supportMember?._id || null,
+      plan: 'enterprise',
+      planExpiresAt: promoExpiresAt,
+      tempGrantExpiresAt: promoExpiresAt,
+      promoCreditsCap: 150,
+      isTrialActive: false,
     });
 
     // Track user referral relationship
