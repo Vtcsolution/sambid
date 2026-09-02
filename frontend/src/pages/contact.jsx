@@ -12,7 +12,7 @@ const SERIF = { fontFamily: "'Playfair Display', Georgia, 'Times New Roman', ser
 const EMPLOYEE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+'];
 
 // Qualifying questions, all folded into the submitted message rather than
-// new DB fields — keeps the existing ContactInquiry/admin-review pipeline
+// new DB fields - keeps the existing ContactInquiry/admin-review pipeline
 // completely untouched while still giving the reviewer real context up
 // front, before they ever pick up the phone.
 const ACTIVITY_OPTIONS = [
@@ -166,7 +166,7 @@ function PitchColumn() {
 
       <h2 className="text-base font-bold text-gray-900 mb-2">See Sambid in action</h2>
       <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5">
-        Talk to our team and see how Sambid helps you find, analyze, and win more federal contracts —
+        Talk to our team and see how Sambid helps you find, analyze, and win more federal contracts  - 
         with your own data, not a demo account.
       </p>
 
@@ -174,7 +174,7 @@ function PitchColumn() {
         <CheckItem>A personalized walkthrough, not a canned tour</CheckItem>
         <CheckItem>See real opportunities scored against your own NAICS codes and past performance</CheckItem>
         <CheckItem>Run a live contract through the Compliance Matrix and proposal builder together</CheckItem>
-        <CheckItem>Leave with a real quote for your seats and plan — not a range to chase down later</CheckItem>
+        <CheckItem>Leave with a real quote for your seats and plan - not a range to chase down later</CheckItem>
       </ul>
 
       <div className="border-t border-gray-100 pt-8 mb-9">
@@ -182,11 +182,11 @@ function PitchColumn() {
         <p className="text-sm text-gray-500 mb-5">Three things, and you can work out roughly where you land before we talk.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <InfoCard title="Seats">
-            How many people need real access — capture, proposal writing, and BD roles all use it differently.
+            How many people need real access - capture, proposal writing, and BD roles all use it differently.
             Read-only stakeholders aren't charged for.
           </InfoCard>
           <InfoCard title="Plan">
-            Starter, Pro, or Enterprise — which AI tools your team needs, from opportunity discovery up to
+            Starter, Pro, or Enterprise - which AI tools your team needs, from opportunity discovery up to
             full proposal + compliance automation.
           </InfoCard>
           <InfoCard title="Term">
@@ -223,11 +223,12 @@ export default function Contact() {
   const [searchParams] = useSearchParams();
   const isLoggedIn = !!(localStorage.getItem('authToken') || sessionStorage.getItem('authToken'));
 
-  // Arriving from Pricing carries which plan they clicked "Contact Us" on,
-  // e.g. /contact?plan=starter - billing cycle isn't used for display
-  // (no prices are shown on this page at all), but is still readable via
-  // searchParams.get('billing') if ever needed later.
-  const urlPlan = searchParams.get('plan'); // 'starter' | 'pro' | 'enterprise'
+  // Arriving from Pricing carries which plan and billing cycle they clicked
+  // "Contact Us" on, e.g. /contact?plan=pro&billing=monthly. No prices are
+  // shown on this page, but the billing preference is real context, so it's
+  // folded into the submitted message alongside the other qualifying answers.
+  const urlPlan    = searchParams.get('plan');    // 'starter' | 'pro' | 'enterprise'
+  const urlBilling = searchParams.get('billing'); // 'monthly' | 'yearly'
   const initialPlanInterest = ['starter', 'pro', 'custom'].includes(urlPlan) ? urlPlan : 'enterprise';
 
   const [existingInquiry, setExistingInquiry] = useState(null);
@@ -313,7 +314,7 @@ export default function Contact() {
     setError('');
     try {
       // Fold every qualifying answer into the message text rather than
-      // adding new DB fields — keeps the existing inquiry/admin-review
+      // adding new DB fields, keeping the existing inquiry/admin-review
       // pipeline untouched while giving the reviewer full context up front.
       const activityLabel = ACTIVITY_OPTIONS.find(o => o.value === form.activity)?.label;
       const decisionLabel = DECISION_OPTIONS.find(o => o.value === form.decision)?.label;
@@ -324,6 +325,7 @@ export default function Contact() {
         revenueLabel  && `Current annual revenue: ${revenueLabel}`,
         form.website.trim() && `Company website: ${form.website.trim()}`,
         form.source && `Heard about us via: ${form.source}`,
+        urlBilling && `Billing preference: ${urlBilling === 'yearly' ? 'Yearly' : 'Monthly'}`,
       ].filter(Boolean);
       const composedMessage = qualifyingLines.length
         ? `${qualifyingLines.join('\n')}\n\n${form.message.trim()}`
@@ -380,19 +382,19 @@ export default function Contact() {
     <div className="min-h-screen bg-white py-10 sm:py-16 px-4">
       <SEOHead
         title="Get a Quote | Sambid Federal Contract Platform"
-        description="Talk to our team and get a plan and pricing built around your real seats, modules, and usage — not a fixed tier. See Sambid in action with your own NAICS codes and contracts."
+        description="Talk to our team and get a plan and pricing built around your real seats, modules, and usage - not a fixed tier. See Sambid in action with your own NAICS codes and contracts."
         keywords="Sambid pricing, federal contracting software quote, GovCon platform demo, custom SAM.gov tool pricing"
         canonical="https://sambid.co/contact"
       />
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16">
         <PitchColumn />
 
-        {/* Form column — sticky so it stays in view while the pitch scrolls */}
+        {/* Form column - sticky so it stays in view while the pitch scrolls */}
         <div className="lg:sticky lg:top-6 lg:self-start">
           <div className="border border-gray-200 rounded-2xl p-5 sm:p-7 bg-gray-50/60">
             <h2 className="text-lg font-bold text-gray-900 mb-1">Book the call</h2>
             <p className="text-sm text-gray-500 mb-6">
-              A few questions so the conversation is yours, not a generic tour — we'll come prepared with your answers already in hand.
+              A few questions so the conversation is yours, not a generic tour - we'll come prepared with your answers already in hand.
             </p>
 
             {/* Plan chips */}

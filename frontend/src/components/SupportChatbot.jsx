@@ -8,12 +8,12 @@ import notificationSound from '../assets/sounds/admin_notification.mp3';
 
 const WELCOME = "Hi! I'm Sambid's AI support assistant 👋\n\nI can help you with:\n• Plan features & pricing\n• How contract matching works\n• Account & billing questions\n• Federal contracting basics\n\nWhat can I help you with today?";
 
-// Same avatar everywhere the assistant appears — teaser bubble, header, and
-// message bubbles — so it reads as one consistent identity, not three.
+// Same avatar everywhere the assistant appears - teaser bubble, header, and
+// message bubbles - so it reads as one consistent identity, not three.
 const AVATAR_URL = 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80';
 
 // Shown once per browser session, a few seconds after the page loads, so the
-// widget doesn't sit as a silent icon nobody notices — a real, dismissible
+// widget doesn't sit as a silent icon nobody notices - a real, dismissible
 // nudge instead. Never opens the chat by itself, only offers to.
 const TEASER_DELAY_MS = 4000;
 const TEASER_SESSION_KEY = 'sambid_chat_teaser_shown';
@@ -73,7 +73,7 @@ export default function SupportChatbot() {
   const audioRef   = useRef(null);
 
   // Auto-pop the "Have a question?" bubble once per session, before the chat
-  // is ever opened — dismissible, and never fires again once the visitor has
+  // is ever opened - dismissible, and never fires again once the visitor has
   // either opened the chat or closed the bubble.
   useEffect(() => {
     if (sessionStorage.getItem(TEASER_SESSION_KEY)) return;
@@ -264,7 +264,7 @@ export default function SupportChatbot() {
         </div>
       )}
 
-      {/* Auto-popped teaser bubble — dismissible, opens the chat on click */}
+      {/* Auto-popped teaser bubble - dismissible, opens the chat on click */}
       {!open && showTeaser && (
         <button
           onClick={handleOpen}

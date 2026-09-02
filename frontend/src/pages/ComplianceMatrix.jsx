@@ -206,10 +206,10 @@ export default function ComplianceMatrix() {
                 <HowItWorks
                   title="Compliance Matrix"
                   steps={[
-                    { title: 'Select a contract', description: 'Choose from your saved opportunities — same picker as Proposal Builder' },
+                    { title: 'Select a contract', description: 'Choose from your saved opportunities - same picker as Proposal Builder' },
                     { title: 'AI reads the real solicitation', description: 'Extracts every SHALL/MUST requirement from the SOW/PWS and attached documents' },
                     { title: 'AI writes the proposal', description: 'Same 7-section proposal Proposal Builder generates, from your real company data' },
-                    { title: 'AI checks coverage, honestly', description: 'Maps every requirement to the section that addresses it — or flags it as missing' },
+                    { title: 'AI checks coverage, honestly', description: 'Maps every requirement to the section that addresses it - or flags it as missing' },
                   ]}
                   dataUsed={['SAM.gov (full SOW)', 'Attached RFP/PWS documents', 'Your Company Profile', 'AI-generated proposal']}
                 >
@@ -221,7 +221,7 @@ export default function ComplianceMatrix() {
                   </ul>
                 </HowItWorks>
               </div>
-              <p className="text-sm text-gray-500">Every RFP requirement, checked against your proposal — covered, partial, or missing</p>
+              <p className="text-sm text-gray-500">Every RFP requirement, checked against your proposal - covered, partial, or missing</p>
             </div>
           </div>
         </div>
@@ -343,7 +343,7 @@ export default function ComplianceMatrix() {
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
                           {m.sectionTitle ? (
                             <span className="inline-flex items-center gap-1"><FileText className="w-3 h-3 text-gray-300" />{m.sectionTitle}</span>
-                          ) : <span className="text-gray-300">—</span>}
+                          ) : <span className="text-gray-300"> - </span>}
                         </td>
                         <td className="py-3 text-gray-500 max-w-xs">{m.note}</td>
                       </tr>

@@ -57,7 +57,7 @@ const fmtM = n => {
   return v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`;
 };
 
-// Normalizes to a dialable US format with the +1 country code — e.g.
+// Normalizes to a dialable US format with the +1 country code - e.g.
 // "(505) 844-8066" or "5058440866" -> "+1 (505) 844-8066". Numbers that
 // already carry a leading 1 (11 digits) or don't look like a standard
 // 10-digit US number are handled without corrupting them.
@@ -339,7 +339,7 @@ export default function AdminProspects() {
 
   // ── Copy phone/company/award list to clipboard ────────────────────────────────
   // Copies whatever's selected, or every row on the current page if nothing is
-  // selected — company name, phone (+1 country code), and their award amount,
+  // selected - company name, phone (+1 country code), and their award amount,
   // one per line, tab-separated so it pastes straight into Excel/Sheets columns.
   const handleCopyList = async () => {
     const source = selected.size > 0 ? prospects.filter(p => selected.has(p._id)) : prospects;
@@ -357,7 +357,7 @@ export default function AdminProspects() {
       setCopyFeedback(`Copied ${withPhone.length} compan${withPhone.length !== 1 ? 'ies' : 'y'}`);
       setTimeout(() => setCopyFeedback(''), 2500);
     } catch {
-      alert('Could not copy to clipboard — your browser may be blocking clipboard access.');
+      alert('Could not copy to clipboard - your browser may be blocking clipboard access.');
     }
   };
 
@@ -459,7 +459,7 @@ export default function AdminProspects() {
               <Send className="w-3.5 h-3.5" /> Email Outreach
             </button>
           )}
-          <button onClick={handleCopyList} title="Copy company, phone (+1), and award for the selected rows — or the whole current page if none are selected"
+          <button onClick={handleCopyList} title="Copy company, phone (+1), and award for the selected rows - or the whole current page if none are selected"
             className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium">
             <Copy className="w-3.5 h-3.5" /> {copyFeedback || 'Copy Phone List'}
           </button>

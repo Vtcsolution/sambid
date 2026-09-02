@@ -75,7 +75,7 @@ const SEGMENT_TEMPLATES = {
 
 // ── Live plan pricing ──────────────────────────────────────────────────────────
 // Loaded from the Plans database on mount (adminPanelAPI.getPlans) so template
-// prices always match the real pricing page — never hardcoded. These are the
+// prices always match the real pricing page - never hardcoded. These are the
 // fallbacks only used until the fetch completes.
 const PLAN_PRICES = {
   starter:    { monthly: 49,  yearly: 470  },
@@ -84,7 +84,7 @@ const PLAN_PRICES = {
 };
 const price = (plan, cycle = 'monthly') => {
   const v = PLAN_PRICES[plan]?.[cycle];
-  return v != null ? `$${v}` : '$—';
+  return v != null ? `$${v}` : '$ - ';
 };
 
 // ── Core template builder - segment + type aware ──────────────────────────────
@@ -660,7 +660,7 @@ The Sambid Team`,
     const pDays   = user?.pendingDays ?? null;
     const ago     = pDays === 0 ? 'today' : pDays === 1 ? 'yesterday' : pDays ? `${pDays} days ago` : 'recently';
 
-    // What their chosen plan actually gives them — used across the templates
+    // What their chosen plan actually gives them - used across the templates
     // so every email sells the PLAN they picked, not a generic feature list.
     const planKey = (user?.pendingPlan || 'starter').toLowerCase();
     const planPitch = {
@@ -930,7 +930,7 @@ export default function AdminCampaigns() {
   const [matchesLoading,setMatchesLoading]= useState(false);
 
   // Every campaign email auto-appends the recipient's own top 5 NAICS-matched
-  // opportunities — fetch the real ones for whoever is selected so the Live
+  // opportunities - fetch the real ones for whoever is selected so the Live
   // Preview shows exactly what that person will actually receive.
   useEffect(() => {
     if (sendMode !== 'user' || !selectedUser?._id) { setTopMatches(null); return; }
@@ -942,7 +942,7 @@ export default function AdminCampaigns() {
   }, [sendMode, selectedUser?._id]);
 
   // Load real plan prices from the Plans database so templates never show a
-  // stale hardcoded amount — updates the module-level PLAN_PRICES in place.
+  // stale hardcoded amount - updates the module-level PLAN_PRICES in place.
   useEffect(() => {
     (async () => {
       try {
@@ -975,7 +975,7 @@ export default function AdminCampaigns() {
           setTimeout(() => loadHistory(page), 3000);
         }
       }
-    } catch { /* silent — polling retry picks up next cycle */ }
+    } catch { /* silent - polling retry picks up next cycle */ }
     finally { setHistoryLoading(false); }
   }, []);
 
@@ -1019,7 +1019,7 @@ export default function AdminCampaigns() {
 
   // When user is selected → auto-populate template.
   // A user with an abandoned checkout gets the pending-payment email (with
-  // their exact plan + amount) no matter which segment they were found in —
+  // their exact plan + amount) no matter which segment they were found in  - 
   // completing that purchase beats any generic segment message.
   const handleUserSelect = (user) => {
     setSelectedUser(user);
@@ -1055,7 +1055,7 @@ export default function AdminCampaigns() {
         ? `Specific user: ${selectedUser.name}, Plan: ${selectedUser.plan}${selectedUser.trialDaysLeft !== null ? `, Trial days left: ${selectedUser.trialDaysLeft}` : ''}${selectedUser.daysSinceActive > 0 ? `, Days inactive: ${selectedUser.daysSinceActive}` : ''}${selectedUser.pendingPlan ? `, ABANDONED CHECKOUT: started buying the ${selectedUser.pendingPlan} plan ($${selectedUser.pendingAmount} ${selectedUser.pendingCycle || 'monthly'}) ${selectedUser.pendingDays === 0 ? 'today' : `${selectedUser.pendingDays} days ago`} but never completed payment` : ''}`
         : '';
       const pendingGoal = segment === 'pending_payment'
-        ? ` GOAL: convince the user to complete their pending payment. Be warm and helpful, never pushy — acknowledge they started the purchase, remove friction (offer help with payment issues, alternative payment methods, answer questions), remind them concretely what unlocks when they pay, and point the CTA to ${PLATFORM_URL}/billing.`
+        ? ` GOAL: convince the user to complete their pending payment. Be warm and helpful, never pushy - acknowledge they started the purchase, remove friction (offer help with payment issues, alternative payment methods, answer questions), remind them concretely what unlocks when they pay, and point the CTA to ${PLATFORM_URL}/billing.`
         : '';
       const res = await adminAIAPI.generateContent({
         type: 'email_body',
@@ -1218,16 +1218,16 @@ export default function AdminCampaigns() {
                 onChange={e => setFromAlias(e.target.value)}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white text-gray-900"
               >
-                <option value="main">zia@sambid.co — personal outreach, upgrades, win-backs</option>
-                <option value="noreply">noreply@sambid.co — newsletters, platform updates</option>
-                <option value="support">support@sambid.co — help, onboarding, check-ins</option>
-                <option value="billing">billing@sambid.co — payments, invoices, renewals</option>
+                <option value="main">zia@sambid.co - personal outreach, upgrades, win-backs</option>
+                <option value="noreply">noreply@sambid.co - newsletters, platform updates</option>
+                <option value="support">support@sambid.co - help, onboarding, check-ins</option>
+                <option value="billing">billing@sambid.co - payments, invoices, renewals</option>
               </select>
               <p className="text-xs text-gray-400 mt-1.5">
-                {fromAlias === 'main'    && 'Personal touch — best for upgrade offers, win-backs, and 1-to-1 messages users may reply to.'}
-                {fromAlias === 'noreply' && 'One-way broadcasts — newsletters and announcements where replies aren\'t expected.'}
-                {fromAlias === 'support' && 'Helpful tone — onboarding guides, profile completion, "how can we help" check-ins.'}
-                {fromAlias === 'billing' && 'Money matters — pending payments, invoices, renewal reminders. Auto-selected for the Pending Payment segment.'}
+                {fromAlias === 'main'    && 'Personal touch - best for upgrade offers, win-backs, and 1-to-1 messages users may reply to.'}
+                {fromAlias === 'noreply' && 'One-way broadcasts - newsletters and announcements where replies aren\'t expected.'}
+                {fromAlias === 'support' && 'Helpful tone - onboarding guides, profile completion, "how can we help" check-ins.'}
+                {fromAlias === 'billing' && 'Money matters - pending payments, invoices, renewal reminders. Auto-selected for the Pending Payment segment.'}
               </p>
             </div>
           </div>

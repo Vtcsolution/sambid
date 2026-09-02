@@ -91,7 +91,7 @@ export default function Testimonials() {
             <div className="text-center py-20 text-gray-400 max-w-md mx-auto">
               <MessageSquareHeart className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium text-gray-600">Client stories coming soon</p>
-              <p className="text-sm mt-1">Check back shortly — we're gathering feedback from businesses using Sambid.</p>
+              <p className="text-sm mt-1">Check back shortly - we're gathering feedback from businesses using Sambid.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

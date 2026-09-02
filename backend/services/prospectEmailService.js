@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import { price, priceNum, pricingLine } from './planPricingService.js';
 import Opportunity from '../models/Opportunity.js';
 // Reuse the one real SMTP transporter (services/emailService.js) instead of a
-// second definition — that copy only read EMAIL_* env vars, never the SMTP_*
+// second definition - that copy only read EMAIL_* env vars, never the SMTP_*
 // names the admin Settings > Email/SMTP panel actually writes to, so every
 // prospect/company outreach email silently authenticated with undefined
 // credentials whenever only SMTP_* was set.
@@ -69,9 +69,9 @@ const divider  = () => `<hr style="border:none;border-top:1px solid #e5e7eb;marg
 
 // ── Real matched opportunities, personalized per prospect's NAICS code ────────
 // Prospects aren't platform users (no UserOpportunity feed), so this queries
-// the live master Opportunity collection directly by NAICS code — exact match
+// the live master Opportunity collection directly by NAICS code - exact match
 // first, falling back to the 4-digit NAICS family if that's thin. Shown with
-// full detail (no paywall lock — these recipients have no account yet) as a
+// full detail (no paywall lock - these recipients have no account yet) as a
 // concrete, honest hook: real live contracts for their exact industry, not a
 // generic pitch. Injected into every outreach email (static template or
 // AI/custom body) right before the footer via sendProspectEmail /
@@ -116,7 +116,7 @@ export async function buildProspectMatchesBlock(prospect) {
   const cards = opps.map(opp => {
     const due = opp.dueDate
       ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : '—';
+      : ' - ';
     const oppUrl = `${PLATFORM_URL}/opportunity/${opp.id}?utm_source=outreach&utm_medium=email`;
     const snippet = opp.description.slice(0, 150);
     return `
@@ -135,7 +135,7 @@ export async function buildProspectMatchesBlock(prospect) {
   return `
     <div style="margin:24px 0 4px;">
       <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#5b21b6;text-transform:uppercase;letter-spacing:0.4px;">Live Opportunities Matched to NAICS ${naics}</p>
-      <p style="margin:0 0 10px;font-size:13px;color:#6b7280;">Real, currently-open federal contracts — found automatically, no search required.</p>
+      <p style="margin:0 0 10px;font-size:13px;color:#6b7280;">Real, currently-open federal contracts - found automatically, no search required.</p>
       ${cards}
     </div>`;
 }
@@ -153,14 +153,14 @@ export const EMAIL_TEMPLATES = {
     preview: 'Stop missing out on contracts that are perfect for your business.',
     buildHtml: (v) => wrap(`
       ${h2(`Hi${v.contact ? ` ${v.contact}` : ''}, federal contracts are waiting for ${v.company}.`)}
-      ${p(`We noticed that <strong>${v.company}</strong> has an active track record in federal contracting. We built ${PLATFORM_NAME} specifically for companies like yours — to make sure you never miss a relevant opportunity.`)}
-      ${p(`${PLATFORM_NAME} is an AI-powered federal contract intelligence platform that monitors SAM.gov, USASpending.gov, and FPDS in real-time — then alerts you the moment a matching opportunity is posted.`)}
+      ${p(`We noticed that <strong>${v.company}</strong> has an active track record in federal contracting. We built ${PLATFORM_NAME} specifically for companies like yours - to make sure you never miss a relevant opportunity.`)}
+      ${p(`${PLATFORM_NAME} is an AI-powered federal contract intelligence platform that monitors SAM.gov, USASpending.gov, and FPDS in real-time - then alerts you the moment a matching opportunity is posted.`)}
       ${p(`Here's what sets us apart:`)}
       ${ul([
-        `<strong>AI-powered matching</strong> — your NAICS codes, past award history, and certifications drive every alert`,
-        `<strong>Real-time SAM.gov notifications</strong> — know about solicitations before your competitors`,
-        `<strong>Competitor tracking</strong> — see who's winning in your NAICS space and for how much`,
-        `<strong>All tiers covered</strong> — from micro-purchases to IDIQ task orders`,
+        `<strong>AI-powered matching</strong> - your NAICS codes, past award history, and certifications drive every alert`,
+        `<strong>Real-time SAM.gov notifications</strong> - know about solicitations before your competitors`,
+        `<strong>Competitor tracking</strong> - see who's winning in your NAICS space and for how much`,
+        `<strong>All tiers covered</strong> - from micro-purchases to IDIQ task orders`,
       ])}
       ${cta(`Explore ${PLATFORM_NAME} Free →`, `${PLATFORM_URL}?utm_source=outreach&utm_campaign=intro`)}
       ${p(`No credit card required for your free trial. Setup takes under 5 minutes.`)}
@@ -177,7 +177,7 @@ export const EMAIL_TEMPLATES = {
     preview: 'AI matching, live SAM.gov alerts, competitor intel, and more.',
     buildHtml: (v) => wrap(`
       ${h2(`What ${PLATFORM_NAME} does for contractors like ${v.company}`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, federal contracting is competitive — and staying on top of opportunities manually is a full-time job. ${PLATFORM_NAME} automates the intelligence so your team can focus on winning.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, federal contracting is competitive - and staying on top of opportunities manually is a full-time job. ${PLATFORM_NAME} automates the intelligence so your team can focus on winning.`)}
       ${divider()}
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
         ${[
@@ -185,7 +185,7 @@ export const EMAIL_TEMPLATES = {
           ['⚡ Instant SAM.gov Alerts', `Email + in-app notifications the moment a solicitation, pre-solicitation, or sources-sought notice matches your profile.`],
           ['📊 Competitor Intelligence', `See which companies are winning contracts in your space, what prices they're bidding, and which agencies are spending the most.`],
           ['🤝 Teaming Partner Finder', `Find qualified teaming partners with complementary certifications for set-aside opportunities you can't pursue alone.`],
-          ['📁 Proposal Workspace', `Organize active opportunities, set bid/no-bid deadlines, attach documents, and track your pipeline — all in one place.`],
+          ['📁 Proposal Workspace', `Organize active opportunities, set bid/no-bid deadlines, attach documents, and track your pipeline - all in one place.`],
         ].map(([feat, desc]) => `
           <tr>
             <td style="padding:12px 16px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;vertical-align:top;width:100%;">
@@ -207,10 +207,10 @@ export const EMAIL_TEMPLATES = {
     name: 'Competitor Comparison',
     category: 'Consideration',
     subject: 'Why contractors are switching from GovWin to {{companyName}}\'s new platform',
-    preview: 'Sambid vs GovWin IQ, Deltek, and USASpending — an honest comparison.',
+    preview: 'Sambid vs GovWin IQ, Deltek, and USASpending - an honest comparison.',
     buildHtml: (v) => wrap(`
       ${h2(`Still paying $1,500/month for GovWin? There's a better option for ${v.company}.`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, tools like GovWin IQ and Deltek were built for large prime contractors with dedicated business development teams. ${PLATFORM_NAME} was built for every contractor — including growing companies like ${v.company}.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, tools like GovWin IQ and Deltek were built for large prime contractors with dedicated business development teams. ${PLATFORM_NAME} was built for every contractor - including growing companies like ${v.company}.`)}
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px;">
         <thead>
           <tr style="background:#4f46e5;color:#fff;">
@@ -236,7 +236,7 @@ export const EMAIL_TEMPLATES = {
           `).join('')}
         </tbody>
       </table>
-      ${cta(`Switch to ${PLATFORM_NAME} — First Month Free`, `${PLATFORM_URL}/pricing?utm_source=outreach&utm_campaign=competitor`)}
+      ${cta(`Switch to ${PLATFORM_NAME} - First Month Free`, `${PLATFORM_URL}/pricing?utm_source=outreach&utm_campaign=competitor`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
   },
@@ -264,9 +264,9 @@ export const EMAIL_TEMPLATES = {
         `).join('')}
       </div>
       ${divider()}
-      ${p(`<em>"Before ${PLATFORM_NAME}, our BD team spent 8 hours a week just monitoring SAM.gov. Now we get a 7am digest with every matching opportunity — we've added two new agency relationships in 6 months."</em><br><strong>— 8(a) Construction Firm, Texas</strong>`)}
+      ${p(`<em>"Before ${PLATFORM_NAME}, our BD team spent 8 hours a week just monitoring SAM.gov. Now we get a 7am digest with every matching opportunity - we've added two new agency relationships in 6 months."</em><br><strong> -  8(a) Construction Firm, Texas</strong>`)}
       ${divider()}
-      ${p(`<em>"The competitor intelligence feature alone paid for the subscription in the first quarter. We finally understood why we were losing and adjusted our pricing strategy."</em><br><strong>— IT Services Contractor, Virginia</strong>`)}
+      ${p(`<em>"The competitor intelligence feature alone paid for the subscription in the first quarter. We finally understood why we were losing and adjusted our pricing strategy."</em><br><strong> -  IT Services Contractor, Virginia</strong>`)}
       ${cta(`Calculate Your ROI → Start Free Trial`, `${PLATFORM_URL}/roi?utm_source=outreach&utm_campaign=roi`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
@@ -280,8 +280,8 @@ export const EMAIL_TEMPLATES = {
     subject: '{{companyName}}: 3 days of federal contract intelligence, on us',
     preview: 'No credit card. No commitment. Full Pro access for 3 days.',
     buildHtml: (v) => wrap(`
-      ${h2(`${v.company} — your free 3-day Pro trial is reserved.`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we'd like to offer <strong>${v.company}</strong> a full ${highlight('3-day Pro trial')} of ${PLATFORM_NAME} — no credit card required.`)}
+      ${h2(`${v.company} - your free 3-day Pro trial is reserved.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we'd like to offer <strong>${v.company}</strong> a full ${highlight('3-day Pro trial')} of ${PLATFORM_NAME} - no credit card required.`)}
       ${p(`During your trial you'll have complete access to:`)}
       ${ul([
         `Unlimited AI-matched opportunity alerts for your NAICS codes`,
@@ -309,11 +309,11 @@ export const EMAIL_TEMPLATES = {
     name: 'Pricing & Plans',
     category: 'Conversion',
     // getter → evaluated on access, so it always uses LIVE DB prices
-    get subject() { return `Custom pricing for {{companyName}} — starting at ${price('starter')}/month`; },
+    get subject() { return `Custom pricing for {{companyName}} - starting at ${price('starter')}/month`; },
     preview: 'Transparent, contractor-friendly plans with no long-term contracts.',
     buildHtml: (v) => wrap(`
       ${h2(`${PLATFORM_NAME} pricing built for contractors like ${v.company}`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we keep our pricing simple and transparent — no per-seat fees, no hidden costs, no 12-month lock-ins.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we keep our pricing simple and transparent - no per-seat fees, no hidden costs, no 12-month lock-ins.`)}
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
         ${[
           ['Starter', `${price('starter')}/mo`, ['25 AI-matched alerts/month', 'SAM.gov monitoring', 'Basic competitor view', 'Email support'], false],
@@ -334,7 +334,7 @@ export const EMAIL_TEMPLATES = {
           </tr>
         `).join('')}
       </table>
-      ${cta(`Start Free — Upgrade Anytime`, `${PLATFORM_URL}/pricing?utm_source=outreach&utm_campaign=pricing`)}
+      ${cta(`Start Free - Upgrade Anytime`, `${PLATFORM_URL}/pricing?utm_source=outreach&utm_campaign=pricing`)}
       ${p(`All plans come with a <strong>3-day free trial</strong>. Cancel anytime.`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
@@ -346,24 +346,24 @@ export const EMAIL_TEMPLATES = {
     name: 'Government Contracting Tips',
     category: 'Value-Add',
     subject: '5 federal contracting tips every contractor needs in 2025',
-    preview: 'Practical tips to win more federal contracts — from our research team.',
+    preview: 'Practical tips to win more federal contracts - from our research team.',
     buildHtml: (v) => wrap(`
       ${h2(`5 tips to win more federal contracts in 2025`)}
       ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we've analyzed tens of thousands of federal contract awards. Here's what separates the contractors who consistently win from those who don't:`)}
       ${[
-        ['Monitor pre-solicitations, not just solicitations', `Most companies start reading when the solicitation drops — but the real opportunity is in pre-solicitations and sources-sought notices. Responding to those puts you on the agency's radar before the formal RFP is even written.`],
-        ['Use past performance strategically', `Agencies score past performance heavily. Build a database of your award history with NAICS codes, agency names, and dollar amounts — and reference it explicitly in every proposal.`],
+        ['Monitor pre-solicitations, not just solicitations', `Most companies start reading when the solicitation drops - but the real opportunity is in pre-solicitations and sources-sought notices. Responding to those puts you on the agency's radar before the formal RFP is even written.`],
+        ['Use past performance strategically', `Agencies score past performance heavily. Build a database of your award history with NAICS codes, agency names, and dollar amounts - and reference it explicitly in every proposal.`],
         ['Target your top 3 agencies, not every agency', `It's better to have three agency relationships where you understand the people, priorities, and procurement cycles than to spray-and-pray across 20 agencies.`],
         ['Leverage set-asides before you outgrow them', `If your business qualifies for 8(a), WOSB, HUBZone, or SDVOSB set-asides, prioritize those pipelines now. Many contractors wait too long and age out of the programs.`],
-        ['Debrief every loss', `Agencies are required to debrief you on why you didn't win. Most contractors skip this — don't. The feedback is gold and directly improves your next proposal.`],
+        ['Debrief every loss', `Agencies are required to debrief you on why you didn't win. Most contractors skip this - don't. The feedback is gold and directly improves your next proposal.`],
       ].map(([title, body], i) => `
         <div style="margin-bottom:20px;padding:16px;background:#f9fafb;border-left:4px solid #4f46e5;border-radius:0 8px 8px 0;">
           <strong style="display:block;font-size:14px;color:#111827;margin-bottom:6px;">${i + 1}. ${title}</strong>
           <p style="margin:0;font-size:14px;color:#4b5563;line-height:1.6;">${body}</p>
         </div>
       `).join('')}
-      ${p(`${PLATFORM_NAME} automates points 1 and 2 for ${v.company} — real-time alerts on pre-solicitations and an auto-generated past-performance summary from your USASpending history.`)}
-      ${cta(`See How It Works — Free Trial`, `${PLATFORM_URL}?utm_source=outreach&utm_campaign=tips`)}
+      ${p(`${PLATFORM_NAME} automates points 1 and 2 for ${v.company} - real-time alerts on pre-solicitations and an auto-generated past-performance summary from your USASpending history.`)}
+      ${cta(`See How It Works - Free Trial`, `${PLATFORM_URL}?utm_source=outreach&utm_campaign=tips`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
   },
@@ -377,7 +377,7 @@ export const EMAIL_TEMPLATES = {
     preview: 'Sambid connects contractors for teaming on federal set-aside opportunities.',
     buildHtml: (v) => wrap(`
       ${h2(`${v.company} could be winning larger contracts through teaming`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, some of the most valuable federal opportunities require capabilities or certifications your company might not have alone — that's where teaming partnerships come in.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, some of the most valuable federal opportunities require capabilities or certifications your company might not have alone - that's where teaming partnerships come in.`)}
       ${p(`${PLATFORM_NAME}'s Teaming Partner Finder connects you with pre-vetted contractors who have:`)}
       ${ul([
         `Complementary NAICS codes and past performance`,
@@ -408,16 +408,16 @@ export const EMAIL_TEMPLATES = {
     subject: 'Re: federal contract opportunities for {{companyName}}',
     preview: 'Just wanted to make sure my earlier note didn\'t get lost.',
     buildHtml: (v) => wrap(`
-      ${h2(`Following up — contracts are moving fast in ${v.state || 'your area'}`)}
+      ${h2(`Following up - contracts are moving fast in ${v.state || 'your area'}`)}
       ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, I wanted to make sure my earlier email didn't get lost in the noise.`)}
-      ${p(`I reached out because <strong>${v.company}</strong> has an active federal contracting profile — and several matching solicitations have posted in the last 30 days that you may not have seen.`)}
+      ${p(`I reached out because <strong>${v.company}</strong> has an active federal contracting profile - and several matching solicitations have posted in the last 30 days that you may not have seen.`)}
       <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:16px;margin-bottom:24px;">
         <p style="margin:0;font-size:14px;color:#92400e;font-family:Arial,sans-serif;">
           📋 <strong>Recent matching opportunities:</strong> ${PLATFORM_NAME} found active solicitations in your NAICS category that close in the next 14–30 days.
         </p>
       </div>
       ${p(`If this isn't the right time or the right person, please let me know who handles business development at ${v.company} and I'll reach out directly.`)}
-      ${p(`If you're open to it, a 15-minute demo would let me show you exactly which opportunities we're tracking for your profile — no pitch, just data.`)}
+      ${p(`If you're open to it, a 15-minute demo would let me show you exactly which opportunities we're tracking for your profile - no pitch, just data.`)}
       ${cta(`Book a 15-Minute Demo`, `${PLATFORM_URL}/demo?utm_source=outreach&utm_campaign=followup`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
@@ -428,11 +428,11 @@ export const EMAIL_TEMPLATES = {
     id: 'discount',
     name: 'Special Discount Offer',
     category: 'Promotion',
-    subject: 'Exclusive: 40% off Sambid Pro for {{companyName}} — this week only',
+    subject: 'Exclusive: 40% off Sambid Pro for {{companyName}} - this week only',
     preview: '40% off your first 3 months. Offer expires Friday.',
     buildHtml: (v) => wrap(`
       ${h2(`Limited offer: 40% off ${PLATFORM_NAME} Pro for ${v.company}`)}
-      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we're extending an exclusive discount to select companies in the federal contracting space this week — and ${v.company} qualified.`)}
+      ${p(`Hi${v.contact ? ` ${v.contact}` : ''}, we're extending an exclusive discount to select companies in the federal contracting space this week - and ${v.company} qualified.`)}
       <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
         <div style="color:rgba(255,255,255,.8);font-size:13px;font-family:Arial,sans-serif;margin-bottom:4px;">Use code at checkout</div>
         <div style="color:#fff;font-size:32px;font-weight:900;font-family:monospace;letter-spacing:6px;background:rgba(255,255,255,.15);display:inline-block;padding:10px 24px;border-radius:8px;">FEDWIN40</div>
@@ -442,7 +442,7 @@ export const EMAIL_TEMPLATES = {
       ${ul([
         `Unlimited AI-matched federal contract alerts`,
         `Real-time monitoring across SAM.gov, FPDS, and USASpending.gov`,
-        `Competitor intelligence — see who's winning and at what price`,
+        `Competitor intelligence - see who's winning and at what price`,
         `Teaming partner finder and proposal workspace`,
         `Priority onboarding support`,
       ])}
@@ -451,7 +451,7 @@ export const EMAIL_TEMPLATES = {
           ⏳ Offer expires this Friday at midnight. Code: <span style="font-family:monospace;background:#fee2e2;padding:2px 8px;border-radius:4px;">FEDWIN40</span>
         </p>
       </div>
-      ${cta(`Claim 40% Off — Apply Code FEDWIN40`, `${PLATFORM_URL}/pricing?code=FEDWIN40&utm_source=outreach&utm_campaign=discount`)}
+      ${cta(`Claim 40% Off - Apply Code FEDWIN40`, `${PLATFORM_URL}/pricing?code=FEDWIN40&utm_source=outreach&utm_campaign=discount`)}
       ${p(`<strong>The ${PLATFORM_NAME} Team</strong>`)}
     `),
   },
@@ -551,7 +551,7 @@ export const sendBulkProspectEmails = async (prospects, templateId, sentBy = 'ad
 // prompt below): congrats hook -> one real pain point -> free-account CTA.
 // What differs per type is ONLY the specific angle/content of the body.
 const TYPE_CONTEXT = {
-  intro:      'ANGLE: general platform introduction. Pivot from the congrats hook to ONE specific, surprising pain point: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly — real dollars lost to a data-entry error, not a capability gap. Bullets: automated SAM.gov monitoring that catches miscoded listings, past performance auto-matched into new proposals, AI-drafted compliant proposals in minutes, incumbent/competitor intel before committing budget, a fast data-backed Go/No-Go decision.',
+  intro:      'ANGLE: general platform introduction. Pivot from the congrats hook to ONE specific, surprising pain point: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly - real dollars lost to a data-entry error, not a capability gap. Bullets: automated SAM.gov monitoring that catches miscoded listings, past performance auto-matched into new proposals, AI-drafted compliant proposals in minutes, incumbent/competitor intel before committing budget, a fast data-backed Go/No-Go decision.',
   features:   'ANGLE: a quick tour of what they would actually see the moment they open a free account, not a spec sheet. Bullets: AI opportunity matching scored against their real NAICS codes and past wins, real-time SAM.gov alerts the second a match posts, competitor intelligence showing who actually won similar contracts and at what price, an AI proposal builder that drafts a compliant draft in minutes, a Go/No-Go score backed by real award data instead of gut feel. Frame it as "this is what your dashboard looks like on day one."',
   // getters → evaluated on access with LIVE DB prices, not baked at import
   get competitor() { return `ANGLE: comparison to GovWin IQ / Deltek, for a company that may already be paying for one. Bullets: Sambid runs ${price('starter')}–${price('pro')}/mo vs $800–2,500/mo for the incumbents, 5-minute setup vs 2-4 week onboarding, AI matching against real NAICS + past-performance data vs plain keyword search, includes AI proposal drafting and Go/No-Go scoring that the older tools don't have at any price. Frame the free account as a zero-risk way to compare it directly against what they use today.`; },
@@ -561,7 +561,7 @@ const TYPE_CONTEXT = {
   trial:      'ANGLE: a direct, low-friction invitation to open a free account right now (this platform\'s free tier has no card required and no time limit, so do not invent urgency or a countdown that isn\'t real). Bullets: what unlocks the moment they sign up, matched opportunities for their real NAICS codes, the AI tools available to test immediately, and that upgrading only ever happens by their own choice once they see real value inside.',
   get pricing() { return `ANGLE: transparent pricing for a company that wants to know the number before clicking anything. State plainly: ${pricingLine()}. Bullets: what's included at each tier, that the free account has no card requirement and no expiration, and that the honest recommendation is to start free, see real matches for their NAICS codes, and only upgrade once the value is obvious from inside the platform, not from a sales email.`; },
   success:    'ANGLE: real numbers from contractors using the platform today. Bullets: 40% more relevant opportunities identified per month vs manual SAM.gov monitoring, 3x faster solicitation discovery, 8+ hours per week saved on BD research, an average of $180K in additional annual contract revenue reported by Pro users. Include one short, specific one-line quote from a real user type (e.g. an 8(a) construction firm or an IT services contractor) if it fits naturally. Frame the free account as the only way to find out if they would see similar numbers.',
-  followup:   "ANGLE: a brief, low-pressure follow-up to someone who didn't respond to an earlier email. Keep it short — 3 short paragraphs plus 2-3 bullets at most, not the full pitch again. Acknowledge inboxes get busy, briefly remind them of the core value (matched contracts they're not currently seeing, or a specific pain point), and make the free-account signup the entire ask, nothing else.",
+  followup:   "ANGLE: a brief, low-pressure follow-up to someone who didn't respond to an earlier email. Keep it short - 3 short paragraphs plus 2-3 bullets at most, not the full pitch again. Acknowledge inboxes get busy, briefly remind them of the core value (matched contracts they're not currently seeing, or a specific pain point), and make the free-account signup the entire ask, nothing else.",
 };
 
 export const EMAIL_TYPE_LIST = [
@@ -584,16 +584,16 @@ const fmtAmount = (n) => {
 
 // ── Static fallback templates (used when no AI key is available) ──────────────
 
-// Shared congrats hook — every template opens with this, personalized off
+// Shared congrats hook - every template opens with this, personalized off
 // their real win history when we have it, so it never reads like a mass blast.
 const buildCongrats = (v) => {
   const hasWins = Number(v.contracts) > 0;
   return hasWins
-    ? `Congrats on ${v.company}'s ${v.contracts} contract win${v.contracts > 1 ? 's' : ''}${v.amount && v.amount !== 'unknown amount' ? ` worth ${v.amount}` : ''} — that track record already puts you ahead of most bidders.`
-    : `Congrats on ${v.company}'s track record in federal contracting${v.state ? ` in ${v.state}` : ''} — that already puts you ahead of most bidders.`;
+    ? `Congrats on ${v.company}'s ${v.contracts} contract win${v.contracts > 1 ? 's' : ''}${v.amount && v.amount !== 'unknown amount' ? ` worth ${v.amount}` : ''} - that track record already puts you ahead of most bidders.`
+    : `Congrats on ${v.company}'s track record in federal contracting${v.state ? ` in ${v.state}` : ''} - that already puts you ahead of most bidders.`;
 };
 
-// Shared sign-off + free-account close — the ask is always the same: create
+// Shared sign-off + free-account close - the ask is always the same: create
 // a free account and explore it themselves, never "buy" from the email.
 const buildClose = (line) => `${line} Free to explore, no credit card needed: ${PLATFORM_URL}\n\nZia\nFounder, Sambid\nsambid.co`;
 
@@ -602,16 +602,16 @@ const STATIC_TEMPLATES = {
     const congrats = buildCongrats(v);
     return {
       subject: `The $4B gap even proven contractors miss`,
-      bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${congrats}\n\nOne thing that catches even experienced contractors: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly — regardless of how strong your team is. Real dollars lost to a data-entry error, not a capability gap.\n\nWe built Sambid to help proven contractors like ${v.company} win more, without scaling your BD team at the same rate as your pipeline:\n\n- Every SAM.gov listing monitored automatically, including the miscoded ones others miss\n- Your past performance auto-matched into every new proposal instantly\n- AI drafts a full compliant proposal in minutes — bid on more without more headcount\n- Know the incumbent's renewal history before committing budget to a bid\n- A data-backed Go/No-Go answer in 30 seconds, so more of what you chase is winnable\n\nWorth 10 minutes to see if it fits how you're scaling? Free to test, no credit card needed: ${PLATFORM_URL}\n\nZia\nFounder, Sambid\nsambid.co`,
+      bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${congrats}\n\nOne thing that catches even experienced contractors: a Contracting Officer can list an opportunity under the wrong NAICS code by mistake, and it becomes invisible to every company searching correctly - regardless of how strong your team is. Real dollars lost to a data-entry error, not a capability gap.\n\nWe built Sambid to help proven contractors like ${v.company} win more, without scaling your BD team at the same rate as your pipeline:\n\n- Every SAM.gov listing monitored automatically, including the miscoded ones others miss\n- Your past performance auto-matched into every new proposal instantly\n- AI drafts a full compliant proposal in minutes - bid on more without more headcount\n- Know the incumbent's renewal history before committing budget to a bid\n- A data-backed Go/No-Go answer in 30 seconds, so more of what you chase is winnable\n\nWorth 10 minutes to see if it fits how you're scaling? Free to test, no credit card needed: ${PLATFORM_URL}\n\nZia\nFounder, Sambid\nsambid.co`,
     };
   },
   features: (v) => ({
     subject: `What ${v.company} would see inside Sambid on day one`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nI won't waste your time with a feature list — here's exactly what shows up on your dashboard the moment you open a free account:\n\n- Opportunities scored against your real NAICS codes and past performance, not just keyword matches\n- Real-time alerts the second a matching solicitation posts to SAM.gov\n- Competitor intelligence showing who actually won similar contracts, and at what price\n- An AI proposal builder that drafts a compliant first draft in minutes\n- A Go/No-Go score backed by real award data instead of a gut call\n\n${buildClose(`See it running against ${v.company}'s own NAICS codes, not a demo account.`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nI won't waste your time with a feature list - here's exactly what shows up on your dashboard the moment you open a free account:\n\n- Opportunities scored against your real NAICS codes and past performance, not just keyword matches\n- Real-time alerts the second a matching solicitation posts to SAM.gov\n- Competitor intelligence showing who actually won similar contracts, and at what price\n- An AI proposal builder that drafts a compliant first draft in minutes\n- A Go/No-Go score backed by real award data instead of a gut call\n\n${buildClose(`See it running against ${v.company}'s own NAICS codes, not a demo account.`)}`,
   }),
   competitor: (v) => ({
     subject: `${v.company}: a faster, cheaper alternative to GovWin IQ`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nIf ${v.company} is currently using or evaluating GovWin IQ or Deltek, here's the honest comparison:\n\n- Price: ${price('starter')}–${price('pro')}/mo vs $800–2,500/mo\n- Setup: 5 minutes vs 2-4 weeks of onboarding\n- Matching: real NAICS + past-performance data vs keyword search only\n- AI proposal drafting and Go/No-Go scoring — neither older tool has this at any price\n\n${buildClose(`Cheapest way to find out if it's actually better for you: put it side by side with what you use today.`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nIf ${v.company} is currently using or evaluating GovWin IQ or Deltek, here's the honest comparison:\n\n- Price: ${price('starter')}–${price('pro')}/mo vs $800–2,500/mo\n- Setup: 5 minutes vs 2-4 weeks of onboarding\n- Matching: real NAICS + past-performance data vs keyword search only\n- AI proposal drafting and Go/No-Go scoring - neither older tool has this at any price\n\n${buildClose(`Cheapest way to find out if it's actually better for you: put it side by side with what you use today.`)}`,
   }),
   campaign: (v) => ({
     subject: `Scaling ${v.company}'s BD without scaling headcount`,
@@ -619,19 +619,19 @@ const STATIC_TEMPLATES = {
   }),
   cost: (v) => ({
     subject: `${v.company}: the real math on BD costs`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nQuick math worth knowing:\n\n- A human proposal writer runs $5,000-$50,000 per proposal — Sambid's AI drafts one in minutes\n- Tools like GovWin/Deltek run $800-2,500/mo — Sambid starts at ${price('starter')}/mo\n- Manual SAM.gov monitoring burns 6-10 hours a week of BD time — fully automated here\n\nAdd that up over a year and it's real money, either spent or saved.\n\n${buildClose(`See the numbers for yourself before deciding anything.`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nQuick math worth knowing:\n\n- A human proposal writer runs $5,000-$50,000 per proposal - Sambid's AI drafts one in minutes\n- Tools like GovWin/Deltek run $800-2,500/mo - Sambid starts at ${price('starter')}/mo\n- Manual SAM.gov monitoring burns 6-10 hours a week of BD time - fully automated here\n\nAdd that up over a year and it's real money, either spent or saved.\n\n${buildClose(`See the numbers for yourself before deciding anything.`)}`,
   }),
   time: (v) => ({
     subject: `${v.company}: get 6-10 hours a week back`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nMost teams at your stage spend 6-10 hours a week just monitoring SAM.gov manually. Here's what that time turns into with Sambid:\n\n- SAM.gov monitoring — fully automated, zero manual searching\n- Proposal drafts that took days now come back in minutes\n- Deadline tracking on a shared calendar instead of a spreadsheet someone has to update\n- Competitor research that used to mean digging through USASpending.gov by hand — instant\n\nThat time goes straight back into writing better proposals, not finding them.\n\n${buildClose(`Free to test with your own NAICS codes.`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nMost teams at your stage spend 6-10 hours a week just monitoring SAM.gov manually. Here's what that time turns into with Sambid:\n\n- SAM.gov monitoring - fully automated, zero manual searching\n- Proposal drafts that took days now come back in minutes\n- Deadline tracking on a shared calendar instead of a spreadsheet someone has to update\n- Competitor research that used to mean digging through USASpending.gov by hand - instant\n\nThat time goes straight back into writing better proposals, not finding them.\n\n${buildClose(`Free to test with your own NAICS codes.`)}`,
   }),
   trial: (v) => ({
     subject: `${v.company}: your free Sambid account is ready`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nI'd like to invite ${v.company} to create a free Sambid account — no credit card, no time limit, full access to test the platform against your real NAICS codes.\n\nThe moment you sign up you'll see:\n\n- Opportunities already matched to your industry, not a generic demo\n- The AI tools available to test immediately — summarize, proposal draft, Go/No-Go\n- Deadline tracking and alerts turned on from day one\n\nUpgrading only ever happens by your own choice, once you've seen real value inside. That's the whole idea.\n\n${buildClose(`Takes under 5 minutes to set up:`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nI'd like to invite ${v.company} to create a free Sambid account - no credit card, no time limit, full access to test the platform against your real NAICS codes.\n\nThe moment you sign up you'll see:\n\n- Opportunities already matched to your industry, not a generic demo\n- The AI tools available to test immediately - summarize, proposal draft, Go/No-Go\n- Deadline tracking and alerts turned on from day one\n\nUpgrading only ever happens by your own choice, once you've seen real value inside. That's the whole idea.\n\n${buildClose(`Takes under 5 minutes to set up:`)}`,
   }),
   pricing: (v) => ({
-    subject: `Sambid pricing for ${v.company} — starting at ${price('starter')}/month`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nSince pricing is usually the first real question, here it is plainly: ${pricingLine()}.\n\n- Every plan includes real-time SAM.gov monitoring and AI matching\n- Higher tiers add unlimited alerts, full competitor intelligence, and team access\n- The free account has no card requirement and no expiration — it's not a countdown trial\n\nHonest recommendation: start free, see real matches for your own NAICS codes, and only upgrade once the value is obvious from inside the platform — not from a pricing email.\n\n${buildClose(`See the plans and start free:`)}`,
+    subject: `Sambid pricing for ${v.company} - starting at ${price('starter')}/month`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\n${buildCongrats(v)}\n\nSince pricing is usually the first real question, here it is plainly: ${pricingLine()}.\n\n- Every plan includes real-time SAM.gov monitoring and AI matching\n- Higher tiers add unlimited alerts, full competitor intelligence, and team access\n- The free account has no card requirement and no expiration - it's not a countdown trial\n\nHonest recommendation: start free, see real matches for your own NAICS codes, and only upgrade once the value is obvious from inside the platform - not from a pricing email.\n\n${buildClose(`See the plans and start free:`)}`,
   }),
   success: (v) => ({
     subject: `What contractors like ${v.company} see after switching to Sambid`,
@@ -639,7 +639,7 @@ const STATIC_TEMPLATES = {
   }),
   followup: (v) => ({
     subject: `Re: federal contract opportunities for ${v.company}`,
-    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI know inboxes get busy, so a quick follow-up.\n\nI reached out because ${v.company} has a track record worth building on${v.state ? ` in ${v.state}` : ''}, and I think Sambid could genuinely help you find more of it:\n\n- Contracts matched to your NAICS codes, found automatically, not manually\n- AI proposal drafts and a data-backed Go/No-Go call, ready when you need them\n\nIf now isn't the right time, no worries — just wanted to put it back on your radar.\n\n${buildClose(`Still free to create an account and take a look, no card, no pressure:`)}`,
+    bodyText: `Hi${v.contact ? ` ${v.contact}` : ''},\n\nI know inboxes get busy, so a quick follow-up.\n\nI reached out because ${v.company} has a track record worth building on${v.state ? ` in ${v.state}` : ''}, and I think Sambid could genuinely help you find more of it:\n\n- Contracts matched to your NAICS codes, found automatically, not manually\n- AI proposal drafts and a data-backed Go/No-Go call, ready when you need them\n\nIf now isn't the right time, no worries - just wanted to put it back on your radar.\n\n${buildClose(`Still free to create an account and take a look, no card, no pressure:`)}`,
   }),
 };
 
@@ -662,7 +662,7 @@ const buildPrompt = (templateType, prospectData) => {
 RECIPIENT COMPANY:
 - Name: ${company}
 - Location: ${location || 'USA'}
-- NAICS: ${naics}${naicsDesc ? ` — ${naicsDesc}` : ''}
+- NAICS: ${naics}${naicsDesc ? ` - ${naicsDesc}` : ''}
 - Federal contract history: ${contracts} contracts won, total ${amount}
 ${contact ? `- Contact: ${contact}` : ''}
 
@@ -678,14 +678,14 @@ INSTRUCTIONS: ${typeCtx}
 
 RULES:
 - Under 250 words total
-- Personalize using the company name and their contracting background — if they have real contract wins (contracts won / award amount above), open by congratulating them on that specific track record, don't skip straight to the pitch
-- Be specific, direct, and human — not corporate-speak, and never sound like a mass blast
-- Use 4-5 short one-line bullet points (starting with "- ") for the concrete benefits section — not a wall of paragraphs
-- Bold the 1-2 most important phrases or numbers per paragraph using **double asterisks** (e.g. **$4.2M**, **1,000 daily matches**) — every email must have at least 3 bolded phrases total, this is required, not optional
-- THE GOAL OF EVERY EMAIL IS THE SAME: get them to create a free account and explore the platform themselves with their own real NAICS codes and contract data. Never ask them to "buy," "upgrade," or "purchase a plan" in the email itself — the free account is the entire ask. They discover the value, and the case for a paid plan, once they're actually inside using it, not from the email.
-- End with ONE soft, low-pressure call to action pointing to ${PLATFORM_URL} that frames it as free to explore, no credit card required — not "Sign up now!" or anything pushy
+- Personalize using the company name and their contracting background - if they have real contract wins (contracts won / award amount above), open by congratulating them on that specific track record, don't skip straight to the pitch
+- Be specific, direct, and human - not corporate-speak, and never sound like a mass blast
+- Use 4-5 short one-line bullet points (starting with "- ") for the concrete benefits section - not a wall of paragraphs
+- Bold the 1-2 most important phrases or numbers per paragraph using **double asterisks** (e.g. **$4.2M**, **1,000 daily matches**) - every email must have at least 3 bolded phrases total, this is required, not optional
+- THE GOAL OF EVERY EMAIL IS THE SAME: get them to create a free account and explore the platform themselves with their own real NAICS codes and contract data. Never ask them to "buy," "upgrade," or "purchase a plan" in the email itself - the free account is the entire ask. They discover the value, and the case for a paid plan, once they're actually inside using it, not from the email.
+- End with ONE soft, low-pressure call to action pointing to ${PLATFORM_URL} that frames it as free to explore, no credit card required - not "Sign up now!" or anything pushy
 - Sign off as:\nZia\nFounder, Sambid\nsambid.co\n(not "Best regards, The Sambid Team")
-- Plain text with basic markdown bullets ("- ") only — no HTML
+- Plain text with basic markdown bullets ("- ") only - no HTML
 - Separate paragraphs with a blank line
 
 Return ONLY this JSON (no markdown wrapper, no extra text):
@@ -738,7 +738,7 @@ export const generateEmailWithAI = async (templateType, prospectData = {}) => {
     } catch { /* fall through */ }
   }
 
-  // ── 3. Static fallback — always works, no API key needed ──────────────────
+  // ── 3. Static fallback - always works, no API key needed ──────────────────
   const tplFn = STATIC_TEMPLATES[templateType] || STATIC_TEMPLATES.intro;
   const tpl   = tplFn(v);
   return { subject: tpl.subject, bodyText: tpl.bodyText, source: 'template' };
@@ -751,7 +751,7 @@ const BULLET_RE = /^[•\-*]\s+(.+)/;
 const escapeBold = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
 // A block renders as a real <ul> when every non-empty line in it is a bullet
-// line — otherwise it's a normal paragraph. Keeps "- " lines from a
+// line - otherwise it's a normal paragraph. Keeps "- " lines from a
 // generated email (AI or static template) from showing as literal dashes.
 const renderBlock = (block) => {
   const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
@@ -804,7 +804,7 @@ export const buildCustomEmailHtml = (bodyText, trackingId = null) => {
 
 // ── Bulk send with custom AI/edited content ───────────────────────────────────
 
-// Sender aliases — all authenticate as SMTP_USER (the real Hostinger mailbox);
+// Sender aliases - all authenticate as SMTP_USER (the real Hostinger mailbox);
 // aliases only change the visible From address.
 const resolveFromAddress = (fromAlias) => {
   const map = {

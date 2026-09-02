@@ -43,7 +43,7 @@ export default function Pricing() {
   };
 
   // Every paid tier (Starter/Pro/Enterprise, any billing cycle) is a
-  // custom-quoted, sales-assisted plan now — a real person reviews the
+  // custom-quoted, sales-assisted plan now - a real person reviews the
   // request and activates the account, rather than a number on this page
   // and a self-serve checkout. Only the free trial stays instant/no-card.
   const isContactOnly = (plan) => plan.name !== 'free';
@@ -81,7 +81,7 @@ export default function Pricing() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16">
       <SEOHead
         title="Pricing | Federal Contract Alert Plans"
-        description="Start free with Sambid's AI-powered federal contract matching — no credit card required. Starter, Pro, and Enterprise plans are custom-quoted for your business; talk to our team to get set up."
+        description="Start free with Sambid's AI-powered federal contract matching - no credit card required. Starter, Pro, and Enterprise plans are custom-quoted for your business; talk to our team to get set up."
         keywords="federal contracting software pricing, SAM.gov alert subscription, government contracting tool cost, federal opportunity tracker price, small business contracting plan, federal contract software cost, GovCon software pricing, best federal contracting tool price, SAM.gov alert service cost, government bid software plans, affordable federal contracting software"
         canonical="https://sambid.co/pricing"
       />
@@ -92,7 +92,7 @@ export default function Pricing() {
             Plans Built Around Your Business
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Start free, no credit card required. Starter, Pro, and Enterprise are priced to your team's real usage —
+            Start free, no credit card required. Starter, Pro, and Enterprise are priced to your team's real usage  - 
             tell us about your business and we'll get you a plan and a quote within 1 business day.
           </p>
 

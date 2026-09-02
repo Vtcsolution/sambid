@@ -44,7 +44,7 @@ export default function ProspectEmailModal({ selectedProspects = [], onClose, on
   const [historyLoading, setHistoryLoading] = useState(false);
 
   // Every outreach email auto-appends this prospect's own NAICS-matched
-  // opportunities — fetch the real ones so the preview shows exactly what
+  // opportunities - fetch the real ones so the preview shows exactly what
   // will actually be sent, not a mock.
   const [topMatches, setTopMatches]       = useState(null);
   const [matchesLoading, setMatchesLoading] = useState(false);

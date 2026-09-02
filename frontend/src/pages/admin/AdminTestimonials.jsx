@@ -213,7 +213,7 @@ export default function AdminTestimonials() {
         </div>
       </div>
 
-      {/* Feature toggle — controls the public nav link + /testimonials page */}
+      {/* Feature toggle - controls the public nav link + /testimonials page */}
       <div className={`mb-6 rounded-2xl border p-5 flex items-center justify-between gap-4 ${enabled ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
         <div>
           <p className="font-semibold text-gray-900">Testimonials page {enabled ? 'is live' : 'is hidden'}</p>
@@ -271,7 +271,7 @@ export default function AdminTestimonials() {
                     {Array.from({ length: t.rating || 5 }).map((_, i) => <Star key={i} className="w-3 h-3 fill-amber-400" />)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 truncate">{t.role}{t.role && t.company ? ', ' : ''}{t.company} — {t.quote}</p>
+                <p className="text-xs text-gray-500 truncate">{t.role}{t.role && t.company ? ', ' : ''}{t.company} - {t.quote}</p>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 <a href="/testimonials" target="_blank" rel="noopener noreferrer"

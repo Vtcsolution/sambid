@@ -7,7 +7,7 @@ import UserOpportunity from '../models/UserOpportunity.js';
 import TrackedEmail from '../models/TrackedEmail.js';
 import { price } from './planPricingService.js';
 
-// Lazy transporter — reads env vars at first use so admin updates take effect.
+// Lazy transporter - reads env vars at first use so admin updates take effect.
 let _transporter = null;
 const transporter = {
   sendMail: async (options) => {
@@ -41,7 +41,7 @@ export const resetEmailTransporter = () => { _transporter = null; };
 // ── Open tracking for "normal" emails (plan / payment / trial / campaigns) ────
 // Injects a 1x1 pixel and records a TrackedEmail doc. When the recipient opens
 // the email, /api/track/email-open/:trackingId fires an admin notification.
-// Deliberately NOT used for bulk opportunity/deadline emails — the volume would
+// Deliberately NOT used for bulk opportunity/deadline emails - the volume would
 // flood the admin panel.
 const TRACK_BASE_URL = () =>
   process.env.TRACK_BASE_URL || process.env.FRONTEND_URL || 'https://sambid.co';
@@ -69,7 +69,7 @@ export const sendTrackedMail = async (options, { emailType = 'other', recipientN
   return transporter.sendMail(options);
 };
 
-// Sambid logo for email headers — must be a hosted PNG (email clients strip
+// Sambid logo for email headers - must be a hosted PNG (email clients strip
 // SVG). apple-touch-icon.png is the square bell icon served by the frontend.
 const LOGO_URL = `${process.env.FRONTEND_URL || 'https://sambid.co'}/apple-touch-icon.png`;
 const LOGO_IMG = `<img src="${LOGO_URL}" width="48" height="48" alt="Sambid" style="display:block;margin:0 auto 10px;border-radius:12px;" />`;
@@ -77,7 +77,7 @@ const LOGO_IMG = `<img src="${LOGO_URL}" width="48" height="48" alt="Sambid" sty
 // Export transporter so other controllers can send mail via the same SMTP config
 export { transporter };
 
-// Sender addresses — Hostinger SMTP only allows sending FROM the authenticated
+// Sender addresses - Hostinger SMTP only allows sending FROM the authenticated
 // account (zia@sambid.co). Using noreply/support/billing as the from address
 // causes relay rejection. We use display names to differentiate and replyTo for
 // routing replies to the appropriate mailbox.
@@ -131,7 +131,7 @@ export const sendPasswordResetOtpEmail = async (user, otp) => {
 };
 
 /**
- * Send password reset email (legacy link-based — kept for compatibility)
+ * Send password reset email (legacy link-based - kept for compatibility)
  */
 export const sendPasswordResetEmail = async (user, resetUrl) => {
   const html = `
@@ -261,7 +261,7 @@ export const sendTrialReminder = async (user, daysLeft) => {
 };
 
 /**
- * Daily upgrade nudge — different content each day of the 3-day trial.
+ * Daily upgrade nudge - different content each day of the 3-day trial.
  * daysLeft=3 → Day 1 (welcome), daysLeft=2 → Day 2 (progress), daysLeft=1 → Day 3 (urgent)
  */
 export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
@@ -271,15 +271,15 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
   const planTable = `
     <table style="width:100%;border-collapse:collapse;font-size:13px;color:#374151;">
       <tr>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Starter</strong> — ${price('starter')}/mo</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Starter</strong> - ${price('starter')}/mo</td>
         <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">Daily matched opportunities · deadline alerts</td>
       </tr>
       <tr>
-        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Pro</strong> — ${price('pro')}/mo</td>
+        <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;"><strong>Pro</strong> - ${price('pro')}/mo</td>
         <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">3,000 matches/month · AI proposals · RFP analysis</td>
       </tr>
       <tr>
-        <td style="padding:7px 0;"><strong>Enterprise</strong> — ${price('enterprise')}/mo</td>
+        <td style="padding:7px 0;"><strong>Enterprise</strong> - ${price('enterprise')}/mo</td>
         <td style="padding:7px 0;">Unlimited matches · Real-time alerts · Full API access</td>
       </tr>
     </table>`;
@@ -299,13 +299,13 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
   let subject, headerBg, headline, body;
 
   if (daysLeft >= 3) {
-    // Day 1 — Welcome & orientation
+    // Day 1 - Welcome & orientation
     subject = `Welcome to Sambid! Your 3-day trial has started 🎯`;
     headerBg = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
     headline = `Your trial just started, ${name}!`;
     body = `
       <p style="color:#374151;line-height:1.7;margin:0 0 16px;">
-        You have <strong>15 contract matches</strong> to explore over the next 3 days — each one matched to your NAICS codes from the live SAM.gov database. This is federal procurement intelligence built specifically for your business.
+        You have <strong>15 contract matches</strong> to explore over the next 3 days - each one matched to your NAICS codes from the live SAM.gov database. This is federal procurement intelligence built specifically for your business.
       </p>
       <div style="background:#f0f4ff;border-left:4px solid #6366f1;padding:14px 16px;border-radius:6px;margin-bottom:20px;">
         <p style="margin:0;color:#3730a3;font-weight:600;">What to do today:</p>
@@ -319,13 +319,13 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
       ${planTable}
       ${ctaButton('See Plans & Pricing →')}`;
   } else if (daysLeft === 2) {
-    // Day 2 — Progress nudge
-    subject = `Day 2 of your Sambid trial — have you found any contracts? 📋`;
+    // Day 2 - Progress nudge
+    subject = `Day 2 of your Sambid trial - have you found any contracts? 📋`;
     headerBg = 'linear-gradient(135deg, #f59e0b, #d97706)';
     headline = `You're halfway through your trial`;
     body = `
       <p style="color:#374151;line-height:1.7;margin:0 0 16px;">
-        How's it going, ${name}? You've got <strong>2 days left</strong> and up to 15 contract matches to review. Federal contracts are awarded to businesses like yours every single day — the question is whether you're in the running.
+        How's it going, ${name}? You've got <strong>2 days left</strong> and up to 15 contract matches to review. Federal contracts are awarded to businesses like yours every single day - the question is whether you're in the running.
       </p>
       <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:14px 16px;border-radius:6px;margin-bottom:20px;">
         <p style="margin:0;color:#92400e;font-weight:600;">Did you know?</p>
@@ -337,8 +337,8 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
       ${planTable}
       ${ctaButton('Upgrade Before Your Trial Ends →')}`;
   } else {
-    // Day 3 — Urgent last day
-    subject = `⚠️ Last day of your Sambid trial — upgrade now to keep your contracts`;
+    // Day 3 - Urgent last day
+    subject = `⚠️ Last day of your Sambid trial - upgrade now to keep your contracts`;
     headerBg = 'linear-gradient(135deg, #ef4444, #dc2626)';
     headline = `Final day of your trial, ${name}`;
     body = `
@@ -347,11 +347,11 @@ export const sendTrialDailyUpgradeEmail = async (user, daysLeft) => {
         <p style="margin:6px 0 0;color:#991b1b;font-size:13px;">After today, your access to contract matches will stop until you upgrade.</p>
       </div>
       <p style="color:#374151;line-height:1.7;margin:0 0 16px;">
-        You've seen what Sambid can do. Every day you don't have a paid plan is a day your competitors might be winning the contracts you qualify for. Federal procurement doesn't pause — and neither should you.
+        You've seen what Sambid can do. Every day you don't have a paid plan is a day your competitors might be winning the contracts you qualify for. Federal procurement doesn't pause - and neither should you.
       </p>
       <p style="color:#374151;line-height:1.7;">Pick a plan and keep the momentum going:</p>
       ${planTable}
-      ${ctaButton('Upgrade Now — Don\'t Lose Access →')}`;
+      ${ctaButton('Upgrade Now - Don\'t Lose Access →')}`;
   }
 
   const emailHtml = `
@@ -594,7 +594,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
           </ul>
         </div>
         <div style="background:#ede9fe; border-radius:8px; padding:16px; margin:20px 0; text-align:center;">
-          <p style="margin:0 0 8px; color:#4c1d95; font-weight:600;">Enterprise Plan — ${price('enterprise')}/month (or ${price('enterprise', 'yearly')}/year)</p>
+          <p style="margin:0 0 8px; color:#4c1d95; font-weight:600;">Enterprise Plan - ${price('enterprise')}/month (or ${price('enterprise', 'yearly')}/year)</p>
           <p style="margin:0; color:#6d28d9; font-size:14px;">10,000 daily matches · Dedicated manager · Custom integrations · Full API access</p>
         </div>
         <p style="color:#6b7280; font-size:14px;">
@@ -607,7 +607,7 @@ export const sendEnterpriseInquiryConfirmation = async ({ name, email, company, 
   await transporter.sendMail({
     from: FROM.support(),
     to: email,
-    subject: `Your Enterprise Plan Request Received — We'll be in touch!`,
+    subject: `Your Enterprise Plan Request Received - We'll be in touch!`,
     html,
   });
 
@@ -627,7 +627,7 @@ export const sendEnterpriseInquiryAdminAlert = async (inquiry, aiAnalysis) => {
     <div style="font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 20px;">
       <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#dc2626,#b91c1c); border-radius:12px; color:white;">
         <h1 style="margin:0;">🚨 New Plan Request</h1>
-        <p style="margin:5px 0 0; opacity:.9;">Action Required — ${planLabel}</p>
+        <p style="margin:5px 0 0; opacity:.9;">Action Required - ${planLabel}</p>
       </div>
 
       <div style="padding:30px; background:white; border-radius:12px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,.1);">
@@ -703,12 +703,12 @@ export const sendPlanActivatedEmail = async ({ name, email, planName, planExpire
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:12px;color:white;">
         <h1 style="margin:0;">🎉 Plan Activated!</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid — Federal Contract Intelligence</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid - Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Your ${planLabel} Plan is Live, ${name}!</h2>
         <p style="color:#4b5563;line-height:1.6;">
-          Great news — your <strong>${planLabel} plan</strong> has been activated by our team. You now have full access to all ${planLabel} features.
+          Great news - your <strong>${planLabel} plan</strong> has been activated by our team. You now have full access to all ${planLabel} features.
         </p>
         <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:20px;margin:20px 0;">
           <p style="margin:0 0 10px;font-weight:700;color:#166534;">What's unlocked:</p>
@@ -741,7 +741,7 @@ export const sendPlanActivatedEmail = async ({ name, email, planName, planExpire
   await sendTrackedMail({
     from: FROM.billing(),
     to: email,
-    subject: `🎉 Your ${planLabel} Plan is Now Active — Welcome aboard!`,
+    subject: `🎉 Your ${planLabel} Plan is Now Active - Welcome aboard!`,
     html,
   }, { emailType: 'plan_activated', recipientName: name });
 
@@ -761,7 +761,7 @@ export const sendAdminPaymentAlert = async ({ userEmail, userName, planName, amo
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:12px;color:white;">
         <h1 style="margin:0;">💰 New Payment Received</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid — Payment Alert</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid - Payment Alert</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Payment Details</h2>
@@ -793,7 +793,7 @@ export const sendAdminPaymentAlert = async ({ userEmail, userName, planName, amo
         </table>
         <div style="background:#f0fdf4;border-radius:10px;padding:16px;margin:24px 0;text-align:center;">
           <p style="margin:0 0 4px;color:#166534;font-weight:600;">Plan activated automatically ✓</p>
-          <p style="margin:0;color:#15803d;font-size:14px;">No action required — the user's plan is already live.</p>
+          <p style="margin:0;color:#15803d;font-size:14px;">No action required - the user's plan is already live.</p>
         </div>
         <div style="text-align:center;">
           <a href="${frontendUrl}/admin/invoices" style="display:inline-block;background:#6366f1;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">
@@ -807,7 +807,7 @@ export const sendAdminPaymentAlert = async ({ userEmail, userName, planName, amo
   await transporter.sendMail({
     from: FROM.billing(),
     to: adminEmail,
-    subject: `💰 New Payment: ${planLabel} plan — $${amount} via ${methodLabel}`,
+    subject: `💰 New Payment: ${planLabel} plan - $${amount} via ${methodLabel}`,
     html,
   });
 
@@ -815,7 +815,7 @@ export const sendAdminPaymentAlert = async ({ userEmail, userName, planName, amo
 };
 
 /**
- * Payment confirmed — send receipt to the user
+ * Payment confirmed - send receipt to the user
  */
 export const sendPaymentConfirmationEmail = async ({ name, email, planName, amount, billingCycle, paymentMethod, invoiceNumber }) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -827,7 +827,7 @@ export const sendPaymentConfirmationEmail = async ({ name, email, planName, amou
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:12px;color:white;">
         <h1 style="margin:0;">✅ Payment Confirmed</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid — Federal Contract Intelligence</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid - Federal Contract Intelligence</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Thank you, ${name}!</h2>
@@ -871,7 +871,7 @@ export const sendPaymentConfirmationEmail = async ({ name, email, planName, amou
   await sendTrackedMail({
     from: FROM.billing(),
     to: email,
-    subject: `✅ Payment confirmed — ${planLabel} plan activated ($${amount})`,
+    subject: `✅ Payment confirmed - ${planLabel} plan activated ($${amount})`,
     html,
   }, { emailType: 'payment_confirmation', recipientName: name });
 
@@ -902,9 +902,9 @@ export const sendCertificationExpiryAlert = async (user, certification, daysLeft
         <div style="background:#f0fdf4;border-radius:8px;padding:16px;margin:20px 0;">
           <p style="margin:0 0 8px;font-weight:600;color:#166534;">Quick Renewal Links:</p>
           <ul style="margin:0;padding-left:20px;color:#15803d;line-height:2;">
-            ${certification.type.includes('SAM') ? '<li><a href="https://sam.gov" style="color:#15803d;">SAM.gov — Renew Registration</a></li>' : ''}
-            ${certification.type.includes('8(a)') ? '<li><a href="https://certify.sba.gov" style="color:#15803d;">SBA Certify — 8(a) Renewal</a></li>' : ''}
-            ${certification.type.includes('WOSB') || certification.type.includes('HUBZone') ? '<li><a href="https://certify.sba.gov" style="color:#15803d;">SBA Certify — Renewal Portal</a></li>' : ''}
+            ${certification.type.includes('SAM') ? '<li><a href="https://sam.gov" style="color:#15803d;">SAM.gov - Renew Registration</a></li>' : ''}
+            ${certification.type.includes('8(a)') ? '<li><a href="https://certify.sba.gov" style="color:#15803d;">SBA Certify - 8(a) Renewal</a></li>' : ''}
+            ${certification.type.includes('WOSB') || certification.type.includes('HUBZone') ? '<li><a href="https://certify.sba.gov" style="color:#15803d;">SBA Certify - Renewal Portal</a></li>' : ''}
           </ul>
         </div>
         <a href="${frontendUrl}/contract-vehicles" style="display:inline-block;background:${color};color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">
@@ -917,11 +917,11 @@ export const sendCertificationExpiryAlert = async (user, certification, daysLeft
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `${urgency}: ${certification.type} expires in ${daysLeft} days — Renew Now`,
+    subject: `${urgency}: ${certification.type} expires in ${daysLeft} days - Renew Now`,
     html,
   });
 
-  console.log(`📧 Certification expiry alert sent to ${user.email} — ${certification.type} (${daysLeft}d)`);
+  console.log(`📧 Certification expiry alert sent to ${user.email} - ${certification.type} (${daysLeft}d)`);
 };
 
 /**
@@ -962,7 +962,7 @@ export const sendDeadlineReminder = async (user, opportunity, daysLeft) => {
         </table>
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:20px 0;text-align:center;">
           <p style="margin:0;color:#991b1b;font-weight:600;">Don't miss this deadline!</p>
-          <p style="margin:5px 0 0;color:#b91c1c;font-size:14px;">You saved this opportunity — make sure your proposal is ready.</p>
+          <p style="margin:5px 0 0;color:#b91c1c;font-size:14px;">You saved this opportunity - make sure your proposal is ready.</p>
         </div>
         <div style="text-align:center;margin-top:20px;">
           <a href="${frontendUrl}/opportunity/${opportunity._id}" style="display:inline-block;background:${urgencyColor};color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;margin-right:10px;">
@@ -986,7 +986,7 @@ export const sendDeadlineReminder = async (user, opportunity, daysLeft) => {
     html,
   });
 
-  console.log(`📧 Deadline reminder sent to ${user.email} — ${daysLeft}d left for: ${opportunity.title}`);
+  console.log(`📧 Deadline reminder sent to ${user.email} - ${daysLeft}d left for: ${opportunity.title}`);
 };
 
 /**
@@ -1038,7 +1038,7 @@ function formatCampaignBody(rawBody, primaryColor = '#4f46e5') {
 
 /**
  * Fetches a user's own top N NAICS-matched opportunities (by matchScore),
- * as plain data — shared by the actual campaign send AND the admin panel's
+ * as plain data - shared by the actual campaign send AND the admin panel's
  * "live preview" (GET /api/admin-ai/user-top-matches/:userId), so what an
  * admin sees in preview is the exact same query result the real email uses,
  * not a mock.
@@ -1070,7 +1070,7 @@ export async function getTopMatchesForUser(user, limit = 5) {
 
 /**
  * Personalizes a campaign email with the recipient's own top 5 NAICS-matched
- * opportunities, each linking straight to its detail page — every recipient
+ * opportunities, each linking straight to its detail page - every recipient
  * sees different contracts, based on their own profile. Trial/free users get
  * the same title-locked treatment as the welcome email (server-side paywall
  * stays intact, no locked data leaked into the email). Returns '' when the
@@ -1085,11 +1085,11 @@ async function buildTopMatchesBlock(user) {
   const cards = matches.map((opp, i) => {
     const due = opp.dueDate
       ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : '—';
+      : ' - ';
     const oppUrl = `${frontendUrl}/opportunity/${opp.id}`;
     const snippet = opp.description.slice(0, 150);
     const titleHtml = opp.locked
-      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
+      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} - details locked</span>`
       : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title}</a>`;
     return `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:8px 0;">
@@ -1122,7 +1122,7 @@ async function buildTopMatchesBlock(user) {
 
 /**
  * Send a campaign email to a single user (used by admin campaign system).
- * fromAlias picks the visible From address (main/noreply/support/billing) —
+ * fromAlias picks the visible From address (main/noreply/support/billing)  - 
  * same alias scheme as prospect outreach; SMTP always authenticates as the
  * real mailbox, only the displayed address changes.
  */
@@ -1217,7 +1217,7 @@ export const sendWeeklyMarketResearchEmail = async (user, reportText) => {
     <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:12px;color:white;">
         <h1 style="margin:0;">📊 Weekly Market Intelligence</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Sambid Enterprise — ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        <p style="margin:5px 0 0;opacity:.9;">Sambid Enterprise - ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Your Federal Market Briefing</h2>
@@ -1230,14 +1230,14 @@ ${reportText}
             View Full Report →
           </a>
         </div>
-        <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:20px;">Enterprise plan benefit — delivered every Monday.</p>
+        <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:20px;">Enterprise plan benefit - delivered every Monday.</p>
       </div>
     </div>
   `;
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `📊 Your Weekly Federal Market Intelligence — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+    subject: `📊 Your Weekly Federal Market Intelligence - ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
     html,
   });
   console.log(`📧 Weekly market research sent to ${user.email}`);
@@ -1273,13 +1273,13 @@ export const sendAdminUserActionAlert = async ({ action, userName, userEmail, de
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:18px;background:${meta.color};border-radius:12px;color:white;">
         <h1 style="margin:0;font-size:22px;">${meta.emoji} ${meta.title}</h1>
-        <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Sambid — Admin Alert</p>
+        <p style="margin:6px 0 0;opacity:.85;font-size:14px;">Sambid - Admin Alert</p>
       </div>
       <div style="padding:28px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <table style="width:100%;border-collapse:collapse;">
           <tr style="border-bottom:1px solid #e5e7eb;">
             <td style="padding:8px 0;font-weight:600;color:#374151;width:40%;">User Name</td>
-            <td style="padding:8px 0;color:#4b5563;">${userName || '—'}</td>
+            <td style="padding:8px 0;color:#4b5563;">${userName || ' - '}</td>
           </tr>
           <tr style="border-bottom:1px solid #e5e7eb;">
             <td style="padding:8px 0;font-weight:600;color:#374151;">User Email</td>
@@ -1300,7 +1300,7 @@ export const sendAdminUserActionAlert = async ({ action, userName, userEmail, de
     await transporter.sendMail({
       from: FROM.support(),
       to: adminEmail,
-      subject: `${meta.emoji} ${meta.title} — ${userName || userEmail}`,
+      subject: `${meta.emoji} ${meta.title} - ${userName || userEmail}`,
       html,
     });
     console.log(`📧 Admin user-action alert sent (${action}) for ${userEmail}`);
@@ -1354,7 +1354,7 @@ export const sendWeeklyDigest = async (user, opportunities) => {
 };
 
 /**
- * Ticket created — notify user and admin
+ * Ticket created - notify user and admin
  */
 export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -1388,7 +1388,7 @@ export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => 
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#7c3aed,#6366f1);border-radius:12px;color:white;">
         <h1 style="margin:0;">🎫 New Support Ticket</h1>
-        <p style="margin:5px 0 0;opacity:.9;">${ticket.ticketNumber} — Action Required</p>
+        <p style="margin:5px 0 0;opacity:.9;">${ticket.ticketNumber} - Action Required</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
@@ -1416,13 +1416,13 @@ export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => 
     html: userHtml,
   });
 
-  // All admins — send individually so each gets it in their inbox
+  // All admins - send individually so each gets it in their inbox
   const targets = adminEmails.length ? adminEmails : [process.env.ADMIN_EMAIL || process.env.EMAIL_USER].filter(Boolean);
   for (const email of targets) {
     transporter.sendMail({
       from: FROM.noreply(),
       to: email,
-      subject: `🎫 [NEW TICKET] ${ticket.ticketNumber} — ${ticket.subject}`,
+      subject: `🎫 [NEW TICKET] ${ticket.ticketNumber} - ${ticket.subject}`,
       html: adminHtml,
     }).catch(() => {});
   }
@@ -1430,10 +1430,10 @@ export const sendTicketCreatedEmail = async (user, ticket, adminEmails = []) => 
 };
 
 /**
- * Admin replied to ticket — notify user
+ * Admin replied to ticket - notify user
  */
 /**
- * User replied to ticket — notify admin
+ * User replied to ticket - notify admin
  */
 export const sendAdminTicketUserReplyAlert = async (user, ticket, replyContent, adminEmails = []) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -1504,7 +1504,7 @@ export const sendTicketReplyEmail = async (user, ticket, replyContent) => {
 };
 
 /**
- * Ticket status changed (resolved / closed) — notify user
+ * Ticket status changed (resolved / closed) - notify user
  */
 export const sendTicketStatusEmail = async (user, ticket, status) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -1546,7 +1546,7 @@ export const sendTicketStatusEmail = async (user, ticket, status) => {
 };
 
 /**
- * Suggestion submitted — user confirmation + all admin alerts
+ * Suggestion submitted - user confirmation + all admin alerts
  */
 export const sendSuggestionEmail = async (user, suggestion, adminEmails = []) => {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -1587,7 +1587,7 @@ export const sendSuggestionEmail = async (user, suggestion, adminEmails = []) =>
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#7c3aed,#6366f1);border-radius:12px;color:white;">
         <h1 style="margin:0;">💡 New Suggestion</h1>
-        <p style="margin:5px 0 0;opacity:.9;">${suggestion.suggestionNumber} — ${categoryLabel}</p>
+        <p style="margin:5px 0 0;opacity:.9;">${suggestion.suggestionNumber} - ${categoryLabel}</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
@@ -1610,7 +1610,7 @@ export const sendSuggestionEmail = async (user, suggestion, adminEmails = []) =>
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `[${suggestion.suggestionNumber}] Feedback received — thank you!`,
+    subject: `[${suggestion.suggestionNumber}] Feedback received - thank you!`,
     html: userHtml,
   });
 
@@ -1619,7 +1619,7 @@ export const sendSuggestionEmail = async (user, suggestion, adminEmails = []) =>
     transporter.sendMail({
       from: FROM.noreply(),
       to: email,
-      subject: `💡 [NEW SUGGESTION] ${suggestion.suggestionNumber} — ${suggestion.title}`,
+      subject: `💡 [NEW SUGGESTION] ${suggestion.suggestionNumber} - ${suggestion.title}`,
       html: adminHtml,
     }).catch(() => {});
   }
@@ -1668,7 +1668,7 @@ export const sendPaymentInstructionsEmail = async ({
 
         <!-- Payment details -->
         <div style="background:#f9fafb;border-left:4px solid #6366f1;border-radius:0 8px 8px 0;padding:20px;margin:24px 0;">
-          <p style="margin:0 0 10px;font-weight:700;color:#1f2937;font-size:15px;">📋 Payment Details — ${methodLabel}</p>
+          <p style="margin:0 0 10px;font-weight:700;color:#1f2937;font-size:15px;">📋 Payment Details - ${methodLabel}</p>
           <pre style="margin:0;white-space:pre-wrap;font-family:Arial,sans-serif;font-size:14px;color:#374151;line-height:1.8;">${accountInfo}</pre>
         </div>
 
@@ -1699,7 +1699,7 @@ export const sendPaymentInstructionsEmail = async ({
   await sendTrackedMail({
     from: FROM.billing(),
     to,
-    subject: `Payment Instructions — ${planLabel} ($${Number(amount).toLocaleString()}) [Ref: ${reference}]`,
+    subject: `Payment Instructions - ${planLabel} ($${Number(amount).toLocaleString()}) [Ref: ${reference}]`,
     html,
   }, { emailType: 'payment_instructions', recipientName: userName || '' });
   console.log(`📧 Payment instructions sent to ${to} (ref: ${reference})`);
@@ -1760,7 +1760,7 @@ export const sendWithdrawalRequestEmails = async ({ supportName, supportEmail, a
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;color:white;">
         <h1 style="margin:0;">New Withdrawal Request</h1>
-        <p style="margin:5px 0 0;opacity:.9;">Action Required — Support Commission</p>
+        <p style="margin:5px 0 0;opacity:.9;">Action Required - Support Commission</p>
       </div>
       <div style="padding:30px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
         <h2 style="color:#1f2937;margin-top:0;">Withdrawal Details</h2>
@@ -1796,7 +1796,7 @@ export const sendWithdrawalRequestEmails = async ({ supportName, supportEmail, a
     transporter.sendMail({
       from: FROM.billing(),
       to: supportEmail,
-      subject: `Withdrawal Request Submitted — ${amountStr} via PayPal`,
+      subject: `Withdrawal Request Submitted - ${amountStr} via PayPal`,
       html: memberHtml,
     }),
     transporter.sendMail({
@@ -1817,7 +1817,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
 
   const statusConfig = {
     approved: { label: 'Approved',  color: '#16a34a', bg: '#f0fdf4', border: '#bbf7d0', emoji: '✅', msg: 'Your withdrawal request has been approved. Payment will be sent to your PayPal account shortly.' },
-    paid:     { label: 'Paid',      color: '#4f46e5', bg: '#eef2ff', border: '#c7d2fe', emoji: '💸', msg: 'Great news — your withdrawal has been paid to your PayPal account!' },
+    paid:     { label: 'Paid',      color: '#4f46e5', bg: '#eef2ff', border: '#c7d2fe', emoji: '💸', msg: 'Great news - your withdrawal has been paid to your PayPal account!' },
     rejected: { label: 'Rejected',  color: '#dc2626', bg: '#fef2f2', border: '#fecaca', emoji: '❌', msg: 'Your withdrawal request has been rejected. Your balance has been refunded. Please contact support if you have questions.' },
   };
   const cfg = statusConfig[status] || statusConfig.approved;
@@ -1871,7 +1871,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
     transporter.sendMail({
       from: FROM.billing(),
       to: supportEmail,
-      subject: `${cfg.emoji} Withdrawal ${cfg.label} — ${amountStr} | Sambid`,
+      subject: `${cfg.emoji} Withdrawal ${cfg.label} - ${amountStr} | Sambid`,
       html,
     }),
   ];
@@ -1880,7 +1880,7 @@ export const sendWithdrawalStatusEmail = async ({ supportName, supportEmail, amo
     const adminHtml = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
         <div style="text-align:center;padding:16px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;color:white;">
-          <h2 style="margin:0;">Withdrawal ${cfg.label} — Action Logged</h2>
+          <h2 style="margin:0;">Withdrawal ${cfg.label} - Action Logged</h2>
         </div>
         <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
@@ -1921,8 +1921,8 @@ const projectRow = (label, value) => `<tr style="border-bottom:1px solid #e5e7eb
 
 const projectCTA = (url, text) => `<a href="${url}" style="display:inline-block;background:#4f46e5;color:#fff;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;margin-top:12px;">${text}</a>`;
 
-const fmtD = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—';
-const fmtM = (n) => n != null ? `$${Number(n).toLocaleString()}` : '—';
+const fmtD = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ' - ';
+const fmtM = (n) => n != null ? `$${Number(n).toLocaleString()}` : ' - ';
 const FE = process.env.FRONTEND_URL || 'https://sambid.co';
 
 export const sendProjectCreatedEmail = async (owner, project) => {
@@ -1930,7 +1930,7 @@ export const sendProjectCreatedEmail = async (owner, project) => {
     await getTransporter().sendMail({
       from: FROM.billing(),
       to: owner.email,
-      subject: `New Project Created — ${project.title}`,
+      subject: `New Project Created - ${project.title}`,
       html: projectEmailWrap('#4f46e5', '📋 New Project Created', 'Managed Service Fulfillment', `
         <p>Hi <strong>${owner.name}</strong>,</p>
         <p>A new project has been created for a contract we won on your behalf.</p>
@@ -1938,9 +1938,9 @@ export const sendProjectCreatedEmail = async (owner, project) => {
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
             ${projectRow('Project #', project.projectNumber)}
             ${projectRow('Contract', project.title)}
-            ${projectRow('Agency', project.agency || '—')}
+            ${projectRow('Agency', project.agency || ' - ')}
             ${projectRow('Contract Value', fmtM(project.contractValue))}
-            ${projectRow('NAICS', project.naicsCode || '—')}
+            ${projectRow('NAICS', project.naicsCode || ' - ')}
           </table>
         </div>
         <p style="color:#6b7280;font-size:13px;">We'll begin sourcing vendors and will keep you updated on progress.</p>
@@ -1955,16 +1955,16 @@ export const sendQuoteReceivedEmail = async (adminEmail, quote, project) => {
     await getTransporter().sendMail({
       from: FROM.noreply(),
       to: adminEmail,
-      subject: `New Quote: ${quote.vendorName} — ${fmtM(quote.quoteAmount)} for ${project.title}`,
+      subject: `New Quote: ${quote.vendorName} - ${fmtM(quote.quoteAmount)} for ${project.title}`,
       html: projectEmailWrap('#6366f1', '💰 New Vendor Quote', project.title, `
         <p>A new subcontractor quote has been submitted.</p>
         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin:20px 0;">
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
             ${projectRow('Vendor', quote.vendorName)}
-            ${projectRow('Company', quote.vendorCompany || '—')}
+            ${projectRow('Company', quote.vendorCompany || ' - ')}
             ${projectRow('Quote Amount', fmtM(quote.quoteAmount))}
-            ${projectRow('Delivery Timeline', quote.deliveryTimeline ? `${quote.deliveryTimeline} days` : '—')}
-            ${projectRow('Location', [quote.vendorLocation?.city, quote.vendorLocation?.state, quote.vendorLocation?.country].filter(Boolean).join(', ') || '—')}
+            ${projectRow('Delivery Timeline', quote.deliveryTimeline ? `${quote.deliveryTimeline} days` : ' - ')}
+            ${projectRow('Location', [quote.vendorLocation?.city, quote.vendorLocation?.state, quote.vendorLocation?.country].filter(Boolean).join(', ') || ' - ')}
           </table>
         </div>
         ${projectCTA(FE + '/admin/managed-projects', 'Review Quote')}
@@ -1978,14 +1978,14 @@ export const sendVendorSelectedEmail = async (vendorEmail, vendorName, project) 
     await getTransporter().sendMail({
       from: FROM.billing(),
       to: vendorEmail,
-      subject: `You've Been Selected! — ${project.title}`,
+      subject: `You've Been Selected! - ${project.title}`,
       html: projectEmailWrap('#059669', '🎉 Congratulations!', 'You have been selected as the vendor', `
         <p>Hi <strong>${vendorName}</strong>,</p>
         <p>We are pleased to inform you that your quote has been accepted for the following project:</p>
         <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px;margin:20px 0;">
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
             ${projectRow('Project', project.title)}
-            ${projectRow('Agency', project.agency || '—')}
+            ${projectRow('Agency', project.agency || ' - ')}
             ${projectRow('Contract Value', fmtM(project.contractValue))}
             ${projectRow('Delivery Deadline', fmtD(project.deliveryDeadline))}
           </table>
@@ -2004,7 +2004,7 @@ export const sendMilestoneUpdateEmail = async (owner, project, milestone) => {
     await getTransporter().sendMail({
       from: FROM.noreply(),
       to: owner.email,
-      subject: `Milestone Update: ${milestone.title} — ${project.title}`,
+      subject: `Milestone Update: ${milestone.title} - ${project.title}`,
       html: projectEmailWrap('#4f46e5', '📊 Milestone Update', project.title, `
         <p>Hi <strong>${owner.name}</strong>,</p>
         <p>There's an update on your project milestone:</p>
@@ -2038,7 +2038,7 @@ export const sendDeadlineAlertEmail = async (recipients, project, daysLeft) => {
       await getTransporter().sendMail({
         from: FROM.noreply(),
         to,
-        subject: `${emoji} ${daysLeft} Days Left — ${project.title}`,
+        subject: `${emoji} ${daysLeft} Days Left - ${project.title}`,
         html: projectEmailWrap(bg, `${emoji} Deadline Alert`, `${daysLeft} days remaining`, `
           <p>The following project delivery deadline is approaching:</p>
           <div style="background:${isUrgent ? '#fef2f2' : '#fffbeb'};border:1px solid ${isUrgent ? '#fecaca' : '#fed7aa'};border-radius:12px;padding:20px;margin:20px 0;">
@@ -2063,7 +2063,7 @@ export const sendGovPaymentReceivedEmail = async (owner, project) => {
     await getTransporter().sendMail({
       from: FROM.billing(),
       to: owner.email,
-      subject: `Government Payment Received — ${project.title}`,
+      subject: `Government Payment Received - ${project.title}`,
       html: projectEmailWrap('#059669', '💵 Payment Received', 'Government Contract Payment', `
         <p>Hi <strong>${owner.name}</strong>,</p>
         <p>Great news! We have received the government payment for your project.</p>
@@ -2088,7 +2088,7 @@ export const sendSubcontractorPaymentEmail = async (vendorEmail, vendorName, mil
     await getTransporter().sendMail({
       from: FROM.billing(),
       to: vendorEmail,
-      subject: `Payment Processed — ${milestone.title} (${project.title})`,
+      subject: `Payment Processed - ${milestone.title} (${project.title})`,
       html: projectEmailWrap('#059669', '✅ Payment Processed', 'Milestone Payment Confirmation', `
         <p>Hi <strong>${vendorName}</strong>,</p>
         <p>Payment has been processed for the following milestone:</p>
@@ -2097,7 +2097,7 @@ export const sendSubcontractorPaymentEmail = async (vendorEmail, vendorName, mil
             ${projectRow('Project', project.title)}
             ${projectRow('Milestone', milestone.title)}
             ${projectRow('Amount', `<span style="color:#059669;font-weight:700;font-size:18px;">${fmtM(milestone.paymentAmount)}</span>`)}
-            ${projectRow('Reference', milestone.paymentReference || '—')}
+            ${projectRow('Reference', milestone.paymentReference || ' - ')}
             ${projectRow('Date', fmtD(milestone.paymentDate))}
           </table>
         </div>
@@ -2120,8 +2120,8 @@ const _deadlineOppBox = (opp, dueLabel) => `
   <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:18px;margin:20px 0;">
     <h3 style="margin:0 0 10px;color:#1f2937;font-size:16px;">${opp.title || 'Untitled Opportunity'}</h3>
     <table style="width:100%;font-size:14px;color:#4b5563;border-collapse:collapse;">
-      <tr><td style="padding:4px 0;width:130px;"><strong>Agency</strong></td><td>${opp.agency || '—'}</td></tr>
-      <tr><td style="padding:4px 0;"><strong>NAICS</strong></td><td>${opp.naicsCode || '—'}</td></tr>
+      <tr><td style="padding:4px 0;width:130px;"><strong>Agency</strong></td><td>${opp.agency || ' - '}</td></tr>
+      <tr><td style="padding:4px 0;"><strong>NAICS</strong></td><td>${opp.naicsCode || ' - '}</td></tr>
       <tr><td style="padding:4px 0;"><strong>Deadline</strong></td><td><strong style="color:#dc2626;">${dueLabel}</strong></td></tr>
       ${opp.estimatedValue ? `<tr><td style="padding:4px 0;"><strong>Value</strong></td><td>$${Number(opp.estimatedValue).toLocaleString()}</td></tr>` : ''}
       ${opp.setAside ? `<tr><td style="padding:4px 0;"><strong>Set-Aside</strong></td><td>${opp.setAside}</td></tr>` : ''}
@@ -2141,11 +2141,11 @@ const _deadlineFtr = () => `
   </div>`;
 
 /**
- * MASKED teaser for trial/free users — creates urgency without leaking anything
+ * MASKED teaser for trial/free users - creates urgency without leaking anything
  * searchable on SAM.gov. Deliberately NO title words, NO full agency chain,
  * NO NAICS code, NO solicitation number: title + agency + NAICS is enough to
  * find the notice on SAM.gov for free, which would let trial users bypass the
- * paywall entirely. Value, set-aside, match strength, and the countdown stay —
+ * paywall entirely. Value, set-aside, match strength, and the countdown stay  - 
  * they sell the opportunity but can't locate it.
  */
 export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
@@ -2154,9 +2154,9 @@ export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
     ${_deadlineHdr('linear-gradient(135deg,#f59e0b,#d97706)', '🔒', 'A Matched Contract Is About to Expire')}
     <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
       <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
-      <p style="color:#4b5563;">A federal contract <strong>matched to your NAICS codes</strong> reaches its submission deadline in <strong style="color:#dc2626;">${timeLabel}</strong> — and on your current plan, its details are locked.</p>
+      <p style="color:#4b5563;">A federal contract <strong>matched to your NAICS codes</strong> reaches its submission deadline in <strong style="color:#dc2626;">${timeLabel}</strong> - and on your current plan, its details are locked.</p>
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:18px;margin:20px 0;">
-        <h3 style="margin:0 0 10px;color:#9ca3af;font-size:16px;">🔒 Contract details locked — upgrade to view</h3>
+        <h3 style="margin:0 0 10px;color:#9ca3af;font-size:16px;">🔒 Contract details locked - upgrade to view</h3>
         <table style="width:100%;font-size:14px;color:#4b5563;border-collapse:collapse;">
           <tr><td style="padding:4px 0;width:130px;"><strong>Agency</strong></td><td>${topAgency}</td></tr>
           <tr><td style="padding:4px 0;"><strong>Match</strong></td><td style="color:#16a34a;font-weight:bold;">Matched to your NAICS codes</td></tr>
@@ -2171,7 +2171,7 @@ export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
           </a>
         </div>
       </div>
-      <p style="color:#6b7280;font-size:13px;">When this deadline passes, the contract is gone — someone else wins it. Upgrading unlocks the full title, documents, contacts, and the direct SAM.gov link for every match.</p>
+      <p style="color:#6b7280;font-size:13px;">When this deadline passes, the contract is gone - someone else wins it. Upgrading unlocks the full title, documents, contacts, and the direct SAM.gov link for every match.</p>
       ${_deadlineFtr()}`;
 
   await transporter.sendMail({
@@ -2184,7 +2184,7 @@ export const sendDeadlineTeaserAlert = async (user, opp, timeLabel) => {
 };
 
 /**
- * Instant "first matches" email — sent the moment a new user's NAICS codes
+ * Instant "first matches" email - sent the moment a new user's NAICS codes
  * produce their first matched opportunities (no waiting for the hourly crons).
  * Trial/free users get MASKED teaser rows (nothing searchable on SAM.gov) plus
  * the total match count to create pull toward the dashboard and the upgrade.
@@ -2197,13 +2197,13 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
     const topAgency = String(opp.agency || 'Federal agency').split('>')[0].trim();
     const due = opp.dueDate
       ? new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : '—';
+      : ' - ';
     const oppUrl = `${frontendUrl}/opportunity/${opp._id}`;
-    // Locked rows never link out — the title itself is already hidden, and
+    // Locked rows never link out - the title itself is already hidden, and
     // the paywall is enforced server-side on the detail page regardless, but
     // there's no reason to hand a trial/free user a direct deep link either.
     const titleHtml = isLimited
-      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} — details locked</span>`
+      ? `<span style="color:#9ca3af;">🔒 Matched contract #${i + 1} - details locked</span>`
       : `<a href="${oppUrl}" style="color:#1f2937;text-decoration:none;">${opp.title || 'Untitled opportunity'}</a>`;
     return `
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:10px 0;">
@@ -2223,7 +2223,7 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
     ${_deadlineHdr('linear-gradient(135deg,#6366f1,#8b5cf6)', '🎯', 'Your First Matched Contracts Are In')}
     <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
       <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
-      <p style="color:#4b5563;">Great news — your NAICS codes just matched <strong>${totalMatches || opps.length} active federal contract${(totalMatches || opps.length) !== 1 ? 's' : ''}</strong> in our database. Here ${opps.length === 1 ? 'is the first one' : 'are your first matches'}:</p>
+      <p style="color:#4b5563;">Great news - your NAICS codes just matched <strong>${totalMatches || opps.length} active federal contract${(totalMatches || opps.length) !== 1 ? 's' : ''}</strong> in our database. Here ${opps.length === 1 ? 'is the first one' : 'are your first matches'}:</p>
       ${rows}
       ${moreCount > 0 ? `<p style="color:#6b7280;font-size:14px;text-align:center;margin:14px 0;">…and <strong>${moreCount} more matched contract${moreCount !== 1 ? 's' : ''}</strong> ${isLimited ? 'locked on your current plan' : 'waiting in your feed'}.</p>` : ''}
       <div style="margin:18px 0;text-align:center;">
@@ -2232,7 +2232,7 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
           View My Matches →
         </a>
       </div>
-      ${isLimited ? `<p style="color:#6b7280;font-size:13px;text-align:center;">Your plan shows ${opps.length} match${opps.length !== 1 ? 'es' : ''} per day. <a href="${frontendUrl}/pricing" style="color:#6366f1;font-weight:bold;">Upgrade</a> to unlock every match — full details, documents, contacts, and deadline alerts.</p>` : ''}
+      ${isLimited ? `<p style="color:#6b7280;font-size:13px;text-align:center;">Your plan shows ${opps.length} match${opps.length !== 1 ? 'es' : ''} per day. <a href="${frontendUrl}/pricing" style="color:#6366f1;font-weight:bold;">Upgrade</a> to unlock every match - full details, documents, contacts, and deadline alerts.</p>` : ''}
       ${_deadlineFtr()}`;
 
   await transporter.sendMail({
@@ -2245,7 +2245,7 @@ export const sendWelcomeMatchesEmail = async (user, opps, totalMatches = 0) => {
 };
 
 /**
- * "Upcoming deadline" — first notice when an opp enters the user's alert window
+ * "Upcoming deadline" - first notice when an opp enters the user's alert window
  */
 export const sendDeadlineUpcomingAlert = async (user, opp, daysLeft) => {
   const dueLabel = `${new Date(opp.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${daysLeft} day${daysLeft !== 1 ? 's' : ''} left)`;
@@ -2260,25 +2260,25 @@ export const sendDeadlineUpcomingAlert = async (user, opp, daysLeft) => {
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `📅 Deadline in ${daysLeft} days — ${(opp.title || '').substring(0, 60)}`,
+    subject: `📅 Deadline in ${daysLeft} days - ${(opp.title || '').substring(0, 60)}`,
     html,
   });
   console.log(`📧 Upcoming deadline alert sent to ${user.email} (${daysLeft}d left)`);
 };
 
 /**
- * "1-day countdown" — up to 5 emails every 5h when <24h remain
+ * "1-day countdown" - up to 5 emails every 5h when <24h remain
  */
 export const sendDeadline1DayAlert = async (user, opp, alertIndex, hoursLeft) => {
   const h = Math.max(0, Math.round(hoursLeft));
-  const dueLabel = `${new Date(opp.dueDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })} — ~${h}h remaining`;
+  const dueLabel = `${new Date(opp.dueDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })} - ~${h}h remaining`;
   const html = `
-    ${_deadlineHdr('linear-gradient(135deg,#f59e0b,#d97706)', '⚠️', `Deadline Tomorrow — Reminder ${alertIndex} of 5`)}
+    ${_deadlineHdr('linear-gradient(135deg,#f59e0b,#d97706)', '⚠️', `Deadline Tomorrow - Reminder ${alertIndex} of 5`)}
     <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
       <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
       <p style="color:#4b5563;">Approximately <strong>${h} hour${h !== 1 ? 's' : ''}</strong> remain to submit your proposal for this opportunity!</p>
       <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px;margin:12px 0;text-align:center;font-weight:bold;color:#92400e;">
-        ⏰ ACT NOW — Less than 24 hours to deadline
+        ⏰ ACT NOW - Less than 24 hours to deadline
       </div>
       ${_deadlineOppBox(opp, dueLabel)}
       ${_deadlineFtr()}`;
@@ -2286,25 +2286,25 @@ export const sendDeadline1DayAlert = async (user, opp, alertIndex, hoursLeft) =>
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `⚠️ ${h}h left to apply — ${(opp.title || '').substring(0, 55)}`,
+    subject: `⚠️ ${h}h left to apply - ${(opp.title || '').substring(0, 55)}`,
     html,
   });
   console.log(`📧 1-day alert #${alertIndex} sent to ${user.email} (~${h}h left)`);
 };
 
 /**
- * "Final hour" — 3 emails every 20min when <60min remain
+ * "Final hour" - 3 emails every 20min when <60min remain
  */
 export const sendDeadlineFinalAlert = async (user, opp, alertIndex, minutesLeft) => {
   const m = Math.max(0, Math.round(minutesLeft));
-  const dueLabel = `${new Date(opp.dueDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })} — ${m} min remaining`;
+  const dueLabel = `${new Date(opp.dueDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })} - ${m} min remaining`;
   const html = `
-    ${_deadlineHdr('linear-gradient(135deg,#dc2626,#991b1b)', '🚨', `URGENT — Final Hour Alert ${alertIndex} of 3`)}
+    ${_deadlineHdr('linear-gradient(135deg,#dc2626,#991b1b)', '🚨', `URGENT - Final Hour Alert ${alertIndex} of 3`)}
     <div style="padding:24px;background:white;border-radius:12px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
       <p style="color:#4b5563;margin-top:0;">Hi ${user.name || 'there'},</p>
       <p style="color:#4b5563;"><strong>Only ${m} minute${m !== 1 ? 's' : ''} left!</strong> Submit your proposal immediately.</p>
       <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:12px;margin:12px 0;text-align:center;font-weight:bold;color:#991b1b;font-size:16px;">
-        🚨 LAST ${m} MINUTES — SUBMIT NOW
+        🚨 LAST ${m} MINUTES - SUBMIT NOW
       </div>
       ${_deadlineOppBox(opp, dueLabel)}
       ${_deadlineFtr()}`;
@@ -2312,7 +2312,7 @@ export const sendDeadlineFinalAlert = async (user, opp, alertIndex, minutesLeft)
   await transporter.sendMail({
     from: FROM.noreply(),
     to: user.email,
-    subject: `🚨 URGENT: ${m} min left — ${(opp.title || '').substring(0, 55)}`,
+    subject: `🚨 URGENT: ${m} min left - ${(opp.title || '').substring(0, 55)}`,
     html,
   });
   console.log(`📧 Final-hour alert #${alertIndex} sent to ${user.email} (~${m}min left)`);

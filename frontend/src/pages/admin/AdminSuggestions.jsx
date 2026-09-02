@@ -124,7 +124,7 @@ function SuggestionRow({ suggestion: initial, onDeleted }) {
             <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line bg-gray-50 dark:bg-gray-700 rounded-lg p-3">{s.description}</p>
           </div>
 
-          {/* AI read — what actually needs to change */}
+          {/* AI read - what actually needs to change */}
           {s.aiSummary?.bullets?.length > 0 && (
             <div>
               <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-wide mb-1">AI Summary</p>
