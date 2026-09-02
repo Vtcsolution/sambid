@@ -21,7 +21,7 @@ import {
 import { buildCompanyProfile } from '../services/companyIntelService.js';
 
 // Same 7 section headers the AI is prompted to produce for a full proposal
-// (mirrors parseSections() in frontend/src/pages/ProposalBuilder.jsx) — used
+// (mirrors parseSections() in frontend/src/pages/ProposalBuilder.jsx) - used
 // to turn the proposal's markdown into a structured sections[] array for the
 // compliance matrix mapping step.
 const PROPOSAL_SECTION_KEYS = [
@@ -55,9 +55,9 @@ const pdfParse = _require('pdf-parse/lib/pdf-parse');
 const rfpUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } });
 export const rfpUploadMiddleware = rfpUpload.single('rfp');
 
-// ── Shared PDF fetcher — used by ALL AI features that need document content ───
+// ── Shared PDF fetcher - used by ALL AI features that need document content ───
 // Checks DB cache first (24h TTL). On cache miss, fetches from SAM.gov and
-// saves the result so every subsequent call uses the cache — no repeated hits.
+// saves the result so every subsequent call uses the cache - no repeated hits.
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 const fetchOpportunityDocuments = async (resourceLinks, opportunityId = null) => {
@@ -82,7 +82,7 @@ const fetchOpportunityDocuments = async (resourceLinks, opportunityId = null) =>
           fromCache: true,
         };
       }
-    } catch { /* cache read failure is non-fatal — fall through to live fetch */ }
+    } catch { /* cache read failure is non-fatal - fall through to live fetch */ }
   }
 
   if (!links.length) return { combinedText: '', fetchedCount: 0, totalDocs: 0 };
@@ -97,7 +97,7 @@ const fetchOpportunityDocuments = async (resourceLinks, opportunityId = null) =>
 
       const fileRes = await axios.get(fetchUrl, {
         responseType: 'arraybuffer',
-        timeout: 60000, // 60s per file — large SAM.gov PDFs (5MB+) need more time
+        timeout: 60000, // 60s per file - large SAM.gov PDFs (5MB+) need more time
         maxRedirects: 5,
         headers: {
           Accept: 'application/pdf,application/octet-stream,*/*',
@@ -189,7 +189,7 @@ const resolveDescription = async (opp) => {
   return '';
 };
 
-// Async version of formatOpportunityContext — resolves description URL first
+// Async version of formatOpportunityContext - resolves description URL first
 const buildOpportunityContext = async (opp) => {
   const resolved = await resolveDescription(opp);
   const oppWithDesc = resolved ? { ...opp, description: resolved } : opp;
@@ -208,7 +208,7 @@ const aiErrorMessage = (error) => {
   if (msg.includes('credit balance is too low') || msg.includes('insufficient_quota') || msg.includes('exceeded your current quota'))
     return 'AI service quota exhausted. Please contact the administrator to add OpenAI API credits (platform.openai.com → Billing).';
   if (msg.includes('Incorrect API key') || msg.includes('invalid_api_key'))
-    return 'AI service configuration error — invalid API key. Please contact the administrator.';
+    return 'AI service configuration error - invalid API key. Please contact the administrator.';
   if (msg.includes('OPENAI_API_KEY not set'))
     return 'AI service is not configured. The administrator needs to add the OpenAI API key to the server .env file.';
   if (msg.includes('rate limit') || msg.includes('429'))
@@ -293,8 +293,8 @@ const formatOpportunityContext = (opp) => {
   if (opp.relatedNotice) lines.push(`Related Notice: ${opp.relatedNotice}`);
   if (opp.archiveType) lines.push(`Inactive Policy: ${opp.archiveType}`);
   if (opp.noticeType) lines.push(`Notice Type: ${opp.noticeType}`);
-  lines.push(`NAICS Code: ${opp.naicsCode}${opp.naicsDescription ? ' — ' + opp.naicsDescription : ''}`);
-  if (opp.pscCode) lines.push(`PSC Code: ${opp.pscCode}${opp.pscDescription ? ' — ' + opp.pscDescription : ''}`);
+  lines.push(`NAICS Code: ${opp.naicsCode}${opp.naicsDescription ? ' - ' + opp.naicsDescription : ''}`);
+  if (opp.pscCode) lines.push(`PSC Code: ${opp.pscCode}${opp.pscDescription ? ' - ' + opp.pscDescription : ''}`);
   lines.push(`Estimated/Award Value: $${opp.estimatedValue?.toLocaleString() || 'Not specified'}`);
   lines.push(`Set-Aside: ${opp.setAside || 'Full and Open Competition'}`);
   lines.push(`Posted Date: ${opp.postedDate ? new Date(opp.postedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}`);
@@ -322,13 +322,13 @@ const formatOpportunityContext = (opp) => {
   if (contacts.length) {
     lines.push(`\nPOINT OF CONTACT:`);
     contacts.forEach(c => {
-      lines.push(`  ${c.fullName || c.name || 'N/A'}${c.title ? ' (' + c.title + ')' : ''} — ${c.email || ''} ${c.phone || ''}`);
+      lines.push(`  ${c.fullName || c.name || 'N/A'}${c.title ? ' (' + c.title + ')' : ''} - ${c.email || ''} ${c.phone || ''}`);
     });
   }
 
   const desc = opp.description || '';
   const descText = desc.startsWith('https://api.sam.gov')
-    ? '[Description not yet loaded — see attached documents for full scope]'
+    ? '[Description not yet loaded - see attached documents for full scope]'
     : (desc || 'No description available');
   lines.push(`\nFULL DESCRIPTION / STATEMENT OF WORK:\n${descText.substring(0, 8000)}`);
   return lines.join('\n');
@@ -346,14 +346,14 @@ const formatCompetitiveContext = (intel) => {
   if (intel.topWinners?.length) {
     lines.push('TOP WINNING COMPANIES (by total award value):');
     intel.topWinners.forEach((w, i) => {
-      lines.push(`  ${i + 1}. ${w.name} — ${w.contracts} contract(s), $${w.totalValue.toLocaleString()} total — Agencies: ${w.agencies.join(', ')}`);
+      lines.push(`  ${i + 1}. ${w.name} - ${w.contracts} contract(s), $${w.totalValue.toLocaleString()} total - Agencies: ${w.agencies.join(', ')}`);
     });
     lines.push('');
   }
 
   lines.push('RECENT INDIVIDUAL AWARDS:');
   intel.awards.slice(0, 15).forEach((a, i) => {
-    lines.push(`  ${i + 1}. ${a.recipient} — $${a.amount.toLocaleString()} — ${a.agency} — ${a.startDate || 'N/A'} to ${a.endDate || 'N/A'}${a.location ? ' — ' + a.location : ''}`);
+    lines.push(`  ${i + 1}. ${a.recipient} - $${a.amount.toLocaleString()} - ${a.agency} - ${a.startDate || 'N/A'} to ${a.endDate || 'N/A'}${a.location ? ' - ' + a.location : ''}`);
     if (a.description) lines.push(`     Desc: ${a.description.substring(0, 150)}`);
   });
 
@@ -404,7 +404,7 @@ export const analyzeRFP = async (req, res) => {
   }
 };
 
-// @desc    AI: Go/No-Go workflow — fetches PDFs + real competitor data + company profile
+// @desc    AI: Go/No-Go workflow - fetches PDFs + real competitor data + company profile
 // @route   POST /api/ai/go-no-go
 export const goNoGoWorkflow = async (req, res) => {
   try {
@@ -445,7 +445,7 @@ export const goNoGoWorkflow = async (req, res) => {
       compContext = formatCompetitiveContext(intel);
       companyProfileText = cp.profileText;
 
-      // Always include SOW text as extra context — even when PDFs exist (description has unique info)
+      // Always include SOW text as extra context - even when PDFs exist (description has unique info)
       const descForDocs = resolvedDesc || (opportunity.description && !opportunity.description.startsWith('https://') ? opportunity.description : '');
       if (descForDocs && descForDocs.length > 100) {
         const descBlock = `${'─'.repeat(60)}\nSAM.GOV FULL DESCRIPTION / SOW\n${'─'.repeat(60)}\n${descForDocs}`;
@@ -679,7 +679,7 @@ export const generateFullProposalAI = async (req, res) => {
     const resolvedDesc = await resolveDescription(opportunity);
     if (resolvedDesc) opportunity.description = resolvedDesc;
 
-    // Step 2: Fetch all attached RFP PDFs (SOW, PWS, amendments) — same as Go/No-Go
+    // Step 2: Fetch all attached RFP PDFs (SOW, PWS, amendments) - same as Go/No-Go
     const docResult = await fetchOpportunityDocuments(opportunity.resourceLinks, opportunity._id.toString());
     console.log(`📄 Proposal builder: ${docResult.fetchedCount}/${docResult.totalDocs} docs fetched${docResult.fromCache ? ' [cache]' : ''}`);
 
@@ -724,7 +724,7 @@ export const generateFullProposalAI = async (req, res) => {
   }
 };
 
-// @desc    AI: Generate a compliance/requirements traceability matrix — pulls
+// @desc    AI: Generate a compliance/requirements traceability matrix - pulls
 //          the RFP's requirements and the AI proposal's sections, then checks
 //          which requirement is actually addressed where (and which aren't).
 // @route   POST /api/ai/compliance-matrix/:opportunityId
@@ -757,7 +757,7 @@ export const generateComplianceMatrix = async (req, res) => {
     }
 
     if (!docsText || docsText.length < 200) {
-      return res.status(400).json({ success: false, message: 'Not enough solicitation text available for this opportunity to build a compliance matrix — try one with an attached SOW/PWS or a fuller SAM.gov description.' });
+      return res.status(400).json({ success: false, message: 'Not enough solicitation text available for this opportunity to build a compliance matrix - try one with an attached SOW/PWS or a fuller SAM.gov description.' });
     }
 
     const compContext = formatCompetitiveContext(intel);
@@ -768,7 +768,7 @@ export const generateComplianceMatrix = async (req, res) => {
     );
     const sections = parseProposalSections(proposalMarkdown);
     if (sections.length === 0) {
-      return res.status(500).json({ success: false, message: 'Could not parse the generated proposal into sections — please try again.' });
+      return res.status(500).json({ success: false, message: 'Could not parse the generated proposal into sections - please try again.' });
     }
 
     // Step 2: structured requirements extraction from the same solicitation text
@@ -993,7 +993,7 @@ export const analyzeAttachment = async (req, res) => {
   }
 };
 
-// @desc    Deep multi-document AI analysis — fetches ALL SAM.gov attachments + full opportunity
+// @desc    Deep multi-document AI analysis - fetches ALL SAM.gov attachments + full opportunity
 //          context, combines into one analysis. Far more accurate than single-doc or metadata-only.
 // @route   POST /api/ai/deep-summarize/:opportunityId
 export const deepSummarize = async (req, res) => {
@@ -1013,7 +1013,7 @@ export const deepSummarize = async (req, res) => {
     const { combinedText: combinedDocText, fetchedCount, totalDocs, fromCache } = await fetchOpportunityDocuments(opp.resourceLinks, opp._id.toString());
     console.log(`🔍 Deep-summarize: ${fetchedCount}/${totalDocs} docs read for "${opp.title?.substring(0, 50)}"${fromCache ? ' [cache]' : ''}`);
 
-    // Always include full SOW text as extra context when available — PDFs may have drawings only
+    // Always include full SOW text as extra context when available - PDFs may have drawings only
     const extraDesc = resolvedDesc && resolvedDesc.length > 100
       ? `\n\n${'─'.repeat(60)}\nSAM.GOV FULL DESCRIPTION / SOW\n${'─'.repeat(60)}\n${resolvedDesc}`
       : (!resolvedDesc && opp.description && opp.description.length > 500 && !opp.description.startsWith('https://'))

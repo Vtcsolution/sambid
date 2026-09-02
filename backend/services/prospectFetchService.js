@@ -1,7 +1,7 @@
 // backend/services/prospectFetchService.js
 //
 // Fetches ALL federal awardees from USASpending.gov (small, medium & large).
-// No AI, no OpenAI, no Gemini, no enrichment — pure API fetch.
+// No AI, no OpenAI, no Gemini, no enrichment - pure API fetch.
 
 import axios from 'axios';
 import Prospect from '../models/Prospect.js';
@@ -12,7 +12,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const USA_SEARCH   = 'https://api.usaspending.gov/api/v2/search/spending_by_award/';
 const PAGE_SIZE    = 100;
 const MAX_PAGES    = 200;   // stop at 20,000 records per run
-const REQUEST_GAP  = 500;   // ms between requests — be polite to the API
+const REQUEST_GAP  = 500;   // ms between requests - be polite to the API
 
 // ── Sync state (read by controller / frontend polling) ─────────────────────────
 export const prospectSyncState = {
@@ -44,7 +44,7 @@ const upsert = async (doc) => {
   const result = await Prospect.updateOne(
     filter,
     {
-      // Only set on first insert — don't overwrite name/UEI on subsequent contracts
+      // Only set on first insert - don't overwrite name/UEI on subsequent contracts
       $setOnInsert: {
         companyName:         doc.companyName,
         uei:                 doc.uei,
@@ -86,11 +86,11 @@ const phase1_USASpending = async () => {
   const today = new Date().toISOString().slice(0, 10);
   const from  = new Date(Date.now() - 3 * 365 * 86400000).toISOString().slice(0, 10);
 
-  console.log(`\n📊 USASpending fetch started — all company sizes (${from} → ${today})`);
+  console.log(`\n📊 USASpending fetch started - all company sizes (${from} → ${today})`);
 
   while (page <= MAX_PAGES) {
     if (!prospectSyncState.isRunning) {
-      console.log('  ⏸  Stop signal received — pausing');
+      console.log('  ⏸  Stop signal received - pausing');
       break;
     }
 
@@ -101,7 +101,7 @@ const phase1_USASpending = async () => {
         {
           filters: {
             // A=BPA Call  B=Purchase Order  C=Delivery Order  D=Definitive Contract
-            // Covers all direct contract award types — no amount or size filters
+            // Covers all direct contract award types - no amount or size filters
             award_type_codes: ['A', 'B', 'C', 'D'],
             time_period: [{ start_date: from, end_date: today }],
           },
@@ -135,7 +135,7 @@ const phase1_USASpending = async () => {
     const { results = [], page_metadata } = res.data;
 
     if (!results.length) {
-      console.log(`  Page ${page}: empty — done`);
+      console.log(`  Page ${page}: empty - done`);
       break;
     }
 
@@ -143,7 +143,7 @@ const phase1_USASpending = async () => {
     if (page === 1 && page_metadata?.total) {
       totalPages = Math.ceil(page_metadata.total / PAGE_SIZE);
       console.log(`  Total contract records: ${page_metadata.total.toLocaleString()} (~${totalPages} pages)`);
-      console.log(`  (Many companies appear multiple times — one row per contract won)`);
+      console.log(`  (Many companies appear multiple times - one row per contract won)`);
     }
 
     for (const r of results) {
@@ -181,7 +181,7 @@ const phase1_USASpending = async () => {
       : Math.min(99, page);
 
     if (page % 10 === 0 || page === 1) {
-      console.log(`  Page ${page}${totalPages ? '/' + totalPages : ''} — ${totalRecords.toLocaleString()} records → ${newCompanies.toLocaleString()} new unique companies`);
+      console.log(`  Page ${page}${totalPages ? '/' + totalPages : ''} - ${totalRecords.toLocaleString()} records → ${newCompanies.toLocaleString()} new unique companies`);
     }
 
     if (results.length < PAGE_SIZE) break;   // last partial page
@@ -221,7 +221,7 @@ export const startProspectSync = async ({ skipEnrich = false, phase2Only = false
     prospectSyncState.phase1Done = true;
     prospectSyncState.phase      = 'done';
     const total = await Prospect.countDocuments();
-    console.log(`\n🎉 Sync complete — ${total.toLocaleString()} unique companies in database`);
+    console.log(`\n🎉 Sync complete - ${total.toLocaleString()} unique companies in database`);
     return { success: true };
   } catch (err) {
     prospectSyncState.lastError = err.message;

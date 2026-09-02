@@ -23,6 +23,6 @@ const uoResult   = await db.collection('useropportunities').deleteMany({});
 
 console.log(`🗑️  Deleted ${oppResult.deletedCount}  records from opportunities`);
 console.log(`🗑️  Deleted ${uoResult.deletedCount}  records from useropportunities`);
-console.log('✅ Done — restart backend and run a manual fetch from admin panel');
+console.log('✅ Done - restart backend and run a manual fetch from admin panel');
 
 await mongoose.disconnect();

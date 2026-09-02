@@ -1,6 +1,6 @@
 // backend/controllers/apiKeyController.js
 // Lets a logged-in dashboard user (Pro/Enterprise) generate and manage their
-// public API key (/api/v1/*). Only the SHA-256 hash is ever stored — the
+// public API key (/api/v1/*). Only the SHA-256 hash is ever stored - the
 // plain key is returned exactly once, at generation/regeneration time.
 import crypto from 'crypto';
 import User from '../models/User.js';
@@ -23,7 +23,7 @@ const todayUsage = async (userId) => {
   return usage?.apiRequests || 0;
 };
 
-// GET /api/apikey — status only, never the secret
+// GET /api/apikey - status only, never the secret
 export const getApiKeyStatus = async (req, res) => {
   try {
     const plan = await Plan.findOne({ name: req.user.plan });
@@ -48,7 +48,7 @@ export const getApiKeyStatus = async (req, res) => {
   }
 };
 
-// POST /api/apikey/generate — first-time key creation
+// POST /api/apikey/generate - first-time key creation
 export const generateApiKey = async (req, res) => {
   try {
     const plan = await Plan.findOne({ name: req.user.plan });
@@ -68,7 +68,7 @@ export const generateApiKey = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'API key generated. Copy it now — you will not be able to see it again.',
+      message: 'API key generated. Copy it now - you will not be able to see it again.',
       data: { apiKey: plainKey, keyPrefix: prefix, createdAt: user.apiKeyCreatedAt },
     });
   } catch (error) {
@@ -76,7 +76,7 @@ export const generateApiKey = async (req, res) => {
   }
 };
 
-// POST /api/apikey/regenerate — invalidates the old key immediately
+// POST /api/apikey/regenerate - invalidates the old key immediately
 export const regenerateApiKey = async (req, res) => {
   try {
     const plan = await Plan.findOne({ name: req.user.plan });
@@ -101,7 +101,7 @@ export const regenerateApiKey = async (req, res) => {
   }
 };
 
-// DELETE /api/apikey — revoke, no replacement
+// DELETE /api/apikey - revoke, no replacement
 export const revokeApiKey = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

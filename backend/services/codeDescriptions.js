@@ -287,7 +287,7 @@ const NAICS_MAP = {
   '331523': 'Nonferrous Metal Die-Casting Foundries',
   '331524': 'Aluminum Foundries (except Die-Casting)',
   '331529': 'Other Nonferrous Foundries (except Die-Casting)',
-  // Fabricated Metal (332xxx) — common in DLA/defense procurement
+  // Fabricated Metal (332xxx) - common in DLA/defense procurement
   '332111': 'Iron and Steel Forging',
   '332112': 'Nonferrous Forging',
   '332114': 'Custom Roll Forming',

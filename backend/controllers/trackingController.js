@@ -1,5 +1,5 @@
 // backend/controllers/trackingController.js
-// Public tracking endpoints — no auth required.
+// Public tracking endpoints - no auth required.
 // Called by email clients (pixel load = open, link click = click).
 
 import Prospect from '../models/Prospect.js';
@@ -7,7 +7,7 @@ import TrackedEmail from '../models/TrackedEmail.js';
 import AdminNotification from '../models/admin/AdminNotification.js';
 import { emitToAdmins } from '../socket.js';
 
-// 1x1 transparent PNG — returned immediately for open tracking
+// 1x1 transparent PNG - returned immediately for open tracking
 const PIXEL = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
   'base64'
@@ -16,7 +16,7 @@ const PIXEL = Buffer.from(
 export const trackOpen = async (req, res) => {
   const { trackingId } = req.params;
 
-  // Return pixel immediately — don't keep the email client waiting
+  // Return pixel immediately - don't keep the email client waiting
   res.set('Content-Type', 'image/png');
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.set('Pragma', 'no-cache');
@@ -42,7 +42,7 @@ export const trackOpen = async (req, res) => {
 };
 
 // Open tracking for normal user emails (plan / payment / trial / campaigns).
-// Notifies admins ONCE per email — on the first open only, so repeat opens
+// Notifies admins ONCE per email - on the first open only, so repeat opens
 // (or a campaign to a large segment) never flood the admin panel.
 const EMAIL_TYPE_LABELS = {
   plan_activated:       'Plan Activated email',
@@ -57,7 +57,7 @@ const EMAIL_TYPE_LABELS = {
 export const trackEmailOpen = async (req, res) => {
   const { trackingId } = req.params;
 
-  // Return pixel immediately — don't keep the email client waiting
+  // Return pixel immediately - don't keep the email client waiting
   res.set('Content-Type', 'image/png');
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.set('Pragma', 'no-cache');
@@ -67,7 +67,7 @@ export const trackEmailOpen = async (req, res) => {
 
   try {
     const now = new Date();
-    // Returns the PRE-update doc — openedAt === null means this is the first open
+    // Returns the PRE-update doc - openedAt === null means this is the first open
     const doc = await TrackedEmail.findOneAndUpdate(
       { trackingId },
       { $inc: { openCount: 1 }, $set: { lastOpenedAt: now } },

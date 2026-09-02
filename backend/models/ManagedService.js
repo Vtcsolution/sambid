@@ -13,7 +13,7 @@ const managedServiceSchema = new mongoose.Schema({
 
   status: { type: String, enum: ['pending', 'active', 'paused', 'cancelled'], default: 'pending' },
 
-  // Commission config — admin sets this per company or uses global defaults
+  // Commission config - admin sets this per company or uses global defaults
   monthlyFee:        { type: Number, default: 299 },
   defaultRate:       { type: Number, default: 5 },    // flat % if no tiers
   commissionCap:     { type: Number, default: 50000 }, // max $ per contract

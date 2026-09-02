@@ -1,5 +1,5 @@
 // backend/controllers/publicApiController.js
-// Handlers behind /api/v1/* — the external, API-key-authenticated surface.
+// Handlers behind /api/v1/* - the external, API-key-authenticated surface.
 // req.apiUser / req.apiPlan are set by middleware/apiKeyAuth.js.
 import UserOpportunity from '../models/UserOpportunity.js';
 

@@ -20,14 +20,14 @@ export const applyAsPartner = async (req, res) => {
 
     await PartnerApplication.create({ name, email, phone, country, experience, channels, motivation });
 
-    // Respond immediately — emails fire in background
+    // Respond immediately - emails fire in background
     res.status(201).json({ success: true, message: 'Application submitted! We will review it and get back to you within 2–3 business days.' });
 
     // Admin notification
     transporter.sendMail({
       from:    FROM.noreply(),
       to:      smtpUser(),
-      subject: `New Partner Application — ${name}`,
+      subject: `New Partner Application - ${name}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:20px;border-radius:12px 12px 0 0;color:white;text-align:center">
@@ -38,10 +38,10 @@ export const applyAsPartner = async (req, res) => {
             <table cellpadding="8" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;width:100%">
               <tr style="background:white"><td style="font-weight:bold;color:#4f46e5;padding:8px 12px;border-radius:4px">Name</td><td>${name}</td></tr>
               <tr><td style="font-weight:bold;color:#4f46e5;padding:8px 12px">Email</td><td>${email}</td></tr>
-              <tr style="background:white"><td style="font-weight:bold;color:#4f46e5;padding:8px 12px;border-radius:4px">Phone</td><td>${phone || '—'}</td></tr>
-              <tr><td style="font-weight:bold;color:#4f46e5;padding:8px 12px">Country</td><td>${country || '—'}</td></tr>
-              <tr style="background:white"><td style="font-weight:bold;color:#4f46e5;padding:8px 12px;border-radius:4px">Experience</td><td>${experience || '—'}</td></tr>
-              <tr><td style="font-weight:bold;color:#4f46e5;padding:8px 12px">Channels</td><td>${(channels || []).join(', ') || '—'}</td></tr>
+              <tr style="background:white"><td style="font-weight:bold;color:#4f46e5;padding:8px 12px;border-radius:4px">Phone</td><td>${phone || ' - '}</td></tr>
+              <tr><td style="font-weight:bold;color:#4f46e5;padding:8px 12px">Country</td><td>${country || ' - '}</td></tr>
+              <tr style="background:white"><td style="font-weight:bold;color:#4f46e5;padding:8px 12px;border-radius:4px">Experience</td><td>${experience || ' - '}</td></tr>
+              <tr><td style="font-weight:bold;color:#4f46e5;padding:8px 12px">Channels</td><td>${(channels || []).join(', ') || ' - '}</td></tr>
             </table>
             <div style="margin-top:16px;background:white;border-left:4px solid #4f46e5;padding:12px 16px;border-radius:4px">
               <p style="font-weight:bold;color:#4f46e5;margin:0 0 6px">Motivation</p>
@@ -57,7 +57,7 @@ export const applyAsPartner = async (req, res) => {
     transporter.sendMail({
       from:    FROM.noreply(),
       to:      email,
-      subject: 'Application Received — Sambid Partner Program',
+      subject: 'Application Received - Sambid Partner Program',
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:30px;border-radius:12px 12px 0 0;color:white;text-align:center">
@@ -77,7 +77,7 @@ export const applyAsPartner = async (req, res) => {
               </ul>
             </div>
             <p style="color:#6b7280;font-size:13px">If you have any questions, reply to this email.</p>
-            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
+            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px"> -  The Sambid Team</p>
           </div>
         </div>
       `,
@@ -187,13 +187,13 @@ export const processApplication = async (req, res) => {
                 <ul style="margin:0;padding-left:20px;color:#78350f;font-size:14px">
                   <li>Companies who sign up via your link get <strong>20% off</strong> any plan</li>
                   <li>You earn <strong>20% commission</strong> on every payment they make</li>
-                  <li>Commission is <strong>recurring</strong> — every billing cycle</li>
+                  <li>Commission is <strong>recurring</strong> - every billing cycle</li>
                   <li>Withdraw once your balance reaches <strong>$100</strong></li>
                 </ul>
               </div>
 
               <p style="color:#6b7280;font-size:13px">Please change your password after your first login.</p>
-              <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
+              <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px"> -  The Sambid Team</p>
             </div>
           </div>
         `,
@@ -211,7 +211,7 @@ export const processApplication = async (req, res) => {
     transporter.sendMail({
       from:    FROM.noreply(),
       to:      application.email,
-      subject: 'Regarding Your Partner Application — Sambid',
+      subject: 'Regarding Your Partner Application - Sambid',
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <div style="background:#6b7280;padding:24px;border-radius:12px 12px 0 0;color:white;text-align:center">
@@ -223,7 +223,7 @@ export const processApplication = async (req, res) => {
             <p style="color:#374151">After reviewing your application, we are unable to move forward at this time.</p>
             ${adminNote ? `<div style="background:#fee2e2;border-radius:8px;padding:12px 16px;margin:12px 0"><p style="margin:0;color:#991b1b"><strong>Reason:</strong> ${adminNote}</p></div>` : ''}
             <p style="color:#6b7280">You are welcome to reapply in the future.</p>
-            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px">— The Sambid Team</p>
+            <p style="color:#6b7280;font-size:12px;margin-top:20px;border-top:1px solid #e5e7eb;padding-top:12px"> -  The Sambid Team</p>
           </div>
         </div>
       `,

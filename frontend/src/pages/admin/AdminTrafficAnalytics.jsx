@@ -68,7 +68,7 @@ export default function AdminTrafficAnalytics() {
             <Globe className="w-6 h-6 text-indigo-600" /> Website Traffic
           </h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            Anonymous visitor tracking — pages, devices, countries, and time on site. Admin panel usage is excluded.
+            Anonymous visitor tracking - pages, devices, countries, and time on site. Admin panel usage is excluded.
           </p>
         </div>
         <div className="flex gap-1.5 bg-gray-100 rounded-xl p-1 self-start">

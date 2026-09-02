@@ -91,7 +91,7 @@ export const getCompanyById = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    // Strip passwordHash before sending to admin — never expose it
+    // Strip passwordHash before sending to admin - never expose it
     const companyObj = company.toObject();
     companyObj.workspaceUsers = (companyObj.workspaceUsers || []).map(
       ({ passwordHash: _ph, ...wu }) => wu

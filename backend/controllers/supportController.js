@@ -17,7 +17,7 @@ export const creditSupportCommission = async (userId, invoiceId, plan, paidAmoun
   try {
     const user = await User.findById(userId).select('supportReferredBy email');
     if (!user?.supportReferredBy) {
-      console.log(`ℹ️  Support commission skipped for ${user?.email} — no support referral`);
+      console.log(`ℹ️  Support commission skipped for ${user?.email} - no support referral`);
       return;
     }
     console.log(`🔍 Processing support commission: user=${user.email}, plan=${plan}, amount=$${paidAmount}`);
@@ -79,7 +79,7 @@ export const creditSupportCommission = async (userId, invoiceId, plan, paidAmoun
 
       AdminNotification.create({
         title:    '🎯 Referral Converted',
-        message:  `${user.email} purchased ${plan} plan ($${paidAmount}) via ${refreshed.email}'s referral — $${commission} commission earned`,
+        message:  `${user.email} purchased ${plan} plan ($${paidAmount}) via ${refreshed.email}'s referral - $${commission} commission earned`,
         type:     'referral_signup',
         priority: 'medium',
         actionUrl: '/admin/support-management',
@@ -94,7 +94,7 @@ export const creditSupportCommission = async (userId, invoiceId, plan, paidAmoun
 
     const admin = await Admin.findById(user.supportReferredBy).select('recurringUnlocked email proEnterpriseReferralCount');
     if (!admin.recurringUnlocked) {
-      console.log(`ℹ️  Support ${admin.email} renewal skipped — recurring locked (${admin.proEnterpriseReferralCount}/${PRO_ENTERPRISE_TARGET})`);
+      console.log(`ℹ️  Support ${admin.email} renewal skipped - recurring locked (${admin.proEnterpriseReferralCount}/${PRO_ENTERPRISE_TARGET})`);
       return;
     }
 

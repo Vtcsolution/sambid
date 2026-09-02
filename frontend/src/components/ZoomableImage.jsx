@@ -5,10 +5,10 @@ import { X, Maximize2 } from 'lucide-react';
 // Shows the full image (never cropped) inside its container, with a click-to-
 // expand fullscreen view. Use anywhere a screenshot was being cut off by
 // object-cover on a fixed-aspect-ratio box.
-// `natural` — size the image (and its wrapper) to its own real aspect ratio
+// `natural` - size the image (and its wrapper) to its own real aspect ratio
 // instead of stretching to fill a fixed-height parent. Use this whenever the
 // parent box's aspect ratio doesn't match the image's own (e.g. a screenshot
-// with built-in transparent margins) — otherwise object-contain letterboxes
+// with built-in transparent margins) - otherwise object-contain letterboxes
 // with visible empty space around the actual content.
 export default function ZoomableImage({ src, alt = '', className = '', containerClassName = '', natural = false }) {
   const [open, setOpen] = useState(false);

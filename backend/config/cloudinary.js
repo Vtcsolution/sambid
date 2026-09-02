@@ -1,6 +1,6 @@
 // backend/config/cloudinary.js
 // Configures the Cloudinary SDK from env vars. Requires CLOUDINARY_CLOUD_NAME,
-// CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to be set — get these from your
+// CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to be set - get these from your
 // Cloudinary Dashboard (Settings > API Keys).
 import { v2 as cloudinary } from 'cloudinary';
 

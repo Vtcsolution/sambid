@@ -1,6 +1,6 @@
 // Single source of truth for plan prices across the whole backend.
-// Everything that mentions a price — the AI chatbot, email templates,
-// prospect outreach, enterprise inquiry replies — reads from here, and this
+// Everything that mentions a price - the AI chatbot, email templates,
+// prospect outreach, enterprise inquiry replies - reads from here, and this
 // reads from the Plan collection (which the admin edits in Plan Pricing).
 // Never hardcode a dollar amount in a template again: use price()/pricingLine().
 //
@@ -37,10 +37,10 @@ export const refreshPlanPrices = async () => {
 refreshPlanPrices();
 setInterval(refreshPlanPrices, 5 * 60 * 1000).unref?.();
 
-// "$99" — number formatted with thousands separators
+// "$99" - number formatted with thousands separators
 export const price = (plan, cycle = 'monthly') => {
   const v = cache[plan]?.[cycle];
-  return v != null ? `$${Number(v).toLocaleString()}` : '$—';
+  return v != null ? `$${Number(v).toLocaleString()}` : '$ - ';
 };
 
 export const priceNum = (plan, cycle = 'monthly') => cache[plan]?.[cycle] ?? null;

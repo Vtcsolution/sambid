@@ -1,6 +1,6 @@
 // backend/models/ComplianceMatrix.js
 // Maps an RFP's extracted requirements to the AI-generated proposal sections
-// that address them — the standard "compliance matrix" artifact expected in
+// that address them - the standard "compliance matrix" artifact expected in
 // real federal proposals, wiring together RFP Analyzer's extraction and
 // Proposal Builder's output instead of leaving the user to cross-reference
 // the two by hand.
@@ -36,7 +36,7 @@ const complianceMatrixSchema = new mongoose.Schema({
   docsAnalyzed:        { type: Number, default: 0 },
 }, { timestamps: true });
 
-// One matrix per user+opportunity — regenerating replaces the previous one.
+// One matrix per user+opportunity - regenerating replaces the previous one.
 complianceMatrixSchema.index({ user: 1, opportunity: 1 }, { unique: true });
 
 export default mongoose.model('ComplianceMatrix', complianceMatrixSchema);

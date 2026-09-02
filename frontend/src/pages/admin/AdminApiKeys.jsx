@@ -60,7 +60,7 @@ export default function AdminApiKeys() {
         </h1>
         <p className="text-gray-500 text-sm mt-0.5">
           Customers on Pro or Enterprise who have generated a key for /api/v1 access. The actual key is never
-          stored or shown here — only the prefix the user already saw once themselves.
+          stored or shown here - only the prefix the user already saw once themselves.
         </p>
       </div>
 
@@ -107,7 +107,7 @@ export default function AdminApiKeys() {
                       <code className="text-xs font-mono text-gray-600">{k.keyPrefix}</code>
                     </td>
                     <td className="px-5 py-3 text-gray-500 text-xs">
-                      {k.createdAt ? new Date(k.createdAt).toLocaleDateString() : '—'}
+                      {k.createdAt ? new Date(k.createdAt).toLocaleDateString() : ' - '}
                     </td>
                     <td className="px-5 py-3 text-gray-700">
                       {k.usedToday} <span className="text-gray-400">/ {k.dailyLimit === -1 ? 'Unlimited' : k.dailyLimit}</span>

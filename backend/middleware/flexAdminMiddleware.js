@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import Admin from '../models/Admin.js';
 
-// Accepts ANY valid token — admin token, regular user token, OR workspace token.
+// Accepts ANY valid token - admin token, regular user token, OR workspace token.
 // Use on routes that both admins and regular users need to access.
 export const protectAny = async (req, res, next) => {
   const authHeader = req.headers.authorization;

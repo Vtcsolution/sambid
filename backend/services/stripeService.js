@@ -1,7 +1,7 @@
 // backend/services/stripeService.js
 import Stripe from 'stripe';
 
-// Lazy Stripe client — re-created whenever key changes
+// Lazy Stripe client - re-created whenever key changes
 let stripe = null;
 
 const getStripe = () => {
@@ -111,7 +111,7 @@ export const confirmStripePayment = async (paymentIntentId) => {
 // Create a Stripe Checkout session for an enterprise inquiry payment link
 export const createCheckoutSessionForInquiry = async ({ inquiryId, email, planName, amount, billingCycle, successUrl, cancelUrl }) => {
   if (!getStripe()) {
-    // Simulation mode — return fake link
+    // Simulation mode - return fake link
     const fakeSessionId = `sim_cs_${Date.now()}`;
     return {
       success: true,
@@ -131,7 +131,7 @@ export const createCheckoutSessionForInquiry = async ({ inquiryId, email, planNa
           currency: 'usd',
           unit_amount: Math.round(amount * 100),
           product_data: {
-            name: `Sambid — ${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan`,
+            name: `Sambid - ${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan`,
             description: `${billingCycle === 'yearly' ? 'Annual' : 'Monthly'} subscription`,
           },
         },
@@ -155,7 +155,7 @@ export const createCheckoutSessionForInquiry = async ({ inquiryId, email, planNa
 };
 
 // Create a Stripe Checkout session to pay a managed-service CommissionInvoice
-// (commission or monthly_fee) — separate from plan-upgrade checkout since the
+// (commission or monthly_fee) - separate from plan-upgrade checkout since the
 // product here is a one-off invoice, not a subscription plan.
 export const createCheckoutSessionForCommissionInvoice = async ({ invoiceId, email, description, amount, successUrl, cancelUrl }) => {
   if (!getStripe()) {
@@ -178,7 +178,7 @@ export const createCheckoutSessionForCommissionInvoice = async ({ invoiceId, ema
           currency: 'usd',
           unit_amount: Math.round(amount * 100),
           product_data: {
-            name: 'Sambid — Managed Service Invoice',
+            name: 'Sambid - Managed Service Invoice',
             description,
           },
         },

@@ -222,7 +222,7 @@ export const findWebsite = async (company) => {
       // Return unvalidated if URL was found but unreachable (might be transient)
       return { url: aiResult.url, rawUrl: aiResult.url, valid: false, source: aiResult.source };
     }
-  } catch { /* AI unavailable — skip */ }
+  } catch { /* AI unavailable - skip */ }
 
   return null;
 };

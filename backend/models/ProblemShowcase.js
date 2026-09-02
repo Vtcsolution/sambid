@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// Public "Problems" pages — one per pain point (17 total), each built around
+// Public "Problems" pages - one per pain point (17 total), each built around
 // a short escalating timeline (trigger -> frequency/stakes -> consequence)
 // followed by the Sambid fix and an optional YouTube video + thumbnail.
 const problemShowcaseSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ const problemShowcaseSchema = new mongoose.Schema({
   video:          { type: String, default: '' }, // YouTube link only
   videoThumbnail: { type: String, default: '' }, // URL or uploaded image
 
-  // The escalating timeline shown as growing circles down a vertical line —
+  // The escalating timeline shown as growing circles down a vertical line,
   // small first point, growing larger toward the consequence.
   timelinePoints: [{ type: String }],
 

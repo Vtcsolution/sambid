@@ -47,7 +47,7 @@ router.post('/change-password', protect, changePassword);
 router.get('/export-data', protect, exportUserData);
 router.delete('/account', protect, deleteAccount);
 
-// Teaming partner finder — search other users by NAICS/certifications (Enterprise)
+// Teaming partner finder - search other users by NAICS/certifications (Enterprise)
 router.get('/teaming-partners', protect, async (req, res) => {
   try {
     if (req.user.plan !== 'enterprise') {
@@ -96,7 +96,7 @@ router.get('/teaming-partners', protect, async (req, res) => {
   }
 });
 
-// Send a real teaming request — creates a record, emails the recipient, and
+// Send a real teaming request - creates a record, emails the recipient, and
 // notifies them in-app. Previously this button only faked success client-side.
 router.post('/teaming-partners/:userId/request', protect, async (req, res) => {
   try {
@@ -122,7 +122,7 @@ router.post('/teaming-partners/:userId/request', protect, async (req, res) => {
       userId,
       'teaming_request',
       `${fromLabel} wants to team up`,
-      `Sent via Teaming Partner Finder${naicsCode ? ` — matched on NAICS ${naicsCode}` : ''}.`,
+      `Sent via Teaming Partner Finder${naicsCode ? ` - matched on NAICS ${naicsCode}` : ''}.`,
       '/teaming-finder'
     );
 

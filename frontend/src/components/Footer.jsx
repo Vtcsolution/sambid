@@ -47,7 +47,7 @@ const contactItems = [
   { icon: Mail, text: 'support@sambid.co' },
 ];
 
-// Default texts — used until (or unless) the admin sets custom ones in
+// Default texts - used until (or unless) the admin sets custom ones in
 // Admin → Settings → "Footer & Social Links".
 const DEFAULT_DESCRIPTION = 'AI-powered federal contract discovery platform. Helping small businesses find, track, and win government opportunities.';
 const DEFAULT_TAGLINE = '"Never miss a federal contract again."';

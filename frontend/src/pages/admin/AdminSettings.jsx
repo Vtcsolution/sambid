@@ -223,14 +223,14 @@ export default function AdminSettings() {
       {/* ── 1b. Footer & Social Links ───────────────────────────────────── */}
       <SectionCard icon={Wifi} color="bg-teal-50 text-teal-700" title="Footer & Social Links">
         <p className="text-xs text-gray-500 -mt-1">
-          Shown in the website footer. Use the switches to show/hide icons without losing the saved URL. Changes appear on the site immediately after saving — no rebuild needed.
+          Shown in the website footer. Use the switches to show/hide icons without losing the saved URL. Changes appear on the site immediately after saving - no rebuild needed.
         </p>
 
         {/* master switch: hide the whole social icons row */}
         <div className="flex items-center justify-between p-3.5 bg-gray-50 rounded-xl border border-gray-100">
           <div>
             <p className="font-medium text-gray-900 text-sm">Show social icons in footer</p>
-            <p className="text-xs text-gray-500 mt-0.5">Master switch — turn off to hide ALL social icons from the site, whatever is set below.</p>
+            <p className="text-xs text-gray-500 mt-0.5">Master switch - turn off to hide ALL social icons from the site, whatever is set below.</p>
           </div>
           <button
             type="button"

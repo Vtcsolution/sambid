@@ -6,11 +6,11 @@
 // resolving it costs 1 API call per record. Personal SAM.gov keys have a tiny
 // daily quota (observed ~10-25 calls/day/key), so per-record resolution can
 // never keep up. But SAM.gov also publishes "Contract Opportunities Full CSV"
-// every night — a public S3 file with NO api key and NO quota that contains
+// every night - a public S3 file with NO api key and NO quota that contains
 // the FULL description text for every notice. This service streams that file
 // and fills in the description for every record still holding a URL.
 //
-// File: ~300-600MB, updated daily ~03:30 UTC. Streamed + parsed row by row —
+// File: ~300-600MB, updated daily ~03:30 UTC. Streamed + parsed row by row,
 // memory stays flat regardless of file size.
 
 import axios from 'axios';
@@ -27,7 +27,7 @@ const createCsvStreamParser = (onRow) => {
   let field = '';
   let row = [];
   let inQuotes = false;
-  let prevQuote = false; // saw a quote while inQuotes — might be escape or close
+  let prevQuote = false; // saw a quote while inQuotes - might be escape or close
 
   const endField = () => { row.push(field); field = ''; };
   const endRow = () => {
@@ -43,7 +43,7 @@ const createCsvStreamParser = (onRow) => {
           if (prevQuote) {
             prevQuote = false;
             if (c === '"') { field += '"'; continue; }   // escaped quote
-            inQuotes = false;                              // closing quote — fall through
+            inQuotes = false;                              // closing quote - fall through
             if (c === ',') { endField(); continue; }
             if (c === '\n') { endField(); endRow(); continue; }
             if (c === '\r') { continue; }
@@ -89,11 +89,11 @@ export const backfillDescriptionsFromCsv = async () => {
   ).lean();
 
   if (!pending.length) {
-    console.log('📄 CSV backfill: no records with unresolved descriptions — skipping');
+    console.log('📄 CSV backfill: no records with unresolved descriptions - skipping');
     return { matched: 0, updated: 0, pending: 0 };
   }
   const wanted = new Map(pending.map(p => [String(p.noticeId).toLowerCase().replace(/-/g, ''), p._id]));
-  console.log(`\n📄 CSV BACKFILL — ${wanted.size} records need descriptions`);
+  console.log(`\n📄 CSV BACKFILL - ${wanted.size} records need descriptions`);
   console.log(`   Downloading SAM.gov public daily extract (no API key, no quota)...`);
 
   // 2. Stream the CSV
@@ -154,6 +154,6 @@ export const backfillDescriptionsFromCsv = async () => {
   flush();
   await Promise.all(flushes);
 
-  console.log(`   ✅ CSV backfill done — rows scanned: ${rowsSeen}, descriptions filled: ${matched}, still missing: ${wanted.size}`);
+  console.log(`   ✅ CSV backfill done - rows scanned: ${rowsSeen}, descriptions filled: ${matched}, still missing: ${wanted.size}`);
   return { matched, updated: matched, pending: wanted.size };
 };

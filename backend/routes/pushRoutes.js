@@ -4,7 +4,7 @@ import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/vapid-public-key', getVapidPublicKey);   // public — no auth needed
+router.get('/vapid-public-key', getVapidPublicKey);   // public - no auth needed
 router.use(protect);
 router.post('/subscribe',   subscribe);
 router.delete('/unsubscribe', unsubscribe);

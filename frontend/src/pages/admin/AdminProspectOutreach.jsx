@@ -160,7 +160,7 @@ export default function AdminProspectOutreach() {
     setResult(null);
 
     // Save to the prospect database in the background for future campaigns.
-    // IMPORTANT: keep the entry in customEmails — do NOT swap it for the DB
+    // IMPORTANT: keep the entry in customEmails - do NOT swap it for the DB
     // record. The list only loads the first 500 prospects, so the new record
     // is usually not in it; the old swap made the entry vanish from the
     // screen AND from the send payload.
@@ -253,7 +253,7 @@ export default function AdminProspectOutreach() {
       <div className="p-4 sm:p-6 max-w-[1100px] mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <History className="w-6 h-6 text-indigo-600" /> Email Outreach — Send History
+            <History className="w-6 h-6 text-indigo-600" /> Email Outreach - Send History
           </h1>
           <button onClick={() => setPageView('compose')}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-indigo-600 border border-gray-200 rounded-lg">

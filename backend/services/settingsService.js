@@ -28,7 +28,7 @@ export const ENV_MAP = {
   'api.openaiApiKey':              'OPENAI_API_KEY',
   'api.geminiApiKey':              'GEMINI_API_KEY',
 
-  // SAM.gov — up to 4 keys rotate automatically on 429 (1,000 req/day each)
+  // SAM.gov - up to 4 keys rotate automatically on 429 (1,000 req/day each)
   'api.samApiKey':                 'SAM_API_KEY',
   'api.samApiKey2':                'SAM_API_KEY_2',
   'api.samApiKey3':                'SAM_API_KEY_3',
@@ -136,7 +136,7 @@ export const loadSettingsFromDB = async () => {
     let settings = await AdminSetting.find({});
 
     if (!settings.length) {
-      console.log('⚙️  No admin settings in DB — seeding from .env values...');
+      console.log('⚙️  No admin settings in DB - seeding from .env values...');
       const docs = [];
       for (const [settingKey, envKey] of Object.entries(ENV_MAP)) {
         const val = process.env[envKey];
@@ -150,7 +150,7 @@ export const loadSettingsFromDB = async () => {
         try {
           await AdminSetting.insertMany(docs, { ordered: false });
         } catch (e) {
-          // Some duplicates may exist — that's fine
+          // Some duplicates may exist - that's fine
           if (e.code !== 11000) throw e;
         }
         settings = await AdminSetting.find({});

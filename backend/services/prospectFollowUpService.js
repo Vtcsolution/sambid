@@ -2,27 +2,27 @@
 // Automated follow-up sequence for prospects who already received one manual
 // outreach email and never replied. Runs on a cron, gated the same way as
 // every other scheduler in this app (production-only unless ENABLE_SCHEDULERS
-// is set) — see server.js.
+// is set) - see server.js.
 //
 // Send window: Tue/Wed/Thu, 10:00 AM America/New_York. This is the
-// well-established best-practice window for US B2B email opens — mid-morning,
+// well-established best-practice window for US B2B email opens - mid-morning,
 // mid-week. Monday is skipped (recipients are clearing weekend inbox backlog,
 // opens run measurably lower) and Friday is skipped (attention drops off
 // toward the weekend). A single US-Eastern anchor time is used rather than
-// per-recipient timezone math — 10am ET lands at 7-8am on the West Coast,
+// per-recipient timezone math - 10am ET lands at 7-8am on the West Coast,
 // which is earlier than ideal there but still within business hours, and
 // keeps the whole system simple and predictable.
 //
 // Sequence (3 touches, each ~4-5 days apart, stops the moment a prospect's
-// responseStatus leaves 'none' — i.e. they replied, showed interest, said
+// responseStatus leaves 'none' - i.e. they replied, showed interest, said
 // not interested, or converted):
-//   1. "time"     — time-saving angle (short, personalized)
-//   2. "trial"    — direct free-trial nudge
-//   3. "followup" — brief, low-pressure "still worth a look?" check-in
+//   1. "time"     - time-saving angle (short, personalized)
+//   2. "trial"    - direct free-trial nudge
+//   3. "followup" - brief, low-pressure "still worth a look?" check-in
 //
-// Every send goes through the same pipeline as a manual outreach email —
+// Every send goes through the same pipeline as a manual outreach email,
 // AI-generated (or static fallback with no API key) via generateEmailWithAI,
-// then the recipient's own live NAICS-matched opportunities auto-appended —
+// then the recipient's own live NAICS-matched opportunities auto-appended,
 // so a follow-up is exactly as personalized as the first email.
 import { randomBytes } from 'crypto';
 import cron from 'node-cron';
@@ -36,7 +36,7 @@ import {
 
 const FROM_NAME = 'Sambid Team';
 const MIN_DAYS_SINCE_LAST_EMAIL = 4;
-const MAX_SENDS_PER_RUN = 150; // safety cap — this batch is ~200 total, staggered naturally by send date
+const MAX_SENDS_PER_RUN = 150; // safety cap - this batch is ~200 total, staggered naturally by send date
 
 // Stage 0 = only the initial (manual) email exists → next up is stage 1.
 const SEQUENCE = ['time', 'trial', 'followup'];
@@ -62,7 +62,7 @@ async function findEligibleProspects() {
 
 export async function runProspectFollowUps() {
   if (!(process.env.SMTP_USER || process.env.EMAIL_USER) || !(process.env.SMTP_PASS || process.env.EMAIL_PASS)) {
-    console.warn('⏸️  Prospect follow-ups skipped — SMTP not configured.');
+    console.warn('⏸️  Prospect follow-ups skipped - SMTP not configured.');
     return { sent: 0, failed: 0 };
   }
 
@@ -72,7 +72,7 @@ export async function runProspectFollowUps() {
     return { sent: 0, failed: 0 };
   }
 
-  console.log(`📧 Prospect follow-ups: ${prospects.length} due — sending...`);
+  console.log(`📧 Prospect follow-ups: ${prospects.length} due - sending...`);
   let sent = 0, failed = 0;
 
   for (const prospect of prospects) {

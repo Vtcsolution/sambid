@@ -34,7 +34,7 @@ const router = express.Router();
 
 router.use(flexAdmin);
 
-// Read-only — all authenticated admins
+// Read-only - all authenticated admins
 router.get('/stats',              getProspectStats);
 router.get('/',                   getProspects);
 router.get('/sync/status',        getProspectSyncStatus);
@@ -56,11 +56,11 @@ router.put('/:id/contacted',      requirePermission('content'), markContacted);
 router.put('/:id/status',         requirePermission('content'), updateResponseStatus);
 router.post('/bulk/contacted',    requirePermission('content'), bulkMarkContacted);
 
-// AI tools — require aiTools permission
+// AI tools - require aiTools permission
 router.post('/ai-finder/start',   requirePermission('aiTools'), startAIWebsiteFinder);
 router.post('/ai-finder/stop',    requirePermission('aiTools'), stopAIWebsiteFinderHandler);
 
-// Email outreach — require campaigns permission
+// Email outreach - require campaigns permission
 router.get('/email/templates',              requirePermission('campaigns'), getEmailTemplates);
 router.get('/email/preview/:templateId',    requirePermission('campaigns'), previewEmailTemplate);
 router.post('/email/generate',              requirePermission('campaigns'), generateProspectEmail);

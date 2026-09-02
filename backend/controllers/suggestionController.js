@@ -50,11 +50,11 @@ export const createSuggestion = async (req, res) => {
       createdAt:        suggestion.createdAt,
     });
 
-    // Admin bell notification — AI-summarized into actionable bullet points
+    // Admin bell notification - AI-summarized into actionable bullet points
     // when an AI key is configured, plain text otherwise. Run in the
     // background so a slow AI call never delays the user's response below.
     (async () => {
-      let message = `${user.name} (${user.email}) — "${suggestion.title}"`;
+      let message = `${user.name} (${user.email}) - "${suggestion.title}"`;
       try {
         const { summary, bullets } = await summarizeFeedback({
           title: suggestion.title,
@@ -64,7 +64,7 @@ export const createSuggestion = async (req, res) => {
         });
         suggestion.aiSummary = { summary, bullets };
         await suggestion.save();
-        message = `${summary}\n\n${bullets.map(b => `• ${b}`).join('\n')}\n\n— ${user.name} (${user.email})`;
+        message = `${summary}\n\n${bullets.map(b => `• ${b}`).join('\n')}\n\n -  ${user.name} (${user.email})`;
       } catch (err) {
         console.warn('Feedback AI summary skipped:', err.message);
       }

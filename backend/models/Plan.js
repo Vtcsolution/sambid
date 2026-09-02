@@ -60,13 +60,13 @@ const planSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Pre-defined plans — features & descriptions sync to DB on every server start.
+// Pre-defined plans - features & descriptions sync to DB on every server start.
 // Prices are only set on first insert (admin may customise them via the panel).
 const defaultPlans = [
   {
     name: 'free',
     displayName: 'Free Trial',
-    description: '5-day free trial — no credit card required',
+    description: '5-day free trial - no credit card required',
     priceMonthly: 0,
     priceYearly: 0,
     features: [
@@ -201,7 +201,7 @@ export const initializePlans = async () => {
         await Plan.create(def);
         console.log(`✅ Created missing plan: ${def.name}`);
       } else {
-        // Sync features, description, displayName, order — but NEVER touch prices or aiCreditsPerMonth
+        // Sync features, description, displayName, order - but NEVER touch prices or aiCreditsPerMonth
         // (admin may have customised these via the panel)
         const updates = {
           displayName: def.displayName,
@@ -219,7 +219,7 @@ export const initializePlans = async () => {
           updates.dailyLimit = def.dailyLimit;
         }
         // apiAccess/apiDailyLimit are feature-tier definitions (like `features`),
-        // not admin-customisable pricing — always keep them in sync with defaults.
+        // not admin-customisable pricing - always keep them in sync with defaults.
         if (exists.limits?.apiAccess !== def.limits.apiAccess) {
           updates['limits.apiAccess'] = def.limits.apiAccess;
         }

@@ -1090,7 +1090,7 @@ export default function Opportunities() {
                           View Details <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       )}
-                      {/* SAM.gov button hidden for trial/free — direct escape hatch to the free source */}
+                      {/* SAM.gov button hidden for trial/free - direct escape hatch to the free source */}
                       {!['trial', 'free'].includes(userProfile?.plan) && (opp.sourceId || (opp.url && opp.url !== '#')) && (
                         <a
                           href={opp.url && opp.url !== '#' && opp.url.includes('sam.gov')
@@ -1154,16 +1154,16 @@ export default function Opportunities() {
             )}
           </div>
         )}
-        {/* ── Locked Top Matches (trial/free upsell — REAL exact-NAICS scores) ── */}
+        {/* ── Locked Top Matches (trial/free upsell - REAL exact-NAICS scores) ── */}
         {lockedMatches.length > 0 && (
           <div className="mt-8">
             <div className="flex items-center gap-2 px-1 mb-3">
               <Zap className="w-4 h-4 text-indigo-600" />
               <span className="font-semibold text-indigo-900 text-sm">
-                Your Top Matches — locked on your current plan
+                Your Top Matches - locked on your current plan
               </span>
               <span className="text-xs text-indigo-500 hidden sm:inline">
-                (Exact matches to your NAICS codes — upgrade to see them)
+                (Exact matches to your NAICS codes - upgrade to see them)
               </span>
             </div>
             <div className="space-y-3">
@@ -1235,7 +1235,7 @@ export default function Opportunities() {
                           <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-300 shrink-0">
                             ⚠️ Potential Match
                           </span>
-                          {/* sector matches cap at 45% by design — a low % badge on a locked
+                          {/* sector matches cap at 45% by design - a low % badge on a locked
                               card discourages upgrading, so hide it for locked cards */}
                           {!opp.locked && (
                             <span className={`px-2 py-0.5 rounded text-xs font-semibold shrink-0 ${getMatchColor(opp.aiMatchScore)}`}>

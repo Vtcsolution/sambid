@@ -1,4 +1,4 @@
-// Aggregate "Send History" for Prospect Outreach — every email ever sent,
+// Aggregate "Send History" for Prospect Outreach - every email ever sent,
 // across every company, newest first, with Total/Delivered/Opened/Failed/Rate
 // stats. Mirrors the campaign Send History panel's look and feel.
 import { useState, useEffect, useCallback } from 'react';

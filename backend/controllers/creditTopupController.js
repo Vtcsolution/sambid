@@ -68,7 +68,7 @@ export const captureTopupPayment = async (req, res) => {
 
     res.json({
       success:  true,
-      message:  'Payment received. Awaiting admin approval — credits will be added to your account shortly.',
+      message:  'Payment received. Awaiting admin approval - credits will be added to your account shortly.',
       purchase: { _id: purchase._id, status: 'pending', credits: pack.credits, price: pack.price },
     });
   } catch (err) {

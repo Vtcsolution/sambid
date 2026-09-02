@@ -14,17 +14,17 @@ console.log(`🔍 Checking ${paidInvoices.length} paid invoice(s)...`);
 
 for (const invoice of paidInvoices) {
   const user = await db.collection('users').findOne({ _id: invoice.user });
-  if (!user?.supportReferredBy) { console.log(`  ⏭️  ${user?.email} — no support referral`); continue; }
+  if (!user?.supportReferredBy) { console.log(`  ⏭️  ${user?.email} - no support referral`); continue; }
 
   const referral = await db.collection('supportreferrals').findOne({
     user: invoice.user,
     supportMember: user.supportReferredBy,
   });
 
-  if (!referral) { console.log(`  ⏭️  ${user.email} — no referral doc`); continue; }
-  if (referral.status !== 'registered') { console.log(`  ✅ ${user.email} — already processed (${referral.status})`); continue; }
+  if (!referral) { console.log(`  ⏭️  ${user.email} - no referral doc`); continue; }
+  if (referral.status !== 'registered') { console.log(`  ✅ ${user.email} - already processed (${referral.status})`); continue; }
 
-  // Commission not yet credited — fix it now
+  // Commission not yet credited - fix it now
   const commission = Math.round(invoice.amount * FIRST_PURCHASE_RATE * 100) / 100;
   const isProEnterprise = PRO_ENTERPRISE_PLANS.includes(invoice.plan);
 

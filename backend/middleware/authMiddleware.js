@@ -18,7 +18,7 @@ export const protect = async (req, res, next) => {
   try {
     decoded = jwt.verify(token, jwtSecret());
   } catch {
-    // Not a regular token — try workspace JWT below
+    // Not a regular token - try workspace JWT below
     decoded = null;
   }
 

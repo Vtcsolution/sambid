@@ -19,14 +19,14 @@ export const fetchCompanyWins = async (companyName, naicsCodes = [], limit = 20,
       }],
     };
 
-    // UEI is the most accurate identifier — use it when available
+    // UEI is the most accurate identifier - use it when available
     if (uei) {
       filters.recipient_ueis = [uei.toUpperCase()];
     } else {
       filters.recipient_search_text = [companyName];
     }
 
-    // Don't filter by NAICS when using UEI — we want ALL past wins, not just current NAICS
+    // Don't filter by NAICS when using UEI - we want ALL past wins, not just current NAICS
     if (naicsCodes.length && !uei) filters.naics_codes = naicsCodes;
 
     const response = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_award/', {
@@ -144,11 +144,11 @@ export const buildCompanyProfile = async (user) => {
       lines.push(`  ${i + 1}. ${r.projectTitle}`);
       lines.push(`     Agency: ${r.agencyName}${r.subAgency ? ' / ' + r.subAgency : ''}${r.officeName ? ' / ' + r.officeName : ''}`);
       lines.push(`     Value: $${val.toLocaleString()} | Role: ${r.role} | Period: ${start} – ${end}${rating}`);
-      lines.push(`     NAICS: ${r.naicsCode || '—'} | Contract Type: ${r.contractType || '—'}${r.setAside ? ' | Set-Aside: ' + r.setAside : ''}`);
+      lines.push(`     NAICS: ${r.naicsCode || ' - '} | Contract Type: ${r.contractType || ' - '}${r.setAside ? ' | Set-Aside: ' + r.setAside : ''}`);
       if (r.scopeSummary) lines.push(`     Scope: ${r.scopeSummary.substring(0, 200)}`);
       if (r.keyDeliverables?.length) lines.push(`     Key Deliverables: ${r.keyDeliverables.filter(Boolean).slice(0, 3).join('; ')}`);
       if (r.technologiesUsed?.length) lines.push(`     Technologies: ${r.technologiesUsed.filter(Boolean).slice(0, 5).join(', ')}`);
-      if (r.pocName) lines.push(`     POC: ${r.pocName}${r.pocTitle ? ', ' + r.pocTitle : ''}${r.pocEmail ? ' — ' + r.pocEmail : ''}`);
+      if (r.pocName) lines.push(`     POC: ${r.pocName}${r.pocTitle ? ', ' + r.pocTitle : ''}${r.pocEmail ? ' - ' + r.pocEmail : ''}`);
     });
   }
 
@@ -165,7 +165,7 @@ export const buildCompanyProfile = async (user) => {
     }
   }
 
-  // 6. Fetch real past wins from USASpending — use UEI for accuracy, fall back to name
+  // 6. Fetch real past wins from USASpending - use UEI for accuracy, fall back to name
   const companyName = company?.name || user.businessName;
   const uei  = company?.uei || '';
   const naics = company?.naicsCodes?.length ? company.naicsCodes : (user.naicsCodes || []);
@@ -176,15 +176,15 @@ export const buildCompanyProfile = async (user) => {
   }
 
   if (winsData.wins.length > 0) {
-    lines.push(`\nFEDERAL CONTRACT AWARD HISTORY (FROM USASPENDING.GOV — LAST 5 YEARS):`);
+    lines.push(`\nFEDERAL CONTRACT AWARD HISTORY (FROM USASPENDING.GOV - LAST 5 YEARS):`);
     lines.push(`Search method: ${uei ? `UEI ${uei} (exact match)` : `Name search: "${companyName}"`}`);
     lines.push(`Total Contracts Found: ${winsData.totalWins}`);
     lines.push(`Total Award Value: $${winsData.totalValue.toLocaleString()}`);
     if (winsData.averageValue) lines.push(`Average Award Value: $${winsData.averageValue.toLocaleString()}`);
     lines.push('');
     winsData.wins.slice(0, 15).forEach((w, i) => {
-      lines.push(`  ${i + 1}. $${w.amount.toLocaleString()} — ${w.agency}`);
-      lines.push(`     Period: ${w.startDate || '?'} to ${w.endDate || '?'} | NAICS: ${w.naicsCode || '—'} | Location: ${w.location || 'N/A'}`);
+      lines.push(`  ${i + 1}. $${w.amount.toLocaleString()} - ${w.agency}`);
+      lines.push(`     Period: ${w.startDate || '?'} to ${w.endDate || '?'} | NAICS: ${w.naicsCode || ' - '} | Location: ${w.location || 'N/A'}`);
       if (w.description) lines.push(`     Scope: ${w.description.substring(0, 150)}`);
     });
   } else {

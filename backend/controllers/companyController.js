@@ -110,7 +110,7 @@ export const verifyUEI = async (req, res) => {
 
     const apiKey = process.env.SAM_GOV_API_KEY;
     if (!apiKey) {
-      // Format validation only — no SAM.gov call
+      // Format validation only - no SAM.gov call
       company.uei          = uei;
       company.ueiVerified  = false;
       company.ueiData      = {};
@@ -212,7 +212,7 @@ export const inviteMember = async (req, res) => {
     const frontendOrigin = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
     const joinUrl = `${frontendOrigin}/company/join?token=${token}`;
 
-    // Send invite email (non-blocking — don't fail if email fails)
+    // Send invite email (non-blocking - don't fail if email fails)
     emailService.sendTeamInvite({
       toEmail:       email.toLowerCase(),
       invitedByName: req.user.name || 'A team member',
@@ -232,7 +232,7 @@ export const inviteMember = async (req, res) => {
   }
 };
 
-// Public preview — no auth required; lets join page show company/role before login
+// Public preview - no auth required; lets join page show company/role before login
 export const previewInvite = async (req, res) => {
   try {
     const { token } = req.params;

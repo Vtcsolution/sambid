@@ -33,7 +33,7 @@ const supportReferralSchema = new Schema({
   firstPurchasePlan:   { type: String, default: null },
   firstPurchaseAmount: { type: Number, default: 0 },
   firstPurchasedAt:    { type: Date,   default: null },
-  // true if first plan was pro or enterprise — counts toward the 100-target
+  // true if first plan was pro or enterprise - counts toward the 100-target
   countsTowardTarget:  { type: Boolean, default: false },
 
   // Recurring 7.5% entries (only after target unlocked, pro/enterprise renewals only)

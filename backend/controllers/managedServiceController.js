@@ -18,7 +18,7 @@ export const applyManagedService = async (req, res) => {
 
     const ms = await ManagedService.create({ company: company._id, owner: req.user._id });
 
-    // Alert admin — this was previously silent, so applications could sit unseen
+    // Alert admin - this was previously silent, so applications could sit unseen
     AdminNotification.create({
       title: 'New Managed Service Application',
       message: `${req.user.name || req.user.email} (${company.name}) applied for the managed bidding service. Review and activate from the Managed Service panel.`,
@@ -94,8 +94,8 @@ export const payInvoiceWithStripe = async (req, res) => {
 
     const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173';
     const description = invoice.type === 'monthly_fee'
-      ? `Monthly service fee — ${invoice.invoiceNumber}`
-      : `Commission — ${invoice.invoiceNumber}${invoice.notes ? ` (${invoice.notes})` : ''}`;
+      ? `Monthly service fee - ${invoice.invoiceNumber}`
+      : `Commission - ${invoice.invoiceNumber}${invoice.notes ? ` (${invoice.notes})` : ''}`;
 
     const session = await createCheckoutSessionForCommissionInvoice({
       invoiceId:  invoice._id,

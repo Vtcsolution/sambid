@@ -27,7 +27,7 @@ for (const [name, docs] of Object.entries(byName)) {
   console.log(`${name}: kept $${keep.monthlyPrice} (oldest), removed ${r.deletedCount} duplicate(s)`);
 }
 
-console.log(`\nDone — removed ${removed} duplicates. Final plans:`);
-(await col.find({}).toArray()).forEach(p => console.log(`  ${p.name} — $${p.monthlyPrice}/mo`));
+console.log(`\nDone - removed ${removed} duplicates. Final plans:`);
+(await col.find({}).toArray()).forEach(p => console.log(`  ${p.name} - $${p.monthlyPrice}/mo`));
 await mongoose.disconnect();
 process.exit(0);

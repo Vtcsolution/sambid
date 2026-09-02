@@ -17,7 +17,7 @@ export default function OpportunityDetail() {
   const [loading, setLoading] = useState(true);
   const [generatingProposal, setGeneratingProposal] = useState(false);
   const [proposalOutline, setProposalOutline] = useState(null);
-  const [accessLocked, setAccessLocked] = useState(false);     // trial/free: not in their feed — full paywall
+  const [accessLocked, setAccessLocked] = useState(false);     // trial/free: not in their feed - full paywall
   const [accessRestricted, setAccessRestricted] = useState(false); // trial/free: viewable but docs/contacts/SAM link stripped
   const { plan: userPlan } = useUserPlan();
 
@@ -252,7 +252,7 @@ export default function OpportunityDetail() {
             )}
             <p className="text-gray-600 max-w-md mx-auto mb-8">
               Upgrade your plan to see the full title, description, official documents,
-              contracting contacts, and the direct SAM.gov link — for this and every contract matched to your business.
+              contracting contacts, and the direct SAM.gov link - for this and every contract matched to your business.
             </p>
             <Button onClick={() => navigate('/pricing')} className="px-8">
               Upgrade to Unlock →
@@ -750,7 +750,7 @@ export default function OpportunityDetail() {
 
           {/* ── SAM.gov Direct Access ───────────────────────────────────── */}
           {accessRestricted ? (
-            /* Not currently sent by the backend — trial and free both get full,
+            /* Not currently sent by the backend - trial and free both get full,
                unrestricted opportunity data. Kept as a defensive fallback in
                case a future plan tier needs field-level restriction again. */
             <div className="mt-6 pt-4 border-t border-gray-100">
@@ -761,7 +761,7 @@ export default function OpportunityDetail() {
                 <p className="font-bold text-gray-900 mb-1">Documents, contacts & SAM.gov link are locked on your plan</p>
                 <p className="text-sm text-gray-600 max-w-lg mx-auto mb-4">
                   Upgrade to unlock the official solicitation documents (RFP/SOW), the contracting
-                  officer's contact details, the solicitation number, and the one-click SAM.gov link —
+                  officer's contact details, the solicitation number, and the one-click SAM.gov link,
                   everything you need to actually bid on this contract.
                 </p>
                 <Button onClick={() => navigate('/pricing')} className="px-6">

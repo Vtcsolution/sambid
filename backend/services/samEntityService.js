@@ -9,7 +9,7 @@ import { upsertCompany } from './companyMergeService.js';
 
 const ENTITY_API_URL = 'https://api.sam.gov/entity-information/v3/entities';
 
-// In-memory sync status — survives per process lifetime
+// In-memory sync status - survives per process lifetime
 export const entitySyncStats = {
   lastSyncAt:        null,
   totalCompanies:    0,
@@ -112,7 +112,7 @@ const transformEntity = (entity) => {
   };
 };
 
-// Fetch a single page — routes through shared rate-limiter queue
+// Fetch a single page - routes through shared rate-limiter queue
 const fetchEntityPage = async (apiKey, page = 0, pageSize = 100) => {
   const url = `${ENTITY_API_URL}?api_key=${apiKey}&registrationStatus=A&purposeOfRegistrationCode=Z1&page=${page}&size=${pageSize}`;
   const res = await samFetch(() =>
@@ -134,7 +134,7 @@ export const syncSamEntities = async (maxPages = 100) => {
     return { success: false, message: 'SAM_API_KEY not configured' };
   }
 
-  // Quota check — need at least 5 requests to be worthwhile
+  // Quota check - need at least 5 requests to be worthwhile
   if (!hasQuota(5)) {
     const q = quotaState();
     const msg = `SAM.gov daily quota exhausted (${q.used}/${q.limit} used). Entity sync will resume tomorrow.`;
@@ -162,7 +162,7 @@ export const syncSamEntities = async (maxPages = 100) => {
   const pageSize     = 100;
 
   console.log('\n' + '='.repeat(70));
-  console.log('🏢 SAM ENTITY SYNC — Active Federal Contractors');
+  console.log('🏢 SAM ENTITY SYNC - Active Federal Contractors');
   console.log('   Time:', new Date().toISOString());
   if (maxPages) console.log(`   Cap: ${maxPages} pages (~${maxPages * pageSize} companies)`);
   console.log('='.repeat(70));
@@ -178,7 +178,7 @@ export const syncSamEntities = async (maxPages = 100) => {
       } catch (err) {
         const isQuota = err.code === 'QUOTA_EXHAUSTED' || err.code === 'RATE_LIMITED';
         const msg = isQuota
-          ? `API quota/rate-limit reached on page ${page} — stopping. ${quotaState().used}/${quotaState().limit} daily requests used.`
+          ? `API quota/rate-limit reached on page ${page} - stopping. ${quotaState().used}/${quotaState().limit} daily requests used.`
           : `Page ${page} fetch failed: ${err.message}`;
         console.warn('⚠️ ' + msg);
         entitySyncStats.lastError = msg;
@@ -206,11 +206,11 @@ export const syncSamEntities = async (maxPages = 100) => {
 
       const entities = pageData.entityData || [];
       if (!entities.length) {
-        console.log(`ℹ️  Page ${page} empty — stopping`);
+        console.log(`ℹ️  Page ${page} empty - stopping`);
         break;
       }
 
-      // Upsert this page — uses smart dedup (UEI → CAGE → name+state → name-only)
+      // Upsert this page - uses smart dedup (UEI → CAGE → name+state → name-only)
       let pageSaved = 0;
       for (const entity of entities) {
         try {
@@ -236,15 +236,15 @@ export const syncSamEntities = async (maxPages = 100) => {
       entitySyncStats.status = limiterState.isRateLimited ? 'rate_limited' : 'running';
 
       if (maxPages && page >= maxPages) {
-        console.log(`⏹️  Reached maxPages cap (${maxPages}) — stopping`);
+        console.log(`⏹️  Reached maxPages cap (${maxPages}) - stopping`);
         break;
       }
 
       if (entities.length < pageSize) {
-        console.log('ℹ️  Last page reached (partial page) — stopping');
+        console.log('ℹ️  Last page reached (partial page) - stopping');
         break;
       }
-      // No manual sleep needed — samFetch enforces 800ms between requests
+      // No manual sleep needed - samFetch enforces 800ms between requests
     }
 
     const duration    = Math.round((Date.now() - startTime) / 1000);
@@ -259,7 +259,7 @@ export const syncSamEntities = async (maxPages = 100) => {
     entitySyncStats.status            = 'completed';
     entitySyncStats.rateLimitedUntil  = null;
 
-    console.log(`\n🎉 Sync complete — ${totalSaved} saved (${newToday} new today) in ${duration}s`);
+    console.log(`\n🎉 Sync complete - ${totalSaved} saved (${newToday} new today) in ${duration}s`);
     console.log('='.repeat(70) + '\n');
 
     return { success: true, totalSaved, newToday, totalCompanies: totalInDB, duration };
@@ -274,7 +274,7 @@ export const syncSamEntities = async (maxPages = 100) => {
   }
 };
 
-// Dynamic-quota wrapper — uses whatever SAM.gov quota remains today minus a
+// Dynamic-quota wrapper - uses whatever SAM.gov quota remains today minus a
 // reserve for the day's opportunity fetches (hourly master + nightly bulk).
 export const syncSamEntitiesDynamic = async (reserveForOpportunities = 200) => {
   const q = quotaState();

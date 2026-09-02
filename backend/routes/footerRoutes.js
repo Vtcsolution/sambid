@@ -1,4 +1,4 @@
-// Public footer content — social links, description, tagline.
+// Public footer content - social links, description, tagline.
 // Managed from Admin → Settings → "Footer & Social Links"; the site footer
 // fetches this on load so changes apply without a rebuild.
 import express from 'express';
@@ -15,7 +15,7 @@ const FOOTER_KEYS = [
   'footerTwitter',
   'footerFacebook',
   'footerTiktok',
-  // visibility controls — 'false' hides without losing the saved URL
+  // visibility controls - 'false' hides without losing the saved URL
   'footerSocialsEnabled',
   'footerYoutubeEnabled',
   'footerInstagramEnabled',

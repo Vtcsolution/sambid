@@ -8,7 +8,7 @@ import { getVideoEmbed } from '../utils/videoEmbed';
 
 const API = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
-// Growing circle size per timeline point — small first point, larger toward
+// Growing circle size per timeline point - small first point, larger toward
 // the consequence, matching the escalating-stakes sketch.
 const CIRCLE_SIZES = ['w-3 h-3', 'w-4 h-4', 'w-6 h-6', 'w-8 h-8'];
 
@@ -129,7 +129,7 @@ export default function ProblemDetail() {
         <div className="absolute inset-0 bg-black opacity-10" />
         <div className="relative max-w-2xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">Stop losing contracts to this.</h2>
-          <p className="text-indigo-100 mb-6">Try Sambid free — no credit card required.</p>
+          <p className="text-indigo-100 mb-6">Try Sambid free - no credit card required.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to={ctaHref} className="inline-flex items-center justify-center px-7 py-3 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-gray-100 transition-all hover:scale-105">
               {ctaLabel} <ArrowRight className="ml-2 w-5 h-5" />

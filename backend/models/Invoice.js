@@ -52,7 +52,7 @@ const invoiceSchema = new mongoose.Schema({
   paidAt: {
     type: Date
   },
-  // PayPal-specific — unique order ID to prevent double-capture
+  // PayPal-specific - unique order ID to prevent double-capture
   paypalOrderId: {
     type: String,
     default: null,
@@ -73,10 +73,10 @@ const invoiceSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Unique index on PayPal order ID — PARTIAL so it only applies to real
+// Unique index on PayPal order ID - PARTIAL so it only applies to real
 // (string) order IDs. Pending invoices store paypalOrderId: null, and a plain
 // sparse unique index still rejects duplicate *explicit* nulls (sparse only
-// skips MISSING fields, not null values) — which caused E11000 on the 2nd
+// skips MISSING fields, not null values) - which caused E11000 on the 2nd
 // unpaid invoice. A partial filter on { $type: 'string' } excludes null/missing
 // entirely while still preventing double-capture of the same real order ID.
 invoiceSchema.index(
@@ -94,7 +94,7 @@ invoiceSchema.pre('save', async function(next) {
   next();
 });
 
-// Self-healing index migration — runs on server startup (called from server.js
+// Self-healing index migration - runs on server startup (called from server.js
 // after the DB connects). On databases that still have the OLD non-partial
 // paypalOrderId index (which rejects a 2nd invoice with paypalOrderId: null and
 // throws E11000), this drops it and recreates it as a partial unique index.

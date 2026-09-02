@@ -47,12 +47,12 @@ export const seedDefaults = async (req, res) => {
       compareSection: {
         tag: 'The Problem We Solve',
         title: 'What Changes When You Use Sambid',
-        subtitle: 'Five things every contractor will recognize — each pain, and exactly what it becomes.',
+        subtitle: 'Five things every contractor will recognize - each pain, and exactly what it becomes.',
         items: [
-          { icon: 'Users', topic: 'Team Size', before: '20-person team monitoring SAM.gov manually, every day', after: '1–2 people — discovery runs fully automated while you sleep' },
-          { icon: 'SlidersHorizontal', topic: 'Daily Noise', before: '150 solicitations/day — 90% completely irrelevant', after: 'Only matched, scored & ranked opportunities reach you' },
+          { icon: 'Users', topic: 'Team Size', before: '20-person team monitoring SAM.gov manually, every day', after: '1–2 people - discovery runs fully automated while you sleep' },
+          { icon: 'SlidersHorizontal', topic: 'Daily Noise', before: '150 solicitations/day - 90% completely irrelevant', after: 'Only matched, scored & ranked opportunities reach you' },
           { icon: 'FileText', topic: 'Proposal Cost', before: '$50,000 per proposal for a human proposal writer', after: 'AI drafts the full proposal in under 3 minutes' },
-          { icon: 'BellRing', topic: 'Deadlines', before: 'Missed deadlines, wrong NAICS codes, lost bids', after: 'Alerts at 7 days / 24 hours / 1 hour — on every device' },
+          { icon: 'BellRing', topic: 'Deadlines', before: 'Missed deadlines, wrong NAICS codes, lost bids', after: 'Alerts at 7 days / 24 hours / 1 hour - on every device' },
           { icon: 'Timer', topic: 'Bid Decision', before: '3 days of analysis + consultant fees per decision', after: 'Data-backed Go/No-Go answer in 30 seconds' },
         ],
         summaryLine: "20 people → 2. $50,000 → 3 minutes. 3 days → 30 seconds. That's the change.",

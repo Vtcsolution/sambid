@@ -136,7 +136,7 @@ export const getUserCreditHistory = async (req, res) => {
   }
 };
 
-// POST /api/admin/credits/reset/:userId — zero out a user's monthly counter
+// POST /api/admin/credits/reset/:userId - zero out a user's monthly counter
 export const resetUserCredits = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -151,7 +151,7 @@ export const resetUserCredits = async (req, res) => {
   }
 };
 
-// POST /api/admin/credits/add/:userId — add bonus credits to a user
+// POST /api/admin/credits/add/:userId - add bonus credits to a user
 export const addBonusCredits = async (req, res) => {
   try {
     const { amount } = req.body;
@@ -197,7 +197,7 @@ export const sendCreditReport = async (req, res) => {
         <td style="padding:8px 12px;font-size:13px;color:#6b7280;">${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</td>
         <td style="padding:8px 12px;font-size:13px;font-weight:600;">${log.featureLabel}</td>
         <td style="padding:8px 12px;font-size:13px;">${log.model}</td>
-        <td style="padding:8px 12px;font-size:13px;">${log.opportunityTitle || '—'}</td>
+        <td style="padding:8px 12px;font-size:13px;">${log.opportunityTitle || ' - '}</td>
         <td style="padding:8px 12px;font-size:13px;font-weight:700;color:#4f46e5;text-align:center;">${log.creditsUsed}</td>
       </tr>`;
     });
@@ -250,7 +250,7 @@ export const sendCreditReport = async (req, res) => {
     await transporter.sendMail({
       from: FROM.noreply(),
       to: user.email,
-      subject: `AI Credits Usage Report — ${monthLabel}`,
+      subject: `AI Credits Usage Report - ${monthLabel}`,
       html,
     });
 

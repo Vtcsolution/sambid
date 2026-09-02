@@ -195,7 +195,7 @@ export default function AdminProblems() {
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <AlertCircle className="w-6 h-6 text-indigo-600" /> Problems Pages
           </h1>
-          <p className="text-sm text-gray-500">Manage the 17 public "problem" landing pages — timeline points, fix text, video/thumbnail.</p>
+          <p className="text-sm text-gray-500">Manage the 17 public "problem" landing pages - timeline points, fix text, video/thumbnail.</p>
         </div>
         <div className="flex gap-2">
           {problems.length === 0 && (

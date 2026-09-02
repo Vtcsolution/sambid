@@ -1,11 +1,11 @@
 // backend/controllers/pageViewController.js
-// Public, anonymous website traffic tracking — no auth, no PII, no raw IP
+// Public, anonymous website traffic tracking - no auth, no PII, no raw IP
 // storage. Powers the admin "Website Traffic" analytics page.
 import geoip from 'geoip-lite';
 import { UAParser } from 'ua-parser-js';
 import PageView from '../models/PageView.js';
 
-// Reads the real client IP even behind nginx (X-Forwarded-For is trusted —
+// Reads the real client IP even behind nginx (X-Forwarded-For is trusted,
 // server.js sets `app.set('trust proxy', ...)`, same pattern already used
 // elsewhere in this app for rate limiting).
 const getClientIp = (req) => {
@@ -14,7 +14,7 @@ const getClientIp = (req) => {
   return req.socket?.remoteAddress || req.ip;
 };
 
-// POST /api/track/pageview — fired once per page/route the visitor opens
+// POST /api/track/pageview - fired once per page/route the visitor opens
 export const recordPageView = async (req, res) => {
   try {
     const { path, sessionId, referrer } = req.body || {};
@@ -48,14 +48,14 @@ export const recordPageView = async (req, res) => {
   }
 };
 
-// POST /api/track/pageview/duration — fired via navigator.sendBeacon when the
+// POST /api/track/pageview/duration - fired via navigator.sendBeacon when the
 // visitor leaves the page, so we know roughly how long they stayed.
 export const recordPageDuration = async (req, res) => {
   try {
     const { id, durationSeconds } = req.body || {};
     if (!id || typeof durationSeconds !== 'number') return res.status(200).json({ success: false });
 
-    // Sanity cap — a stale tab left open for hours shouldn't skew "avg time on page"
+    // Sanity cap - a stale tab left open for hours shouldn't skew "avg time on page"
     const capped = Math.max(0, Math.min(durationSeconds, 30 * 60));
     await PageView.updateOne({ _id: id }, { $set: { durationSeconds: capped } });
     res.json({ success: true });

@@ -1,12 +1,12 @@
 // backend/controllers/adminApiKeyController.js
 // Admin visibility into customer-issued public API keys (Settings > API Access
-// on the user side). Never exposes the actual key — only the safe prefix that
+// on the user side). Never exposes the actual key - only the safe prefix that
 // was already shown to the user once at generation time.
 import User from '../models/User.js';
 import Plan from '../models/Plan.js';
 import UsageTracking from '../models/admin/UsageTracking.js';
 
-// GET /api/admin/api-keys — everyone who currently has an active key
+// GET /api/admin/api-keys - everyone who currently has an active key
 export const listApiKeys = async (req, res) => {
   try {
     const users = await User.find({ apiKeyHash: { $ne: null } })
@@ -41,7 +41,7 @@ export const listApiKeys = async (req, res) => {
   }
 };
 
-// DELETE /api/admin/api-keys/:userId — force-revoke (e.g. suspected leak/abuse)
+// DELETE /api/admin/api-keys/:userId - force-revoke (e.g. suspected leak/abuse)
 export const revokeUserApiKey = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);

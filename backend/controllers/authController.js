@@ -71,7 +71,7 @@ export const registerUser = async (req, res) => {
     if (referralCode) {
       referredByUser = await User.findOne({ referralCode: referralCode.trim().toUpperCase() });
       if (!referredByUser) {
-        console.log(`⚠️  Referral code "${referralCode}" not found — ignoring`);
+        console.log(`⚠️  Referral code "${referralCode}" not found - ignoring`);
       }
     }
 
@@ -80,7 +80,7 @@ export const registerUser = async (req, res) => {
     if (supportRef) {
       supportMember = await Admin.findOne({ referralCode: supportRef.trim().toUpperCase(), role: 'support', isActive: true });
       if (!supportMember) {
-        console.log(`⚠️  Support ref "${supportRef}" not found — ignoring`);
+        console.log(`⚠️  Support ref "${supportRef}" not found - ignoring`);
       }
     }
 
@@ -178,9 +178,9 @@ export const registerUser = async (req, res) => {
       userName: user.name,
       userEmail: user.email,
       details: {
-        'Business Name': user.businessName || '—',
+        'Business Name': user.businessName || ' - ',
         'Plan':          user.plan,
-        'Referred By':   referredByUser ? referredByUser.email : '—',
+        'Referred By':   referredByUser ? referredByUser.email : ' - ',
       },
     }).catch(() => {});
     
@@ -228,7 +228,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    // Soft-deleted (in admin trash) — blocked until an admin restores them
+    // Soft-deleted (in admin trash) - blocked until an admin restores them
     if (user.isDeleted) {
       return res.status(403).json({ success: false, message: 'This account has been deactivated. Contact support if you believe this is a mistake.' });
     }
@@ -313,7 +313,7 @@ export const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
-    // Always return success — don't reveal whether email exists
+    // Always return success - don't reveal whether email exists
     if (!user) {
       return res.json({ success: true, message: 'If that email is registered, a code has been sent.' });
     }
@@ -363,7 +363,7 @@ export const verifyResetOtp = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid or expired code. Please try again.' });
     }
 
-    // OTP verified — replace with a secure one-time reset token (10 min window)
+    // OTP verified - replace with a secure one-time reset token (10 min window)
     const rawToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
     user.resetPasswordToken   = hashedToken;
@@ -438,7 +438,7 @@ export const updateProfile = async (req, res) => {
 
     // If NAICS codes changed → immediately distribute matching opportunities to
     // this user's feed AND (first time only) send the instant "your first
-    // matched contracts" email — grabs the new user's attention right away
+    // matched contracts" email - grabs the new user's attention right away
     // instead of waiting for the hourly alert crons.
     if (naicsChanged && naicsCodes?.length > 0) {
       import('../services/schedulerService.js').then(({ sendFirstMatchesNow }) => {

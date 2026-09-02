@@ -1,6 +1,6 @@
 // One-time cleanup: remove fake SAMPLE_* opportunities (dev seed data) and any
 // feed/saved references to them. Production should only ever hold real SAM.gov
-// records — the sample seeding is now dev-only (NODE_ENV !== 'production').
+// records - the sample seeding is now dev-only (NODE_ENV !== 'production').
 //
 // Usage: node scripts/remove-sample-opps.js
 import mongoose from 'mongoose';
@@ -20,6 +20,6 @@ const uo = await db.collection('useropportunities').deleteMany({ opportunity: { 
 const so = await db.collection('savedopportunities').deleteMany({ opportunity: { $in: ids } });
 const op = await db.collection('opportunities').deleteMany({ _id: { $in: ids } });
 
-console.log(`Deleted — opportunities: ${op.deletedCount} | feed entries: ${uo.deletedCount} | saved: ${so.deletedCount}`);
+console.log(`Deleted - opportunities: ${op.deletedCount} | feed entries: ${uo.deletedCount} | saved: ${so.deletedCount}`);
 console.log('Opportunities remaining:', await db.collection('opportunities').countDocuments());
 await mongoose.disconnect();

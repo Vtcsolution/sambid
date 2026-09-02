@@ -31,7 +31,7 @@ export const disconnectSocket = (tokenKey = 'authToken') => {
 };
 
 /**
- * Hook — connects on mount, cleans up on unmount.
+ * Hook - connects on mount, cleans up on unmount.
  * @param {string}   tokenKey  'authToken' for users, 'adminToken' for admins
  * @param {Object}   handlers  { 'event:name': callback, ... }
  */
@@ -47,7 +47,7 @@ export const useSocket = (tokenKey = 'authToken', handlers = {}) => {
     Object.entries(handlers).forEach(([event, cb]) => socket.on(event, cb));
 
     return () => {
-      // Clean up listeners (don't disconnect — socket is shared)
+      // Clean up listeners (don't disconnect - socket is shared)
       Object.entries(handlers).forEach(([event, cb]) => socket.off(event, cb));
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps

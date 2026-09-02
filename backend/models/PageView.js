@@ -1,6 +1,6 @@
 // backend/models/PageView.js
 // Anonymous website traffic tracking for the admin dashboard. No PII, no raw
-// IP addresses stored — the IP is resolved to a country at request time and
+// IP addresses stored - the IP is resolved to a country at request time and
 // then discarded.
 import mongoose from 'mongoose';
 

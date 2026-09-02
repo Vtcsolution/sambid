@@ -78,7 +78,7 @@ export const upsertCompany = async (data, sourceName) => {
       'physicalAddress.stateOrProvinceCode': state,
     });
   }
-  // Name-only fallback — only when both UEI and CAGE are absent (e.g. USASpending records)
+  // Name-only fallback - only when both UEI and CAGE are absent (e.g. USASpending records)
   // Prevents false deduplication when authoritative keys exist but differ.
   if (!existing && escName && !uei && !cage) {
     existing = await SamCompany.findOne({
@@ -102,7 +102,7 @@ export const upsertCompany = async (data, sourceName) => {
   setIfPresent('contactPhone',      data.contactPhone?.trim());
   setIfPresent('contactName',       data.contactName?.trim());
 
-  // Merge allEmails — union of existing + incoming + contactEmail, lowercased + deduped
+  // Merge allEmails - union of existing + incoming + contactEmail, lowercased + deduped
   {
     const incomingEmails = [
       ...(Array.isArray(data.allEmails) ? data.allEmails : []),
@@ -119,7 +119,7 @@ export const upsertCompany = async (data, sourceName) => {
     }
   }
 
-  // Merge allPhones — union of existing + incoming + contactPhone, deduped
+  // Merge allPhones - union of existing + incoming + contactPhone, deduped
   {
     const incomingPhones = [
       ...(Array.isArray(data.allPhones) ? data.allPhones : []),
@@ -154,7 +154,7 @@ export const upsertCompany = async (data, sourceName) => {
   }
 
   if (Array.isArray(data.naicsCodes) && data.naicsCodes.length > 0) {
-    // Merge NAICS codes — add new ones, don't remove existing
+    // Merge NAICS codes - add new ones, don't remove existing
     const existingCodes = (existing?.naicsCodes || []).map(n => n.code);
     const merged = [...(existing?.naicsCodes || [])];
     for (const n of data.naicsCodes) {
@@ -189,7 +189,7 @@ export const upsertCompany = async (data, sourceName) => {
     return { doc: { ...existing.toObject(), ...set }, isNew: false };
   }
 
-  // New record — need at least a UEI (generate placeholder if truly absent)
+  // New record - need at least a UEI (generate placeholder if truly absent)
   const newUei = uei || `NOUEI-${cage || name.substring(0, 8).replace(/\s/g, '')}-${Date.now()}`;
   const doc = await SamCompany.create({
     ...set,

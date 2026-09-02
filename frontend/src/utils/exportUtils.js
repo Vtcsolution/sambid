@@ -1,7 +1,7 @@
 // frontend/src/utils/exportUtils.js
 // Reusable PDF and CSV/Excel export helpers.
 // PDF uses jsPDF + jspdf-autotable (both already installed).
-// CSV uses a plain Blob download — opens natively in Excel.
+// CSV uses a plain Blob download - opens natively in Excel.
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -21,7 +21,7 @@ const AMBER_TEXT  = [146, 64, 14];
 // ── Shared helpers ────────────────────────────────────────────────────────────
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
 const fmtVal  = (v) => {
-  if (!v) return '—';
+  if (!v) return ' - ';
   if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
   if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
   return `$${v}`;
@@ -75,7 +75,7 @@ const addFooter = (doc) => {
     doc.setPage(i);
     doc.setTextColor(...GRAY);
     doc.setFontSize(7);
-    doc.text(`Page ${i} of ${pages}  |  ${BRAND} — Confidential`, pageW / 2, pageH - 8, { align: 'center' });
+    doc.text(`Page ${i} of ${pages}  |  ${BRAND} - Confidential`, pageW / 2, pageH - 8, { align: 'center' });
   }
 };
 
@@ -117,10 +117,10 @@ export const exportOpportunitiesPDF = (opportunities, userName = '', naicsCodes 
     startY: startY + 14,
     head: [['Match', 'Title', 'Agency', 'NAICS', 'Value', 'Deadline', 'Days Left', 'Status']],
     body: opportunities.map(o => [
-      o.aiMatchScore ? `${o.aiMatchScore}%` : '—',
+      o.aiMatchScore ? `${o.aiMatchScore}%` : ' - ',
       (o.title || '').substring(0, 60),
       (o.agency || '').substring(0, 35),
-      o.naicsCode || '—',
+      o.naicsCode || ' - ',
       fmtVal(o.estimatedValue),
       fmtDate(o.dueDate),
       daysLabel(o.dueDate),
@@ -201,7 +201,7 @@ export const exportSingleOpportunityPDF = (opp, matchReasons = []) => {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...GRAY);
-  doc.text(`${opp.agency || ''}  ·  NAICS ${opp.naicsCode || '—'}  ·  ${opp.setAside || 'Full & Open Competition'}`, 22, y + 36);
+  doc.text(`${opp.agency || ''}  ·  NAICS ${opp.naicsCode || ' - '}  ·  ${opp.setAside || 'Full & Open Competition'}`, 22, y + 36);
   y += 66;
 
   // Key details grid
@@ -210,8 +210,8 @@ export const exportSingleOpportunityPDF = (opp, matchReasons = []) => {
     ['Posted Date',     fmtDate(opp.postedDate)],
     ['Response Due',    fmtDate(opp.dueDate)],
     ['Days Remaining',  daysLabel(opp.dueDate)],
-    ['NAICS Code',      opp.naicsCode || '—'],
-    ['PSC Code',        opp.pscCode   || '—'],
+    ['NAICS Code',      opp.naicsCode || ' - '],
+    ['PSC Code',        opp.pscCode   || ' - '],
     ['Set-Aside',       opp.setAside  || 'None'],
     ['Source',          opp.source?.toUpperCase() || 'SAM.GOV'],
   ];
@@ -299,7 +299,7 @@ const STAGE_LABELS = {
 
 export const exportPipelinePDF = (columns, stats) => {
   const doc    = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'letter' });
-  const statsLine = `Total: ${stats?.total || 0}  |  Active: ${stats?.active || 0}  |  Submitted: ${stats?.submitted || 0}  |  Win Rate: ${stats?.winRate != null ? stats.winRate + '%' : '—'}`;
+  const statsLine = `Total: ${stats?.total || 0}  |  Active: ${stats?.active || 0}  |  Submitted: ${stats?.submitted || 0}  |  Win Rate: ${stats?.winRate != null ? stats.winRate + '%' : ' - '}`;
   let y = addHeader(doc, 'Bid Pipeline Report', statsLine);
   y += 14;
 
@@ -315,7 +315,7 @@ export const exportPipelinePDF = (columns, stats) => {
         fmtVal(opp.estimatedValue),
         fmtDate(opp.dueDate),
         daysLabel(opp.dueDate),
-        item.pipelineNotes ? item.pipelineNotes.substring(0, 40) : '—'
+        item.pipelineNotes ? item.pipelineNotes.substring(0, 40) : ' - '
       ]);
     });
   });
@@ -517,7 +517,7 @@ const addCoverPage = (doc) => {
   doc.text(`Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, W / 2, H * 0.76, { align: 'center' });
   doc.text('www.sambid.co', W / 2, H * 0.82, { align: 'center' });
   doc.setFontSize(7);
-  doc.text('CONFIDENTIAL — For Authorized Recipients Only', W / 2, H * 0.92, { align: 'center' });
+  doc.text('CONFIDENTIAL - For Authorized Recipients Only', W / 2, H * 0.92, { align: 'center' });
 };
 
 const addSectionTitle = (doc, y, title, icon) => {
@@ -551,7 +551,7 @@ export const exportSamBidReport = () => {
   // ── Page 2: The 7-Step Gap ───────────────────────────────────
   doc.addPage();
   let y = addHeader(doc, 'Competitive Intelligence Report', 'What Competitors Do vs. What We Do');
-  y = addSectionTitle(doc, y, 'The 7-Step Gap — Why Competitors Fall Short', '');
+  y = addSectionTitle(doc, y, 'The 7-Step Gap - Why Competitors Fall Short', '');
 
   autoTable(doc, {
     startY: y,
@@ -559,10 +559,10 @@ export const exportSamBidReport = () => {
     body: [
       ['1. Find', 'Contracts matched to my NAICS', 'Show a list, you figure it out', 'Auto-matched, AI-scored 0-100%'],
       ['2. Understand', 'Full contract details', 'Basic title + description', '40+ fields from SAM.gov'],
-      ['3. Decide', 'Should I bid? Real data', 'Nothing — you guess', 'AI + real competitors from USASpending'],
-      ['4. Write', 'Professional proposal', 'Nothing — hire $15K consultant', 'AI writes 7-section proposal'],
-      ['5. Submit', 'Manage the bid process', 'Nothing — you do it alone', 'Managed service: we bid for you'],
-      ['6. Deliver', 'Workforce & milestones', 'Nothing — platform disappears', 'Subcontracting: quotes, milestones, alerts'],
+      ['3. Decide', 'Should I bid? Real data', 'Nothing - you guess', 'AI + real competitors from USASpending'],
+      ['4. Write', 'Professional proposal', 'Nothing - hire $15K consultant', 'AI writes 7-section proposal'],
+      ['5. Submit', 'Manage the bid process', 'Nothing - you do it alone', 'Managed service: we bid for you'],
+      ['6. Deliver', 'Workforce & milestones', 'Nothing - platform disappears', 'Subcontracting: quotes, milestones, alerts'],
       ['7. Get Paid', 'Track Net-30 payment', 'Nothing', 'Gov payment tracker + auto-alerts'],
     ],
     headStyles: { fillColor: BRAND_COLOR, textColor: WHITE, fontSize: 8, fontStyle: 'bold' },
@@ -625,7 +625,7 @@ export const exportSamBidReport = () => {
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...GRAY);
-  doc.text('Next best competitor (GovWin): 8 features — SamBid has 7x more at 1/50th the price', 30, y + 28);
+  doc.text('Next best competitor (GovWin): 8 features - SamBid has 7x more at 1/50th the price', 30, y + 28);
 
   // ── Page 4-5: Competitor Missing Features ────────────────────
   const competitors = [
@@ -662,7 +662,7 @@ export const exportSamBidReport = () => {
   for (const comp of competitors) {
     doc.addPage();
     y = addHeader(doc, 'Competitive Intelligence Report', `vs. ${comp.name}`);
-    y = addSectionTitle(doc, y, `${comp.name}  —  ${comp.price}`, '');
+    y = addSectionTitle(doc, y, `${comp.name} - ${comp.price}`, '');
 
     // What they have (green box)
     doc.setFillColor(220, 252, 231);
@@ -705,8 +705,8 @@ export const exportSamBidReport = () => {
 
   // ── Page: 10 AI Tools ────────────────────────────────────────
   doc.addPage();
-  y = addHeader(doc, 'Competitive Intelligence Report', '10 AI Tools — Powered by Real Government Data');
-  y = addSectionTitle(doc, y, '10 AI Tools — Every One Uses 4 Real Data Sources', '');
+  y = addHeader(doc, 'Competitive Intelligence Report', '10 AI Tools - Powered by Real Government Data');
+  y = addSectionTitle(doc, y, '10 AI Tools - Every One Uses 4 Real Data Sources', '');
 
   // Data sources box
   doc.setFillColor(238, 242, 255);
@@ -717,10 +717,10 @@ export const exportSamBidReport = () => {
   doc.text('Before any AI generates anything, it pulls from:', 20, y + 14);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...DARK);
-  doc.text('1. SAM.gov Opportunities API — 40+ fields per contract (dates, contacts, office chain, award details)', 20, y + 26);
-  doc.text('2. USASpending.gov API — Real companies who won similar contracts, actual dollar amounts', 20, y + 34);
-  doc.text('3. SAM.gov Entity API — Your verified UEI, CAGE, certifications, business types', 322, y + 26);
-  doc.text('4. Your Past Wins — Auto-imported contract history from USASpending', 322, y + 34);
+  doc.text('1. SAM.gov Opportunities API - 40+ fields per contract (dates, contacts, office chain, award details)', 20, y + 26);
+  doc.text('2. USASpending.gov API - Real companies who won similar contracts, actual dollar amounts', 20, y + 34);
+  doc.text('3. SAM.gov Entity API - Your verified UEI, CAGE, certifications, business types', 322, y + 26);
+  doc.text('4. Your Past Wins - Auto-imported contract history from USASpending', 322, y + 34);
   y += 54;
 
   const aiTools = [
@@ -750,14 +750,14 @@ export const exportSamBidReport = () => {
   // ── Page: Managed Bidding + Subcontracting ───────────────────
   doc.addPage();
   y = addHeader(doc, 'Competitive Intelligence Report', 'Managed Bidding & Subcontracting');
-  y = addSectionTitle(doc, y, 'Managed Bidding — We Bid For You (Zero Competitors Offer This)', '');
+  y = addSectionTitle(doc, y, 'Managed Bidding - We Bid For You (Zero Competitors Offer This)', '');
 
   const managedSteps = [
     ['1', 'You Sign Up', 'Apply for managed service from your company dashboard'],
     ['2', 'We Find Contracts', 'Our team identifies opportunities matching your NAICS, certs, past performance'],
     ['3', 'We Write Proposals', 'AI + GovCon team writes professional proposals using your real data'],
     ['4', 'We Submit Bids', 'We manage the entire submission process'],
-    ['5', 'You Win', 'You pay commission (% of contract value) — ONLY when you win. No win = no fee'],
+    ['5', 'You Win', 'You pay commission (% of contract value) - ONLY when you win. No win = no fee'],
   ];
 
   autoTable(doc, {
@@ -772,7 +772,7 @@ export const exportSamBidReport = () => {
   });
   y = doc.lastAutoTable.finalY + 16;
 
-  y = addSectionTitle(doc, y, 'Subcontracting System — Post-Win Delivery (Zero Competitors)', '');
+  y = addSectionTitle(doc, y, 'Subcontracting System - Post-Win Delivery (Zero Competitors)', '');
 
   const subSteps = [
     ['1', 'Create Project', 'Auto-copies all contract details from won bid'],
@@ -837,13 +837,13 @@ export const exportSamBidReport = () => {
     body: [
       ['Contract matches', '50/mo', '500/mo', '3,000/mo', 'Unlimited'],
       ['Smart filters', 'Basic', 'Full', 'Full', 'Full'],
-      ['AI tools (10)', '—', '—', 'All 10', 'All 10'],
-      ['Proposal builder', '—', '—', 'Unlimited', 'Unlimited'],
-      ['Pipeline + Calendar', '—', 'Yes', 'Yes', 'Yes'],
-      ['Past performance repo', '—', '—', 'Yes', 'Yes'],
-      ['Market research', '—', '—', '—', 'Yes'],
-      ['Managed bidding', '—', '—', '—', 'Yes'],
-      ['Subcontracting', '—', '—', '—', 'Yes'],
+      ['AI tools (10)', ' - ', ' - ', 'All 10', 'All 10'],
+      ['Proposal builder', ' - ', ' - ', 'Unlimited', 'Unlimited'],
+      ['Pipeline + Calendar', ' - ', 'Yes', 'Yes', 'Yes'],
+      ['Past performance repo', ' - ', ' - ', 'Yes', 'Yes'],
+      ['Market research', ' - ', ' - ', ' - ', 'Yes'],
+      ['Managed bidding', ' - ', ' - ', ' - ', 'Yes'],
+      ['Subcontracting', ' - ', ' - ', ' - ', 'Yes'],
       ['Support', 'Email', 'Priority', 'Priority', 'Dedicated'],
     ],
     headStyles: { fillColor: BRAND_COLOR, textColor: WHITE, fontSize: 7.5, fontStyle: 'bold' },
@@ -910,7 +910,7 @@ export const exportSamBidReport = () => {
   doc.text('www.sambid.co', FW / 2, 430, { align: 'center' });
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text('From Discovery to Delivery — Powered by Real Government Data', FW / 2, 450, { align: 'center' });
+  doc.text('From Discovery to Delivery - Powered by Real Government Data', FW / 2, 450, { align: 'center' });
 
   // ── Footers ──────────────────────────────────────────────────
   addFooter(doc);

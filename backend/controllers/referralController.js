@@ -5,7 +5,7 @@ import Withdrawal, { MIN_PAID_REFERRALS, MIN_WITHDRAWAL_AMOUNT, MIN_BALANCE_TO_U
 import { sendAdminUserActionAlert, sendPlanActivatedEmail } from '../services/emailService.js';
 import { distributeToUser } from '../services/schedulerService.js';
 
-// Standard monthly plan prices — fallback when no invoice amount is available
+// Standard monthly plan prices - fallback when no invoice amount is available
 const PLAN_PRICES = { starter: 29, pro: 79, enterprise: 499 };
 const PAID_PLANS  = ['starter', 'pro', 'enterprise'];
 
@@ -72,7 +72,7 @@ export const validateCoupon = async (req, res) => {
       referrerName:    referrer.name,
       referrerId:      referrer._id,
       code,
-      message:         `Coupon applied! You get 10% off — referred by ${referrer.name}.`,
+      message:         `Coupon applied! You get 10% off - referred by ${referrer.name}.`,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -131,7 +131,7 @@ export const reconcileReferralCommissions = async () => {
     }
 
     if (credited > 0) {
-      console.log(`✅ Referral reconcile complete — ${credited} commission(s) credited`);
+      console.log(`✅ Referral reconcile complete - ${credited} commission(s) credited`);
     } else {
       console.log('ℹ️  Referral reconcile: no pending commissions found');
     }

@@ -29,7 +29,7 @@ const userOpportunitySchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// One opportunity per user — no duplicates
+// One opportunity per user - no duplicates
 userOpportunitySchema.index({ user: 1, opportunity: 1 }, { unique: true });
 userOpportunitySchema.index({ user: 1, fetchedAt: -1 });
 userOpportunitySchema.index({ user: 1, matchScore: -1 });

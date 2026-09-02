@@ -1,11 +1,11 @@
 // backend/services/schedulerService.js
 //
 // Two-phase opportunity pipeline:
-//  Phase 1 — Master Fetch:  SAM.gov API → global Opportunity collection (every 30 min)
-//  Phase 2 — Distribution:  global Opportunity → per-user UserOpportunity (every hour + midnight)
+//  Phase 1 - Master Fetch:  SAM.gov API → global Opportunity collection (every 30 min)
+//  Phase 2 - Distribution:  global Opportunity → per-user UserOpportunity (every hour + midnight)
 //
 // Plan limits applied during distribution:
-//  trial        : 3 opps/day,       source window = last 7 days (account itself expires after 5 days — see User.trialEndDate)
+//  trial        : 3 opps/day,       source window = last 7 days (account itself expires after 5 days - see User.trialEndDate)
 //  free         : 3 opps/day,       source window = last 7 days
 //  starter      : 500 opps/month,   source window = last 14 days
 //  pro          : 3000 opps/month,  source window = last 60 days
@@ -32,7 +32,7 @@ import {
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 const MAX_NAICS_PER_FETCH  = 5;     // max unique NAICS codes fetched per master cycle (quota-safe)
-const NAICS_FETCH_DELAY_MS = 5000;  // delay between SAM.gov calls (5s — avoids rate limiting)
+const NAICS_FETCH_DELAY_MS = 5000;  // delay between SAM.gov calls (5s - avoids rate limiting)
 const USER_BATCH_DELAY_MS  = 500;   // delay between users during distribution
 const MIN_FETCH_INTERVAL_MS = 28 * 60 * 1000; // don't re-run master fetch if ran < 28 min ago (30-min cron cycle)
 
@@ -68,9 +68,9 @@ const calculateMatchScore = (opportunity, user) => {
   if (exactNaicsMatch) {
     score += 50; reasons.push('✓ Your NAICS code matches this opportunity');
   } else if (familyNaicsMatch) {
-    score += 35; reasons.push('✓ Same NAICS industry group — likely relevant');
+    score += 35; reasons.push('✓ Same NAICS industry group - likely relevant');
   } else if (keywordNaicsMatch) {
-    score += 25; reasons.push('✓ Keyword-matched — may have incorrect NAICS code on posting');
+    score += 25; reasons.push('✓ Keyword-matched - may have incorrect NAICS code on posting');
   } else if (user.naicsCodes?.length > 0) {
     score += 5;  reasons.push('✗ NAICS code mismatch');
   } else {
@@ -90,7 +90,7 @@ const calculateMatchScore = (opportunity, user) => {
     else if (daysLeft > 14) { score += 15; reasons.push(`⚠️ ${daysLeft} days left`); }
     else if (daysLeft > 7)  { score += 10; reasons.push(`⚠️ Only ${daysLeft} days left`); }
     else if (daysLeft > 0)  { score += 5;  reasons.push(`❗ Due in ${daysLeft} days`); }
-    else                    { score += 5;  reasons.push('📊 Historical — research only'); }
+    else                    { score += 5;  reasons.push('📊 Historical - research only'); }
   }
 
   if (opportunity.estimatedValue) {
@@ -107,7 +107,7 @@ const calculateMatchScore = (opportunity, user) => {
 // and upserts results into the global Opportunity collection.
 export const runMasterFetch = async ({ force = false } = {}) => {
   if (fetchStats.isFetching) {
-    console.log('⏳ Master fetch already in progress — skipping');
+    console.log('⏳ Master fetch already in progress - skipping');
     return;
   }
 
@@ -117,13 +117,13 @@ export const runMasterFetch = async ({ force = false } = {}) => {
     const msSinceLast = Date.now() - new Date(fetchStats.lastMasterFetchAt).getTime();
     if (msSinceLast < MIN_FETCH_INTERVAL_MS) {
       const minsAgo = Math.round(msSinceLast / 60000);
-      console.log(`⏭️  Master fetch skipped — last run was ${minsAgo} min ago (min interval: 8 min)`);
+      console.log(`⏭️  Master fetch skipped - last run was ${minsAgo} min ago (min interval: 8 min)`);
       return;
     }
   }
 
   console.log('\n' + '='.repeat(70));
-  console.log('🌐 PHASE 1 — MASTER FETCH  (SAM.gov → Global Opportunity Store)');
+  console.log('🌐 PHASE 1 - MASTER FETCH  (SAM.gov → Global Opportunity Store)');
   console.log('   Time:', new Date().toISOString());
   console.log('='.repeat(70));
 
@@ -148,7 +148,7 @@ export const runMasterFetch = async ({ force = false } = {}) => {
       await new Promise(r => setTimeout(r, NAICS_FETCH_DELAY_MS));
     }
 
-    // Keyword searches for cross-NAICS coverage — catches ~5-6% of misclassified postings.
+    // Keyword searches for cross-NAICS coverage - catches ~5-6% of misclassified postings.
     // Group by 4-digit family so we run one search per sector, not per code.
     const naicsFamilyMap = new Map();
     for (const code of uniqueNaics.slice(0, MAX_NAICS_PER_FETCH)) {
@@ -176,7 +176,7 @@ export const runMasterFetch = async ({ force = false } = {}) => {
     fetchStats.lastMasterFetchCount = totalProcessed;
     fetchStats.totalFetchRuns      += 1;
 
-    console.log(`\n✅ Master fetch done — ${totalProcessed} records processed, ${masterCount} total in store`);
+    console.log(`\n✅ Master fetch done - ${totalProcessed} records processed, ${masterCount} total in store`);
     console.log('='.repeat(70) + '\n');
   } catch (err) {
     console.error('❌ Master fetch error:', err.message);
@@ -238,7 +238,7 @@ const distributeToUser = async (user) => {
   const windowStart = new Date();
   windowStart.setDate(windowStart.getDate() - config.sourceWindowDays);
 
-  // IDs already in this user's feed — skip them
+  // IDs already in this user's feed - skip them
   const existing = await UserOpportunity.find({ user: user._id }).select('opportunity').lean();
   const existingIds = existing.map(e => e.opportunity);
 
@@ -246,7 +246,7 @@ const distributeToUser = async (user) => {
   const activeFilter = { dueDate: { $gt: now } };
 
   // Only fully-resolved records: never distribute an opportunity whose description
-  // is still a raw SAM.gov URL — it stays in the master store until the nightly
+  // is still a raw SAM.gov URL - it stays in the master store until the nightly
   // completion pass (or an on-demand fetch) fills in the real text.
   const completeFilter = { description: { $not: /^https?:\/\/.*api\.sam\.gov/ } };
 
@@ -263,7 +263,7 @@ const distributeToUser = async (user) => {
         { suggestedNaics: { $in: user.naicsCodes } },
       ]};
 
-  // Fetch candidates from master store within plan window (SAM.gov only — exclude past-award data)
+  // Fetch candidates from master store within plan window (SAM.gov only - exclude past-award data)
   let candidates = await Opportunity.find({
     ...naicsFamilyFilter,
     postedDate: { $gte: windowStart },
@@ -312,7 +312,7 @@ const distributeToUser = async (user) => {
       assigned++;
     } catch (err) {
       if (err.code !== 11000) console.error(`Assign error (${opp._id}):`, err.message);
-      // 11000 = duplicate key — opportunity already exists for this user, skip silently
+      // 11000 = duplicate key - opportunity already exists for this user, skip silently
     }
   }
 
@@ -330,7 +330,7 @@ const distributeToUser = async (user) => {
       `(${used}/${cap}, window=${config.sourceWindowDays}d)`
     );
 
-    // Push notification — fire-and-forget (don't block distribution)
+    // Push notification - fire-and-forget (don't block distribution)
     const topMatch = scored[0];
     const pushTitle = `${assigned} new contract match${assigned !== 1 ? 'es' : ''} found`;
     const pushBody  = topMatch
@@ -407,7 +407,7 @@ const checkUserAlerts = async (user) => {
 
 export const runUserDistribution = async () => {
   console.log('\n' + '='.repeat(70));
-  console.log('📤 PHASE 2 — USER DISTRIBUTION  (Global Store → User Feeds)');
+  console.log('📤 PHASE 2 - USER DISTRIBUTION  (Global Store → User Feeds)');
   console.log('   Time:', new Date().toISOString());
   console.log('='.repeat(70));
 
@@ -435,7 +435,7 @@ export const runUserDistribution = async () => {
     fetchStats.lastDistributionAt    = new Date();
     fetchStats.lastDistributionCount = totalAssigned;
 
-    console.log(`\n🎉 Distribution complete — ${totalAssigned} new opportunities assigned across all users`);
+    console.log(`\n🎉 Distribution complete - ${totalAssigned} new opportunities assigned across all users`);
     console.log('='.repeat(70) + '\n');
   } catch (err) {
     console.error('❌ User distribution error:', err.message);
@@ -445,18 +445,18 @@ export const runUserDistribution = async () => {
 // ─── Scheduler Bootstrap ──────────────────────────────────────────────────────
 export const startScheduler = () => {
   console.log('\n🚀 Starting Hybrid Opportunity Scheduler');
-  console.log('   Phase 1a — API Fetch (per NAICS)        : MANUAL only (Admin panel button)');
-  console.log('   Phase 1b — Bulk Nightly Download (all)   : 00:10 UTC (05:10 AM Pakistan) — first claim on fresh quota');
-  console.log('   Phase 2  — User Distribution             : every 10 min');
+  console.log('   Phase 1a - API Fetch (per NAICS)        : MANUAL only (Admin panel button)');
+  console.log('   Phase 1b - Bulk Nightly Download (all)   : 00:10 UTC (05:10 AM Pakistan) - first claim on fresh quota');
+  console.log('   Phase 2 - User Distribution              : every 10 min');
 
-  // Phase 1a: Automatic API fetch is DISABLED — use Admin panel buttons to fetch manually.
+  // Phase 1a: Automatic API fetch is DISABLED - use Admin panel buttons to fetch manually.
   // Uncomment the line below to re-enable auto-fetch every 30 min:
   // cron.schedule('*/30 * * * *', () => runMasterFetch());
 
-  // Phase 2: distribute to users every 10 min (reads local DB only — no SAM.gov quota used)
+  // Phase 2: distribute to users every 10 min (reads local DB only - no SAM.gov quota used)
   cron.schedule('*/10 * * * *', () => runUserDistribution());
 
-  // Daily full cycle at 6 AM — distribution only (no auto SAM.gov fetch)
+  // Daily full cycle at 6 AM - distribution only (no auto SAM.gov fetch)
   cron.schedule('0 6 * * *', async () => {
     console.log('\n🌅 DAILY 6 AM DISTRIBUTION starting...');
     await runUserDistribution();
@@ -464,12 +464,12 @@ export const startScheduler = () => {
 
   // Phase 1b: Nightly bulk download at 00:10 UTC = 05:10 AM Pakistan.
   // Why 00:10 UTC:
-  //   • SAM.gov's own 429 responses state quota resets at 00:00:00 UTC — running
+  //   • SAM.gov's own 429 responses state quota resets at 00:00:00 UTC - running
   //     10 minutes later gives the opportunity pipeline FIRST CLAIM on the fresh
   //     daily quota, before entity sync or any daytime usage can consume it.
   //   • Descriptions + PDFs are fetched per record inside this job, so every
   //     record it processes is 100% complete for users the same night.
-  //   • No NAICS filter — every category is downloaded so no opportunity is missed.
+  //   • No NAICS filter - every category is downloaded so no opportunity is missed.
   //   • Deduplication via sourceId upsert; API-fetched records are never duplicated.
   cron.schedule('10 0 * * *', async () => {
     console.log('\n🌙 BULK DOWNLOAD (00:10 UTC = 05:10 AM Pakistan) starting on fresh quota...');
@@ -479,7 +479,7 @@ export const startScheduler = () => {
     await runUserDistribution();
   });
 
-  // SAM Entity sync — 09:00 UTC daily (AFTER the opportunity pipeline).
+  // SAM Entity sync - 09:00 UTC daily (AFTER the opportunity pipeline).
   // Uses dynamic quota: consumes remaining daily SAM.gov requests minus a reserve.
   // Deliberately scheduled after the 00:10 bulk job so company data never starves
   // opportunity descriptions/PDFs of quota (it previously ran at 02:00 and did).
@@ -488,45 +488,45 @@ export const startScheduler = () => {
     await syncSamEntitiesDynamic(200);
   });
 
-  // USASpending company sync — 02:30 UTC daily (enriches contract history, no email)
+  // USASpending company sync - 02:30 UTC daily (enriches contract history, no email)
   cron.schedule('30 2 * * *', async () => {
     console.log('\n📊 02:30 UTC USASPENDING COMPANY SYNC starting…');
     await syncUsaSpendingCompanies(50);
   });
 
-  // FPDS company sync — 03:00 UTC daily (skip gracefully if endpoint unavailable)
+  // FPDS company sync - 03:00 UTC daily (skip gracefully if endpoint unavailable)
   cron.schedule('0 3 * * *', async () => {
     console.log('\n📋 03:00 UTC FPDS COMPANY SYNC starting…');
     await syncFpdsCompanies(30);
   });
 
-  // SBA DSBS company sync — 03:30 UTC daily (skip gracefully if endpoint unavailable)
+  // SBA DSBS company sync - 03:30 UTC daily (skip gracefully if endpoint unavailable)
   cron.schedule('30 3 * * *', async () => {
     console.log('\n🏢 03:30 UTC SBA DSBS COMPANY SYNC starting…');
     await syncSbaCompanies(30);
   });
 
   // ── Deadline Alerts ─────────────────────────────────────────────────────────
-  // Upcoming deadline: hourly — notify users when an opp enters their alert window
+  // Upcoming deadline: hourly - notify users when an opp enters their alert window
   cron.schedule('0 * * * *', async () => {
     await checkUpcomingDeadlineAlerts();
   });
 
-  // 1-day countdown: every hour — send up to 5 emails (every 5h) when <24h remain
+  // 1-day countdown: every hour - send up to 5 emails (every 5h) when <24h remain
   cron.schedule('5 * * * *', async () => {
     await check1DayDeadlineAlerts();
   });
 
-  // Final hour: every 20 min — send up to 3 emails (every 20min) when <60min remain
+  // Final hour: every 20 min - send up to 3 emails (every 20min) when <60min remain
   cron.schedule('*/20 * * * *', async () => {
     await checkFinalHourDeadlineAlerts();
   });
 
-  // Daily plan expiry sweep — 01:00 UTC
+  // Daily plan expiry sweep - 01:00 UTC
   // Downgrades expired trials → free and expired paid plans → free.
-  // Complimentary plans (tempGrantExpiresAt set — either an admin grant, or
+  // Complimentary plans (tempGrantExpiresAt set - either an admin grant, or
   // the automatic 7-day Enterprise signup promo in authController.js
-  // registerUser) are handled first and separately — they revert to
+  // registerUser) are handled first and separately - they revert to
   // 'trial' with a fresh window instead, since the account was never a
   // real subscription to begin with.
   cron.schedule('0 1 * * *', async () => {
@@ -561,7 +561,7 @@ export const startScheduler = () => {
     console.log(`✅ Expiry sweep: ${expiredGrants.modifiedCount} admin grants → trial, ${expiredTrials.modifiedCount} trials → free, ${expiredPaid.modifiedCount} paid plans → free`);
   });
 
-  // Startup fetch disabled — use Admin → Hybrid Data Pipeline test buttons instead.
+  // Startup fetch disabled - use Admin → Hybrid Data Pipeline test buttons instead.
   // Auto-fetch on restart was burning SAM.gov quota every time nodemon restarted.
   setTimeout(async () => {
     console.log('\n📤 Running initial user distribution on startup (no SAM.gov fetch)...');
@@ -572,7 +572,7 @@ export const startScheduler = () => {
       const { default: SamCompany } = await import('../models/SamCompany.js');
       const companyCount = await SamCompany.countDocuments();
       if (companyCount === 0) {
-        console.log('\n📊 Company database is empty — auto-seeding from USASpending.gov (20 pages)…');
+        console.log('\n📊 Company database is empty - auto-seeding from USASpending.gov (20 pages)…');
         syncUsaSpendingCompanies(20).catch(err =>
           console.error('Auto-seed USASpending error:', err.message)
         );
@@ -591,7 +591,7 @@ export { distributeToUser };
 // ── Instant first-matches email ────────────────────────────────────────────────
 // Called right after a new user's NAICS codes are saved (and after email
 // verification): distributes matches immediately, then sends the one-time
-// "your first matched contracts" email — no waiting for the hourly crons.
+// "your first matched contracts" email - no waiting for the hourly crons.
 // Guarded by user.welcomeMatchesSentAt so it can never send twice.
 export const sendFirstMatchesNow = async (userDoc) => {
   try {
@@ -619,9 +619,9 @@ export const sendFirstMatchesNow = async (userDoc) => {
       .populate('opportunity')
       .lean();
     const opps = feed.map(f => f.opportunity).filter(Boolean);
-    if (opps.length === 0) return; // no matches yet — the crons will cover it later
+    if (opps.length === 0) return; // no matches yet - the crons will cover it later
 
-    // Total active matches across the master store — the hunger number
+    // Total active matches across the master store - the hunger number
     const naicsPrefixes = [...new Set(user.naicsCodes.map(c => String(c).slice(0, 4)))];
     const totalMatches = await Opportunity.countDocuments({
       dueDate: { $gt: new Date() },
@@ -640,7 +640,7 @@ export const sendFirstMatchesNow = async (userDoc) => {
 // Manual trigger (used by admin refresh endpoint)
 export const triggerManualFetch = async () => {
   console.log('🔧 Manual fetch triggered');
-  await runMasterFetch({ force: true }); // bypass cooldown — admin explicitly requested this
+  await runMasterFetch({ force: true }); // bypass cooldown - admin explicitly requested this
   await runUserDistribution();
 };
 
@@ -653,7 +653,7 @@ export const triggerManualBulk = async () => {
 
 // ─── Test fetch: 10 records per click, no NAICS filter, 1 API call ───────────
 export const triggerTestFetch = async (offset = 0) => {
-  console.log(`🧪 Test fetch — ALL categories, offset ${offset}, limit 10`);
+  console.log(`🧪 Test fetch - ALL categories, offset ${offset}, limit 10`);
   const result = await fetchSAMPage(null, 10, offset);
   await runUserDistribution();
   return { ...result, message: `Test fetch: ${result.saved} records saved (offset ${offset})` };

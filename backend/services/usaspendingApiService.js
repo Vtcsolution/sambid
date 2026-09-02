@@ -103,7 +103,7 @@ export const fetchUSAspendingOpportunities = async (naicsCode = null, limit = 50
       if (award["Award Amount"])     parts.push(`Total contract value: $${Number(award["Award Amount"]).toLocaleString()}.`);
       if (award["Start Date"] || award["End Date"]) parts.push(`Period of performance: ${award["Start Date"] || 'n/a'} to ${award["End Date"] || 'n/a'}.`);
       if (award.naics_code)          parts.push(`NAICS code: ${award.naics_code}.`);
-      parts.push('Why this matters to you: while the period of performance is open, the prime contractor may need subcontractors or teaming partners for this work — and the award shows exactly what this agency buys and at what price, which is valuable intelligence for your own future bids.');
+      parts.push('Why this matters to you: while the period of performance is open, the prime contractor may need subcontractors or teaming partners for this work - and the award shows exactly what this agency buys and at what price, which is valuable intelligence for your own future bids.');
       return parts.join(' ');
     };
 

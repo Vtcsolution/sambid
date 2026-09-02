@@ -3,12 +3,12 @@
 import webpush from 'web-push';
 import PushSubscription from '../models/PushSubscription.js';
 
-// Configure VAPID once on module load (lazy — env vars are loaded by then)
+// Configure VAPID once on module load (lazy - env vars are loaded by then)
 let _configured = false;
 const configure = () => {
   if (_configured) return;
   if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
-    console.warn('⚠️ VAPID keys not set — push notifications disabled');
+    console.warn('⚠️ VAPID keys not set - push notifications disabled');
     return;
   }
   webpush.setVapidDetails(
@@ -39,7 +39,7 @@ const sendToSubscription = async (sub, payload) => {
     return true;
   } catch (err) {
     if (err.statusCode === 410 || err.statusCode === 404) {
-      // Subscription expired/unregistered — clean up
+      // Subscription expired/unregistered - clean up
       await PushSubscription.deleteOne({ endpoint: sub.endpoint }).catch(() => {});
       console.log(`🗑️ Removed stale push subscription: ${sub.endpoint.slice(-20)}`);
     } else {

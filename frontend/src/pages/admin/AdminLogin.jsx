@@ -12,7 +12,7 @@ export default function AdminLogin() {
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState('');
 
-  // Already signed in? Straight to the dashboard — no repeated logins.
+  // Already signed in? Straight to the dashboard - no repeated logins.
   useEffect(() => {
     if (localStorage.getItem('adminToken')) navigate('/admin/dashboard', { replace: true });
   }, [navigate]);
@@ -104,7 +104,7 @@ export default function AdminLogin() {
                 onChange={e => setRemember(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
-              <span className="text-sm text-gray-600">Remember me — stay signed in for 30 days</span>
+              <span className="text-sm text-gray-600">Remember me - stay signed in for 30 days</span>
             </label>
 
             {error && (

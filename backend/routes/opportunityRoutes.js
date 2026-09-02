@@ -17,7 +17,7 @@ import { checkApiLimit } from '../middleware/rateLimitMiddleware.js';
 
 const router = express.Router();
 
-// Admin-specific opportunity routes (flexAdmin — before protect middleware)
+// Admin-specific opportunity routes (flexAdmin - before protect middleware)
 router.post('/refresh', flexAdmin, checkApiLimit, refreshOpportunities);
 
 // All other routes require user authentication (admin token also accepted via protectAny)
@@ -28,7 +28,7 @@ router.use(enforcePlanExpiry);
 router.get('/profile', getUserProfile);
 router.put('/profile', updateUserProfile);
 
-// Feed refresh (user-accessible — clears stale feed and refills based on current plan)
+// Feed refresh (user-accessible - clears stale feed and refills based on current plan)
 router.post('/refresh-my-feed', refreshUserFeed);
 
 // Opportunities routes

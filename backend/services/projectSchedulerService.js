@@ -51,7 +51,7 @@ const runDeadlineAlerts = async () => {
 
       console.log(`  📧 Sent ${alertType} for "${project.title}" (${daysLeft}d left)`);
     }
-    console.log(`✅ Deadline alerts done — ${projects.length} project(s) checked`);
+    console.log(`✅ Deadline alerts done - ${projects.length} project(s) checked`);
   } catch (err) {
     console.error('❌ Deadline alerts error:', err.message);
   }
@@ -90,7 +90,7 @@ const runGovPaymentCheck = async () => {
 
       console.log(`  ⚠️ Gov payment overdue: "${project.title}" (${daysOverdue}d)`);
     }
-    console.log(`✅ Gov payment check done — ${overdueProjects.length} overdue`);
+    console.log(`✅ Gov payment check done - ${overdueProjects.length} overdue`);
   } catch (err) {
     console.error('❌ Gov payment check error:', err.message);
   }
@@ -116,19 +116,19 @@ const runWeeklyProgressSummary = async () => {
           user: project.owner._id,
           type: 'managed_project_update',
           title: 'Weekly Progress Report',
-          message: `"${project.title}": ${project.overallProgress}% complete — ${approved}/${milestones.length} milestones done, ${inProgress} in progress.`,
+          message: `"${project.title}": ${project.overallProgress}% complete - ${approved}/${milestones.length} milestones done, ${inProgress} in progress.`,
           link: '/company/managed-service',
         });
       } catch {}
     }
-    console.log(`✅ Weekly summary done — ${activeProjects.length} active projects`);
+    console.log(`✅ Weekly summary done - ${activeProjects.length} active projects`);
   } catch (err) {
     console.error('❌ Weekly summary error:', err.message);
   }
 };
 
 // ── Monthly: Auto-generate the monthly retainer fee for every active company ─
-// Previously 100% manual — admin had to remember to click "Monthly Fee" per
+// Previously 100% manual - admin had to remember to click "Monthly Fee" per
 // company every month. Now it's automatic on the 1st, with a duplicate guard
 // so re-running the job (or a late server restart) never double-bills.
 export const runMonthlyCommissionFees = async () => {
@@ -170,13 +170,13 @@ export const runMonthlyCommissionFees = async () => {
         sendMonthlyFeeEmail(ms.owner, invoice).catch(() => {});
 
         billed++;
-        console.log(`  💳 Billed ${ms.owner.email} — ${invoice.invoiceNumber} ($${ms.monthlyFee})`);
+        console.log(`  💳 Billed ${ms.owner.email} - ${invoice.invoiceNumber} ($${ms.monthlyFee})`);
       } catch (err) {
         console.error(`  ❌ Failed to bill managed service ${ms._id}:`, err.message);
       }
     }
 
-    console.log(`✅ Monthly fee billing done — ${billed} billed, ${skipped} skipped (already billed or $0 fee)`);
+    console.log(`✅ Monthly fee billing done - ${billed} billed, ${skipped} skipped (already billed or $0 fee)`);
   } catch (err) {
     console.error('❌ Monthly fee billing error:', err.message);
   }

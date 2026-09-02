@@ -37,7 +37,7 @@ export default function Problems() {
       <style>{ANIM_CSS}</style>
       <SEOHead
         title="17 Federal Contracting Problems, Solved | Sambid"
-        description="Every real problem small businesses face winning federal contracts, and exactly how Sambid solves each one — wrong NAICS codes, missed deadlines, bidding blind, and more."
+        description="Every real problem small businesses face winning federal contracts, and exactly how Sambid solves each one - wrong NAICS codes, missed deadlines, bidding blind, and more."
         keywords="federal contracting problems, SAM.gov problems, government contract mistakes, win government contracts, federal bid problems"
         canonical="https://sambid.co/problems"
       />

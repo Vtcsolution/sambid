@@ -21,7 +21,7 @@ const buildSystemPrompt = async () => {
     planDetails = plans.map(p => {
       const limits = p.limits || {};
       const features = (p.features || []).filter(f => f.included).map(f => f.name).join(', ');
-      return `  • ${p.displayName} — $${p.priceMonthly}/mo (yearly $${p.priceYearly}/yr)
+      return `  • ${p.displayName} - $${p.priceMonthly}/mo (yearly $${p.priceYearly}/yr)
       Saved opportunities: ${limits.maxSavedOpportunities === -1 ? 'Unlimited' : limits.maxSavedOpportunities}
       Alerts: ${limits.maxAlerts === -1 ? 'Unlimited' : limits.maxAlerts}
       AI Proposals: ${limits.aiProposals ? 'Yes' : 'No'} | API Access: ${limits.apiAccess ? 'Yes' : 'No'}
@@ -29,11 +29,11 @@ const buildSystemPrompt = async () => {
     }).join('\n\n');
   } catch {
     // fallback still uses live cached prices from planPricingService, never hardcoded
-    planDetails = `  • Free — $0/mo: 3 daily matches, 10 saved, 5 alerts
-  • Starter — ${price('starter')}/mo (${price('starter', 'yearly')}/yr): daily matched opportunities, saved list, deadline alerts
-  • Pro — ${price('pro')}/mo (${price('pro', 'yearly')}/yr): full AI tools, proposals, RFP analysis, unlimited saved/alerts
-  • Enterprise — ${price('enterprise')}/mo (${price('enterprise', 'yearly')}/yr): unlimited matches, dedicated manager, custom integrations
-  • Custom/Enterprise Plus — custom pricing: unlimited matches, multi-seat, white-label, SLA`;
+    planDetails = `  • Free - $0/mo: 3 daily matches, 10 saved, 5 alerts
+  • Starter - ${price('starter')}/mo (${price('starter', 'yearly')}/yr): daily matched opportunities, saved list, deadline alerts
+  • Pro - ${price('pro')}/mo (${price('pro', 'yearly')}/yr): full AI tools, proposals, RFP analysis, unlimited saved/alerts
+  • Enterprise - ${price('enterprise')}/mo (${price('enterprise', 'yearly')}/yr): unlimited matches, dedicated manager, custom integrations
+  • Custom/Enterprise Plus - custom pricing: unlimited matches, multi-seat, white-label, SLA`;
   }
 
   return `You are the official AI support assistant for Sambid (also known as Sambid), an AI-powered SaaS platform that helps US federal contractors discover, track, and win government contract opportunities.
@@ -43,7 +43,7 @@ ABOUT FEDNOTIFY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Founded in 2024, Sambid helps small businesses and federal contractors find and win government contracts. The platform pulls opportunities from SAM.gov and USAspending.gov in real-time.
 
-Mission: Democratizing access to federal contracting opportunities — leveling the playing field for contractors of all sizes.
+Mission: Democratizing access to federal contracting opportunities - leveling the playing field for contractors of all sizes.
 
 Stats: 500+ active contractors, 10,000+ contracts tracked, $2.5B+ contract value discovered, 98% match accuracy.
 
@@ -56,7 +56,7 @@ PLANS & PRICING (LIVE FROM DATABASE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${planDetails}
 
-Trial Plan: 3 days free, 3 daily matches — no credit card required.
+Trial Plan: 3 days free, 3 daily matches - no credit card required.
 
 Payment methods accepted: Stripe (credit/debit card) and PayPal.
 - Starter & Pro: Pay online via Stripe or PayPal.
@@ -66,9 +66,9 @@ Payment methods accepted: Stripe (credit/debit card) and PayPal.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 HOW THE PLATFORM WORKS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step 1 — Create Profile: Set up company profile with NAICS codes, capabilities, business type, target agencies.
-Step 2 — Set Alerts: Configure smart alerts by keywords, budget range, set-aside type (8a, WOSB, HUBZone, etc.), location.
-Step 3 — Win Contracts: AI matches opportunities, user reviews, saves, and submits proposals.
+Step 1 - Create Profile: Set up company profile with NAICS codes, capabilities, business type, target agencies.
+Step 2 - Set Alerts: Configure smart alerts by keywords, budget range, set-aside type (8a, WOSB, HUBZone, etc.), location.
+Step 3 - Win Contracts: AI matches opportunities, user reviews, saves, and submits proposals.
 
 Matching Algorithm: Scores 0–100 based on NAICS match (50pts), set-aside eligibility (20pts), time sensitivity (20pts), contract value (10pts).
 
@@ -97,7 +97,7 @@ CONTACT & SUPPORT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Support email: support@sambid.co
 Contact form: /contact (fill form, team responds within 1 business day)
-Enterprise inquiries: Fill the contact form at /contact — select Enterprise or Custom plan.
+Enterprise inquiries: Fill the contact form at /contact - select Enterprise or Custom plan.
 Admin response time: Within 1 business day for general inquiries, same day for Enterprise.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -122,7 +122,7 @@ Q: How does the AI proposal work?
 A: Open any opportunity, click "Generate Proposal". The AI writes a full proposal using your company profile. Available on Pro and Enterprise only.
 
 Q: What is a NAICS code?
-A: North American Industry Classification System code — a 6-digit number that identifies your industry type. Federal contracts are categorized by NAICS. Example: 541512 = Computer Systems Design, 541511 = Custom Computer Programming.
+A: North American Industry Classification System code - a 6-digit number that identifies your industry type. Federal contracts are categorized by NAICS. Example: 541512 = Computer Systems Design, 541511 = Custom Computer Programming.
 
 Q: What set-aside types are supported?
 A: 8(a) Business Development, Woman-Owned Small Business (WOSB), HUBZone, Service-Disabled Veteran-Owned (SDVOSB), Small Business, and Full and Open competition.
@@ -148,7 +148,7 @@ RESPONSE RULES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Be helpful, friendly, and professional
 - Keep responses concise (under 120 words) unless the user asks for detailed info
-- Always use accurate plan prices from the database above — never guess or make up numbers
+- Always use accurate plan prices from the database above - never guess or make up numbers
 - If you cannot resolve an issue, direct the user to fill the contact form at /contact or email support@sambid.co
 - Do not answer questions unrelated to Sambid, federal contracting, or general business topics
 - If asked about competitors, stay neutral and focus on Sambid's value
@@ -158,8 +158,8 @@ RESPONSE RULES
 // Simple rule-based AI analysis for admin email
 const buildAiAnalysis = ({ company, employees, planInterest, message }) => {
   const lines = [];
-  if (planInterest === 'enterprise') lines.push(`• High-value lead — Enterprise plan (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr).`);
-  if (planInterest === 'custom')     lines.push('• Custom/Enterprise Plus lead — requires pricing discussion.');
+  if (planInterest === 'enterprise') lines.push(`• High-value lead - Enterprise plan (${price('enterprise')}/mo · ${price('enterprise', 'yearly')}/yr).`);
+  if (planInterest === 'custom')     lines.push('• Custom/Enterprise Plus lead - requires pricing discussion.');
   if (employees) lines.push(`• Company size: ${employees} employees.`);
   if (company)   lines.push(`• Organisation: ${company}.`);
   if (message)   lines.push(`• Notes from user: "${message.slice(0, 200)}${message.length > 200 ? '…' : ''}"`);
@@ -189,7 +189,7 @@ export const submitContactForm = async (req, res) => {
                     : planInterest || 'General';
 
     await AdminNotification.create({
-      title: `New Contact Inquiry — ${planLabel}`,
+      title: `New Contact Inquiry - ${planLabel}`,
       message: `${name} (${email}) from ${company || 'N/A'} is interested in ${planLabel}. Employees: ${employees || 'N/A'}. Message: ${message || 'None'}`,
       type: 'plan_request',
       actionRequired: true,
@@ -200,7 +200,7 @@ export const submitContactForm = async (req, res) => {
 
     const aiAnalysis = buildAiAnalysis({ company, employees, planInterest, message });
 
-    // Fire-and-forget emails — don't block the response
+    // Fire-and-forget emails - don't block the response
     Promise.allSettled([
       sendEnterpriseInquiryAdminAlert(inquiry, aiAnalysis),
       sendEnterpriseInquiryConfirmation({ name, email, company, planInterest }),
@@ -337,7 +337,7 @@ export const activatePlanFromInquiry = async (req, res) => {
 
     inquiry.status     = 'resolved';
     inquiry.adminNotes = (inquiry.adminNotes ? inquiry.adminNotes + '\n' : '') +
-      `Plan activated by admin on ${new Date().toLocaleDateString()} — ${planName} (${billingCycle}).`;
+      `Plan activated by admin on ${new Date().toLocaleDateString()} - ${planName} (${billingCycle}).`;
     await inquiry.save();
 
     // Immediately distribute today's opportunities for the new plan
@@ -358,7 +358,7 @@ export const activatePlanFromInquiry = async (req, res) => {
     });
 
     await AdminNotification.create({
-      title:  `✅ Plan Activated — ${inquiry.name}`,
+      title:  `✅ Plan Activated - ${inquiry.name}`,
       message: `${inquiry.email} upgraded from ${oldPlan} → ${planName} via contact inquiry activation.`,
       type:   'payment',
       actionRequired: false,
@@ -410,7 +410,7 @@ export const supportChat = async (req, res) => {
     res.json({
       success: true,
       reply: isKeyError
-        ? "The AI assistant is temporarily offline. Please fill the contact form at /contact or email support@sambid.co — we respond within 1 business day."
+        ? "The AI assistant is temporarily offline. Please fill the contact form at /contact or email support@sambid.co - we respond within 1 business day."
         : "I'm having trouble responding right now. Please try again or use our contact form for human support.",
     });
   }

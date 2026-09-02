@@ -24,7 +24,7 @@ import {
 const router = express.Router();
 router.use(protectAdmin);
 
-// Static routes first — must come before /:id wildcard
+// Static routes first - must come before /:id wildcard
 router.get('/stats',                          getManagedStats);
 router.get('/invoices',                       listAllInvoices);
 router.get('/search-users',                   searchUsersForEnroll);

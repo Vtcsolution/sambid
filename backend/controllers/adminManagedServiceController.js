@@ -33,7 +33,7 @@ export async function sendCommissionEmail(owner, invoice, bid) {
     await transporter.sendMail({
       from:    FROM.billing(),
       to:      owner.email,
-      subject: `Commission Invoice ${invoice.invoiceNumber} — ${fmt(invoice.amount)}`,
+      subject: `Commission Invoice ${invoice.invoiceNumber} - ${fmt(invoice.amount)}`,
       html: `
         <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;color:#1f2937;">
           <div style="background:#4f46e5;padding:32px;border-radius:16px 16px 0 0;text-align:center;">
@@ -46,7 +46,7 @@ export async function sendCommissionEmail(owner, invoice, bid) {
             <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin:20px 0;">
               <table style="width:100%;border-collapse:collapse;font-size:14px;">
                 <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;width:45%;">Invoice #</td><td style="padding:8px 0;font-weight:700;color:#1f2937;font-family:monospace;">${invoice.invoiceNumber}</td></tr>
-                <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;">Contract</td><td style="padding:8px 0;font-weight:600;color:#1f2937;">${bid?.contractTitle || '—'}</td></tr>
+                <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;">Contract</td><td style="padding:8px 0;font-weight:600;color:#1f2937;">${bid?.contractTitle || ' - '}</td></tr>
                 <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;">Contract Value</td><td style="padding:8px 0;font-weight:600;color:#059669;">${fmt(invoice.contractValue)}</td></tr>
                 <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;">Commission Rate</td><td style="padding:8px 0;font-weight:600;">${invoice.commissionRate}%</td></tr>
                 <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;color:#6b7280;">Commission Due</td><td style="padding:8px 0;font-weight:700;color:#4f46e5;font-size:18px;">${fmt(invoice.amount)}</td></tr>
@@ -68,7 +68,7 @@ export async function sendMonthlyFeeEmail(owner, invoice) {
     await transporter.sendMail({
       from:    FROM.billing(),
       to:      owner.email,
-      subject: `Monthly Service Invoice ${invoice.invoiceNumber} — ${fmt(invoice.amount)}`,
+      subject: `Monthly Service Invoice ${invoice.invoiceNumber} - ${fmt(invoice.amount)}`,
       html: `
         <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;color:#1f2937;">
           <div style="background:#4f46e5;padding:28px;border-radius:16px 16px 0 0;text-align:center;">
@@ -358,7 +358,7 @@ export const updateBid = async (req, res) => {
         if (!wonValue) return res.status(400).json({ success: false, message: 'wonValue is required when marking as won.' });
 
         bid.wonValue = wonValue;
-        // Informational total — actual commission is billed progressively per milestone as the government pays
+        // Informational total - actual commission is billed progressively per milestone as the government pays
         const { rate, amount } = calcCommission(ms, wonValue);
         bid.commissionRate   = rate;
         bid.commissionAmount = amount;
@@ -366,7 +366,7 @@ export const updateBid = async (req, res) => {
         ms.totalWon += 1;
         await ms.save();
 
-        // Auto-create the fulfillment project so milestones can be set up right away — no manual step needed
+        // Auto-create the fulfillment project so milestones can be set up right away - no manual step needed
         let project = await ManagedProject.findOne({ managedBid: bid._id });
         if (!project) {
           project = await ManagedProject.create({
@@ -389,7 +389,7 @@ export const updateBid = async (req, res) => {
         );
 
       } else if (prev === 'won' && req.body.status !== 'won') {
-        // Reversing a won bid — rollback stats
+        // Reversing a won bid - rollback stats
         ms.totalWon    = Math.max(0, ms.totalWon - 1);
         ms.totalEarned = Math.max(0, ms.totalEarned - (bid.commissionInvoiced || 0));
         await ms.save();
@@ -403,7 +403,7 @@ export const updateBid = async (req, res) => {
 
       } else {
         // Non-won status updates
-        const statusLabels = { submitted: 'Proposal Submitted', lost: 'Bid Result — Not Selected', cancelled: 'Bid Cancelled' };
+        const statusLabels = { submitted: 'Proposal Submitted', lost: 'Bid Result - Not Selected', cancelled: 'Bid Cancelled' };
         if (statusLabels[req.body.status]) {
           await notify(ms.owner._id, 'managed_bid_update', statusLabels[req.body.status],
             `Update on "${bid.contractTitle}": ${req.body.status === 'submitted' ? "Your proposal has been submitted. We'll update you on the result." : req.body.status === 'lost' ? "Unfortunately this bid was not selected. Our team is identifying new opportunities for you." : "This bid has been cancelled."}`,
@@ -444,13 +444,13 @@ export const deleteBid = async (req, res) => {
 };
 
 // ── Run monthly fee billing for ALL active companies right now (admin override) ─
-// The cron job does this automatically on the 1st of each month — this lets
+// The cron job does this automatically on the 1st of each month - this lets
 // admin force a run on-demand (e.g. testing, or a company activated mid-month).
 export const triggerMonthlyBillingRun = async (req, res) => {
   try {
     const { runMonthlyCommissionFees } = await import('../services/projectSchedulerService.js');
     runMonthlyCommissionFees().catch(err => console.error('Manual monthly billing run error:', err.message));
-    res.json({ success: true, message: 'Monthly billing run started — invoices will be generated for active companies that have not been billed yet this month.' });
+    res.json({ success: true, message: 'Monthly billing run started - invoices will be generated for active companies that have not been billed yet this month.' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -497,7 +497,7 @@ export const markInvoicePaid = async (req, res) => {
     if (inv.bid) await ManagedBid.findByIdAndUpdate(inv.bid, { commissionPaid: true, paidAt: new Date() });
     await inv.save();
 
-    await notify(inv.owner._id, 'commission_invoice', 'Invoice Paid — Thank You!',
+    await notify(inv.owner._id, 'commission_invoice', 'Invoice Paid - Thank You!',
       `Invoice ${inv.invoiceNumber} (${fmt(inv.amount)}) has been marked as paid. Thank you!`,
     );
 
@@ -517,7 +517,7 @@ export const updateInvoice = async (req, res) => {
     Object.assign(inv, req.body);
     await inv.save();
 
-    // If cancelled and was previously pending — adjust totalEarned
+    // If cancelled and was previously pending - adjust totalEarned
     if (req.body.status === 'cancelled' && prevStatus !== 'cancelled' && inv.type === 'commission') {
       await ManagedService.findByIdAndUpdate(inv.managedService, { $inc: { totalEarned: -(inv.amount || 0) } });
     }

@@ -18,7 +18,7 @@ import {
 } from './emailService.js';
 import { generateMarketResearchReport } from './geminiService.js';
 
-// SAM Registration & Certification Expiry Alerts — 90, 60, 30 days before
+// SAM Registration & Certification Expiry Alerts - 90, 60, 30 days before
 const processCertificationExpiryAlerts = async () => {
   const REMINDER_DAYS = [90, 60, 30];
   const now = new Date(); now.setHours(0, 0, 0, 0);
@@ -45,7 +45,7 @@ const processCertificationExpiryAlerts = async () => {
   }
 };
 
-// Smart Deadline Reminders — fires at 30, 14, 7, 3, 1 day before submission deadline
+// Smart Deadline Reminders - fires at 30, 14, 7, 3, 1 day before submission deadline
 const processDeadlineReminders = async () => {
   const REMINDER_DAYS = [30, 14, 7, 3, 1];
   const now = new Date();
@@ -77,8 +77,8 @@ const processDeadlineReminders = async () => {
   }
 };
 
-// Process trial reminders — sends an upgrade nudge EVERY day of the trial
-// (length is whatever User.trialEndDate says, currently 5 days — see getTrialDaysLeft())
+// Process trial reminders - sends an upgrade nudge EVERY day of the trial
+// (length is whatever User.trialEndDate says, currently 5 days - see getTrialDaysLeft())
 const processTrialReminders = async () => {
   console.log('📧 Processing trial reminders...');
 
@@ -286,7 +286,7 @@ export const startEmailScheduler = () => {
     }
   });
   
-  // Deadline reminders — run daily at 7 AM
+  // Deadline reminders - run daily at 7 AM
   cron.schedule('0 7 * * *', async () => {
     console.log('\n📧 [SCHEDULER] Checking deadline reminders...');
     try {
@@ -307,7 +307,7 @@ export const startEmailScheduler = () => {
     }
   });
   
-  // Weekly AI Market Research Report — Enterprise users, Monday at 6 AM
+  // Weekly AI Market Research Report - Enterprise users, Monday at 6 AM
   cron.schedule('0 6 * * 1', async () => {
     console.log('\n📊 [SCHEDULER] Sending weekly market research to Enterprise users...');
     try {

@@ -275,7 +275,7 @@ export const runAIWebsiteFinder = async ({ onlySource } = {}) => {
         aiFindState.percentComplete = total > 0 ? Math.round((processed / total) * 100) : 0;
 
         if (processed % 50 === 0) {
-          console.log(`  AI Finder: ${processed}/${total} — found: ${aiFindState.found}, skipped: ${aiFindState.skipped}`);
+          console.log(`  AI Finder: ${processed}/${total} - found: ${aiFindState.found}, skipped: ${aiFindState.skipped}`);
         }
       }
     }

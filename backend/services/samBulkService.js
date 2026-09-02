@@ -1,6 +1,6 @@
 // backend/services/samBulkService.js
 //
-// Nightly bulk download from SAM.gov — runs at midnight every day.
+// Nightly bulk download from SAM.gov - runs at midnight every day.
 //
 // Strategy:
 //   • Fetches ALL contract opportunities posted in the last 24 hours with NO
@@ -11,12 +11,12 @@
 //   • Upserts each record into the master Opportunity collection by sourceId
 //     (SAM.gov noticeId / solicitationNumber).  Because sourceId is a unique
 //     MongoDB index, a record fetched by the real-time API will simply be
-//     UPDATED — never duplicated — when the bulk run encounters it.
+//     UPDATED - never duplicated - when the bulk run encounters it.
 //   • The fetchSource field is set to 'api' on insert when the API fetched
 //     it first, and 'bulk' when the bulk run is first.  It never overwrites
 //     an existing fetchSource so the origin is preserved.
 //
-// No total-record cap is applied — the loop keeps paginating until SAM.gov
+// No total-record cap is applied - the loop keeps paginating until SAM.gov
 // returns an empty or partial page, meaning ALL records for that date range
 // are downloaded regardless of how many there are.
 //
@@ -90,7 +90,7 @@ const parseAgencyChain = (opp) => {
   };
 };
 
-// Resolve a SAM.gov description field — when the API returns a URL instead of text,
+// Resolve a SAM.gov description field - when the API returns a URL instead of text,
 // fetch the actual description text from that URL using the API key.
 const resolveDescription = async (apiKey, descOrUrl) => {
   const desc = safeStr(descOrUrl);
@@ -115,9 +115,9 @@ const resolveDescription = async (apiKey, descOrUrl) => {
       }
       return (text || desc).substring(0, 15000);
     } catch (e) {
-      if (e.response?.status === 429) throw e; // all keys exhausted — let caller break the loop
+      if (e.response?.status === 429) throw e; // all keys exhausted - let caller break the loop
       if (e.response?.status === 500 || e.response?.status === 404) {
-        // SAM.gov has no description at this URL — mark permanently so we stop wasting quota
+        // SAM.gov has no description at this URL - mark permanently so we stop wasting quota
         return 'No description available';
       }
       console.error('  resolveDescription failed:', e.message);
@@ -270,7 +270,7 @@ const fetchPage = async (_apiKey, postedFrom, postedTo, limit, offset, rdlFrom =
   return data.opportunitiesData || data.opportunities || [];
 };
 
-// Retry wrapper — on 429 reads Retry-After header and waits, up to maxRetries times.
+// Retry wrapper - on 429 reads Retry-After header and waits, up to maxRetries times.
 const fetchPageWithRetry = async (apiKey, postedFrom, postedTo, limit, offset, maxRetries = 4, rdlFrom = null) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -282,14 +282,14 @@ const fetchPageWithRetry = async (apiKey, postedFrom, postedTo, limit, offset, m
         const retryAfterSec = parseInt(err.response?.headers?.['retry-after'] || '0', 10);
         const backoffSec    = retryAfterSec > 0 ? retryAfterSec : Math.min(60 * attempt, 300);
         console.warn(
-          `  ⚠️  Rate-limited (429) on attempt ${attempt}/${maxRetries} — ` +
+          `  ⚠️  Rate-limited (429) on attempt ${attempt}/${maxRetries} - ` +
           `waiting ${backoffSec}s before retry…`
         );
         if (attempt < maxRetries) {
           await new Promise(r => setTimeout(r, backoffSec * 1000));
           continue;
         }
-        // All retries exhausted — re-throw so the caller can log and stop gracefully
+        // All retries exhausted - re-throw so the caller can log and stop gracefully
       }
       throw err;
     }
@@ -328,12 +328,12 @@ const upsertOpp = async (doc) => {
 // ─── Main bulk download ───────────────────────────────────────────────────────
 export const runNightlyBulkDownload = async () => {
   if (!process.env.SAM_API_KEY) {
-    console.error('❌ SAM_API_KEY missing — bulk download skipped');
+    console.error('❌ SAM_API_KEY missing - bulk download skipped');
     return { fetched: 0, saved: 0, skipped: 0, pages: 0 };
   }
 
   // Fetch window: only recent postings (last 2 days, with 1-day overlap for safety).
-  // Kept small ON PURPOSE — the goal is that every record fetched tonight gets its
+  // Kept small ON PURPOSE - the goal is that every record fetched tonight gets its
   // description + PDFs resolved the SAME night, so the store only ever holds
   // complete records. The library builds up day by day from launch.
   const FETCH_WINDOW_DAYS = 2;
@@ -389,7 +389,7 @@ export const runNightlyBulkDownload = async () => {
     } catch (err) {
       console.error(`  ❌ Page ${pages + 1} error: ${err.message}`);
       if (err.response?.status === 429) {
-        console.error('  💤  Quota exhausted — bulk download will resume at next scheduled run');
+        console.error('  💤  Quota exhausted - bulk download will resume at next scheduled run');
       }
       hasMore = false;
     }
@@ -404,7 +404,7 @@ export const runNightlyBulkDownload = async () => {
   return { fetched, saved, skipped, pages, totalInStore };
 };
 
-// ─── Resolve pending descriptions — user feeds first, then rest ───────────────
+// ─── Resolve pending descriptions - user feeds first, then rest ───────────────
 // Priority pass: records that are in any user's personal feed get resolved first
 // so non-enterprise users always see complete data. Enterprise users query the
 // master store directly and benefit from on-demand resolution when they open records.
@@ -417,7 +417,7 @@ export const resolveAllPendingDescriptions = async (maxCalls = 9999) => {
     $or: [{ dueDate: { $gt: new Date() } }, { dueDate: null }],
   };
 
-  // Get IDs of records in any user's personal feed — resolve these first
+  // Get IDs of records in any user's personal feed - resolve these first
   const userFeedIds = await UserOpportunity.distinct('opportunity');
 
   const [priorityPending, restPending] = await Promise.all([
@@ -436,7 +436,7 @@ export const resolveAllPendingDescriptions = async (maxCalls = 9999) => {
   let resolved = 0;
   for (const rec of pending) {
     if (resolved >= maxCalls) {
-      console.log(`  ⏸️  Reached nightly cap of ${maxCalls} — remaining will resolve on-demand or tomorrow night.`);
+      console.log(`  ⏸️  Reached nightly cap of ${maxCalls} - remaining will resolve on-demand or tomorrow night.`);
       break;
     }
     try {
@@ -447,12 +447,12 @@ export const resolveAllPendingDescriptions = async (maxCalls = 9999) => {
       }
     } catch (err) {
       if (err.response?.status === 429) {
-        console.error(`  💤 All API keys quota exhausted — stopped after ${resolved} descriptions. Remaining will complete next night.`);
+        console.error(`  💤 All API keys quota exhausted - stopped after ${resolved} descriptions. Remaining will complete next night.`);
         break;
       }
       console.warn(`  ⚠️  Failed (${rec.sourceId}): ${err.message}`);
     }
-    await new Promise(r => setTimeout(r, 250)); // 250ms between calls — avoids SAM.gov per-second limit
+    await new Promise(r => setTimeout(r, 250)); // 250ms between calls - avoids SAM.gov per-second limit
     if (resolved > 0 && resolved % 100 === 0) {
       console.log(`  📝 Progress: ${resolved}/${pending.length}`);
     }
@@ -484,7 +484,7 @@ export const resolveAllPendingResourceLinks = async (maxCalls = 200) => {
   let withFiles = 0;
   for (const rec of pending) {
     if (checked >= maxCalls) {
-      console.log(`  ⏸️  Reached resource-links cap of ${maxCalls} — remaining will resolve on-demand or tomorrow night.`);
+      console.log(`  ⏸️  Reached resource-links cap of ${maxCalls} - remaining will resolve on-demand or tomorrow night.`);
       break;
     }
     try {
@@ -494,7 +494,7 @@ export const resolveAllPendingResourceLinks = async (maxCalls = 200) => {
       if (links.length > 0) withFiles++;
     } catch (err) {
       if (err.response?.status === 429) {
-        console.error(`  💤 All API keys quota exhausted — stopped after ${checked} resource checks. Remaining will complete next night.`);
+        console.error(`  💤 All API keys quota exhausted - stopped after ${checked} resource checks. Remaining will complete next night.`);
         break;
       }
       console.warn(`  ⚠️  Resource links failed (${rec.noticeId?.slice(0,8)}...): ${err.message}`);
@@ -557,7 +557,7 @@ export const completeAllPendingRecords = async () => {
       completed++;
     } catch (err) {
       if (err.response?.status === 429) {
-        console.error(`  💤 All API keys quota exhausted — ${completed}/${pending.length} records fully completed. Rest continue next night + on-demand.`);
+        console.error(`  💤 All API keys quota exhausted - ${completed}/${pending.length} records fully completed. Rest continue next night + on-demand.`);
         break;
       }
       console.warn(`  ⚠️  Completion failed (${rec.sourceId}): ${err.message}`);
@@ -572,7 +572,7 @@ export const completeAllPendingRecords = async () => {
   return completed;
 };
 
-// ─── Test bulk: exactly 10 records at a given offset — 1 API call per click ──
+// ─── Test bulk: exactly 10 records at a given offset - 1 API call per click ──
 export const runBulkTest = async (offset = 0) => {
   const apiKey = process.env.SAM_API_KEY;
   if (!apiKey) return { fetched: 0, saved: 0, offset, message: 'SAM_API_KEY not set' };
@@ -582,7 +582,7 @@ export const runBulkTest = async (offset = 0) => {
   const postedFrom = fmtDate(from180);
   const postedTo   = fmtDate(new Date());
 
-  console.log(`\n🧪 TEST BULK — 10 records at offset ${offset} (1 API call)`);
+  console.log(`\n🧪 TEST BULK - 10 records at offset ${offset} (1 API call)`);
 
   let saved = 0;
   try {
@@ -590,11 +590,11 @@ export const runBulkTest = async (offset = 0) => {
     for (const raw of opps) {
       const doc = transformOpp(raw);
       if (!doc) continue;
-      // Resolve description URL — only 10 records so quota cost is acceptable
+      // Resolve description URL - only 10 records so quota cost is acceptable
       doc.description = await resolveDescription(apiKey, doc.description);
       try { await upsertOpp(doc); saved++; } catch {}
     }
-    console.log(`🧪 Test bulk done — offset ${offset}, fetched ${opps.length}, saved ${saved}`);
+    console.log(`🧪 Test bulk done - offset ${offset}, fetched ${opps.length}, saved ${saved}`);
     return { fetched: opps.length, saved, offset, message: `Test bulk: ${saved} records saved (offset ${offset})` };
   } catch (err) {
     console.error('🧪 Test bulk error:', err.message);
@@ -610,7 +610,7 @@ export const bulkStats = {
   isRunning:    false,
 };
 
-// Full nightly pipeline — two steps in sequence:
+// Full nightly pipeline - two steps in sequence:
 //   1. Bulk fetch : download ALL active SAM.gov records, save every field (cheap)
 //   2. Complete   : per record, fetch description text + PDF links together so
 //                   each processed record is 100% complete. Quota exhaustion
@@ -621,7 +621,7 @@ export const bulkStats = {
 
 export const triggerBulkDownload = async () => {
   if (bulkStats.isRunning) {
-    console.log('⏳ Bulk download already in progress — skipping');
+    console.log('⏳ Bulk download already in progress - skipping');
     return null;
   }
 
@@ -634,7 +634,7 @@ export const triggerBulkDownload = async () => {
     bulkStats.lastRunPages = result.pages;
 
     // Step 2: fill descriptions from SAM.gov's PUBLIC daily CSV extract.
-    // Free and unlimited — no API key, no quota. This is the primary description
+    // Free and unlimited - no API key, no quota. This is the primary description
     // source; the per-record API resolution below only mops up records the CSV
     // missed. (Personal SAM.gov keys have a tiny daily quota, so per-record
     // resolution alone can never keep up.)

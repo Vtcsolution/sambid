@@ -1,4 +1,4 @@
-// backend/socket.js — Socket.IO singleton
+// backend/socket.js - Socket.IO singleton
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js';

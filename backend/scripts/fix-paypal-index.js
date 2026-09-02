@@ -1,6 +1,6 @@
 // One-off maintenance: replace the paypalOrderId index with a PARTIAL unique
 // index so pending invoices (paypalOrderId: null) no longer collide, while real
-// PayPal order IDs stay unique. NON-DESTRUCTIVE — only touches the index, never
+// PayPal order IDs stay unique. NON-DESTRUCTIVE - only touches the index, never
 // the invoice documents.
 //
 // Run from backend/:  node scripts/fix-paypal-index.js
@@ -25,7 +25,7 @@ const dupes = await col.aggregate([
 ]).toArray();
 
 if (dupes.length) {
-  console.error('❌ Found duplicate non-null paypalOrderId values — resolve these first:');
+  console.error('❌ Found duplicate non-null paypalOrderId values - resolve these first:');
   dupes.forEach(d => console.error(`   "${d._id}" → ${d.n} invoices: ${d.ids.join(', ')}`));
   await mongoose.disconnect();
   process.exit(1);

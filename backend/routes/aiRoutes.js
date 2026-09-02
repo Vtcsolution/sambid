@@ -29,6 +29,6 @@ router.post('/sources-sought',             requireAICredits('sources_sought'),  
 router.post('/analyze-attachment',         requireAICredits('analyze_attachment'),   analyzeAttachment);
 router.post('/deep-summarize/:opportunityId', requireAICredits('summarize'),         deepSummarize);
 router.post('/compliance-matrix/:opportunityId', requireAICredits('compliance_matrix'), generateComplianceMatrix);
-router.get('/compliance-matrix/:opportunityId', getComplianceMatrix); // fetch saved — no credit charge
+router.get('/compliance-matrix/:opportunityId', getComplianceMatrix); // fetch saved - no credit charge
 
 export default router;

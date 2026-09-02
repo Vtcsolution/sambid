@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 import cloudinary from '../config/cloudinary.js';
 
 // Uploads an in-memory file buffer (from multer memoryStorage) straight to
-// Cloudinary — nothing ever touches local disk, so nothing gets wiped on
+// Cloudinary - nothing ever touches local disk, so nothing gets wiped on
 // the next deploy/redeploy.
 export function uploadBufferToCloudinary(buffer, { folder, resourceType = 'auto', publicId } = {}) {
   return new Promise((resolve, reject) => {

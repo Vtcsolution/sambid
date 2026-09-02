@@ -196,13 +196,13 @@ export const triggerProspectSync = async (req, res) => {
 export const triggerCollectOnly = async (req, res) => {
   if (prospectSyncState.isRunning) return res.json({ success: false, message: 'Already running', state: prospectSyncState });
   startProspectSync({ phase2Only: false, skipEnrich: true }).catch(e => { prospectSyncState.lastError = e.message; prospectSyncState.isRunning = false; });
-  res.json({ success: true, message: 'Phase 1 (collect) started — companies saved to DB as collected' });
+  res.json({ success: true, message: 'Phase 1 (collect) started - companies saved to DB as collected' });
 };
 // Phase 2 only (enrich companies already in DB)
 export const triggerEnrichOnly = async (req, res) => {
   if (prospectSyncState.isRunning) return res.json({ success: false, message: 'Already running', state: prospectSyncState });
   resumeProspectEnrichment().catch(e => { prospectSyncState.lastError = e.message; prospectSyncState.isRunning = false; });
-  res.json({ success: true, message: 'Phase 2 (enrich) started — enriching companies already in DB' });
+  res.json({ success: true, message: 'Phase 2 (enrich) started - enriching companies already in DB' });
 };
 export const resumeProspectSyncHandler = async (req, res) => {
   if (prospectSyncState.isRunning) return res.json({ success: false, message: 'Already running' });
@@ -315,7 +315,7 @@ export const sendProspectEmails = async (req, res) => {
     // DB prospects
     const dbProspects = hasIds ? await Prospect.find({ _id: { $in: prospectIds } }) : [];
 
-    // Manual recipients shaped like prospect objects (no _id — history skipped)
+    // Manual recipients shaped like prospect objects (no _id - history skipped)
     const manualProspects = hasCustom
       ? customRecipients
           .filter(r => r.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email))
@@ -399,7 +399,7 @@ export const quickAddProspect = async (req, res) => {
 };
 
 // Live-preview data for the outreach modal's "Top matched opportunities"
-// block — the exact same query buildProspectMatchesBlock() uses at real
+// block - the exact same query buildProspectMatchesBlock() uses at real
 // send time, so the preview shown to the admin is real, not a mock.
 export const getProspectTopMatches = async (req, res) => {
   try {
@@ -425,7 +425,7 @@ export const getProspectEmailHistory = async (req, res) => {
 
 // ── Admin: all prospect outreach emails ever sent, across every company ──────
 // Flattens each prospect's emailHistory[] into one row per send, newest
-// first, with overall Total/Delivered/Opened/Failed/Rate stats — the
+// first, with overall Total/Delivered/Opened/Failed/Rate stats - the
 // Prospect Outreach equivalent of the campaign Send History panel.
 export const getAllProspectEmailHistory = async (req, res) => {
   try {

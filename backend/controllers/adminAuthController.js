@@ -170,7 +170,7 @@ export const seedFirstAdmin = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Super admin created! Save this token — use it to log in at /admin/login.',
+      message: 'Super admin created! Save this token - use it to log in at /admin/login.',
       token,
       admin: { id: admin._id, name: admin.name, email: admin.email, role: admin.role },
     });

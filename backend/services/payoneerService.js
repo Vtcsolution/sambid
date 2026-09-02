@@ -1,6 +1,6 @@
 // backend/services/payoneerService.js
 //
-// Payoneer API integration — SANDBOX by default, LIVE when ready.
+// Payoneer API integration - SANDBOX by default, LIVE when ready.
 // ─────────────────────────────────────────────────────────────────
 //  Sandbox  →  PAYONEER_ENV=sandbox  (safe for testing, no real money)
 //  Live     →  PAYONEER_ENV=live     (replace ALL .env values first)
@@ -9,15 +9,15 @@
 //  Dev Portal: https://developer.payoneer.com  ← get sandbox keys here
 // ─────────────────────────────────────────────────────────────────
 //
-//  CAPABILITY A — CHECKOUT
+//  CAPABILITY A - CHECKOUT
 //    Creates a hosted Payoneer payment page for subscription billing.
 //    Flow: create session → redirect user → Payoneer redirects back → webhook confirms.
 //
-//  CAPABILITY B — MASS PAYOUT
+//  CAPABILITY B - MASS PAYOUT
 //    Sends referral commission to user's Payoneer account.
 //    Requires the user to have a Payoneer account linked to your program.
 //
-//  ALL credentials are read from .env — never hardcoded.
+//  ALL credentials are read from .env - never hardcoded.
 
 import axios from 'axios';
 import crypto from 'crypto';
@@ -127,7 +127,7 @@ export const createCheckoutSession = async ({ user, plan, billingCycle, invoiceI
     payment: {
       currency:    'USD',
       amount,
-      description: `FedNotify ${plan} Plan — ${billingCycle === 'yearly' ? 'Annual' : 'Monthly'}`,
+      description: `FedNotify ${plan} Plan - ${billingCycle === 'yearly' ? 'Annual' : 'Monthly'}`,
     },
     client_reference_id: String(invoiceId),  // maps webhook back to our invoice
     redirect_url: RETURN_URL,
@@ -154,7 +154,7 @@ export const getCheckoutSession = async (sessionId) =>
 // Header sent: X-Payoneer-Signature
 export const verifyWebhookSignature = (rawBody, signatureHeader) => {
   if (!WEBHOOK_SECRET || WEBHOOK_SECRET.includes('REPLACE_ME')) {
-    console.warn('⚠️  PAYONEER_WEBHOOK_SECRET not set — skipping verification (not safe for production)');
+    console.warn('⚠️  PAYONEER_WEBHOOK_SECRET not set - skipping verification (not safe for production)');
     return true;
   }
   const expected = crypto.createHmac('sha256', WEBHOOK_SECRET).update(rawBody).digest('hex');

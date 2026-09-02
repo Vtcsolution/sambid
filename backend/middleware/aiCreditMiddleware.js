@@ -44,6 +44,6 @@ export const requireAICredits = (feature) => async (req, res, next) => {
     next();
   } catch (err) {
     console.error('AI credit middleware error:', err.message);
-    next(); // non-fatal — let the AI call proceed rather than block on an error
+    next(); // non-fatal - let the AI call proceed rather than block on an error
   }
 };

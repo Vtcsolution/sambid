@@ -60,7 +60,7 @@ export const getDashboardStats = async (req, res) => {
       // Unread alert notifications
       AlertNotification.countDocuments({ user: userId, isRead: false }),
 
-      // Upcoming deadlines — next 5 opportunities from user feed
+      // Upcoming deadlines - next 5 opportunities from user feed
       UserOpportunity.find({ user: userId })
         .populate({
           path: 'opportunity',
@@ -84,7 +84,7 @@ export const getDashboardStats = async (req, res) => {
 
     // ── On-demand fill when dashboard loads with an empty feed ────────────────
     if (totalFeedCount === 0 && req.user.naicsCodes?.length > 0) {
-      console.log(`🔄 Dashboard: empty feed for ${req.user.email} — triggering on-demand fill`);
+      console.log(`🔄 Dashboard: empty feed for ${req.user.email} - triggering on-demand fill`);
       const masterCount = await Opportunity.countDocuments({ naicsCode: { $in: req.user.naicsCodes } });
       if (masterCount === 0) {
         for (const code of req.user.naicsCodes.slice(0, 3)) {
@@ -92,7 +92,7 @@ export const getDashboardStats = async (req, res) => {
         }
         const afterFetch = await Opportunity.countDocuments({ naicsCode: { $in: req.user.naicsCodes } });
         if (afterFetch === 0 && process.env.NODE_ENV !== 'production') {
-          // Dev-only fallback — production must never show fake sample data
+          // Dev-only fallback - production must never show fake sample data
           await seedSampleForUser(req.user.naicsCodes.slice(0, 2));
         }
       }
@@ -116,12 +116,12 @@ export const getDashboardStats = async (req, res) => {
 
     // ── Enterprise override: read stats directly from master Opportunity store ──
     // (enterprise users bypass UserOpportunity in the Opportunities page, so personal
-    //  feed counts are misleading — reflect the real master store numbers instead)
+    //  feed counts are misleading - reflect the real master store numbers instead)
     if (user.plan === 'enterprise') {
       const naics = user.naicsCodes || [];
       const enterpriseBase = {
         dueDate: { $gt: now },
-        source: { $ne: 'usaspending' }, // SAM.gov opportunities only — awards are not biddable
+        source: { $ne: 'usaspending' }, // SAM.gov opportunities only - awards are not biddable
         ...(naics.length ? { naicsCode: { $in: naics } } : {}),
         description: { $not: /^https?:\/\/.*api\.sam\.gov/ }, // complete records only
       };
@@ -186,7 +186,7 @@ export const getDashboardStats = async (req, res) => {
         isActive:       uo.opportunity.dueDate && new Date(uo.opportunity.dueDate) > now
       }));
 
-    // Plan info — read from DB
+    // Plan info - read from DB
     let monthlyLimit;
     if (user.role === 'admin') {
       monthlyLimit = 'Unlimited';
@@ -251,7 +251,7 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
-// @desc    Get calendar events — opportunities grouped by due date for a month
+// @desc    Get calendar events - opportunities grouped by due date for a month
 // @route   GET /api/dashboard/calendar?month=YYYY-MM
 export const getCalendarEvents = async (req, res) => {
   try {
@@ -344,7 +344,7 @@ export const getCalendarEvents = async (req, res) => {
 
     // ── Locked deadlines (trial/free upsell) ────────────────────────────────
     // Fill the calendar with the user's REAL matched deadlines beyond their
-    // plan cap — real dates, real values, masked identity. A calendar full of
+    // plan cap - real dates, real values, masked identity. A calendar full of
     // locked money with dates ticking closer sells harder than an empty one.
     if (['trial', 'free'].includes(req.user.plan) && req.user.naicsCodes?.length > 0) {
       try {
@@ -367,7 +367,7 @@ export const getCalendarEvents = async (req, res) => {
           eventsMap[key].push({
             id:             opp._id.toString(),
             locked:         true,
-            title:          '🔒 Matched contract — locked',
+            title:          '🔒 Matched contract - locked',
             agency:         String(opp.agency || 'Federal agency').split('>')[0].trim(),
             dueDate:        opp.dueDate,
             estimatedValue: opp.estimatedValue || null,

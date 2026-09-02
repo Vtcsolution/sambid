@@ -50,7 +50,7 @@ const headers = async () => ({
   'Authorization': `Bearer ${await getAccessToken()}`
 });
 
-// Create a PayPal order — returns orderId that frontend PayPal button uses
+// Create a PayPal order - returns orderId that frontend PayPal button uses
 export const createPayPalOrder = async (amount, currency = 'USD', metadata = {}) => {
   try {
     const value       = Number(amount).toFixed(2);
@@ -65,7 +65,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
         intent: 'CAPTURE',
         purchase_units: [{
           custom_id:   metadata.userId || '',
-          description: `Sambid — ${planLabel} (${cycleLabel})`,
+          description: `Sambid - ${planLabel} (${cycleLabel})`,
           amount: {
             currency_code: currency,
             value,
@@ -75,7 +75,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
           },
           items: [{
             name:        `Sambid ${planLabel}`,
-            description: `${cycleLabel} subscription — AI-powered federal contract intelligence`,
+            description: `${cycleLabel} subscription - AI-powered federal contract intelligence`,
             quantity:    '1',
             category:    'DIGITAL_GOODS',
             unit_amount: { currency_code: currency, value }
@@ -109,7 +109,7 @@ export const createPayPalOrder = async (amount, currency = 'USD', metadata = {})
   }
 };
 
-// Capture a PayPal order — call this after user approves in the Smart Button popup
+// Capture a PayPal order - call this after user approves in the Smart Button popup
 export const capturePayPalPayment = async (orderId) => {
   try {
     const res = await axios.post(
@@ -125,7 +125,7 @@ export const capturePayPalPayment = async (orderId) => {
       return { success: false, error: `Order status: ${order.status}` };
     }
 
-    console.log(`✅ PayPal captured: ${capture?.id} — $${capture?.amount?.value}`);
+    console.log(`✅ PayPal captured: ${capture?.id} - $${capture?.amount?.value}`);
     return {
       success:   true,
       captureId: capture?.id,

@@ -300,7 +300,7 @@ export const createPayPalPayment = async (req, res) => {
       console.log(`🎁 Support referral discount $${supportDiscount} applied for ${user.email}`);
     }
 
-    // Apply 10% coupon code discount — check User referral codes then Support Admin codes
+    // Apply 10% coupon code discount - check User referral codes then Support Admin codes
     let couponDiscount = 0;
     let couponReferrerId = null;
     if (couponCode && !freshUser.supportReferredBy) {
@@ -368,12 +368,12 @@ export const createPayPalPayment = async (req, res) => {
         await invoice.save();
         console.log(`✅ Invoice created: ${invoice.invoiceNumber}${referralReserved > 0 ? ` (referral reserved: $${referralReserved})` : ''}`);
       } catch (saveErr) {
-        // E11000: old non-partial index rejects a 2nd null paypalOrderId — fall back to reusing
+        // E11000: old non-partial index rejects a 2nd null paypalOrderId - fall back to reusing
         // any existing pending invoice for this user (across all plans) rather than crashing.
         if (saveErr.code === 11000) {
-          console.warn('⚠️  E11000 on invoice save (old index) — falling back to existing pending invoice');
+          console.warn('⚠️  E11000 on invoice save (old index) - falling back to existing pending invoice');
           invoice = await Invoice.findOne({ user: user._id, status: 'pending', paymentMethod: 'paypal' });
-          if (!invoice) throw saveErr; // nothing to fall back to — surface the real error
+          if (!invoice) throw saveErr; // nothing to fall back to - surface the real error
           invoice.plan = planName;
           invoice.billingCycle = billingCycle;
           invoice.amount = fullAmount;
@@ -400,7 +400,7 @@ export const createPayPalPayment = async (req, res) => {
         billingCycle: billingCycle
       });
     } catch (paypalError) {
-      // PayPal failed — delete the invoice so it doesn't show as a ghost pending entry
+      // PayPal failed - delete the invoice so it doesn't show as a ghost pending entry
       if (!existingInvoice) {
         await invoice.deleteOne();
         console.warn(`🗑️  Deleted orphan invoice ${invoice.invoiceNumber} after PayPal order failure`);
@@ -427,7 +427,7 @@ export const createPayPalPayment = async (req, res) => {
   }
 };
 
-// @desc    Capture & verify PayPal payment — prevents duplicates, activates plan, distributes opps
+// @desc    Capture & verify PayPal payment - prevents duplicates, activates plan, distributes opps
 // @route   POST /api/payment/paypal/capture
 export const capturePayPalPaymentHandler = async (req, res) => {
   const { orderId, invoiceId } = req.body;
@@ -436,7 +436,7 @@ export const capturePayPalPaymentHandler = async (req, res) => {
     return res.status(400).json({ success: false, message: 'orderId and invoiceId are required' });
   }
 
-  console.log(`📝 PayPal capture request — order: ${orderId}, invoice: ${invoiceId}`);
+  console.log(`📝 PayPal capture request - order: ${orderId}, invoice: ${invoiceId}`);
 
   try {
     // ── 1. Duplicate guard ────────────────────────────────────────────────────
@@ -518,7 +518,7 @@ export const capturePayPalPaymentHandler = async (req, res) => {
         $inc: { referralBalance: couponCommission, totalReferralEarnings: couponCommission },
       });
       if (!userUpdate) {
-        // Referrer is a support admin — credit their admin balance
+        // Referrer is a support admin - credit their admin balance
         Admin.findByIdAndUpdate(invoice.couponReferrer, {
           $inc: { referralBalance: couponCommission, totalCommissionEarned: couponCommission },
         }).catch(e => console.error('Coupon commission (admin, paypal):', e.message));
@@ -539,7 +539,7 @@ export const capturePayPalPaymentHandler = async (req, res) => {
     try {
       await AdminNotification.create({
         title: '💰 PayPal Payment Verified & Activated',
-        message: `${user.email} purchased ${plan?.displayName || invoice.plan} for $${invoice.amount} — plan activated automatically`,
+        message: `${user.email} purchased ${plan?.displayName || invoice.plan} for $${invoice.amount} - plan activated automatically`,
         type: 'payment',
         actionRequired: false,
         priority: 'high',
@@ -737,7 +737,7 @@ export const adminVerifyPayment = async (req, res) => {
   }
 };
 
-// @desc    Simulate a successful PayPal capture — DEV ONLY
+// @desc    Simulate a successful PayPal capture - DEV ONLY
 // @route   POST /api/payment/paypal/simulate-capture
 export const simulatePayPalCapture = async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
@@ -799,7 +799,7 @@ export const simulatePayPalCapture = async (req, res) => {
 
     res.json({
       success:     true,
-      message:     `[DEV] Simulated payment — ${invoice.plan} plan activated!`,
+      message:     `[DEV] Simulated payment - ${invoice.plan} plan activated!`,
       plan:        invoice.plan,
       planExpires: user.planExpiresAt,
       invoice:     { invoiceNumber: invoice.invoiceNumber, amount: invoice.amount, paidAt: invoice.paidAt },
@@ -891,7 +891,7 @@ export const createPayoneerCheckout = async (req, res) => {
         amount,
       });
     } catch (payoneerErr) {
-      console.warn('⚠️  Payoneer API unavailable — using sandbox mock:', payoneerErr.message);
+      console.warn('⚠️  Payoneer API unavailable - using sandbox mock:', payoneerErr.message);
       session = createSandboxMock(invoice._id, amount, planName, billingCycle);
       isMock = true;
     }
@@ -921,7 +921,7 @@ export const capturePayoneerReturn = async (req, res) => {
   try {
     const { sessionId, invoiceId, status, isMock } = req.body;
 
-    console.log(`📝 Payoneer capture — session: ${sessionId}, invoice: ${invoiceId}`);
+    console.log(`📝 Payoneer capture - session: ${sessionId}, invoice: ${invoiceId}`);
 
     const invoice = await Invoice.findById(invoiceId);
     if (!invoice) return res.status(404).json({ success: false, message: 'Invoice not found' });
@@ -1041,7 +1041,7 @@ export const capturePayoneerReturn = async (req, res) => {
 };
 
 // @desc    Payoneer IPN webhook (called by Payoneer server)
-// @route   POST /api/payment/payoneer/webhook  (PUBLIC — no auth)
+// @route   POST /api/payment/payoneer/webhook  (PUBLIC - no auth)
 export const payoneerWebhook = async (req, res) => {
   try {
     const signature = req.headers['x-payoneer-signature'];
@@ -1083,8 +1083,8 @@ export const payoneerWebhook = async (req, res) => {
   }
 };
 
-// @desc    Stripe webhook — handles checkout.session.completed for enterprise payment links
-// @route   POST /api/payment/stripe/webhook  (PUBLIC — raw body required)
+// @desc    Stripe webhook - handles checkout.session.completed for enterprise payment links
+// @route   POST /api/payment/stripe/webhook  (PUBLIC - raw body required)
 export const stripeWebhook = async (req, res) => {
   const sig       = req.headers['stripe-signature'];
   const secret    = process.env.STRIPE_WEBHOOK_SECRET;
@@ -1095,7 +1095,7 @@ export const stripeWebhook = async (req, res) => {
       const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
       event = stripeInstance.webhooks.constructEvent(req.body, sig, secret);
     } else {
-      // No webhook secret configured — parse body manually (dev/test)
+      // No webhook secret configured - parse body manually (dev/test)
       event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     }
   } catch (err) {
@@ -1148,7 +1148,7 @@ export const stripeWebhook = async (req, res) => {
           await inquiry.save();
 
           await AdminNotification.create({
-            title:   `💳 Enterprise Payment Received — ${inquiry.name}`,
+            title:   `💳 Enterprise Payment Received - ${inquiry.name}`,
             message: `${inquiry.email} paid $${inquiry.paymentAmount} via Stripe checkout link. Plan auto-activated: ${planName}.`,
             type:    'payment',
             actionRequired: false,

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// A single client testimonial — admin-uploaded photo/video plus a text
+// A single client testimonial - admin-uploaded photo/video plus a text
 // quote. Shown on the public /testimonials page only when
 // TestimonialSettings.isEnabled is true (see TestimonialSettings.js).
 const testimonialSchema = new mongoose.Schema({

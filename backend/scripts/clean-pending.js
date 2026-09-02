@@ -10,7 +10,7 @@ console.log(`🗑️  Deleted ${result.deletedCount} pending invoice(s)`);
 
 const remaining = await db.collection('invoices').find({}).toArray();
 console.log(`📋 Remaining invoices (${remaining.length}):`);
-remaining.forEach(i => console.log(`  ${i.invoiceNumber} — ${i.status} — ${i.plan} — $${i.amount}`));
+remaining.forEach(i => console.log(`  ${i.invoiceNumber} - ${i.status} - ${i.plan} - $${i.amount}`));
 
 await mongoose.disconnect();
 console.log('✅ Done');

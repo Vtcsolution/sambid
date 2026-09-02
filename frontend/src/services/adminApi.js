@@ -1,4 +1,4 @@
-// Separate axios instance for admin panel — uses adminToken, not authToken
+// Separate axios instance for admin panel - uses adminToken, not authToken
 import axios from 'axios';
 import { redirectTo } from '../utils/navigation';
 
@@ -59,15 +59,15 @@ export const adminPanelAPI = {
   rejectPlanRequest:          (id,d) => adminApi.post(`/admin/plan-requests/${id}/reject`, d),
   sendPaymentInstructions:    (id,d) => adminApi.post(`/admin/plan-requests/${id}/send-instructions`, d),
   getNotifications:      (p)    => adminApi.get('/admin/notifications', { params: p }),
-  // Both names kept — markNotificationRead is the original, markNotificationAsRead used by components
+  // Both names kept - markNotificationRead is the original, markNotificationAsRead used by components
   markNotificationRead:     (id) => adminApi.put(`/admin/notifications/${id}/read`),
   markNotificationAsRead:   (id) => adminApi.put(`/admin/notifications/${id}/read`),
   deleteNotification:    (id)   => adminApi.delete(`/admin/notifications/${id}`),
-  // Both names kept — getUnreadCount is original, getUnreadNotificationsCount used by components
+  // Both names kept - getUnreadCount is original, getUnreadNotificationsCount used by components
   getUnreadCount:               () => adminApi.get('/admin/notifications/unread/count'),
   getUnreadNotificationsCount:  () => adminApi.get('/admin/notifications/unread/count'),
   getPendingCounts:             () => adminApi.get('/admin/pending-counts'),
-  // Both names kept — sendBroadcast is original, sendBroadcastEmail used by components
+  // Both names kept - sendBroadcast is original, sendBroadcastEmail used by components
   sendBroadcast:         (d)    => adminApi.post('/admin/notifications/broadcast', d),
   sendBroadcastEmail:    (d)    => adminApi.post('/admin/notifications/broadcast', d),
   getInvoices:           (p)    => adminApi.get('/admin/invoices', { params: p }),

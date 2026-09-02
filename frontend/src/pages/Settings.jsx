@@ -1434,7 +1434,7 @@ function ApiAccessSection() {
           remaining: res.headers['x-ratelimit-remaining'],
         },
       });
-      await load(); // usage counter just moved — refresh it
+      await load(); // usage counter just moved - refresh it
     } catch (e) {
       setTestResult({
         ok: false,
@@ -1494,7 +1494,7 @@ function ApiAccessSection() {
           {/* One-time reveal of a freshly generated key */}
           {revealedKey && (
             <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <p className="text-sm font-semibold text-amber-800 mb-2">Copy this key now — you won't be able to see it again</p>
+              <p className="text-sm font-semibold text-amber-800 mb-2">Copy this key now - you won't be able to see it again</p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-mono break-all">{revealedKey}</code>
                 <button onClick={copyKey} className="shrink-0 flex items-center gap-1.5 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors">
@@ -1560,7 +1560,7 @@ function ApiAccessSection() {
             </>
           )}
 
-          {/* Test panel — fires a real request, exactly like an outside caller would */}
+          {/* Test panel - fires a real request, exactly like an outside caller would */}
           <div className="border-t border-gray-100 pt-4 mb-4">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Test Your Key</p>
             <p className="text-xs text-gray-500 mb-2">
@@ -1591,7 +1591,7 @@ function ApiAccessSection() {
                     ? <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
                     : <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />}
                   <span className={`text-xs font-semibold ${testResult.ok ? 'text-green-700' : 'text-red-700'}`}>
-                    {testResult.ok ? `Success — HTTP ${testResult.status}` : `Failed — HTTP ${testResult.status || 'network error'}`}
+                    {testResult.ok ? `Success - HTTP ${testResult.status}` : `Failed - HTTP ${testResult.status || 'network error'}`}
                   </span>
                   {testResult.rateLimit?.limit && (
                     <span className="text-xs text-gray-500 ml-auto">
@@ -1618,8 +1618,8 @@ function ApiAccessSection() {
 })()}
             </pre>
             <p className="text-xs text-gray-400">
-              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities</code> — paginated list (page, limit params, max 50/page) ·{' '}
-              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities/:id</code> — single opportunity
+              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities</code> - paginated list (page, limit params, max 50/page) ·{' '}
+              <code className="bg-gray-100 px-1 py-0.5 rounded">GET /api/v1/opportunities/:id</code> - single opportunity
             </p>
           </div>
         </>

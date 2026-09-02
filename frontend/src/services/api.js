@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// Add token to every request — workspace token (sessionStorage, per-tab) takes priority
+// Add token to every request - workspace token (sessionStorage, per-tab) takes priority
 // so a workspace tab never accidentally sends the owner's token
 api.interceptors.request.use(
   (config) => {
@@ -45,7 +45,7 @@ api.interceptors.response.use(
     const isLoginRequest = error.config?.url?.includes('/auth/login');
 
     if (error.response?.status === 401 && !isLoginRequest && !redirectingToLogin) {
-      // Don't redirect if in workspace mode — workspace token is the auth mechanism
+      // Don't redirect if in workspace mode - workspace token is the auth mechanism
       try {
         const ws = JSON.parse(sessionStorage.getItem('workspaceSession') || 'null');
         if (ws?.token) return Promise.reject(error);
@@ -228,7 +228,7 @@ export const contactAPI = {
   activatePlan: (id, data)   => api.post(`/contact/${id}/activate-plan`, data),
 };
 
-// Testimonials — public read only; admin CRUD lives in AdminTestimonials.jsx
+// Testimonials - public read only; admin CRUD lives in AdminTestimonials.jsx
 // via direct fetch calls (same pattern as AdminFeatureShowcase.jsx).
 export const testimonialAPI = {
   getSettings: () => api.get('/testimonials/settings'),
@@ -290,7 +290,7 @@ export const pastPerformanceAPI = {
   exportBatch:  (ids)      => api.post('/past-performance/export/batch', { ids }),
 };
 
-// Public API key management (Pro/Enterprise) — the key itself is used OUTSIDE
+// Public API key management (Pro/Enterprise) - the key itself is used OUTSIDE
 // this app (X-API-Key header against /api/v1/*), this just manages it.
 export const apiKeyAPI = {
   getStatus:   ()  => api.get('/apikey'),
@@ -306,7 +306,7 @@ export const contractVehicleAPI = {
   remove: (id)     => api.delete(`/contract-vehicles/${id}`),
 };
 
-// Coupon validation (public — no auth required, uses base axios without interceptors)
+// Coupon validation (public - no auth required, uses base axios without interceptors)
 export const validateCoupon = (code) =>
   api.post('/referral/validate-coupon', { code });
 

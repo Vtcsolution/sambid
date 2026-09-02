@@ -10,7 +10,7 @@ import { testimonialAPI } from '../services/api';
 
 // Curated set shown in the nav dropdown. The rest of the 20 feature pages
 // (Risk Assessment, Bid Pipeline, Past Performance, Capability Statement,
-// etc.) exist and are reachable via the "View All Features" link below —
+// etc.) exist and are reachable via the "View All Features" link below,
 // Features.jsx itself is a static display grid with no click-through to
 // individual pages, so this dropdown (plus direct URLs) is the real nav path.
 const featureDemoLinks = [
@@ -35,7 +35,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated, setUser, u
   const dropdownRef  = useRef(null);
   const featuresRef  = useRef(null);
 
-  // Admin-controlled toggle — only show the nav link when the site owner has
+  // Admin-controlled toggle - only show the nav link when the site owner has
   // turned the Testimonials page on (Admin → Testimonials).
   useEffect(() => {
     testimonialAPI.getSettings()

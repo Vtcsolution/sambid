@@ -6,13 +6,13 @@ import { getNaicsDescription, getPscDescription } from './codeDescriptions.js';
 
 const SAM_API_URL = 'https://api.sam.gov/opportunities/v2/search';
 
-// All configured API keys in priority order — rotates on 429
+// All configured API keys in priority order - rotates on 429
 const getSamKeys = () =>
   [process.env.SAM_API_KEY, process.env.SAM_API_KEY_2, process.env.SAM_API_KEY_3, process.env.SAM_API_KEY_4]
     .filter(Boolean);
 
 // Makes a GET request, rotating through backup keys on 429 (quota exhausted)
-// or 401/403 (key invalid/revoked) — a single dead or rate-limited key must
+// or 401/403 (key invalid/revoked) - a single dead or rate-limited key must
 // never take down the whole fetch when other configured keys still work.
 export const samGetWithRotation = async (buildUrl, axiosOptions = {}) => {
   const keys = getSamKeys();
@@ -23,7 +23,7 @@ export const samGetWithRotation = async (buildUrl, axiosOptions = {}) => {
     } catch (err) {
       const status = err.response?.status;
       if (status === 429 || status === 401 || status === 403) {
-        console.warn(`  SAM.gov ${status} on key …${key.slice(-8)} — trying next key`);
+        console.warn(`  SAM.gov ${status} on key …${key.slice(-8)} - trying next key`);
         lastErr = err;
         continue;
       }
@@ -53,7 +53,7 @@ const formatDate = (date) => {
 // SAM.gov direct links use the internal noticeId (UUID), not the solicitation number.
 // The API provides uiLink with the correct URL. If unavailable, use search URL.
 const buildSamUrl = (opp) => {
-  // Best: use the uiLink provided by the API — direct /opp/<uuid>/view URL
+  // Best: use the uiLink provided by the API - direct /opp/<uuid>/view URL
   if (opp.uiLink) {
     const link = safeString(opp.uiLink);
     if (link.includes('sam.gov')) return link;
@@ -64,7 +64,7 @@ const buildSamUrl = (opp) => {
   if (nid && /^[a-f0-9]{32}$/i.test(nid.replace(/-/g, ''))) {
     return `https://sam.gov/opp/${nid}/view`;
   }
-  // Fallback: search by solicitation number — SAM.gov auto-shows the right result
+  // Fallback: search by solicitation number - SAM.gov auto-shows the right result
   const sol = safeString(opp.solicitationNumber);
   if (sol && !sol.includes('SAMPLE')) {
     return `https://sam.gov/search/?index=opp&q=${encodeURIComponent(sol)}&sort=-relevance`;
@@ -167,7 +167,7 @@ export const fetchSAMResourceLinks = async (_apiKey, noticeId) => {
     ? `${noDashes.slice(0,8)}-${noDashes.slice(8,12)}-${noDashes.slice(12,16)}-${noDashes.slice(16,20)}-${noDashes.slice(20)}`
     : noticeId;
 
-  // Try no-dashes first (most common), then with-dashes as fallback — 2 calls max per record
+  // Try no-dashes first (most common), then with-dashes as fallback - 2 calls max per record
   for (const nid of [...new Set([noDashes, withDashes])]) {
     try {
       const res = await samGetWithRotation(
@@ -177,7 +177,7 @@ export const fetchSAMResourceLinks = async (_apiKey, noticeId) => {
       const files = flattenSAMFiles(res.data);
       if (files.length > 0) return files;
     } catch (err) {
-      if (err.response?.status === 429) throw err; // all keys exhausted — propagate to caller
+      if (err.response?.status === 429) throw err; // all keys exhausted - propagate to caller
       if (err.response?.status !== 404) {
         console.warn(`fetchSAMResourceLinks (${nid.slice(0,8)}...):`, err.message);
       }
@@ -278,7 +278,7 @@ const NAICS_KEYWORDS = {
   '9221': 'law enforcement police security investigation protection services',
 };
 
-// Returns keyword string for a NAICS code — checks 6→4→3-digit prefix.
+// Returns keyword string for a NAICS code - checks 6→4→3-digit prefix.
 export const getKeywordsForNaics = (naicsCode) => {
   const c = String(naicsCode || '');
   return NAICS_KEYWORDS[c] || NAICS_KEYWORDS[c.slice(0, 4)] || NAICS_KEYWORDS[c.slice(0, 3)] || null;
@@ -308,7 +308,7 @@ export const fetchSAMPage = async (naicsCode, count = 10, offset = 0) => {
   for (const [k, v] of Object.entries(params)) paramStr += `&${k}=${v}`;
 
   try {
-    console.log(`🌐 fetchSAMPage — using key rotation, ${count} records`);
+    console.log(`🌐 fetchSAMPage - using key rotation, ${count} records`);
     const response = await samGetWithRotation(
       key => `${SAM_API_URL}?api_key=${key}${paramStr}`,
       { timeout: 30000, headers: { Accept: 'application/json' } }
@@ -406,7 +406,7 @@ export const fetchSAMPage = async (naicsCode, count = 10, offset = 0) => {
 
     return { records: records.length, saved, offset, naicsCode };
   } catch (err) {
-    console.error(`❌ fetchSAMPage error — HTTP ${err.response?.status}, body: ${JSON.stringify(err.response?.data || err.message).substring(0, 500)}`);
+    console.error(`❌ fetchSAMPage error - HTTP ${err.response?.status}, body: ${JSON.stringify(err.response?.data || err.message).substring(0, 500)}`);
     throw new Error(err.response?.data?.message || err.message);
   }
 };
@@ -425,7 +425,7 @@ const fetchOnePage = async (apiKey, params) => {
   return Array.isArray(arr) ? arr : [];
 };
 
-// 🔥 MAIN FETCH FUNCTION — paginates SAM.gov to get active solicitations only
+// 🔥 MAIN FETCH FUNCTION - paginates SAM.gov to get active solicitations only
 export const fetchSAMOpportunities = async (naicsCode = null, limit = 200) => {
   try {
     const apiKey = process.env.SAM_API_KEY;
@@ -466,8 +466,8 @@ export const fetchSAMOpportunities = async (naicsCode = null, limit = 200) => {
     console.log(`✅ Found ${allRaw.length} raw active solicitations from SAM.gov`);
 
     if (allRaw.length === 0) {
-      // Fallback: relax the rdlfrom filter — some solicitations have no responseDeadLine set
-      console.log('⚠️ No results with rdlfrom filter — falling back to active=Yes only');
+      // Fallback: relax the rdlfrom filter - some solicitations have no responseDeadLine set
+      console.log('⚠️ No results with rdlfrom filter - falling back to active=Yes only');
       allRaw = await fetchOnePage(apiKey, {
         postedFrom: baseParams.postedFrom,
         postedTo:   baseParams.postedTo,
@@ -484,14 +484,14 @@ export const fetchSAMOpportunities = async (naicsCode = null, limit = 200) => {
       return [];
     }
 
-    // Transform opportunities — fetch descriptions and attachments
+    // Transform opportunities - fetch descriptions and attachments
     const transformed = [];
 
     for (const opp of allRaw) {
       try {
         if (!opp.title && !opp.description) continue;
 
-        // Resolve description URL — SAM.gov returns a link instead of text for long descriptions
+        // Resolve description URL - SAM.gov returns a link instead of text for long descriptions
         const fullDescription = await fetchDescription(apiKey, opp.description);
 
         // Parse agency chain from fullParentPathName (uses dots: "DEPT OF DEFENSE.DEPT OF THE NAVY.OFFICE")
@@ -572,7 +572,7 @@ export const fetchSAMOpportunities = async (naicsCode = null, limit = 200) => {
           lastFetched: new Date(),
 
           // Extended fields
-          noticeId:   noticeId, // SAM.gov UUID — for direct links & resource fetching
+          noticeId:   noticeId, // SAM.gov UUID - for direct links & resource fetching
           noticeType: mapNoticeType(opp.type),
           archiveDate: opp.archiveDate ? new Date(opp.archiveDate) : null,
           archiveType: safeString(opp.archiveType),
@@ -642,7 +642,7 @@ export const fetchSAMOpportunities = async (naicsCode = null, limit = 200) => {
 
     console.log(`📝 Processed ${transformed.length} opportunities for saving`);
 
-    // Save to database — upsert by sourceId (unique key).
+    // Save to database - upsert by sourceId (unique key).
     // $setOnInsert ensures fetchSource:'api' is only written when inserting a brand-new
     // record; if the nightly bulk already inserted it first, 'bulk' is preserved.
     let savedCount = 0;
@@ -722,7 +722,7 @@ export const fetchSAMByKeyword = async (keyword, suggestedNaicsArray = [], limit
       const sourceId = safeString(opp.solicitationNumber) || safeString(opp.noticeId);
       if (!sourceId || sourceId.includes('undefined')) continue;
 
-      // If this opp already has the correct NAICS, the normal NAICS fetch covers it — skip tagging.
+      // If this opp already has the correct NAICS, the normal NAICS fetch covers it - skip tagging.
       const realNaics = safeString(opp.naicsCode);
       if (suggestedNaicsArray.includes(realNaics)) continue;
 
@@ -792,7 +792,7 @@ export const fetchSAMByKeyword = async (keyword, suggestedNaicsArray = [], limit
   return tagged;
 };
 
-// Bulk fetch for multiple NAICS codes — used by the master-fetch scheduler phase.
+// Bulk fetch for multiple NAICS codes - used by the master-fetch scheduler phase.
 // Each code is fetched sequentially with a delay to respect SAM.gov rate limits.
 // After all NAICS fetches, runs keyword searches per unique 4-digit family to catch
 // opportunities where the CO entered a wrong NAICS code (affects ~5-6% of postings).

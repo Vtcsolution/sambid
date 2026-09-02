@@ -2,9 +2,9 @@
 //
 // Three tiers of deadline alerts sent to users for matched opportunities:
 //
-//   1. "upcoming"  — one email when a matched opp first enters the user's alertDays window
-//   2. "1day"      — up to 5 emails, every 5 hours, while <24 h remain
-//   3. "final"     — up to 3 emails, every 20 minutes, while <60 min remain
+//   1. "upcoming"  - one email when a matched opp first enters the user's alertDays window
+//   2. "1day"      - up to 5 emails, every 5 hours, while <24 h remain
+//   3. "final"     - up to 3 emails, every 20 minutes, while <60 min remain
 
 import User from '../models/User.js';
 import Opportunity from '../models/Opportunity.js';
@@ -20,7 +20,7 @@ import {
 const MS_PER_HOUR = 60 * 60 * 1000;
 const MS_PER_MIN  = 60 * 1000;
 
-// Trial/free users get MASKED teaser emails (no title/agency-chain/NAICS —
+// Trial/free users get MASKED teaser emails (no title/agency-chain/NAICS,
 // that data is enough to find the notice on SAM.gov for free and bypass the
 // paywall) at a REDUCED frequency: the upcoming notice + ONE 1-day teaser,
 // no final-hour barrage. Paid plans get the full detailed alerts unchanged.

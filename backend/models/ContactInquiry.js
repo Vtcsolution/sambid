@@ -13,7 +13,7 @@ const contactInquirySchema = new mongoose.Schema({
   adminNotes:   { type: String, default: '' },
   userId:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
 
-  // Payment tracking — must be confirmed before plan activation
+  // Payment tracking - must be confirmed before plan activation
   paymentConfirmed:  { type: Boolean, default: false },
   paymentReference:  { type: String, default: '' },   // manual ref, Stripe charge ID, PayPal txn, etc.
   paymentAmount:     { type: Number, default: 0 },

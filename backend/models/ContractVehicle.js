@@ -1,6 +1,6 @@
 // backend/models/ContractVehicle.js
 // A federal contract vehicle (GWAC/IDIQ/BPA/GSA Schedule) the user holds or
-// is tracking. Previously this page only saved to browser localStorage —
+// is tracking. Previously this page only saved to browser localStorage,
 // nothing tied to the account, nothing that synced across devices.
 import mongoose from 'mongoose';
 
@@ -12,7 +12,7 @@ const contractVehicleSchema = new mongoose.Schema({
   type:       { type: String, enum: ['GWAC', 'IDIQ', 'BPA', 'GSA Schedule', 'Other'], default: 'Other' },
   onRampStatus: { type: String, enum: ['open', 'closed', 'upcoming', 'unknown'], default: 'unknown' },
   ceilingValue: { type: Number, default: null },
-  // What the vehicle itself requires — compared against the user's real
+  // What the vehicle itself requires - compared against the user's real
   // NAICS codes and certifications to flag likely eligibility. Left blank
   // means "not enough info to judge" rather than a false negative.
   eligibleNaicsCodes: [{ type: String }],

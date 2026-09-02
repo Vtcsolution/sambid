@@ -61,7 +61,7 @@ export default function Status() {
           <h1 className="text-2xl font-bold text-gray-900">System Status</h1>
         </div>
         <p className="text-sm text-gray-500 mb-6">
-          Live status, checked in real time — refreshes automatically every 30 seconds.
+          Live status, checked in real time - refreshes automatically every 30 seconds.
         </p>
 
         {loading ? (
@@ -70,7 +70,7 @@ export default function Status() {
           </div>
         ) : error ? (
           <div className={`flex items-center gap-2 p-4 rounded-xl border ${OVERALL_META.down.bg} ${OVERALL_META.down.border} ${OVERALL_META.down.color} text-sm font-medium`}>
-            <XCircle className="w-5 h-5 shrink-0" /> {error} — the website itself may be reachable while the status API is not.
+            <XCircle className="w-5 h-5 shrink-0" /> {error} - the website itself may be reachable while the status API is not.
           </div>
         ) : (
           <>

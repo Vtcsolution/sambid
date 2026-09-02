@@ -11,7 +11,7 @@ const formatSF330 = (r) => {
     r.taskOrderNumber  ? `TASK ORDER: ${r.taskOrderNumber}`      : null,
     `CONTRACT TYPE: ${r.contractType}`,
     ``,
-    `CUSTOMER: ${r.agencyName}${r.subAgency ? ` / ${r.subAgency}` : ''}${r.officeName ? ` — ${r.officeName}` : ''}`,
+    `CUSTOMER: ${r.agencyName}${r.subAgency ? ` / ${r.subAgency}` : ''}${r.officeName ? ` - ${r.officeName}` : ''}`,
     `ROLE: ${r.role}${r.role !== 'Prime' && r.primeContractorName ? ` (Prime: ${r.primeContractorName})` : ''}`,
     r.placeOfPerformance ? `PLACE OF PERFORMANCE: ${r.placeOfPerformance}` : null,
     r.naicsCode          ? `NAICS: ${r.naicsCode}`                          : null,
@@ -47,7 +47,7 @@ const formatSF330 = (r) => {
   if (r.keyPersonnel?.length) {
     lines.push(``, `KEY PERSONNEL:`);
     r.keyPersonnel.forEach(p => {
-      lines.push(`• ${p.name}${p.title ? ` — ${p.title}` : ''}${p.clearance ? ` (${p.clearance})` : ''}`);
+      lines.push(`• ${p.name}${p.title ? ` - ${p.title}` : ''}${p.clearance ? ` (${p.clearance})` : ''}`);
     });
   }
 

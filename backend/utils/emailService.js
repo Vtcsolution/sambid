@@ -290,7 +290,7 @@ Submission Date: ${new Date().toLocaleString()}
   <div class="wrap">
     <div class="header">
       <h1>🏢 You're Invited to Join a Team</h1>
-      <p>Sambid — Federal Contract Platform</p>
+      <p>Sambid - Federal Contract Platform</p>
     </div>
     <div class="body">
       <p>Hi there,</p>

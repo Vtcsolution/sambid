@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-// Public — no auth needed to validate a coupon code
+// Public - no auth needed to validate a coupon code
 router.post('/validate-coupon', validateCoupon);
 router.get('/validate-coupon',  validateCoupon);
 

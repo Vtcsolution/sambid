@@ -135,7 +135,7 @@ export const syncSbaCompanies = async (maxPages = 30) => {
       } catch (err) {
         if (page === 0) {
           // If SBA endpoint is unreachable or changed format, log and stop gracefully
-          console.warn(`⚠️  SBA DSBS not reachable (${err.message}) — skipping source`);
+          console.warn(`⚠️  SBA DSBS not reachable (${err.message}) - skipping source`);
           sbaSyncStats.lastError = `SBA DSBS unavailable: ${err.message}`;
           break;
         }
@@ -144,7 +144,7 @@ export const syncSbaCompanies = async (maxPages = 30) => {
       }
 
       if (!records.length) {
-        console.log(`  ℹ️  SBA page ${page}: no records — stopping`);
+        console.log(`  ℹ️  SBA page ${page}: no records - stopping`);
         break;
       }
 

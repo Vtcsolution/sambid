@@ -19,7 +19,7 @@ if (!admin) { console.error('Admin not found:', email); process.exit(1); }
 
 console.log(`Found: ${admin.name} | role: ${admin.role} | active: ${admin.isActive}`);
 
-// Assigning plaintext triggers the pre-save hash — this is the correct path
+// Assigning plaintext triggers the pre-save hash - this is the correct path
 admin.password = newPassword;
 await admin.save();
 

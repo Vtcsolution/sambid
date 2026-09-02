@@ -1,5 +1,5 @@
 // backend/routes/publicApiRoutes.js
-// The actual external, versioned API (Pro/Enterprise only) — authenticated
+// The actual external, versioned API (Pro/Enterprise only) - authenticated
 // via X-API-Key, not the dashboard JWT. Keys are issued from
 // routes/apiKeyRoutes.js (dashboard-only, JWT-authenticated).
 import express from 'express';

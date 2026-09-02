@@ -182,10 +182,10 @@ export const getPlatformHealth = async (req, res) => {
       { name: 'Open Inquiries',         value: openInquiries,        unit: 'pending', status: openInquiries > 10 ? 'warn' : 'ok' },
     ];
 
-    // ── External API health checks (axios — consistent with rest of codebase) ──
+    // ── External API health checks (axios - consistent with rest of codebase) ──
     // Checks the PRIMARY key directly first (so a dead/revoked primary key is
     // still surfaced here as something to renew), but if that fails, also
-    // checks via the same rotation logic real fetches use — a dead primary
+    // checks via the same rotation logic real fetches use - a dead primary
     // key with a working backup means the pipeline is actually fine, not
     // "down", so this must not cry wolf once a backup key has taken over.
     const checkSam = async () => {
@@ -213,7 +213,7 @@ export const getPlatformHealth = async (req, res) => {
 
     const checkUsa = async () => {
       try {
-        // USASpending is a POST-only API — same endpoint the usaspendingApiService uses
+        // USASpending is a POST-only API - same endpoint the usaspendingApiService uses
         const r = await axios.post(
           'https://api.usaspending.gov/api/v2/search/spending_by_award/',
           {
@@ -345,7 +345,7 @@ export const getSegmentUsers = async (req, res) => {
       no_naics:   { naicsCodes: { $size: 0 } },
     };
 
-    // Pending-invoice data is attached to users in EVERY segment — a trial
+    // Pending-invoice data is attached to users in EVERY segment - a trial
     // user with an abandoned checkout should get "your $239 starter invoice
     // is waiting" even when selected from the Trial segment, not only from
     // the dedicated Pending Payment segment.
@@ -434,7 +434,7 @@ export const sendCampaign = async (req, res) => {
         return res.status(400).json({ success: false, message: 'No users found for this segment.' });
     }
 
-    // Check SMTP is configured before starting the loop — SMTP_* is what the
+    // Check SMTP is configured before starting the loop - SMTP_* is what the
     // admin Settings > Email/SMTP panel actually saves to; EMAIL_* is the
     // legacy fallback, so both must be checked or this false-blocks every
     // campaign whenever only SMTP_* is set.
@@ -494,7 +494,7 @@ export const sendCampaign = async (req, res) => {
       });
 
       await AdminNotification.create({
-        title:   `📧 Campaign ${status} — ${segment}`,
+        title:   `📧 Campaign ${status} - ${segment}`,
         message: `"${subject}" sent to ${sent}/${users.length} ${targetUserId ? 'user' : `users in segment: ${segment}`}`,
         type:    'system',
         actionRequired: false,
@@ -510,7 +510,7 @@ export const sendCampaign = async (req, res) => {
 
 // ── Live preview data for a single-user campaign send ────────────────────────
 // Powers the "Top 5 Matched Opportunities" block shown in the admin panel's
-// Live Preview — the exact same query the real campaign email uses, so the
+// Live Preview - the exact same query the real campaign email uses, so the
 // preview isn't a mock, it's that recipient's real matched contracts.
 // @route  GET /api/admin-ai/user-top-matches/:userId
 export const getUserTopMatches = async (req, res) => {

@@ -223,7 +223,7 @@ export default function AdminHowItWorks() {
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Layers className="w-6 h-6 text-indigo-600" /> How It Works Page
           </h1>
-          <p className="text-sm text-gray-500">Edit the hero, comparison table, AI engine strip, and all 17 pain points — including their videos.</p>
+          <p className="text-sm text-gray-500">Edit the hero, comparison table, AI engine strip, and all 17 pain points - including their videos.</p>
         </div>
         <button onClick={load} className="p-2 hover:bg-gray-100 rounded-lg shrink-0"><RefreshCw className="w-4 h-4" /></button>
       </div>
@@ -266,7 +266,7 @@ export default function AdminHowItWorks() {
           <FlowEditor flow={content.aiEngineSection?.flow} onChange={flow => set('aiEngineSection.flow', flow)} />
         </Section>
 
-        <Section title="Pain Points — Section Header">
+        <Section title="Pain Points - Section Header">
           <TextField label="Tag" value={content.painPointsSection?.tag} onChange={v => set('painPointsSection.tag', v)} />
           <TextField label="Title" value={content.painPointsSection?.title} onChange={v => set('painPointsSection.title', v)} />
           <TextField label="Subtitle" value={content.painPointsSection?.subtitle} onChange={v => set('painPointsSection.subtitle', v)} />

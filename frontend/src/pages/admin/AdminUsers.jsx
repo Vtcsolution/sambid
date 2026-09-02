@@ -206,7 +206,7 @@ function UserDetail({ userId }) {
               Set plan, duration, and optional bonus credits. User gets notified via email + notification.
               {['trial', 'free'].includes(data.plan) && (
                 <span className="block mt-1 font-medium">
-                  This account is currently {data.plan} — granting a paid plan here is complimentary, not a purchase, so it auto-reverts back to Trial (fresh window) once the days run out.
+                  This account is currently {data.plan} - granting a paid plan here is complimentary, not a purchase, so it auto-reverts back to Trial (fresh window) once the days run out.
                 </span>
               )}
             </p>
@@ -348,7 +348,7 @@ export default function AdminUsers() {
       <ConfirmModal
         isOpen={!!confirmDel}
         title={`Move ${confirmDel?.name || confirmDel?.email || 'user'} to trash?`}
-        message={`${confirmDel?.email || ''} will be hidden from the platform and blocked from logging in. Nothing is permanently deleted — you can restore them anytime from the Trash tab.`}
+        message={`${confirmDel?.email || ''} will be hidden from the platform and blocked from logging in. Nothing is permanently deleted - you can restore them anytime from the Trash tab.`}
         confirmLabel="Move to Trash"
         variant="danger"
         onConfirm={() => handleDelete(confirmDel)}

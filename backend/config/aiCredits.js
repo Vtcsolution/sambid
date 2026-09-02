@@ -5,7 +5,7 @@
 // ── Monthly credit allocation per plan ────────────────────────────────────────
 // Each AI call = 15 credits, so allocations reflect realistic usage
 export const PLAN_AI_CREDITS = {
-  trial:         0,    // no AI access — opportunity data is unrestricted, AI tools are Pro+
+  trial:         0,    // no AI access - opportunity data is unrestricted, AI tools are Pro+
   free:          0,    // no AI access
   starter:     300,    // ~20 AI calls/month
   pro:        1000,    // ~66 AI calls/month
@@ -17,7 +17,7 @@ export const PLAN_AI_CREDITS = {
 // All Claude API features = 15 credits per request (covers API cost)
 // GPT-based features (if any) = 10 credits per request
 export const FEATURE_COSTS = {
-  // Claude Sonnet 4.6 features (15 credits — Claude API)
+  // Claude Sonnet 4.6 features (15 credits - Claude API)
   summarize:            15,
   ask_question:         15,
   capability_statement: 15,
@@ -26,7 +26,7 @@ export const FEATURE_COSTS = {
   analyze_attachment:   15,
   market_research:      15,
 
-  // Claude Opus 4.8 features (15 credits — Claude API)
+  // Claude Opus 4.8 features (15 credits - Claude API)
   bid_analysis:         15,
   risk_assessment:      15,
   competitive_analysis: 15,
@@ -37,7 +37,7 @@ export const FEATURE_COSTS = {
   go_no_go:             15,
 
   // Runs a full proposal generation + structured requirement extraction +
-  // an AI compliance review in one call — priced higher to reflect that.
+  // an AI compliance review in one call - priced higher to reflect that.
   compliance_matrix:    30,
 };
 

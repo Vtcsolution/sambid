@@ -1,5 +1,5 @@
 // backend/controllers/statusController.js
-// Public, unauthenticated system status check — real live checks only,
+// Public, unauthenticated system status check - real live checks only,
 // never fabricated historical uptime numbers (no monitoring history exists
 // to back that up honestly yet).
 import mongoose from 'mongoose';
@@ -10,7 +10,7 @@ const SAM_SYNC_STALE_AFTER_MS = 2 * 60 * 60 * 1000; // 2 hours
 export const getStatus = async (req, res) => {
   const checks = [];
 
-  // 1. API server — trivially true if this handler is running at all
+  // 1. API server - trivially true if this handler is running at all
   checks.push({
     name: 'Website & API',
     status: 'operational',
@@ -25,7 +25,7 @@ export const getStatus = async (req, res) => {
     detail: dbState === 1 ? 'Connected' : 'Not connected',
   });
 
-  // 3. SAM.gov data sync — schedulers only run in production, so a null
+  // 3. SAM.gov data sync - schedulers only run in production, so a null
   // timestamp on a fresh/local server isn't a real outage, just "no data yet"
   let samStatus = 'operational';
   let samDetail = 'No sync recorded yet';

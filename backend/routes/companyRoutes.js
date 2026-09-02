@@ -30,20 +30,20 @@ import {
 
 const router = express.Router();
 
-// Public workspace login — no auth required
+// Public workspace login - no auth required
 router.post('/workspace/login', workspaceLogin);
 
-// Public invite preview — no auth required
+// Public invite preview - no auth required
 router.get('/join/:token', previewInvite);
 
 router.use(protect);
 
-// Company CRUD — no requireCompany on create/mine so users can create/check
+// Company CRUD - no requireCompany on create/mine so users can create/check
 router.post('/',            createCompany);
 router.get('/mine',         getMyCompanyProfile);
 router.get('/ai-readiness', getAIReadiness);
 
-// Accept invite — user must be logged in but NOT necessarily in a company yet
+// Accept invite - user must be logged in but NOT necessarily in a company yet
 router.post('/join/:token', acceptInvite);
 
 // All routes below need the user to already be in a company

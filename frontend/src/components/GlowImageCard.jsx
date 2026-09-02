@@ -1,7 +1,7 @@
 import { Play } from 'lucide-react';
 import ZoomableImage from './ZoomableImage';
 
-// Soft colored blur glowing behind a rounded screenshot card — used on the
+// Soft colored blur glowing behind a rounded screenshot card - used on the
 // home page's "7 Phases" section and every FeatureShowcase step visual, so
 // the whole site's screenshot presentation is one consistent, premium style.
 const GLOW_THEMES = {
@@ -21,11 +21,11 @@ export default function GlowImageCard({ src, alt = '', theme = 'indigo', title, 
 
   // Image case: these screenshots already have their own glowing rounded
   // card + transparent margin baked into the PNG, so the wrapper here must
-  // stay transparent — a solid background would fill that margin with an
+  // stay transparent - a solid background would fill that margin with an
   // ugly box instead of letting the page (and the blur glow behind) show
   // through. Video/embed/placeholder cases still need an opaque frame since
   // they have no such margin of their own.
-  // No hardcoded max-width here — sizing is the caller's job: a side-by-side
+  // No hardcoded max-width here - sizing is the caller's job: a side-by-side
   // grid column naturally constrains it small, while a full-width wrapper
   // (no cap) lets it read as the large, dominant showcase image.
   if (src) {

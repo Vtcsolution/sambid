@@ -94,7 +94,7 @@ export const createTicket = async (req, res) => {
     // ── Admin bell notification ───────────────────────────────────────────
     AdminNotification.create({
       title: `🎫 New Ticket: ${ticket.ticketNumber}`,
-      message: `${user.name} (${user.email}) — "${ticket.subject}"`,
+      message: `${user.name} (${user.email}) - "${ticket.subject}"`,
       type: 'ticket_created',
       actionRequired: true,
       priority: ticket.priority === 'urgent' ? 'high' : 'medium',

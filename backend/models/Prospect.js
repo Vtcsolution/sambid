@@ -67,7 +67,7 @@ const ProspectSchema = new mongoose.Schema({
   },
   notes: { type: String },
 
-  // Automated follow-up sequence (post initial manual outreach) — see
+  // Automated follow-up sequence (post initial manual outreach) - see
   // services/prospectFollowUpService.js. 0 = only the initial email exists,
   // 1/2/3 = which follow-up touch (time-saving / free-trial / check-in) was
   // last sent. Stops automatically once responseStatus leaves 'none'.

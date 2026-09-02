@@ -75,11 +75,11 @@ const COMPARE = [
   {
     icon: Users, topic: 'Team Size',
     before: <><strong className="text-gray-900">20-person team</strong> monitoring SAM.gov manually, every day</>,
-    after:  <><strong className="text-gray-900">1–2 people</strong> — discovery runs fully automated while you sleep</>,
+    after:  <><strong className="text-gray-900">1–2 people</strong> - discovery runs fully automated while you sleep</>,
   },
   {
     icon: SlidersHorizontal, topic: 'Daily Noise',
-    before: <><strong className="text-gray-900">150 solicitations/day</strong> — 90% completely irrelevant</>,
+    before: <><strong className="text-gray-900">150 solicitations/day</strong> - 90% completely irrelevant</>,
     after:  <>Only <strong className="text-gray-900">matched, scored &amp; ranked</strong> opportunities reach you</>,
   },
   {
@@ -90,7 +90,7 @@ const COMPARE = [
   {
     icon: BellRing, topic: 'Deadlines',
     before: <>Missed deadlines, wrong NAICS codes, <strong className="text-gray-900">lost bids</strong></>,
-    after:  <>Alerts at <strong className="text-gray-900">7 days / 24 hours / 1 hour</strong> — on every device</>,
+    after:  <>Alerts at <strong className="text-gray-900">7 days / 24 hours / 1 hour</strong> - on every device</>,
   },
   {
     icon: Timer, topic: 'Bid Decision',
@@ -329,7 +329,7 @@ export default function HowItWorks() {
   const cms = useHowItWorksContent();
 
   // Every section falls back to the hardcoded defaults above until an admin
-  // seeds/edits the page — the live site never breaks or shows blank content.
+  // seeds/edits the page - the live site never breaks or shows blank content.
   const hero = {
     badge: cms?.hero?.badge || 'Intelligence Brief: Expert Edition',
     titleLine1: cms?.hero?.titleLine1 || 'Federal BD Intelligence.',
@@ -339,7 +339,7 @@ export default function HowItWorks() {
   const compareMeta = {
     tag: cms?.compareSection?.tag || 'The Problem We Solve',
     title: cms?.compareSection?.title || 'What Changes When You Use Sambid',
-    subtitle: cms?.compareSection?.subtitle || 'Five things every contractor will recognize — each pain, and exactly what it becomes.',
+    subtitle: cms?.compareSection?.subtitle || 'Five things every contractor will recognize - each pain, and exactly what it becomes.',
     summaryLine: cms?.compareSection?.summaryLine || "20 people → 2. $50,000 → 3 minutes. 3 days → 30 seconds. That's the change.",
   };
   const compareItems = (cms?.compareSection?.items?.length ? cms.compareSection.items : COMPARE).map(item => ({
@@ -650,7 +650,7 @@ export default function HowItWorks() {
                           if (pp.videoThumbnail) {
                             return <ZoomableImage src={pp.videoThumbnail} alt={pp.title} />;
                           }
-                          // no video/thumbnail set yet — visible placeholder so it's
+                          // no video/thumbnail set yet - visible placeholder so it's
                           // obvious this slot exists and is waiting for point N's clip
                           return (
                             <div className="w-full h-full flex items-center justify-center">

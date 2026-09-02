@@ -110,7 +110,7 @@ export const syncFpdsCompanies = async (maxPages = 30) => {
       const entries = (Array.isArray(feed?.entry) ? feed.entry : feed?.entry ? [feed.entry] : []);
 
       if (!entries.length) {
-        console.log(`  ℹ️  FPDS page ${page}: no entries — stopping`);
+        console.log(`  ℹ️  FPDS page ${page}: no entries - stopping`);
         break;
       }
 

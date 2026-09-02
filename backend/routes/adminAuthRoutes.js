@@ -10,10 +10,10 @@ import { passwordLengthGuard } from '../middleware/securityMiddleware.js';
 
 const router = express.Router();
 
-// Public — seed first admin (disabled once any admin exists + rate limited)
+// Public - seed first admin (disabled once any admin exists + rate limited)
 router.post('/seed', sensitiveAuthLimiter, passwordLengthGuard, seedFirstAdmin);
 
-// Public — admin login (brute-force protected)
+// Public - admin login (brute-force protected)
 router.post('/login', loginLimiter, passwordLengthGuard, adminLogin);
 
 // Protected admin routes

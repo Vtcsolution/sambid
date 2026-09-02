@@ -119,7 +119,7 @@ export const markRead = async (req, res) => {
       const realId = rawId.replace('alert_', '');
       await markNotificationAsRead(realId, req.user._id);
     } else {
-      // Legacy plain ID — try both
+      // Legacy plain ID - try both
       await Promise.allSettled([
         UserNotification.findOneAndUpdate({ _id: rawId, user: req.user._id }, { read: true }),
         markNotificationAsRead(rawId, req.user._id),

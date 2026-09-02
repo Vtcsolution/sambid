@@ -88,7 +88,7 @@ router.post('/trigger-bulk-test',     triggerBulkFetchTest);
 router.get('/hybrid-opportunities',   getHybridOpportunities);
 router.get('/recent-activity',        getRecentActivity);
 
-// Settings — super_admin only (API keys, SMTP, payment gateways are system-level)
+// Settings - super_admin only (API keys, SMTP, payment gateways are system-level)
 router.get('/settings', getSettings);
 router.put('/settings', superAdminOnly, updateSettings);
 
@@ -133,7 +133,7 @@ router.post('/referrals/reconcile',    async (req, res) => {
   res.json({ success: true, ...result });
 });
 
-// SAM Company Directory — clear is BLOCKED for everyone (protected data)
+// SAM Company Directory - clear is BLOCKED for everyone (protected data)
 router.get('/companies',                    getSamCompanies);
 router.get('/companies/stats',              getSamSyncStats);
 router.get('/companies/source-stats',       getCompanySourceStats);

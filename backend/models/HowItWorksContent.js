@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// Single-document store for the public /how-it-works page — every section is
+// Single-document store for the public /how-it-works page - every section is
 // admin-editable (hero copy, the 5-item comparison, the AI engine strip, and
 // all 17 pain points including their video/thumbnail). There is only ever
 // one document; the controller upserts against a fixed key.

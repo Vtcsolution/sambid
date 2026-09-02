@@ -2,7 +2,7 @@ import UserNotification from '../models/UserNotification.js';
 
 /**
  * Create a user-facing in-app notification.
- * Fire-and-forget safe — always returns a promise, never throws.
+ * Fire-and-forget safe - always returns a promise, never throws.
  */
 export const createUserNotification = async (userId, type, title, message = '', link = '') => {
   try {

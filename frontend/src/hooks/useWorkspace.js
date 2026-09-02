@@ -1,7 +1,7 @@
 const WS_KEY = 'workspaceSession';
 
 export function getWorkspaceSession() {
-  // sessionStorage is per-tab — owner on Tab 1 is unaffected by workspace login on Tab 2
+  // sessionStorage is per-tab - owner on Tab 1 is unaffected by workspace login on Tab 2
   try { return JSON.parse(sessionStorage.getItem(WS_KEY) || 'null'); }
   catch { return null; }
 }

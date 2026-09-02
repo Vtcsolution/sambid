@@ -1,7 +1,7 @@
 // frontend/src/components/PageTracker.jsx
 // Anonymous, cookie-free website traffic tracking. Fires once per route
 // change; reports time-on-page via sendBeacon when the visitor navigates
-// away or closes the tab. No PII is ever sent — just the path, an anonymous
+// away or closes the tab. No PII is ever sent - just the path, an anonymous
 // client-generated id, and the referrer.
 import { useEffect, useRef } from 'react';
 
@@ -23,7 +23,7 @@ export default function PageTracker({ path }) {
   const enteredAt = useRef(null);
 
   useEffect(() => {
-    // Skip the admin panel — this tracks customer/visitor traffic, not internal usage
+    // Skip the admin panel - this tracks customer/visitor traffic, not internal usage
     if (path.startsWith('/admin')) return;
 
     const sendDuration = () => {

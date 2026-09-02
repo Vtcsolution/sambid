@@ -1,4 +1,4 @@
-// backend/routes/trackingRoutes.js — public, no auth
+// backend/routes/trackingRoutes.js - public, no auth
 import express from 'express';
 import { trackOpen, trackClick, trackEmailOpen } from '../controllers/trackingController.js';
 import { recordPageView, recordPageDuration } from '../controllers/pageViewController.js';

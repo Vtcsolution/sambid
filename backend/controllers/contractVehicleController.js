@@ -4,7 +4,7 @@ import UserCertification from '../models/UserCertification.js';
 
 // Compares a vehicle's stated eligibility requirements against the real,
 // current user profile. Returns true/false only when there's something
-// concrete to compare against — null means "not enough info entered on
+// concrete to compare against - null means "not enough info entered on
 // this vehicle to judge," which is more honest than a false negative.
 async function attachEligibility(vehicles, user) {
   const hasNaicsReq = vehicles.some(v => v.eligibleNaicsCodes?.length);

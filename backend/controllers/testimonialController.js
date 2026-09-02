@@ -32,7 +32,7 @@ export const updateSettings = async (req, res) => {
   }
 };
 
-// ── Public: active testimonials — empty when the toggle is off ───────────────
+// ── Public: active testimonials - empty when the toggle is off ───────────────
 export const getPublicTestimonials = async (req, res) => {
   try {
     const settings = await getOrCreateSettings();

@@ -8,7 +8,7 @@ const APP_NAME = 'Sambid';
 
 // POST /api/auth/2fa/setup
 // Generates a new TOTP secret + QR code for the authenticated user.
-// Does NOT enable 2FA yet — user must verify a valid code first.
+// Does NOT enable 2FA yet - user must verify a valid code first.
 export const setup2FA = async (req, res) => {
   try {
     const secret = speakeasy.generateSecret({
@@ -194,7 +194,7 @@ export const verifyLogin2FA = async (req, res) => {
   }
 };
 
-// GET /api/auth/2fa/backup-codes  — returns count only (codes shown only during setup)
+// GET /api/auth/2fa/backup-codes  - returns count only (codes shown only during setup)
 export const getBackupCodes = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('+twoFactorBackupCodes');

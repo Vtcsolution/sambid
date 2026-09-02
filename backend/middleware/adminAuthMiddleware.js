@@ -45,7 +45,7 @@ export const adminOrSuperAdmin = (req, res, next) => {
   next();
 };
 
-// Per-permission guard — use after protectAdmin or flexAdmin
+// Per-permission guard - use after protectAdmin or flexAdmin
 // Usage: requirePermission('aiTools') or requirePermission('content')
 export const requirePermission = (perm) => (req, res, next) => {
   const admin = req.admin;

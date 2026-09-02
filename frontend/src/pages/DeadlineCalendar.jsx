@@ -302,7 +302,7 @@ export default function DeadlineCalendar() {
           </div>
         )}
 
-        {/* ── Locked deadlines banner (trial/free) — real matched contracts
+        {/* ── Locked deadlines banner (trial/free) - real matched contracts
              expiring behind the paywall. Professional, factual, urgent. ── */}
         {stats?.lockedCount > 0 && (
           <div className="mb-6 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl shadow-md p-5 sm:p-6 text-white flex flex-col sm:flex-row sm:items-center gap-4">
@@ -313,7 +313,7 @@ export default function DeadlineCalendar() {
               </p>
               <p className="text-sm text-white/85 mt-1">
                 These are real contracts matched to your NAICS codes. When their deadlines pass,
-                they're gone — and another company wins them. Upgrade to see every one before it expires.
+                they're gone - and another company wins them. Upgrade to see every one before it expires.
               </p>
             </div>
             <Link to="/pricing"

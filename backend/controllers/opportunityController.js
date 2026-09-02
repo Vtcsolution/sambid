@@ -15,7 +15,7 @@ export const seedSampleForUser = async (naicsCodes) => {
   const samples = naicsCodes.flatMap((code, i) => [
     {
       source: 'sam', sourceId: `SAMPLE_${code}_A`,
-      title: `IT Services Contract — NAICS ${code}`,
+      title: `IT Services Contract - NAICS ${code}`,
       description: 'Sample federal IT services opportunity. Replace with live SAM.gov data by refreshing.',
       agency: 'Department of Veterans Affairs',
       estimatedValue: 250000,
@@ -26,7 +26,7 @@ export const seedSampleForUser = async (naicsCodes) => {
     },
     {
       source: 'sam', sourceId: `SAMPLE_${code}_B`,
-      title: `Cloud & Infrastructure Support — NAICS ${code}`,
+      title: `Cloud & Infrastructure Support - NAICS ${code}`,
       description: 'Sample cloud infrastructure opportunity. Replace with live SAM.gov data by refreshing.',
       agency: 'Department of Defense',
       estimatedValue: 500000,
@@ -161,20 +161,20 @@ const calculateMatchScore = (opportunity, user) => {
   if (exactNaicsMatch) {
     score += 50; reasons.push('✓ Your NAICS code matches this opportunity');
   } else if (familyNaicsMatch) {
-    score += 35; reasons.push('✓ Same NAICS industry group — likely relevant');
+    score += 35; reasons.push('✓ Same NAICS industry group - likely relevant');
   } else if (user.naicsCodes?.length > 0) {
     score += 5;  reasons.push('✗ NAICS code mismatch');
   } else {
     score += 10; reasons.push('⚠️ No NAICS codes configured');
   }
 
-  // 2. Set-aside eligibility (up to 20 points — checks actual certifications)
+  // 2. Set-aside eligibility (up to 20 points - checks actual certifications)
   if (opportunity.setAside) {
     const sa = opportunity.setAside.toLowerCase();
     const userCerts = (user.certifications || []).map(c => (typeof c === 'string' ? c : c.name || c.type || '').toLowerCase());
 
     if (sa.includes('full and open') || sa.includes('unrestricted')) {
-      score += 15; reasons.push('✓ Full & Open competition — anyone can bid');
+      score += 15; reasons.push('✓ Full & Open competition - anyone can bid');
     } else {
       // Check if user's certs qualify for this set-aside
       let eligible = false;
@@ -190,11 +190,11 @@ const calculateMatchScore = (opportunity, user) => {
       }
 
       if (eligible) {
-        score += 20; reasons.push(`✓ ${opportunity.setAside} — your certifications qualify`);
+        score += 20; reasons.push(`✓ ${opportunity.setAside} - your certifications qualify`);
       } else if (userCerts.length === 0) {
-        score += 5;  reasons.push(`⚠️ ${opportunity.setAside} — add certifications to check eligibility`);
+        score += 5;  reasons.push(`⚠️ ${opportunity.setAside} - add certifications to check eligibility`);
       } else {
-        score += 0;  reasons.push(`❌ ${opportunity.setAside} — you may not qualify (check your certs)`);
+        score += 0;  reasons.push(`❌ ${opportunity.setAside} - you may not qualify (check your certs)`);
       }
     }
   }
@@ -206,7 +206,7 @@ const calculateMatchScore = (opportunity, user) => {
     else if (daysLeft > 14) { score += 15; reasons.push(`⚠️ ${daysLeft} days left`); }
     else if (daysLeft > 7)  { score += 10; reasons.push(`⚠️ Only ${daysLeft} days left`); }
     else if (daysLeft > 0)  { score += 5;  reasons.push(`❗ Due in ${daysLeft} days`); }
-    else                    { score += 5;  reasons.push('📊 Historical award — research only'); }
+    else                    { score += 5;  reasons.push('📊 Historical award - research only'); }
   }
 
   // 4. Contract value (10 points)
@@ -310,7 +310,7 @@ export const getOpportunities = async (req, res) => {
     // ── Regular user path ──────────────────────────────────────────────────────
     const access = await checkUserAccess(req.user);
 
-    // Only hard-block fully expired plans — daily/monthly limits should not hide the feed,
+    // Only hard-block fully expired plans - daily/monthly limits should not hide the feed,
     // they only gate new distributions (enforced inside distributeToUser).
     if (access.plan === 'expired') {
       return res.json({
@@ -325,15 +325,15 @@ export const getOpportunities = async (req, res) => {
 
     const now = new Date();
 
-    // ── Enterprise: query master store directly — ALL records where dueDate > today ──
+    // ── Enterprise: query master store directly - ALL records where dueDate > today ──
     // Bypasses the personal feed so the user always sees everything in the DB.
-    // SAM.gov solicitations ONLY — usaspending award records are market
+    // SAM.gov solicitations ONLY - usaspending award records are market
     // intelligence, not biddable opportunities, and confused users in the feed.
     if (req.user.plan === 'enterprise') {
       const masterQuery = {
-        dueDate: { $gt: now },  // strictly future — only requirement for enterprise
+        dueDate: { $gt: now },  // strictly future - only requirement for enterprise
         source: { $ne: 'usaspending' },
-        // Hide records whose description is still an unresolved SAM.gov URL —
+        // Hide records whose description is still an unresolved SAM.gov URL,
         // they appear automatically once the nightly completion pass fills them in.
         description: { $not: /^https?:\/\/.*api\.sam\.gov/ },
       };
@@ -415,12 +415,12 @@ export const getOpportunities = async (req, res) => {
       .lean();
 
     // 48-hour grace: remove opportunities whose dueDate has passed by more than 48 hours.
-    // Opportunities with NO dueDate (award notices, special notices) are kept — they are
+    // Opportunities with NO dueDate (award notices, special notices) are kept - they are
     // permanent records and may still be valuable to the user.
     const EXPIRED_GRACE_MS = 48 * 60 * 60 * 1000;
     const staleUOIds = userOpps
       .filter(uo => {
-        if (!uo.opportunity) return true; // orphaned record — opportunity was deleted
+        if (!uo.opportunity) return true; // orphaned record - opportunity was deleted
         if (!uo.opportunity.dueDate) return false; // no deadline → keep it (award notice etc.)
         return new Date(uo.opportunity.dueDate) <= new Date(now - EXPIRED_GRACE_MS);
       })
@@ -450,7 +450,7 @@ export const getOpportunities = async (req, res) => {
 
     // On-demand fill: if feed is empty (new user or fully expired)
     if (userOpps.filter(uo => uo.opportunity).length === 0 && req.user.naicsCodes?.length > 0) {
-      console.log(`🔄 Empty feed for ${req.user.email} — triggering on-demand fill`);
+      console.log(`🔄 Empty feed for ${req.user.email} - triggering on-demand fill`);
 
       const fillFamilyPfx = [...new Set(req.user.naicsCodes.map(c => c.slice(0, 4)))];
       const fillFamilyFilter = { naicsCode: { $regex: new RegExp(`^(${fillFamilyPfx.join('|')})`) } };
@@ -460,7 +460,7 @@ export const getOpportunities = async (req, res) => {
       });
 
       if (masterCount === 0) {
-        console.log('📡 Master store empty — fetching from SAM.gov...');
+        console.log('📡 Master store empty - fetching from SAM.gov...');
         for (const code of req.user.naicsCodes.slice(0, 3)) {
           await fetchSAMOpportunities(code, 200).catch(() => {});
         }
@@ -471,8 +471,8 @@ export const getOpportunities = async (req, res) => {
         if (afterFetch === 0 && process.env.NODE_ENV !== 'production') {
           // Dev-only: sample records so the UI isn't empty while testing.
           // In production the feed stays empty until the nightly SAM.gov
-          // fetch delivers real, complete records — never show fake data.
-          console.log('🧪 SAM.gov returned nothing — seeding sample opportunities (dev only)');
+          // fetch delivers real, complete records - never show fake data.
+          console.log('🧪 SAM.gov returned nothing - seeding sample opportunities (dev only)');
           await seedSampleForUser(req.user.naicsCodes.slice(0, 2));
         }
       }
@@ -573,7 +573,7 @@ export const getOpportunities = async (req, res) => {
             ...opp,
             isPotentialMatch: true,
             aiMatchScore: Math.min(score, 45),
-            potentialMatchReason: `NAICS ${opp.naicsCode} is in the same industry sector as your registered codes. The contracting officer may have entered an incorrect code — this opportunity may still be relevant to your business.`,
+            potentialMatchReason: `NAICS ${opp.naicsCode} is in the same industry sector as your registered codes. The contracting officer may have entered an incorrect code - this opportunity may still be relevant to your business.`,
             ...ds,
             status: 'active',
             canApply: true,
@@ -586,7 +586,7 @@ export const getOpportunities = async (req, res) => {
             _id:              full._id,
             isPotentialMatch: true,
             locked:           true,
-            title:            '🔒 Potential match — details locked',
+            title:            '🔒 Potential match - details locked',
             agency:           String(full.agency || 'Federal agency').split('>')[0].trim(),
             naicsCode:        null,
             solicitationNumber: null,
@@ -599,7 +599,7 @@ export const getOpportunities = async (req, res) => {
             noticeType:       full.noticeType || null,
             dueDate:          full.dueDate,
             aiMatchScore:     full.aiMatchScore,
-            potentialMatchReason: 'An opportunity in your industry sector — the contracting officer may have entered a different NAICS code. Upgrade to see the full details.',
+            potentialMatchReason: 'An opportunity in your industry sector - the contracting officer may have entered a different NAICS code. Upgrade to see the full details.',
             ...ds,
             status:  'active',
             canApply: false,
@@ -613,7 +613,7 @@ export const getOpportunities = async (req, res) => {
     // ── Locked top matches (trial/free upsell) ──────────────────────────────
     // The sector-fallback "potential matches" score ≤45% by nature (different
     // NAICS), which makes a weak upgrade pitch. The REAL sell is the user's own
-    // exact-NAICS matches beyond the daily cap — genuinely high scores, shown
+    // exact-NAICS matches beyond the daily cap - genuinely high scores, shown
     // masked. Scores are real, never inflated.
     let lockedMatches = [];
     if (['trial', 'free'].includes(req.user.plan) && pageNum === 1 && req.user.naicsCodes?.length > 0) {
@@ -633,13 +633,13 @@ export const getOpportunities = async (req, res) => {
           .map(({ opp, score }) => ({
             _id:            opp._id,
             locked:         true,
-            title:          '🔒 Top matched contract — details locked',
+            title:          '🔒 Top matched contract - details locked',
             agency:         String(opp.agency || 'Federal agency').split('>')[0].trim(),
             estimatedValue: opp.estimatedValue || null,
             setAside:       opp.setAside || null,
             noticeType:     opp.noticeType || null,
             dueDate:        opp.dueDate,
-            aiMatchScore:   score, // REAL score — exact NAICS matches rank high honestly
+            aiMatchScore:   score, // REAL score - exact NAICS matches rank high honestly
             status:         'active',
             canApply:       false,
           }));
@@ -797,7 +797,7 @@ export const getOpportunityById = async (req, res) => {
     const isDescMissing = !opportunity.description || opportunity.description === 'No description available';
 
     if (isDescUrl || isDescMissing) {
-      // Build base URL (no api_key — samGetWithRotation injects it per-key)
+      // Build base URL (no api_key - samGetWithRotation injects it per-key)
       let baseDescUrl = null;
 
       if (isDescUrl) {
@@ -833,7 +833,7 @@ export const getOpportunityById = async (req, res) => {
           }
         } catch (e) {
           console.warn('getOpportunityById: description re-fetch failed:', e.message);
-          // Primary URL was prod endpoint — retry with the standard (non-prod) endpoint
+          // Primary URL was prod endpoint - retry with the standard (non-prod) endpoint
         }
       }
     }
@@ -865,9 +865,9 @@ export const getOpportunityById = async (req, res) => {
 
     // ── Trial/free paywall ────────────────────────────────────────────────
     // Opportunities that aren't in a limited-plan user's matched feed are
-    // fully locked (teaser only) — the daily NAICS-match quota (3/day) and,
+    // fully locked (teaser only) - the daily NAICS-match quota (3/day) and,
     // for trial, the 5-day window are the actual paywall. Any opportunity
-    // that IS in their feed shows completely, same as a paid plan — full
+    // that IS in their feed shows completely, same as a paid plan - full
     // documents, contacts, solicitation number, and SAM.gov link, nothing
     // hidden. AI tools (Deep AI Analysis, Risk Assessment, Ask AI) are
     // gated separately by the AI credit system, not by this endpoint.
@@ -956,7 +956,7 @@ export const getUserProfile = async (req, res) => {
     const access = await checkUserAccess(req.user);
 
     // Enterprise reads the master store live, so the sidebar counter must be the
-    // SAME live number the opportunities list shows — the cumulative distribution
+    // SAME live number the opportunities list shows - the cumulative distribution
     // counter drifts (it keeps counting matches whose deadlines have passed).
     let matchesUsed = access.monthlyUsed;
     if (access.plan === 'enterprise') {
@@ -1034,7 +1034,7 @@ URL: ${opportunity.url}
 // Safe to call after a plan upgrade to get new quota/window immediately.
 export const refreshUserFeed = async (req, res) => {
   try {
-    // Only block fully-expired plans — daily/monthly limits are enforced by distributeToUser internally.
+    // Only block fully-expired plans - daily/monthly limits are enforced by distributeToUser internally.
     const access = await checkUserAccess(req.user);
     if (access.plan === 'expired') {
       return res.status(403).json({ success: false, message: access.message || 'Your plan has expired. Please upgrade to continue.' });
@@ -1050,7 +1050,7 @@ export const refreshUserFeed = async (req, res) => {
     const now = new Date();
 
     // Remove only truly expired opportunities (dueDate > 48h ago).
-    // NEVER delete the entire feed — that loses all historical records.
+    // NEVER delete the entire feed - that loses all historical records.
     const EXPIRED_GRACE_MS = 48 * 60 * 60 * 1000;
     const expiredUOs = await UserOpportunity.find({ user: req.user._id })
       .populate('opportunity', 'dueDate')
@@ -1070,7 +1070,7 @@ export const refreshUserFeed = async (req, res) => {
     const added = await distributeToUser(req.user);
     console.log(`✅ User feed refreshed for ${req.user.email}: ${added || 0} new opportunities added`);
 
-    res.json({ success: true, message: `Feed refreshed — ${added || 0} new opportunities added.`, count: added || 0 });
+    res.json({ success: true, message: `Feed refreshed - ${added || 0} new opportunities added.`, count: added || 0 });
   } catch (error) {
     console.error('Refresh user feed error:', error);
     res.status(500).json({ success: false, message: error.message });

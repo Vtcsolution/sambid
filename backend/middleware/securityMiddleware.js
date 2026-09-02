@@ -1,5 +1,5 @@
 // backend/middleware/securityMiddleware.js
-// Global security middleware — NoSQL injection, XSS, input limits, password validation
+// Global security middleware - NoSQL injection, XSS, input limits, password validation
 
 // ── Strip MongoDB operators from user input (prevents NoSQL injection) ────────
 const stripMongoOps = (obj) => {
@@ -17,7 +17,7 @@ const stripMongoOps = (obj) => {
 
 export const noSQLInjectionGuard = (req, res, next) => {
   if (req.body && typeof req.body === 'object') req.body = stripMongoOps(req.body);
-  // req.query and req.params are read-only in Express 5+ — sanitize values in-place
+  // req.query and req.params are read-only in Express 5+ - sanitize values in-place
   if (req.query && typeof req.query === 'object') {
     for (const key of Object.keys(req.query)) {
       if (key.startsWith('$')) { delete req.query[key]; continue; }

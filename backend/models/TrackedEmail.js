@@ -1,6 +1,6 @@
 // backend/models/TrackedEmail.js
 // One document per tracked transactional/campaign email sent to a user.
-// NOT used for bulk opportunity/deadline emails — those would flood admin
+// NOT used for bulk opportunity/deadline emails - those would flood admin
 // notifications (thousands/day). Only "normal" emails: plan, payment, trial,
 // broadcast campaigns. Open pixel hits /api/track/email-open/:trackingId.
 import mongoose from 'mongoose';

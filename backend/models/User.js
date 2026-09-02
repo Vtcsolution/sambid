@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
   },
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
-  // Public API access (/api/v1/*) — Pro/Enterprise only, see Plan.limits.apiAccess.
+  // Public API access (/api/v1/*) - Pro/Enterprise only, see Plan.limits.apiAccess.
   // Only the SHA-256 hash is stored; the plain key is shown to the user once,
   // at generation time, and never again.
   apiKeyHash: { type: String, default: null, select: false },
-  apiKeyPrefix: { type: String, default: null },      // e.g. "sambid_live_a1b2c3d4" — safe to display
+  apiKeyPrefix: { type: String, default: null },      // e.g. "sambid_live_a1b2c3d4" - safe to display
   apiKeyCreatedAt: { type: Date, default: null },
   role: {
     type: String,
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  // Soft delete (admin trash) — deleted users are hidden and blocked from
+  // Soft delete (admin trash) - deleted users are hidden and blocked from
   // logging in, but stay in the database and can be restored by an admin.
   isDeleted: {
     type: Boolean,
@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
-  // One-time "first matched contracts" email — sent immediately after the
+  // One-time "first matched contracts" email - sent immediately after the
   // user's NAICS codes produce their first matches (no waiting for crons).
   welcomeMatchesSentAt: {
     type: Date,
@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  // Daily match tracking (trial/free — 3 per day)
+  // Daily match tracking (trial/free - 3 per day)
   dailyMatchesUsed: {
     type: Number,
     default: 0
@@ -121,7 +121,7 @@ const userSchema = new mongoose.Schema({
     default: 0
   },
   // Set only when an admin grants a paid plan to a trial/free account (not a
-  // real purchase) — the nightly expiry sweep reverts these to `plan: 'trial'`
+  // real purchase) - the nightly expiry sweep reverts these to `plan: 'trial'`
   // with a fresh trial window instead of the normal 'free' downgrade a lapsed
   // real subscription gets. Left null for real purchases/subscriptions.
   tempGrantExpiresAt: {

@@ -85,7 +85,7 @@ const opportunitySchema = new mongoose.Schema({
   },
 
   // ── Extended fields from SAM.gov ──────────────────────────────
-  noticeId:   { type: String, default: '' }, // SAM.gov UUID — used for direct links and resource fetching
+  noticeId:   { type: String, default: '' }, // SAM.gov UUID - used for direct links and resource fetching
   noticeType: { type: String, default: '' },
   archiveDate: { type: Date, default: null },
   archiveType: { type: String, default: '' },
@@ -150,7 +150,7 @@ const opportunitySchema = new mongoose.Schema({
     fax: String
   }],
 
-  // Cached PDF text — populated when any AI feature successfully reads the attachments.
+  // Cached PDF text - populated when any AI feature successfully reads the attachments.
   // Reused by all subsequent AI calls so SAM.gov is not hit again.
   docCache: {
     text:       { type: String, default: '' },

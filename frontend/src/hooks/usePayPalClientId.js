@@ -1,4 +1,4 @@
-// Runtime PayPal client ID — fetched from the backend (/payment/gateways),
+// Runtime PayPal client ID - fetched from the backend (/payment/gateways),
 // which reads the credentials saved in Admin → Settings. This is what makes
 // switching Sandbox → Live in the admin panel take effect immediately:
 // the old approach baked VITE_PAYPAL_CLIENT_ID into the bundle at build time,

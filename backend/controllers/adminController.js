@@ -396,7 +396,7 @@ export const testEmail = async (req, res) => {
     await transporter.sendMail({
       from,
       to: email,
-      subject: `[Sambid] Test email — ${label} sender`,
+      subject: `[Sambid] Test email - ${label} sender`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;">
           <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;padding:24px;text-align:center;color:white;">
@@ -648,7 +648,7 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
-// @desc    Move user to trash (soft delete — restorable)
+// @desc    Move user to trash (soft delete - restorable)
 // @route   DELETE /api/admin/users/:id
 export const deleteUser = async (req, res) => {
   try {
@@ -760,10 +760,10 @@ export const unlockUser = async (req, res) => {
       changes.push(`Expires: ${user.planExpiresAt.toLocaleDateString()}`);
 
       // A trial/free account being granted a paid plan here is a complimentary
-      // admin grant, not a real purchase — mark it so the nightly sweep sends
+      // admin grant, not a real purchase - mark it so the nightly sweep sends
       // them back to 'trial' (fresh window) when it expires, instead of the
       // 'free' downgrade a real lapsed subscription gets. An existing paying
-      // customer whose plan an admin adjusts here is untouched — normal
+      // customer whose plan an admin adjusts here is untouched - normal
       // expiry behavior still applies to them.
       if (['starter', 'pro', 'enterprise'].includes(plan) && ['trial', 'free'].includes(oldPlan)) {
         user.tempGrantExpiresAt = user.planExpiresAt;
@@ -812,7 +812,7 @@ export const unlockUser = async (req, res) => {
         user: user._id,
         type: 'plan_activated',
         title: plan ? `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Activated` : 'Account Updated',
-        message: changes.join(' | ') + (reason ? ` — ${reason}` : ''),
+        message: changes.join(' | ') + (reason ? ` - ${reason}` : ''),
         link: '/dashboard',
       });
     } catch {}
@@ -1142,7 +1142,7 @@ export const sendPlanPaymentInstructions = async (req, res) => {
 
     res.json({ success: true, message: `Payment instructions sent to ${userEmail}.` });
 
-    // Fire after responding — never block on SMTP
+    // Fire after responding - never block on SMTP
     sendPaymentInstructionsEmail({
       to:            userEmail,
       userName,
@@ -1358,7 +1358,7 @@ export const triggerBulkFetch = async (req, res) => {
   }
 };
 
-// @desc    Test API fetch — exactly 10 records at given offset (1 API call)
+// @desc    Test API fetch - exactly 10 records at given offset (1 API call)
 // @route   POST /api/admin/trigger-fetch-test
 export const triggerSAMFetchTest = async (req, res) => {
   try {
@@ -1374,7 +1374,7 @@ export const triggerSAMFetchTest = async (req, res) => {
   }
 };
 
-// @desc    Test bulk fetch — exactly 10 records at given offset (1 API call)
+// @desc    Test bulk fetch - exactly 10 records at given offset (1 API call)
 // @route   POST /api/admin/trigger-bulk-test
 export const triggerBulkFetchTest = async (req, res) => {
   try {
@@ -1523,7 +1523,7 @@ export const updateSettings = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Settings saved — DB, .env file, and all services updated.',
+      message: 'Settings saved - DB, .env file, and all services updated.',
       data: updatedSettings
     });
   } catch (error) {
@@ -1852,7 +1852,7 @@ export const processWithdrawal = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Withdrawal already processed.' });
     }
 
-    // If rejected — refund the balance that was frozen on request
+    // If rejected - refund the balance that was frozen on request
     if (status === 'rejected') {
       await User.findByIdAndUpdate(withdrawal.user._id, {
         $inc: { referralBalance: withdrawal.amount },
@@ -1988,7 +1988,7 @@ export const getSamSyncStats = async (req, res) => {
   }
 };
 
-// POST /api/admin/companies/sync  — triggers SAM.gov sync (auto-calc pages from quota); falls back to USASpending
+// POST /api/admin/companies/sync - triggers SAM.gov sync (auto-calc pages from quota); falls back to USASpending
 export const triggerCompanySync = async (req, res) => {
   if (entitySyncStats.isSyncing) {
     return res.json({ success: false, message: 'SAM.gov sync already in progress' });
@@ -2001,7 +2001,7 @@ export const triggerCompanySync = async (req, res) => {
     }
     res.json({
       success: true,
-      message: 'SAM.gov daily quota exhausted — syncing from USASpending.gov instead (free, no quota)',
+      message: 'SAM.gov daily quota exhausted - syncing from USASpending.gov instead (free, no quota)',
       source: 'usaspending',
     });
     syncUsaSpendingCompanies(100).catch(err => console.error('Background USASpending sync error:', err));
@@ -2014,21 +2014,21 @@ export const triggerCompanySync = async (req, res) => {
 
   res.json({
     success: true,
-    message: `SAM.gov sync started — fetching up to ${maxPages} pages (~${maxPages * 100} companies with full contact details)`,
+    message: `SAM.gov sync started - fetching up to ${maxPages} pages (~${maxPages * 100} companies with full contact details)`,
   });
 
   // Run SAM.gov sync; after it finishes, run USASpending to enrich with contract data
   syncSamEntities(maxPages)
     .then(() => {
       if (!usaSpendingSyncStats.isSyncing) {
-        console.log('\n📊 SAM.gov sync done — starting USASpending to add contract data…');
+        console.log('\n📊 SAM.gov sync done - starting USASpending to add contract data…');
         return syncUsaSpendingCompanies(100);
       }
     })
     .catch(err => console.error('Sync chain error:', err));
 };
 
-// POST /api/admin/companies/clear  — BLOCKED: government-sourced data is protected
+// POST /api/admin/companies/clear - BLOCKED: government-sourced data is protected
 export const clearAllCompanies = async (req, res) => {
   try {
     return res.status(403).json({
@@ -2040,7 +2040,7 @@ export const clearAllCompanies = async (req, res) => {
   }
 };
 
-// POST /api/admin/companies/fetch-one  — fetch & upsert a single company by UEI
+// POST /api/admin/companies/fetch-one - fetch & upsert a single company by UEI
 export const fetchOneCompany = async (req, res) => {
   try {
     const { ueiSAM } = req.body;
@@ -2131,7 +2131,7 @@ export const syncSbaSource = async (req, res) => {
 };
 
 // GET /api/admin/pending-counts
-// Returns badge counts for sidebar items — all in one round-trip
+// Returns badge counts for sidebar items - all in one round-trip
 export const getPendingCounts = async (req, res) => {
   try {
     const adminId   = req.user._id;

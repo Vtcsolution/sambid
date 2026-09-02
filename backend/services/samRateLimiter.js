@@ -6,11 +6,11 @@
 // Guarantees:
 //   • Only one SAM.gov request in-flight at a time
 //   • ≥800ms gap between requests (~75/min, under the 100/min cap)
-//   • 429 pauses the entire queue — no other service jumps in during the wait
-//   • Daily quota tracking — both services count against the same 1,000/day limit
+//   • 429 pauses the entire queue - no other service jumps in during the wait
+//   • Daily quota tracking - both services count against the same 1,000/day limit
 
 const MIN_INTERVAL_MS = 800;
-export const DAILY_LIMIT = 950; // conservative — actual SAM.gov free tier is 1,000/day
+export const DAILY_LIMIT = 950; // conservative - actual SAM.gov free tier is 1,000/day
 
 // ── Rate-limit state (exposed so controllers can show it in the admin UI) ────
 export const limiterState = {
@@ -66,7 +66,7 @@ export const samFetch = (fn) => {
     // Quota guard
     _resetIfNewDay();
     if (_quota.count >= DAILY_LIMIT) {
-      throw Object.assign(new Error('SAM.gov daily quota exhausted — try again tomorrow'), { code: 'QUOTA_EXHAUSTED' });
+      throw Object.assign(new Error('SAM.gov daily quota exhausted - try again tomorrow'), { code: 'QUOTA_EXHAUSTED' });
     }
 
     // Enforce minimum gap
@@ -80,7 +80,7 @@ export const samFetch = (fn) => {
         return await fn();
       } catch (err) {
         if (err.response?.status === 429) {
-          // SAM.gov code 900804 = daily quota exhausted — don't retry, mark internally
+          // SAM.gov code 900804 = daily quota exhausted - don't retry, mark internally
           const isQuotaExhausted = err.response?.data?.code === '900804' ||
             (err.response?.data?.description || '').toLowerCase().includes('quota');
           if (isQuotaExhausted) {
@@ -88,7 +88,7 @@ export const samFetch = (fn) => {
             const nextReset = err.response?.data?.nextAccessTime || 'midnight UTC';
             console.warn(`🚫 SAM.gov daily quota exhausted. Resets: ${nextReset}`);
             throw Object.assign(
-              new Error(`SAM.gov daily quota exhausted — resets at ${nextReset}`),
+              new Error(`SAM.gov daily quota exhausted - resets at ${nextReset}`),
               { code: 'QUOTA_EXHAUSTED' }
             );
           }
@@ -100,7 +100,7 @@ export const samFetch = (fn) => {
             limiterState.isRateLimited    = true;
             limiterState.rateLimitedUntil = new Date(Date.now() + waitMs);
 
-            console.warn(`⚠️  SAM.gov 429 (attempt ${attempt}/3) — pausing ${waitMs / 1000}s…`);
+            console.warn(`⚠️  SAM.gov 429 (attempt ${attempt}/3) - pausing ${waitMs / 1000}s…`);
             await new Promise(r => setTimeout(r, waitMs));
 
             limiterState.isRateLimited    = false;

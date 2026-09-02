@@ -15,7 +15,7 @@ const users = await db.collection('users').find({}).toArray();
 console.log('Users in DB:');
 users.forEach(u => console.log(` - ${u.email} | plan: ${u.plan} | naics: ${u.naicsCodes?.join(',')}`));
 
-// Target user — update this email if needed
+// Target user - update this email if needed
 const TARGET_EMAIL = users.find(u => u.email !== 'ranazia943@gmail.com')?.email || users[0]?.email;
 const user = users.find(u => u.email === TARGET_EMAIL);
 

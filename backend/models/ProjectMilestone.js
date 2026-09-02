@@ -15,7 +15,7 @@ const projectMilestoneSchema = new mongoose.Schema({
     default: 'pending',
   },
 
-  // Payment tracking — what the SUBCONTRACTOR/vendor is paid for this milestone
+  // Payment tracking - what the SUBCONTRACTOR/vendor is paid for this milestone
   paymentAmount:     { type: Number, default: 0 },
   paymentPercentage: { type: Number, default: 0 },
   paymentStatus: {
@@ -26,7 +26,7 @@ const projectMilestoneSchema = new mongoose.Schema({
   paymentDate:      { type: Date },
   paymentReference: { type: String, default: '' },
 
-  // Government payment tracking — what the GOVERNMENT paid for this milestone (drives commission billing)
+  // Government payment tracking - what the GOVERNMENT paid for this milestone (drives commission billing)
   govPaymentAmount:     { type: Number, default: 0 },
   govPaymentReceived:   { type: Boolean, default: false },
   govPaymentReceivedAt: { type: Date },

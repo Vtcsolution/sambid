@@ -1,7 +1,7 @@
 // backend/models/TeamingRequest.js
 // A real record of one user asking another to team up on a federal contract
 // (Teaming Partner Finder, Enterprise). Backs the "Send Teaming Request"
-// button — previously that button only faked success client-side.
+// button - previously that button only faked success client-side.
 import mongoose from 'mongoose';
 
 const teamingRequestSchema = new mongoose.Schema({

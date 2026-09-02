@@ -39,7 +39,7 @@ async function seed() {
     created++;
   }
 
-  console.log(`\n✅ Done — ${created} upserted, ${skipped} skipped (already in DB or env empty)`);
+  console.log(`\n✅ Done - ${created} upserted, ${skipped} skipped (already in DB or env empty)`);
   await mongoose.disconnect();
 }
 
