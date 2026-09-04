@@ -4,12 +4,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Mail, Search, Loader2, Sparkles, Send, RefreshCw,
-  CheckCircle, AlertCircle, X, Clock,
+  CheckCircle, AlertCircle, X, Clock, Eye,
   Building2, History, ArrowLeft, Plus, UserPlus,
 } from 'lucide-react';
 import { adminProspectAPI, adminAIAPI } from '../../services/adminApi';
 import { useAdminPermission } from '../../hooks/useAdminPermission';
 import ProspectEmailHistoryPanel from '../../components/admin/ProspectEmailHistoryPanel';
+import EmailPreview from '../../components/admin/EmailPreview';
 
 const EMAIL_TYPES = [
   { id: 'intro',      label: 'Platform Intro',   emoji: '👋', desc: 'Introduce Sambid for the first time' },
@@ -136,6 +137,22 @@ export default function AdminProspectOutreach() {
 
   const selectedProspects  = prospects.filter(p => selected.has(p._id));
   const totalRecipients    = selected.size + customEmails.length;
+
+  // Live Preview (right panel) - real NAICS-matched opportunities for whichever
+  // DB prospect is first in the current selection, same query the actual send
+  // uses, so the preview shows exactly what will go out, not a mock.
+  const [topMatches, setTopMatches]         = useState(null);
+  const [matchesLoading, setMatchesLoading] = useState(false);
+  const previewProspectId = selectedProspects[0]?._id;
+
+  useEffect(() => {
+    if (!previewProspectId) { setTopMatches(null); return; }
+    setMatchesLoading(true);
+    adminProspectAPI.getTopMatches(previewProspectId)
+      .then(r => setTopMatches(r.data?.data || []))
+      .catch(() => setTopMatches([]))
+      .finally(() => setMatchesLoading(false));
+  }, [previewProspectId]);
 
   // ── DB selection ────────────────────────────────────────────────────────────
   const toggleSelect = (id) => {
@@ -494,7 +511,8 @@ export default function AdminProspectOutreach() {
             </p>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto py-6 px-6 space-y-5">
+          <div className="max-w-6xl mx-auto py-6 px-6 grid lg:grid-cols-[1fr_380px] gap-6 items-start">
+          <div className="space-y-5 min-w-0">
 
             {/* To: header */}
             <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -767,6 +785,31 @@ export default function AdminProspectOutreach() {
             )}
 
             <div className="h-4" />
+          </div>
+
+          {/* ── Live Preview ── */}
+          <div className="hidden lg:block sticky top-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Eye className="w-4 h-4 text-indigo-500" />
+              <h3 className="font-semibold text-gray-900 text-sm">Live Preview</h3>
+              <span className="ml-auto text-xs text-gray-400">How recipients see it</span>
+            </div>
+            {subject || bodyText
+              ? <EmailPreview
+                  subject={subject}
+                  body={bodyText}
+                  fromName="Sambid"
+                  userName={selectedProspects[0]?.contactPersonName || selectedProspects[0]?.companyName || customEmails[0]?.name || 'there'}
+                  signOff={'Zia\nFounder, Sambid\nsambid.co'}
+                  topMatches={topMatches}
+                  matchesLoading={matchesLoading}
+                />
+              : <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-100">
+                  <Mail className="w-8 h-8 text-gray-300 mb-2" />
+                  <p className="text-xs text-gray-400 px-6">Pick an email type to see the live preview here</p>
+                </div>
+            }
+          </div>
           </div>
         )}
       </div>
